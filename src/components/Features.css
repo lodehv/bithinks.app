@@ -42,9 +42,12 @@
   min-height: 500px;
   border-radius: 32px;
   overflow: hidden;
-  box-shadow: 0 -10px 40px rgba(0,0,0,0.05), 0 20px 40px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
   border: 1px solid rgba(255,255,255,0.5);
   transform-origin: top center;
+  /* Hardware acceleration to prevent scroll lag */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
   background-size: cover;
   background-position: center;
 }
@@ -172,9 +175,10 @@
   position: absolute;
   background: white;
   border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
   padding: 24px;
   transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
 }
 
 /* Hover effects for mockups to give them life */
@@ -193,7 +197,7 @@
   top: 15%;
   right: -5%;
   z-index: 2;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.08);
 }
 
 .mock-float-2 {
