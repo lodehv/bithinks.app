@@ -1,0 +1,174 @@
+import { useState } from "react";
+import "./Register.css";
+import { ArrowLeft } from "lucide-react";
+import { useAppContext } from "../context/AppContext";
+import api, { getApiErrorMessage } from "../utils/api";
+import { WaHelperButton } from "./register/RegisterShared";
+import { StepCredentials, StepOtp, StepProfile } from "./register/RegisterSteps";
+
+const Register = () => {
+  const { t, login } = useAppContext();
+
+  const [step, setStep]       = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError]     = useState("");
+
+  // Step 1
+  const [email, setEmail]       = useState("");
+  const [phone, setPhone]       = useState("");
+  const [password, setPassword] = useState("");
+
+  // Step 2
+  const [otp, setOtp]                 = useState("");
+  const [verifyToken, setVerifyToken] = useState("");
+
+  // Step 3
+  const [formData, setFormData] = useState({
+    nama: "", namaUsaha: "", bidang: "", solusi: "", jumlahKaryawan: "",
+  });
+
+  const handleChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleOtpChange = (e) => {
+    const val = e.target.value.replace(/\D/g, "");
+    if (val.length <= 6) setOtp(val);
+  };
+
+  const goBack = () => { setError(""); setStep((s) => s - 1); };
+
+  // ─── Step 1: Kirim OTP ke email ────────────────────────────────────────────
+  const handleSendOtp = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      await api.post("/api/auth/send-otp", { email, channel: "email", purpose: "register" });
+      setOtp("");
+      setStep(2);
+    } catch (err) {
+      setError(getApiErrorMessage(err, "Gagal mengirim OTP. Coba lagi."));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ─── Step 2: Verifikasi OTP ─────────────────────────────────────────────────
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    setError("");
+    if (otp.length !== 6) { setError("Kode OTP harus tepat 6 digit"); return; }
+    setLoading(true);
+    try {
+      const res = await api.post("/api/auth/verify-otp", { email, code: otp, purpose: "register" });
+      setVerifyToken(res.data.data.verifyToken);
+      setStep(3);
+    } catch (err) {
+      setError(getApiErrorMessage(err, "Kode OTP tidak valid."));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ─── Step 3: Submit Registrasi ──────────────────────────────────────────────
+  const handleFinalSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    if (!formData.nama || !formData.namaUsaha) {
+      setError("Nama dan nama usaha wajib diisi");
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await api.post("/api/auth/register", {
+        phone,
+        email,
+        password,
+        verifyToken,
+        name:            formData.nama,
+        companyName:     formData.namaUsaha,
+        industry:        formData.bidang       || undefined,
+        employeeCount:   formData.jumlahKaryawan || undefined,
+        preferredModule: formData.solusi        || undefined,
+      });
+      const { accessToken, refreshToken, user, tenant } = res.data.data;
+      login({ accessToken, refreshToken, user, tenant });
+      window.location.href = "/dashboard";
+    } catch (err) {
+      setError(getApiErrorMessage(err, "Pendaftaran gagal. Coba lagi."));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="register-page">
+      {/* Panel Kiri */}
+      <div className="register-left" style={{ backgroundColor: "#FFF9DB" }}>
+        <a href="/" className="register-brand">
+          <img src="/bithinks.jpeg" alt="Logo Bithinks" style={{ height: "40px", borderRadius: "4px" }} />
+        </a>
+        <div className="register-left-content">
+          <h1>
+            {t.hero.title1} <span>{t.hero.titleHighlight}</span>
+          </h1>
+          <p>{t.hero.desc}</p>
+        </div>
+        <div />
+      </div>
+
+      {/* Panel Kanan */}
+      <div className="register-right">
+        <div className="register-form-container">
+          {step === 1 ? (
+            <a href="/" className="back-home">
+              <ArrowLeft size={16} /> Kembali ke Beranda
+            </a>
+          ) : (
+            <button
+              className="back-home"
+              onClick={goBack}
+              disabled={loading}
+              style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}
+            >
+              <ArrowLeft size={16} /> Kembali
+            </button>
+          )}
+
+          {step === 1 && (
+            <StepCredentials
+              email={email} setEmail={setEmail}
+              phone={phone} setPhone={setPhone}
+              password={password} setPassword={setPassword}
+              loading={loading} error={error}
+              onSubmit={handleSendOtp} t={t}
+            />
+          )}
+
+          {step === 2 && (
+            <StepOtp
+              email={email} otp={otp}
+              onOtpChange={handleOtpChange}
+              loading={loading} error={error}
+              onSubmit={handleVerifyOtp}
+            />
+          )}
+
+          {step === 3 && (
+            <StepProfile
+              formData={formData} onChange={handleChange}
+              loading={loading} error={error}
+              onSubmit={handleFinalSubmit}
+            />
+          )}
+
+          {step !== 3 && (
+            <WaHelperButton helpText={t.register.helpText} waHelp={t.register.waHelp} />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Register;

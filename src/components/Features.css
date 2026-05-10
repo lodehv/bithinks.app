@@ -1,0 +1,247 @@
+.features-section {
+  padding: 80px 0 160px;
+  position: relative;
+}
+
+.features-header {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 80px;
+}
+
+.features-pretitle {
+  color: var(--color-primary-dark);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-size: 0.875rem;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.features-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.features-stack {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.feature-large-card {
+  position: sticky;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  min-height: 500px;
+  border-radius: 32px;
+  overflow: hidden;
+  box-shadow: 0 -10px 40px rgba(0,0,0,0.05), 0 20px 40px rgba(0,0,0,0.05);
+  border: 1px solid rgba(255,255,255,0.5);
+  transform-origin: top center;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Card distinct styling (Desty style) */
+.feature-large-card:nth-child(1) {
+  top: 100px;
+  background-color: #FFF9DB; /* POS - Yellowish */
+}
+
+.feature-large-card:nth-child(2) {
+  top: 120px;
+  background-color: #E8F5E9; /* HRM - Greenish */
+}
+
+.feature-large-card:nth-child(3) {
+  top: 140px;
+  background-color: #E3F2FD; /* Finance - Bluish */
+}
+
+.feature-large-card:nth-child(4) {
+  top: 160px;
+  background-color: #F3E5F5; /* WMS - Purplish */
+}
+
+.feature-large-card:nth-child(5) {
+  top: 180px;
+  background-color: #FCE4EC; /* Places - Pinkish */
+}
+
+/* Content Left */
+.feature-content {
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.feature-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 24px;
+}
+
+.feature-badge svg {
+  background: white;
+  padding: 8px;
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  width: 40px;
+  height: 40px;
+}
+
+.feature-large-card h3 {
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  color: #111827;
+}
+
+.feature-large-card p {
+  font-size: 1.125rem;
+  color: #4B5563;
+  margin-bottom: 40px;
+}
+
+.feature-btn {
+  align-self: flex-start;
+  padding: 12px 24px;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  font-size: 1rem;
+  color: white;
+  background-color: #0066FF; /* Primary Action Color */
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-bottom: 40px;
+}
+
+.feature-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+}
+
+.feature-tags {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.feature-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background-color: rgba(0,0,0,0.05);
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* Mockup Right Side */
+.feature-mockup {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.mock-ui {
+  position: absolute;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+  padding: 24px;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Hover effects for mockups to give them life */
+.feature-large-card:hover .mock-base { transform: scale(1.02); }
+.feature-large-card:hover .mock-float-1 { transform: translateY(-10px) translateX(-5px); }
+.feature-large-card:hover .mock-float-2 { transform: translateY(10px) translateX(5px); }
+
+.mock-base {
+  width: 80%;
+  height: 60%;
+  z-index: 1;
+}
+
+.mock-float-1 {
+  width: 60%;
+  top: 15%;
+  right: -5%;
+  z-index: 2;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+}
+
+.mock-float-2 {
+  width: 65%;
+  bottom: 10%;
+  left: 5%;
+  z-index: 3;
+}
+
+/* UI Skeletons to represent software */
+.skel-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 16px; }
+.skel-avatar { width: 32px; height: 32px; border-radius: 50%; background: #f0f0f0; }
+.skel-title { width: 40%; height: 16px; background: #e0e0e0; border-radius: 8px; }
+.skel-line { width: 100%; height: 12px; background: #f0f0f0; border-radius: 6px; margin-bottom: 12px; }
+.skel-line.short { width: 60%; }
+.skel-btn { width: 80px; height: 32px; background: #0066FF; border-radius: 8px; margin-top: auto; }
+
+/* Responsive */
+@media (max-width: 992px) {
+  .feature-large-card {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+  
+  .feature-content {
+    padding: 40px;
+  }
+  
+  .feature-mockup {
+    min-height: 300px;
+  }
+  
+  .mock-base { width: 90%; height: 80%; }
+}
+
+@media (max-width: 768px) {
+  .features-section {
+    padding-top: 40px;
+  }
+  
+  /* On mobile, we still want the sticky effect, but maybe start closer to the top to save space */
+  .feature-large-card:nth-child(1) { top: 60px; }
+  .feature-large-card:nth-child(2) { top: 75px; }
+  .feature-large-card:nth-child(3) { top: 90px; }
+  .feature-large-card:nth-child(4) { top: 105px; }
+  .feature-large-card:nth-child(5) { top: 120px; }
+  
+  .feature-content h3 {
+    font-size: 1.75rem;
+  }
+}

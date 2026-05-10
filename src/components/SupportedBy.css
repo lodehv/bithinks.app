@@ -1,0 +1,71 @@
+.supported-section {
+  padding: 80px 0;
+  background-color: var(--color-bg);
+  text-align: center;
+  position: relative;
+  z-index: 10;
+}
+
+.supported-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 32px;
+}
+
+.supported-logos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 64px;
+  flex-wrap: wrap;
+}
+
+.supported-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  opacity: 0.8;
+  transition: var(--transition);
+}
+
+.supported-item:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.supported-img-box {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.supported-logo {
+  max-width: 160px;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px; /* In case the logo has a background */
+}
+
+/* Ensure circular or nicely cut logos look good */
+.logo-round {
+  border-radius: 12px;
+}
+
+.supported-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 768px) {
+  .supported-logos {
+    gap: 40px;
+    flex-direction: column;
+  }
+}
