@@ -1,40 +1,21 @@
 import React from 'react';
 import './SupportedBy.css';
-import { useAppContext } from '../context/AppContext';
 
 const SupportedBy = () => {
-  const { t } = useAppContext();
   return (
     <section className="supported-section">
       <div className="container">
-        <h4 className="supported-title">{t.supported.title}</h4>
+        <h4 className="supported-title">Dilindungi Badan Hukum</h4>
         
-        <div className="supported-logos">
-          
-          {/* Logo 1: Lodehv */}
-          <div className="supported-item">
-            <div className="supported-img-box">
-              <img 
-                src="/lodehv.jpeg" 
-                alt="Logo Lodehv" 
-                className="supported-logo logo-round" 
-              />
-            </div>
-            <span className="supported-label">Lodehv</span>
+        <div className="legal-protection">
+          <p className="legal-text">Keputusan Menteri Hukum Republik Indonesia AHU-A084709.AH.01.30 Tahun 2026</p>
+          <div className="legal-barcode-box">
+            <img 
+              src="/barcode-perizinan.png" 
+              alt="Barcode Perizinan AHU" 
+              className="legal-barcode" 
+            />
           </div>
-
-          {/* Logo 2: Bithinks */}
-          <div className="supported-item">
-            <div className="supported-img-box">
-              <img 
-                src="/bithinks.jpeg" 
-                alt="Logo Bithinks" 
-                className="supported-logo logo-round" 
-              />
-            </div>
-            <span className="supported-label">Bithinks</span>
-          </div>
-
         </div>
       </div>
     </section>

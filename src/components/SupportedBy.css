@@ -1,5 +1,5 @@
 .supported-section {
-  padding: 80px 0;
+  padding: 60px 0 100px;
   background-color: var(--color-bg);
   text-align: center;
   position: relative;
@@ -15,57 +15,50 @@
   margin-bottom: 32px;
 }
 
-.supported-logos {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 64px;
-  flex-wrap: wrap;
-}
-
-.supported-item {
+.legal-protection {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  opacity: 0.8;
-  transition: var(--transition);
+  gap: 20px;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-.supported-item:hover {
-  opacity: 1;
-  transform: translateY(-2px);
-}
-
-.supported-img-box {
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.supported-logo {
-  max-width: 160px;
-  max-height: 100%;
-  object-fit: contain;
-  border-radius: 8px; /* In case the logo has a background */
-}
-
-/* Ensure circular or nicely cut logos look good */
-.logo-round {
-  border-radius: 12px;
-}
-
-.supported-label {
-  font-size: 0.9rem;
+.legal-text {
+  font-size: 1rem;
   font-weight: 600;
   color: var(--color-text);
-  letter-spacing: 0.5px;
+  line-height: 1.6;
+}
+
+.legal-barcode-box {
+  background: white;
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.legal-barcode-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+}
+
+.legal-barcode {
+  max-width: 250px;
+  height: auto;
+  border-radius: 8px;
 }
 
 @media (max-width: 768px) {
-  .supported-logos {
-    gap: 40px;
-    flex-direction: column;
+  .legal-text {
+    font-size: 0.9rem;
+    padding: 0 20px;
+  }
+  .legal-barcode {
+    max-width: 200px;
   }
 }
