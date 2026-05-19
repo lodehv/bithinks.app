@@ -10,6 +10,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 
 gsap.registerPlugin(ScrollTrigger);
+ScrollTrigger.config({
+  ignoreMobileResize: true
+});
 
 function Home() {
   useEffect(() => {
