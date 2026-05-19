@@ -26,14 +26,29 @@ const Footer = () => {
             <div className="footer-col">
               <h4>{t.footer.col1}</h4>
               <ul>
-                <li><a href="#">{t.footer.c1l1}</a></li>
-                <li><a href="#">{t.footer.c1l2}</a></li>
-                <li><a href="#">{t.footer.c1l3}</a></li>
-                <li><a href="#">{t.footer.c1l4}</a></li>
+                <li><a href="#">{t.footer.prod1}</a></li>
+                <li><a href="#">{t.footer.prod2}</a></li>
+                <li><a href="#">{t.footer.prod3}</a></li>
+                <li><a href="#">{t.footer.prod4}</a></li>
+                <li><a href="#">{t.footer.prod5}</a></li>
               </ul>
             </div>
             <div className="footer-col">
               <h4>{t.footer.col2}</h4>
+              <ul>
+                <li><a href="#">{t.footer.sol1}</a></li>
+                <li><a href="#">{t.footer.sol2}</a></li>
+                <li><a href="#">{t.footer.sol3}</a></li>
+                <li><a href="#">{t.footer.sol4}</a></li>
+                <li><a href="#">{t.footer.sol5}</a></li>
+                <li><a href="#">{t.footer.sol6}</a></li>
+                <li><a href="#">{t.footer.sol7}</a></li>
+                <li><a href="#">{t.footer.sol8}</a></li>
+                <li><a href="#">{t.footer.sol9}</a></li>
+              </ul>
+            </div>
+            <div className="footer-col">
+              <h4>{t.footer.col3}</h4>
               <ul>
                 <li><a href="#">{t.footer.c2l1}</a></li>
                 <li><a href="#">{t.footer.c2l2}</a></li>
@@ -42,7 +57,7 @@ const Footer = () => {
               </ul>
             </div>
             <div className="footer-col">
-              <h4>{t.footer.col3}</h4>
+              <h4>{t.footer.col4}</h4>
               <ul>
                 <li><a href="#">{t.footer.c3l1}</a></li>
                 <li><a href="#">{t.footer.c3l2}</a></li>

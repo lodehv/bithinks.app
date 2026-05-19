@@ -31,8 +31,9 @@
 
 .footer-links-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 40px;
+  flex: 1;
 }
 
 .footer-col h4 {
@@ -66,6 +67,12 @@
   align-items: center;
   color: var(--color-text-light);
   font-size: 0.875rem;
+}
+
+@media (max-width: 1024px) {
+  .footer-links-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 768px) {

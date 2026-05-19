@@ -26,57 +26,57 @@
 }
 
 .features-stack {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
   max-width: 1000px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  position: relative;
 }
 
 .feature-large-card {
-  position: sticky;
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
-  min-height: 500px;
+  min-height: 520px;
   border-radius: 32px;
   overflow: hidden;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
-  border: 1px solid rgba(255,255,255,0.5);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+  border: 1px solid rgba(255,255,255,0.6);
   transform-origin: top center;
-  /* Hardware acceleration to prevent scroll lag */
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  background-size: cover;
-  background-position: center;
-}
-
-/* Card distinct styling (Desty style) */
-.feature-large-card:nth-child(1) {
-  top: 100px;
-  background-color: #FFF9DB; /* POS - Yellowish */
-}
-
-.feature-large-card:nth-child(2) {
+  will-change: transform, opacity;
+  position: relative;
+  --card-overlay: 0;
+  position: sticky;
   top: 120px;
-  background-color: #E8F5E9; /* HRM - Greenish */
 }
 
-.feature-large-card:nth-child(3) {
-  top: 140px;
-  background-color: #E3F2FD; /* Finance - Bluish */
+.feature-large-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #000000;
+  opacity: var(--card-overlay);
+  pointer-events: none;
+  z-index: 10;
+  will-change: opacity;
 }
 
-.feature-large-card:nth-child(4) {
-  top: 160px;
-  background-color: #F3E5F5; /* WMS - Purplish */
+@media (min-width: 992px) {
+  .features-stack {
+    gap: 80px;
+  }
 }
 
-.feature-large-card:nth-child(5) {
-  top: 180px;
-  background-color: #FCE4EC; /* Places - Pinkish */
-}
+.feature-large-card:nth-child(1) { background-color: #F0F9FF; }
+.feature-large-card:nth-child(2) { background-color: #F3E5F5; }
+.feature-large-card:nth-child(3) { background-color: #FFF9DB; }
+.feature-large-card:nth-child(4) { background-color: #E3F2FD; }
+.feature-large-card:nth-child(5) { background-color: #E8F5E9; }
+.feature-large-card:nth-child(6) { background-color: #FFFBEB; }
 
 /* Content Left */
 .feature-content {
@@ -101,11 +101,11 @@
 
 .feature-badge svg {
   background: white;
-  padding: 8px;
-  border-radius: 12px;
-  box-shadow: var(--shadow-sm);
-  width: 40px;
-  height: 40px;
+  padding: 10px;
+  border-radius: 16px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+  width: 48px;
+  height: 48px;
 }
 
 .feature-large-card h3 {
@@ -129,7 +129,6 @@
   font-weight: 700;
   font-size: 1rem;
   color: white;
-  background-color: #0066FF; /* Primary Action Color */
   border: none;
   cursor: pointer;
   transition: var(--transition);
@@ -138,7 +137,7 @@
 
 .feature-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
 .feature-tags {
@@ -164,7 +163,7 @@
   position: relative;
   width: 100%;
   height: 100%;
-  min-height: 500px;
+  min-height: 520px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -181,33 +180,15 @@
   will-change: transform;
 }
 
-/* Hover effects for mockups to give them life */
 .feature-large-card:hover .mock-base { transform: scale(1.02); }
 .feature-large-card:hover .mock-float-1 { transform: translateY(-10px) translateX(-5px); }
 .feature-large-card:hover .mock-float-2 { transform: translateY(10px) translateX(5px); }
 
-.mock-base {
-  width: 80%;
-  height: 60%;
-  z-index: 1;
-}
+.mock-base { width: 80%; height: 60%; z-index: 1; }
+.mock-float-1 { width: 60%; top: 15%; right: -5%; z-index: 2; box-shadow: 0 15px 35px rgba(0,0,0,0.08); }
+.mock-float-2 { width: 65%; bottom: 10%; left: 5%; z-index: 3; }
 
-.mock-float-1 {
-  width: 60%;
-  top: 15%;
-  right: -5%;
-  z-index: 2;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.08);
-}
-
-.mock-float-2 {
-  width: 65%;
-  bottom: 10%;
-  left: 5%;
-  z-index: 3;
-}
-
-/* UI Skeletons to represent software */
+/* UI Skeletons */
 .skel-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 16px; }
 .skel-avatar { width: 32px; height: 32px; border-radius: 50%; background: #f0f0f0; }
 .skel-title { width: 40%; height: 16px; background: #e0e0e0; border-radius: 8px; }
@@ -215,37 +196,34 @@
 .skel-line.short { width: 60%; }
 .skel-btn { width: 80px; height: 32px; background: #0066FF; border-radius: 8px; margin-top: auto; }
 
-/* Responsive */
 @media (max-width: 992px) {
   .feature-large-card {
     grid-template-columns: 1fr;
     min-height: auto;
+    top: 90px;
   }
-  
-  .feature-content {
-    padding: 40px;
+  .feature-content { 
+    padding: 32px 24px 20px; 
   }
-  
-  .feature-mockup {
-    min-height: 300px;
+  .feature-mockup { 
+    min-height: 220px; 
+    padding: 10px;
   }
-  
-  .mock-base { width: 90%; height: 80%; }
+  .mock-base { width: 85%; height: 75%; }
 }
 
 @media (max-width: 768px) {
-  .features-section {
-    padding-top: 40px;
+  .features-section { padding-top: 40px; }
+  .features-stack {
+    gap: 40px;
   }
-  
-  /* On mobile, we still want the sticky effect, but maybe start closer to the top to save space */
-  .feature-large-card:nth-child(1) { top: 60px; }
-  .feature-large-card:nth-child(2) { top: 75px; }
-  .feature-large-card:nth-child(3) { top: 90px; }
-  .feature-large-card:nth-child(4) { top: 105px; }
-  .feature-large-card:nth-child(5) { top: 120px; }
-  
-  .feature-content h3 {
-    font-size: 1.75rem;
+  .feature-large-card {
+    top: 70px;
+    border-radius: 24px;
   }
+  .feature-large-card h3 { font-size: 1.5rem; margin-bottom: 12px; }
+  .feature-large-card p { font-size: 0.95rem; margin-bottom: 20px; }
+  .feature-btn { margin-bottom: 20px; padding: 10px 20px; font-size: 0.9rem; }
+  .feature-badge { font-size: 1rem; margin-bottom: 16px; }
+  .feature-badge svg { width: 36px; height: 36px; padding: 8px; border-radius: 12px; }
 }

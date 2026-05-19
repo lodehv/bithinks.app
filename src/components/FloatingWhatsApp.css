@@ -1,0 +1,113 @@
+.floating-wa-container {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.floating-wa-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: #25D366;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.4);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  overflow: hidden;
+}
+
+.floating-wa-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+  background-color: #20BD5A;
+}
+
+.wa-text {
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+/* Tooltip Styling */
+.floating-wa-tooltip {
+  background: white;
+  width: 280px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  margin-bottom: 16px;
+  transform: translateY(20px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-origin: bottom right;
+  border: 1px solid rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+body.dark .floating-wa-tooltip {
+  background: #1F2937;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.floating-wa-container.hovered .floating-wa-tooltip {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+.wa-tooltip-header {
+  background-color: #25D366;
+  color: white;
+  padding: 16px;
+  font-size: 0.95rem;
+}
+
+.wa-tooltip-body {
+  padding: 20px 16px;
+  font-size: 0.95rem;
+  color: #4B5563;
+  line-height: 1.5;
+}
+
+body.dark .wa-tooltip-body {
+  color: #D1D5DB;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  .floating-wa-container {
+    bottom: 24px;
+    right: 16px;
+  }
+
+  .floating-wa-tooltip {
+    display: none;
+  }
+
+  .floating-wa-btn {
+    padding: 0;
+    border-radius: 50%;
+    width: 52px;
+    height: 52px;
+    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.5);
+    justify-content: center;
+  }
+
+  .floating-wa-btn svg {
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+  }
+
+  .wa-text {
+    display: none;
+  }
+}

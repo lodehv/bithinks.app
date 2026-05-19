@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './Features.css';
-import { ShoppingCart, Users, DollarSign, Package, CheckCircle2, Zap, Store } from 'lucide-react';
+import { ShoppingCart, Users, DollarSign, CheckCircle2, Zap, Store, Layers, Code } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -13,140 +13,44 @@ const Features = () => {
 
   const features = [
     {
-      id: 'pos',
-      module: 'Bithinks POS',
-      logoIcon: <ShoppingCart color="#F59E0B" />, 
-      title: t.features.posTitle,
-      description: t.features.posDesc,
-      buttonText: t.features.posBtn,
-      buttonColor: '#F59E0B',
-      tags: t.features.posTags,
+      id: 'bithinksOne',
+      module: 'Bithinks One',
+      logoIcon: <Layers color="#0EA5E9" />,
+      title: t.features.oneCardTitle,
+      description: t.features.oneCardDesc,
+      buttonText: t.features.oneCardBtn,
+      buttonColor: '#0EA5E9',
+      tags: ['Sistem ERP Terpadu', 'Online & Offline', 'Semua Terhubung'],
       mockup: (
         <>
           <div className="mock-ui mock-base">
             <div className="skel-header">
-              <div className="skel-avatar" style={{ background: '#FDE68A' }}></div>
-              <div className="skel-title"></div>
+               <div className="skel-avatar" style={{ background: '#E0F2FE' }}></div>
+               <div className="skel-title" style={{ width: '60%' }}></div>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '12px' }}>
+                <div style={{ height: '40px', background: '#F0F9FF', borderRadius: '8px' }}></div>
+                <div style={{ height: '40px', background: '#E0F2FE', borderRadius: '8px' }}></div>
             </div>
             <div className="skel-line"></div>
             <div className="skel-line short"></div>
-            <div className="skel-line"></div>
           </div>
-          <div className="mock-ui mock-float-1" style={{ padding: '16px' }}>
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '12px' }}>
-              <CheckCircle2 color="#10B981" size={20} />
-              <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>Transaksi #INV-001 Sukses</span>
-            </div>
-            <div className="skel-line"></div>
-          </div>
-          <div className="mock-ui mock-float-2" style={{ padding: '16px', background: '#FEF3C7' }}>
-            <span style={{ fontSize: '1rem', fontWeight: 700, color: '#D97706' }}>Total: Rp 2.500.000</span>
+          <div className="mock-ui mock-float-1" style={{ top: '15%', right: '-5%' }}>
+              <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>Total Pendapatan</span>
+              <h3 style={{ margin: '4px 0 0', color: '#0EA5E9' }}>Rp 1.250M</h3>
           </div>
         </>
       )
     },
     {
-      id: 'hrm',
-      module: 'Bithinks HRM',
-      logoIcon: <Users color="#10B981" />,
-      title: t.features.hrmTitle,
-      description: t.features.hrmDesc,
-      buttonText: t.features.hrmBtn,
-      buttonColor: '#10B981',
-      tags: t.features.hrmTags,
-      mockup: (
-        <>
-          <div className="mock-ui mock-base">
-            <div className="skel-header">
-              <div className="skel-avatar"></div>
-              <div className="skel-title" style={{ width: '60%' }}></div>
-            </div>
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <div style={{ width: '40px', height: '40px', background: '#D1FAE5', borderRadius: '8px' }}></div>
-              <div style={{ width: '40px', height: '40px', background: '#D1FAE5', borderRadius: '8px' }}></div>
-            </div>
-          </div>
-          <div className="mock-ui mock-float-1" style={{ right: '5%', top: '30%' }}>
-            <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>Kehadiran Hari Ini: 98%</span>
-            <div style={{ marginTop: '8px', height: '6px', background: '#10B981', width: '100%', borderRadius: '4px' }}></div>
-          </div>
-        </>
-      )
-    },
-    {
-      id: 'finance',
-      module: 'Bithinks FINANCE',
-      logoIcon: <DollarSign color="#3B82F6" />,
-      title: t.features.financeTitle,
-      description: t.features.financeDesc,
-      buttonText: t.features.financeBtn,
-      buttonColor: '#3B82F6',
-      tags: t.features.financeTags,
-      mockup: (
-        <>
-          <div className="mock-ui mock-base">
-            <div className="skel-header">
-              <h4 style={{ margin: 0 }}>Cashflow Chart</h4>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'flex-end', gap: '8px', height: '100px', marginTop: '20px' }}>
-              <div style={{ width: '15%', height: '40%', background: '#EFF6FF', borderRadius: '4px' }}></div>
-              <div style={{ width: '15%', height: '70%', background: '#93C5FD', borderRadius: '4px' }}></div>
-              <div style={{ width: '15%', height: '50%', background: '#EFF6FF', borderRadius: '4px' }}></div>
-              <div style={{ width: '15%', height: '90%', background: '#3B82F6', borderRadius: '4px' }}></div>
-            </div>
-          </div>
-          <div className="mock-ui mock-float-2">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.875rem', color: '#6B7280' }}>Net Profit</span>
-              <span style={{ color: '#10B981', fontWeight: 700 }}>+ 24%</span>
-            </div>
-            <h3 style={{ margin: '8px 0 0', fontSize: '1.5rem' }}>Rp 128M</h3>
-          </div>
-        </>
-      )
-    },
-    {
-      id: 'wms',
-      module: 'Bithinks WMS',
-      logoIcon: <Package color="#8B5CF6" />,
-      title: t.features.wmsTitle,
-      description: t.features.wmsDesc,
-      buttonText: t.features.wmsBtn,
+      id: 'omnichannel',
+      module: 'Bithinks Omnichannel',
+      logoIcon: <Store color="#8B5CF6" />,
+      title: t.features.omniCardTitle,
+      description: t.features.omniCardDesc,
+      buttonText: t.features.omniCardBtn,
       buttonColor: '#8B5CF6',
-      tags: t.features.wmsTags,
-      mockup: (
-        <>
-           <div className="mock-ui mock-base">
-            <div className="skel-header">
-               <div className="skel-title" style={{ width: '30%' }}></div>
-            </div>
-            <div className="skel-line"></div>
-            <div className="skel-line short"></div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px', marginTop: '16px' }}>
-                <div style={{ height: '40px', background: '#EDE9FE', borderRadius: '8px' }}></div>
-                <div style={{ height: '40px', background: '#EDE9FE', borderRadius: '8px' }}></div>
-                <div style={{ height: '40px', background: '#C4B5FD', borderRadius: '8px' }}></div>
-            </div>
-          </div>
-          <div className="mock-ui mock-float-1" style={{ top: '10%' }}>
-              <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>Tugas Picking</span>
-              <div style={{ marginTop: '8px', background: '#F3F4F6', padding: '8px', borderRadius: '8px', fontSize: '12px' }}>
-                  Lokasi: Rak A-02-1<br/>
-                  Qty: 5 Pcs
-              </div>
-          </div>
-        </>
-      )
-    },
-    {
-      id: 'places',
-      module: 'Bithinks Places',
-      logoIcon: <Store color="#EC4899" />,
-      title: t.features.placesTitle,
-      description: t.features.placesDesc,
-      buttonText: t.features.placesBtn,
-      buttonColor: '#EC4899',
-      tags: t.features.placesTags,
+      tags: ['Multi Marketplace', 'Sync Stok', 'OMS', 'Analitik'],
       mockup: (
         <>
           {/* Base card — daftar order */}
@@ -197,29 +101,204 @@ const Features = () => {
           </div>
         </>
       )
+    },
+    {
+      id: 'pos',
+      module: 'Bithinks POS',
+      logoIcon: <ShoppingCart color="#F59E0B" />, 
+      title: t.features.posTitle,
+      description: t.features.posDesc,
+      buttonText: t.features.posBtn,
+      buttonColor: '#F59E0B',
+      tags: t.features.posTags,
+      mockup: (
+        <>
+          <div className="mock-ui mock-base">
+            <div className="skel-header">
+              <div className="skel-avatar" style={{ background: '#FDE68A' }}></div>
+              <div className="skel-title"></div>
+            </div>
+            <div className="skel-line"></div>
+            <div className="skel-line short"></div>
+            <div className="skel-line"></div>
+          </div>
+          <div className="mock-ui mock-float-1" style={{ padding: '16px' }}>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '12px' }}>
+              <CheckCircle2 color="#10B981" size={20} />
+              <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>Transaksi #INV-001 Sukses</span>
+            </div>
+            <div className="skel-line"></div>
+          </div>
+          <div className="mock-ui mock-float-2" style={{ padding: '16px', background: '#FEF3C7' }}>
+            <span style={{ fontSize: '1rem', fontWeight: 700, color: '#D97706' }}>Total: Rp 2.500.000</span>
+          </div>
+        </>
+      )
+    },
+    {
+      id: 'finance',
+      module: 'Bithinks FINANCE',
+      logoIcon: <DollarSign color="#3B82F6" />,
+      title: t.features.financeTitle,
+      description: t.features.financeDesc,
+      buttonText: t.features.financeBtn,
+      buttonColor: '#3B82F6',
+      tags: t.features.financeTags,
+      mockup: (
+        <>
+          <div className="mock-ui mock-base">
+            <div className="skel-header">
+              <h4 style={{ margin: 0 }}>Cashflow Chart</h4>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: '8px', height: '100px', marginTop: '20px' }}>
+              <div style={{ width: '15%', height: '40%', background: '#EFF6FF', borderRadius: '4px' }}></div>
+              <div style={{ width: '15%', height: '70%', background: '#93C5FD', borderRadius: '4px' }}></div>
+              <div style={{ width: '15%', height: '50%', background: '#EFF6FF', borderRadius: '4px' }}></div>
+              <div style={{ width: '15%', height: '90%', background: '#3B82F6', borderRadius: '4px' }}></div>
+            </div>
+          </div>
+          <div className="mock-ui mock-float-2">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.875rem', color: '#6B7280' }}>Net Profit</span>
+              <span style={{ color: '#10B981', fontWeight: 700 }}>+ 24%</span>
+            </div>
+            <h3 style={{ margin: '8px 0 0', fontSize: '1.5rem' }}>Rp 128M</h3>
+          </div>
+        </>
+      )
+    },
+    {
+      id: 'hrm',
+      module: 'Bithinks HRM',
+      logoIcon: <Users color="#10B981" />,
+      title: t.features.hrmTitle,
+      description: t.features.hrmDesc,
+      buttonText: t.features.hrmBtn,
+      buttonColor: '#10B981',
+      tags: t.features.hrmTags,
+      mockup: (
+        <>
+          <div className="mock-ui mock-base">
+            <div className="skel-header">
+              <div className="skel-avatar"></div>
+              <div className="skel-title" style={{ width: '60%' }}></div>
+            </div>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <div style={{ width: '40px', height: '40px', background: '#D1FAE5', borderRadius: '8px' }}></div>
+              <div style={{ width: '40px', height: '40px', background: '#D1FAE5', borderRadius: '8px' }}></div>
+            </div>
+          </div>
+          <div className="mock-ui mock-float-1" style={{ right: '5%', top: '30%' }}>
+            <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>Kehadiran Hari Ini: 98%</span>
+            <div style={{ marginTop: '8px', height: '6px', background: '#10B981', width: '100%', borderRadius: '4px' }}></div>
+          </div>
+        </>
+      )
+    },
+    {
+      id: 'customServices',
+      module: 'Bithinks Custom',
+      logoIcon: <Code color="#4B5563" />,
+      title: t.customServices.title,
+      description: t.customServices.desc,
+      buttonText: t.customServices.btn,
+      buttonColor: '#4B5563',
+      tags: ['App Development', 'ERP Custom', 'Sistem Khusus'],
+      mockup: (
+        <>
+          <div className="mock-ui mock-base">
+            <div className="skel-header">
+              <div className="skel-avatar" style={{ background: '#F3F4F6', borderRadius: '4px' }}></div>
+              <div className="skel-title" style={{ width: '40%' }}></div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+               <div style={{ height: '8px', width: '90%', background: '#E5E7EB', borderRadius: '4px' }}></div>
+               <div style={{ height: '8px', width: '70%', background: '#E5E7EB', borderRadius: '4px' }}></div>
+               <div style={{ height: '8px', width: '80%', background: '#E5E7EB', borderRadius: '4px' }}></div>
+            </div>
+            <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
+              <div style={{ width: '32px', height: '16px', background: '#D1D5DB', borderRadius: '8px' }}></div>
+              <div style={{ width: '48px', height: '16px', background: '#9CA3AF', borderRadius: '8px' }}></div>
+            </div>
+          </div>
+          <div className="mock-ui mock-float-1" style={{ top: '25%', right: '5%', padding: '12px' }}>
+            <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>Zero Bug Deployment</span>
+            <div style={{ display: 'flex', gap: '4px', marginTop: '6px' }}>
+              <div style={{ width: '12px', height: '12px', background: '#10B981', borderRadius: '50%' }}></div>
+              <div style={{ width: '12px', height: '12px', background: '#10B981', borderRadius: '50%' }}></div>
+              <div style={{ width: '12px', height: '12px', background: '#10B981', borderRadius: '50%' }}></div>
+            </div>
+          </div>
+        </>
+      )
     }
   ];
 
   useEffect(() => {
+    const ctx = gsap.matchMedia();
     const cards = gsap.utils.toArray('.feature-large-card');
-    cards.forEach((card, i) => {
-      if (i === cards.length - 1) return;
-      ScrollTrigger.create({
-        trigger: card,
-        start: "block start",
-        endTrigger: cards[i + 1],
-        end: "top 20%",
-        onUpdate: (self) => {
-          const progress = self.progress;
-          gsap.to(card, {
-            scale: 1 - (progress * 0.05),
-            filter: `brightness(${1 - (progress * 0.15)})`,
-            duration: 0.1,
-            overwrite: 'auto'
-          });
+
+    // 1. Entry fade-in and slide-up animation (all screen sizes)
+    cards.forEach((card) => {
+      gsap.fromTo(card,
+        { opacity: 0, y: 60 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: card,
+            start: 'top 92%',
+            toggleActions: 'play none none none',
+          },
         }
+      );
+    });
+
+    // 2. Sticky Stacking effect (Responsive via matchMedia for all viewports)
+    ctx.add("(min-width: 992px)", () => {
+      cards.forEach((card, i) => {
+        if (i === cards.length - 1) return;
+
+        const nextCard = cards[i + 1];
+
+        gsap.to(card, {
+          scale: 0.94,
+          '--card-overlay': 0.15,
+          scrollTrigger: {
+            trigger: nextCard,
+            start: 'top 85%',
+            end: 'top 120px',
+            scrub: true,
+          }
+        });
       });
     });
+
+    ctx.add("(max-width: 991px)", () => {
+      cards.forEach((card, i) => {
+        if (i === cards.length - 1) return;
+
+        const nextCard = cards[i + 1];
+
+        gsap.to(card, {
+          scale: 0.94,
+          '--card-overlay': 0.15,
+          scrollTrigger: {
+            trigger: nextCard,
+            start: 'top 85%',
+            end: 'top 90px',
+            scrub: true,
+          }
+        });
+      });
+    });
+
+    return () => {
+      ctx.revert();
+      ScrollTrigger.getAll().forEach(t => t.kill());
+    };
   }, []);
 
   return (
@@ -233,7 +312,7 @@ const Features = () => {
 
         <div className="features-stack" ref={containerRef}>
           {features.map((feat, idx) => (
-            <div className="feature-large-card" key={idx}>
+            <div className="feature-large-card" key={idx} style={{ '--i': idx }}>
               <div className="feature-content">
                 <div className="feature-badge">
                   {feat.logoIcon}
@@ -253,7 +332,7 @@ const Features = () => {
                 </div>
               </div>
               <div className="feature-mockup">
-                 {feat.mockup}
+                {feat.mockup}
               </div>
             </div>
           ))}

@@ -1,12 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:wght@300..900&display=swap');
 
 :root {
-  --color-primary: #FFDF00; /* Yellow for buttons */
-  --color-primary-dark: #E5C800;
-  --color-primary-light: #FFF080;
+  --color-primary: #FF6B00; /* Vibrant Solid Orange */
+  --color-primary-dark: #E05300; /* Rich Solid Dark Orange */
+  --color-primary-light: #FFEAD8; /* Soft Warm Orange-Cream Tint */
   --color-accent: #1D4ED8; /* Blue for left panel backgrounds - richer, calmer blue */
   --color-bg: #FFFFFF;
-  --color-bg-alt: #E0F2FE; /* Smooth light sky blue */
+  --color-bg-alt: #F4F8FA; /* Extremely clean solid off-white background with a slight cool tone */
   --color-text: #111827;
   --color-text-muted: #4B5563;
   --color-text-light: #9CA3AF;
@@ -46,7 +46,10 @@ body {
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+}
+
+#root {
+  overflow-x: clip;
 }
 
 .container {
@@ -91,7 +94,7 @@ p {
 
 .btn-primary {
   background-color: var(--color-primary);
-  color: var(--color-text);
+  color: #FFFFFF;
 }
 
 .btn-primary:hover {
