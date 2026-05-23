@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './Features.css';
-import { ShoppingCart, Users, DollarSign, CheckCircle2, Zap, Store, Layers, Code } from 'lucide-react';
+import { CheckCircle2, Database, TrendingUp, Headphones, Sliders, ArrowUpCircle, Zap } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -13,223 +13,195 @@ const Features = () => {
 
   const features = [
     {
-      id: 'bithinksOne',
-      module: 'Bithinks One',
-      logoIcon: <Layers color="#0EA5E9" />,
-      title: t.features.oneCardTitle,
-      description: t.features.oneCardDesc,
-      buttonText: t.features.oneCardBtn,
-      buttonColor: '#0EA5E9',
-      tags: ['Sistem ERP Terpadu', 'Online & Offline', 'Semua Terhubung'],
+      id: 'performance',
+      module: 'Performance Badge',
+      logoIcon: <CheckCircle2 color="#0066FF" />,
+      title: t.features.card1Title,
+      description: t.features.card1Desc,
+      buttonText: t.features.card1Btn,
+      buttonColor: '#0066FF',
+      tags: t.features.card1Tags,
       mockup: (
-        <>
-          <div className="mock-ui mock-base">
-            <div className="skel-header">
-               <div className="skel-avatar" style={{ background: '#E0F2FE' }}></div>
-               <div className="skel-title" style={{ width: '60%' }}></div>
+        <div className="mock-perf-wrapper">
+          <div className="perf-gauge-core">
+            <svg viewBox="0 0 100 100" className="perf-gauge-svg">
+              <circle cx="50" cy="50" r="40" className="gauge-track"></circle>
+              <circle cx="50" cy="50" r="40" className="gauge-fill"></circle>
+            </svg>
+            <div className="perf-check-icon">
+              <CheckCircle2 size={38} color="#0066FF" style={{ strokeWidth: 2.5 }} />
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '12px' }}>
-                <div style={{ height: '40px', background: '#F0F9FF', borderRadius: '8px' }}></div>
-                <div style={{ height: '40px', background: '#E0F2FE', borderRadius: '8px' }}></div>
-            </div>
-            <div className="skel-line"></div>
-            <div className="skel-line short"></div>
           </div>
-          <div className="mock-ui mock-float-1" style={{ top: '15%', right: '-5%' }}>
-              <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>Total Pendapatan</span>
-              <h3 style={{ margin: '4px 0 0', color: '#0EA5E9' }}>Rp 1.250M</h3>
+          <div className="perf-floating-badge">
+            <CheckCircle2 size={12} color="#0066FF" style={{ strokeWidth: 3 }} />
+            <span>{t.features.card1Badge}</span>
           </div>
-        </>
+        </div>
       )
     },
     {
-      id: 'omnichannel',
-      module: 'Bithinks Omnichannel',
-      logoIcon: <Store color="#8B5CF6" />,
-      title: t.features.omniCardTitle,
-      description: t.features.omniCardDesc,
-      buttonText: t.features.omniCardBtn,
-      buttonColor: '#8B5CF6',
-      tags: ['Multi Marketplace', 'Sync Stok', 'OMS', 'Analitik'],
+      id: 'integration',
+      module: 'Semua Bisa Jadi Satu',
+      logoIcon: <Database color="#0066FF" />,
+      title: t.features.card2Title,
+      description: t.features.card2Desc,
+      buttonText: t.features.card2Btn,
+      buttonColor: '#0066FF',
+      tags: t.features.card2Tags,
       mockup: (
-        <>
-          {/* Base card — daftar order */}
-          <div className="mock-ui mock-base">
-            <div className="skel-header">
-              <div className="skel-avatar" style={{ background: '#FCE7F3' }}></div>
-              <div className="skel-title" style={{ width: '50%' }}></div>
-            </div>
-            {/* Marketplace logo row */}
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '14px' }}>
-              {/* Shopee */}
-              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#EE4D2D', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(238,77,45,0.3)', flexShrink: 0 }}>
-                <svg viewBox="0 0 100 100" width="22" height="22" fill="none"><path d="M50 18C43.4 18 38 23.1 38 29.4c0 1.2.2 2.4.5 3.5H28.5C26 32.9 24 34.8 24 37.2l3.2 36.2C27.5 75.8 29.3 77 31.3 77h37.4c2 0 3.8-1.2 4.1-3.6L76 37.2c0-2.4-2-4.3-4.5-4.3H61.5c.3-1.1.5-2.3.5-3.5C62 23.1 56.6 18 50 18zm0 5c4.1 0 7.5 3.1 7.5 7 0 1.2-.3 2.4-.9 3.4H43.4c-.6-1-1-2.2-1-3.4.1-3.9 3.5-7 7.6-7zm-8 28.5c1.4 0 2.5 1.1 2.5 2.5S43.4 56.5 42 56.5s-2.5-1.1-2.5-2.5 1.1-2.5 2.5-2.5zm16 0c1.4 0 2.5 1.1 2.5 2.5s-1.1 2.5-2.5 2.5-2.5-1.1-2.5-2.5 1.1-2.5 2.5-2.5z" fill="white"/></svg>
-              </div>
-              {/* Tokopedia */}
-              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#03AC0E', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(3,172,14,0.3)', flexShrink: 0 }}>
-                <svg viewBox="0 0 100 100" width="22" height="22" fill="none"><path d="M50 20C33.4 20 20 33.4 20 50s13.4 30 30 30 30-13.4 30-30S66.6 20 50 20zm0 8c3.9 0 7 3.1 7 7s-3.1 7-7 7-7-3.1-7-7 3.1-7 7-7zm0 44c-8.3 0-15.7-4.2-20-10.6.1-6.6 13.3-10.2 20-10.2s19.9 3.6 20 10.2C65.7 67.8 58.3 72 50 72z" fill="white"/></svg>
-              </div>
-              {/* TikTok Shop */}
-              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#010101', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(0,0,0,0.25)', flexShrink: 0 }}>
-                <svg viewBox="0 0 100 100" width="22" height="22" fill="none"><path d="M67.5 30.2c-3.5-.4-6.6-2.2-8.8-4.9V57c0 7.2-5.8 13-13 13s-13-5.8-13-13 5.8-13 13-13c.7 0 1.4.1 2 .2V36c-.7-.1-1.3-.1-2-.1-12.1 0-22 9.9-22 22s9.9 22 22 22 22-9.9 22-22V42.7c3.3 2.2 7.2 3.5 11.5 3.5v-9.6c-4.5-.1-9.1-2.8-11.7-6.4z" fill="white"/></svg>
-              </div>
-            </div>
-            <div className="skel-line"></div>
-            <div className="skel-line short"></div>
+        <div className="mock-integ-wrapper">
+          <div className="integ-single-box-left">
+            <div className="integ-single-box"></div>
           </div>
-
-          {/* Float card — TikTok Shop order */}
-          <div className="mock-ui mock-float-1" style={{ right: '-5%', top: '18%', padding: '14px 18px', minWidth: '170px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-              <div style={{ width: '24px', height: '24px', borderRadius: '6px', background: '#010101', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <svg viewBox="0 0 100 100" width="14" height="14" fill="none"><path d="M67.5 30.2c-3.5-.4-6.6-2.2-8.8-4.9V57c0 7.2-5.8 13-13 13s-13-5.8-13-13 5.8-13 13-13c.7 0 1.4.1 2 .2V36c-.7-.1-1.3-.1-2-.1-12.1 0-22 9.9-22 22s9.9 22 22 22 22-9.9 22-22V42.7c3.3 2.2 7.2 3.5 11.5 3.5v-9.6c-4.5-.1-9.1-2.8-11.7-6.4z" fill="white"/></svg>
-              </div>
-              <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#111' }}>TikTok Shop</span>
-            </div>
-            <div style={{ color: '#10B981', fontWeight: 800, fontSize: '1rem' }}>+ 12 Order Baru</div>
+          <div className="integ-flow-lines">
+            <svg viewBox="0 0 120 100" className="integ-flow-svg">
+              <path d="M10 25 C60 25, 60 50, 110 50" className="flow-path"></path>
+              <path d="M10 50 L110 50" className="flow-path"></path>
+              <path d="M10 75 C60 75, 60 50, 110 50" className="flow-path"></path>
+              <path d="M-25 50 L10 50" className="flow-path-left" style={{ strokeDasharray: '4 4' }}></path>
+            </svg>
+            <div className="flow-dot flow-dot-1"></div>
+            <div className="flow-dot flow-dot-2"></div>
+            <div className="flow-dot flow-dot-3"></div>
+            <div className="flow-dot-left"></div>
           </div>
-
-          {/* Float card — Shopee order */}
-          <div className="mock-ui mock-float-2" style={{ left: '5%', bottom: '10%', padding: '14px 18px', minWidth: '170px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-              <div style={{ width: '24px', height: '24px', borderRadius: '6px', background: '#EE4D2D', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <svg viewBox="0 0 100 100" width="14" height="14" fill="none"><path d="M50 18C43.4 18 38 23.1 38 29.4c0 1.2.2 2.4.5 3.5H28.5C26 32.9 24 34.8 24 37.2l3.2 36.2C27.5 75.8 29.3 77 31.3 77h37.4c2 0 3.8-1.2 4.1-3.6L76 37.2c0-2.4-2-4.3-4.5-4.3H61.5c.3-1.1.5-2.3.5-3.5C62 23.1 56.6 18 50 18zm0 5c4.1 0 7.5 3.1 7.5 7 0 1.2-.3 2.4-.9 3.4H43.4c-.6-1-1-2.2-1-3.4.1-3.9 3.5-7 7.6-7zm-8 28.5c1.4 0 2.5 1.1 2.5 2.5S43.4 56.5 42 56.5s-2.5-1.1-2.5-2.5 1.1-2.5 2.5-2.5zm16 0c1.4 0 2.5 1.1 2.5 2.5s-1.1 2.5-2.5 2.5-2.5-1.1-2.5-2.5 1.1-2.5 2.5-2.5z" fill="white"/></svg>
-              </div>
-              <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#111' }}>Shopee</span>
-            </div>
-            <div style={{ color: '#10B981', fontWeight: 800, fontSize: '1rem' }}>+ 8 Order Baru</div>
+          <div className="integ-servers-middle">
+            <div className="integ-server-node"></div>
+            <div className="integ-server-node"></div>
+            <div className="integ-server-node"></div>
           </div>
-        </>
+          <div className="integ-hub-right">
+            <div className="integ-hub-circle">
+              <Database size={22} color="#FFFFFF" style={{ strokeWidth: 2 }} />
+            </div>
+          </div>
+        </div>
       )
     },
     {
-      id: 'pos',
-      module: 'Bithinks POS',
-      logoIcon: <ShoppingCart color="#F59E0B" />, 
-      title: t.features.posTitle,
-      description: t.features.posDesc,
-      buttonText: t.features.posBtn,
-      buttonColor: '#F59E0B',
-      tags: t.features.posTags,
+      id: 'growth',
+      module: 'Membantu Bisnis Bertumbuh',
+      logoIcon: <TrendingUp color="#0066FF" />,
+      title: t.features.card3Title,
+      description: t.features.card3Desc,
+      buttonText: t.features.card3Btn,
+      buttonColor: '#0066FF',
+      tags: t.features.card3Tags,
       mockup: (
-        <>
-          <div className="mock-ui mock-base">
-            <div className="skel-header">
-              <div className="skel-avatar" style={{ background: '#FDE68A' }}></div>
-              <div className="skel-title"></div>
+        <div className="mock-growth-wrapper">
+          <div className="growth-chart-side">
+            <div className="growth-chart-box">
+              <svg viewBox="0 0 100 60" className="growth-chart-svg">
+                <defs>
+                  <linearGradient id="growthGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="rgba(0, 102, 255, 0.25)"></stop>
+                    <stop offset="100%" stopColor="rgba(0, 102, 255, 0)"></stop>
+                  </linearGradient>
+                </defs>
+                <path d="M0 50 C20 40, 40 45, 60 25 C75 10, 85 15, 100 5 L100 60 L0 60 Z" fill="url(#growthGrad)"></path>
+                <path d="M0 50 C20 40, 40 45, 60 25 C75 10, 85 15, 100 5" className="growth-chart-line"></path>
+              </svg>
+              <div className="growth-chart-arrow">
+                <TrendingUp size={14} color="#FFFFFF" style={{ strokeWidth: 3 }} />
+              </div>
             </div>
-            <div className="skel-line"></div>
-            <div className="skel-line short"></div>
-            <div className="skel-line"></div>
           </div>
-          <div className="mock-ui mock-float-1" style={{ padding: '16px' }}>
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '12px' }}>
-              <CheckCircle2 color="#10B981" size={20} />
-              <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>Transaksi #INV-001 Sukses</span>
+          <div className="growth-gauge-side">
+            <div className="growth-gauge-core">
+              <svg viewBox="0 0 100 100" className="growth-gauge-svg">
+                <circle cx="50" cy="50" r="40" className="gauge-track"></circle>
+                <circle cx="50" cy="50" r="40" className="gauge-fill-95"></circle>
+              </svg>
+              <div className="growth-percentage-val">95%</div>
             </div>
-            <div className="skel-line"></div>
           </div>
-          <div className="mock-ui mock-float-2" style={{ padding: '16px', background: '#FEF3C7' }}>
-            <span style={{ fontSize: '1rem', fontWeight: 700, color: '#D97706' }}>Total: Rp 2.500.000</span>
-          </div>
-        </>
+        </div>
       )
     },
     {
-      id: 'finance',
-      module: 'Bithinks FINANCE',
-      logoIcon: <DollarSign color="#3B82F6" />,
-      title: t.features.financeTitle,
-      description: t.features.financeDesc,
-      buttonText: t.features.financeBtn,
-      buttonColor: '#3B82F6',
-      tags: t.features.financeTags,
+      id: 'support',
+      module: 'Support Cepat',
+      logoIcon: <Headphones color="#0066FF" />,
+      title: t.features.card4Title,
+      description: t.features.card4Desc,
+      buttonText: t.features.card4Btn,
+      buttonColor: '#0066FF',
+      tags: t.features.card4Tags,
       mockup: (
-        <>
-          <div className="mock-ui mock-base">
-            <div className="skel-header">
-              <h4 style={{ margin: 0 }}>Cashflow Chart</h4>
+        <div className="mock-support-wrapper">
+          <div className="support-bubble-box">
+            <div className="support-icon-circle">
+              <Headphones size={36} color="#0066FF" style={{ strokeWidth: 2 }} />
             </div>
-            <div style={{ display: 'flex', alignItems: 'flex-end', gap: '8px', height: '100px', marginTop: '20px' }}>
-              <div style={{ width: '15%', height: '40%', background: '#EFF6FF', borderRadius: '4px' }}></div>
-              <div style={{ width: '15%', height: '70%', background: '#93C5FD', borderRadius: '4px' }}></div>
-              <div style={{ width: '15%', height: '50%', background: '#EFF6FF', borderRadius: '4px' }}></div>
-              <div style={{ width: '15%', height: '90%', background: '#3B82F6', borderRadius: '4px' }}></div>
-            </div>
+            <div className="support-bubble-tail"></div>
+            <div className="support-bubble-offset"></div>
           </div>
-          <div className="mock-ui mock-float-2">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.875rem', color: '#6B7280' }}>Net Profit</span>
-              <span style={{ color: '#10B981', fontWeight: 700 }}>+ 24%</span>
-            </div>
-            <h3 style={{ margin: '8px 0 0', fontSize: '1.5rem' }}>Rp 128M</h3>
+          <div className="support-live-badge">
+            <div className="live-pulse-dot"></div>
+            <span>{t.features.card4Badge}</span>
           </div>
-        </>
+        </div>
       )
     },
     {
-      id: 'hrm',
-      module: 'Bithinks HRM',
-      logoIcon: <Users color="#10B981" />,
-      title: t.features.hrmTitle,
-      description: t.features.hrmDesc,
-      buttonText: t.features.hrmBtn,
-      buttonColor: '#10B981',
-      tags: t.features.hrmTags,
+      id: 'adjustable',
+      module: 'Bisa Disesuaikan',
+      logoIcon: <Sliders color="#0066FF" />,
+      title: t.features.card5Title,
+      description: t.features.card5Desc,
+      buttonText: t.features.card5Btn,
+      buttonColor: '#0066FF',
+      tags: t.features.card5Tags,
       mockup: (
-        <>
-          <div className="mock-ui mock-base">
-            <div className="skel-header">
-              <div className="skel-avatar"></div>
-              <div className="skel-title" style={{ width: '60%' }}></div>
-            </div>
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <div style={{ width: '40px', height: '40px', background: '#D1FAE5', borderRadius: '8px' }}></div>
-              <div style={{ width: '40px', height: '40px', background: '#D1FAE5', borderRadius: '8px' }}></div>
+        <div className="mock-adjust-wrapper">
+          <div className="adjust-toggle-core">
+            <div className="toggle-track-active">
+              <div className="toggle-thumb-active"></div>
             </div>
           </div>
-          <div className="mock-ui mock-float-1" style={{ right: '5%', top: '30%' }}>
-            <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>Kehadiran Hari Ini: 98%</span>
-            <div style={{ marginTop: '8px', height: '6px', background: '#10B981', width: '100%', borderRadius: '4px' }}></div>
+          <div className="adjust-gear-core">
+            <div className="gear-spinner">
+              <svg viewBox="0 0 100 100" className="gear-svg" fill="#0066FF">
+                <path d="M50 34c-8.8 0-16 7.2-16 16s7.2 16 16 16 16-7.2 16-16-7.2-16-16-16zm0 24c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8z"></path>
+                <path d="M92.5 45.5h-8.8c-.6-2.6-1.7-5-3.3-7.2l6.2-6.2c1.2-1.2 1.2-3.1 0-4.2l-5-5c-1.2-1.2-3.1-1.2-4.2 0l-6.2 6.2c-2.2-1.6-4.6-2.7-7.2-3.3V17c0-1.7-1.3-3-3-3h-7c-1.7 0-3 1.3-3 3v8.8c-2.6.6-5 1.7-7.2 3.3l-6.2-6.2c-1.2-1.2-3.1-1.2-4.2 0l-5 5c-1.2 1.2-1.2 3.1 0 4.2l6.2 6.2c-1.6 2.2-2.7 4.6-3.3 7.2H7.5c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h8.8c.6 2.6 1.7 5 3.3 7.2l-6.2 6.2c-1.2 1.2-1.2 3.1 0 4.2l5 5c1.2 1.2 3.1 1.2 4.2 0l6.2-6.2c2.2 1.6 4.6 2.7 7.2 3.3V83c0 1.7 1.3 3 3 3h7c1.7 0 3-1.3 3-3v-8.8c2.6-.6 5-1.7 7.2-3.3l6.2 6.2c1.2 1.2 3.1 1.2 4.2 0l5-5c1.2-1.2 1.2-3.1 0-4.2l-6.2-6.2c1.6-2.2 2.7-4.6 3.3-7.2h8.8c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3z"></path>
+              </svg>
+            </div>
+            <div className="gear-wrench-icon">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#FFFFFF" strokeWidth="3"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            </div>
           </div>
-        </>
+          <div className="adjust-floating-badge">
+            <span>{t.features.card5Badge}</span>
+          </div>
+        </div>
       )
     },
     {
-      id: 'customServices',
-      module: 'Bithinks Custom',
-      logoIcon: <Code color="#4B5563" />,
-      title: t.customServices.title,
-      description: t.customServices.desc,
-      buttonText: t.customServices.btn,
-      buttonColor: '#4B5563',
-      tags: ['App Development', 'ERP Custom', 'Sistem Khusus'],
+      id: 'scale',
+      module: 'Siap Berkembang',
+      logoIcon: <ArrowUpCircle color="#0066FF" />,
+      title: t.features.card6Title,
+      description: t.features.card6Desc,
+      buttonText: t.features.card6Btn,
+      buttonColor: '#0066FF',
+      tags: t.features.card6Tags,
       mockup: (
-        <>
-          <div className="mock-ui mock-base">
-            <div className="skel-header">
-              <div className="skel-avatar" style={{ background: '#F3F4F6', borderRadius: '4px' }}></div>
-              <div className="skel-title" style={{ width: '40%' }}></div>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-               <div style={{ height: '8px', width: '90%', background: '#E5E7EB', borderRadius: '4px' }}></div>
-               <div style={{ height: '8px', width: '70%', background: '#E5E7EB', borderRadius: '4px' }}></div>
-               <div style={{ height: '8px', width: '80%', background: '#E5E7EB', borderRadius: '4px' }}></div>
-            </div>
-            <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
-              <div style={{ width: '32px', height: '16px', background: '#D1D5DB', borderRadius: '8px' }}></div>
-              <div style={{ width: '48px', height: '16px', background: '#9CA3AF', borderRadius: '8px' }}></div>
+        <div className="mock-scale-wrapper">
+          <div className="scale-cloud-core">
+            <svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="#0066FF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="scale-cloud-svg">
+              <path d="M17.5 19A3.5 3.5 0 0 0 21 15.5c0-2.79-2.54-4.5-5-4.5-.42-1.01-1.03-2.01-2-2.5A5.62 5.62 0 0 0 8 10c-3 0-5 2.5-5 5.5A3.5 3.5 0 0 0 6.5 19z"></path>
+            </svg>
+            <div className="scale-arrow-icon">
+              <TrendingUp size={20} color="#FFFFFF" style={{ strokeWidth: 3 }} />
             </div>
           </div>
-          <div className="mock-ui mock-float-1" style={{ top: '25%', right: '5%', padding: '12px' }}>
-            <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>Zero Bug Deployment</span>
-            <div style={{ display: 'flex', gap: '4px', marginTop: '6px' }}>
-              <div style={{ width: '12px', height: '12px', background: '#10B981', borderRadius: '50%' }}></div>
-              <div style={{ width: '12px', height: '12px', background: '#10B981', borderRadius: '50%' }}></div>
-              <div style={{ width: '12px', height: '12px', background: '#10B981', borderRadius: '50%' }}></div>
-            </div>
+          <div className="scale-progress-bar">
+            <div className="scale-progress-fill"></div>
           </div>
-        </>
+          <div className="scale-floating-badge">
+            <span>{t.features.card6Badge}</span>
+          </div>
+        </div>
       )
     }
   ];
@@ -238,7 +210,6 @@ const Features = () => {
     const ctx = gsap.matchMedia();
     const cards = gsap.utils.toArray('.feature-large-card');
 
-    // 1. Entry fade-in and slide-up animation (all screen sizes)
     cards.forEach((card) => {
       gsap.fromTo(card,
         { opacity: 0, y: 60 },
@@ -256,7 +227,6 @@ const Features = () => {
       );
     });
 
-    // 2. Sticky Stacking effect (Responsive via matchMedia for all viewports)
     ctx.add("(min-width: 992px)", () => {
       cards.forEach((card, i) => {
         if (i === cards.length - 1) return;
@@ -307,7 +277,7 @@ const Features = () => {
         <div className="features-header">
           <span className="features-pretitle">{t.features.pretitle}</span>
           <h2 className="features-title">{t.features.title}</h2>
-          <p>{t.features.subtitle}</p>
+          <p className="features-subtitle">{t.features.subtitle}</p>
         </div>
 
         <div className="features-stack" ref={containerRef}>

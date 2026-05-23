@@ -181,34 +181,228 @@ body.dark .mega-menu-item:hover {
   line-height: 1.4;
 }
 
-.one-card {
-  background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(14, 165, 233, 0.02));
-  border: 1px solid rgba(14, 165, 233, 0.2);
-  padding: 20px;
+/* ── App Cards Mega Menu (replaces old column layout) ── */
+
+/* Wider panel to fit 3 cards per row */
+.mega-menu-apps {
+  width: 900px;
+  left: -320px;
+  padding: 24px 28px 28px;
+}
+
+/* Header row */
+.mega-apps-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+body.dark .mega-apps-header {
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+
+.mega-apps-pretitle {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #6B7280;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.mega-apps-see-all {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #0066FF;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.2s ease;
+  text-decoration: none;
+}
+
+.mega-apps-see-all:hover {
+  opacity: 0.75;
+}
+
+/* 2 rows × 3 cols */
+.mega-apps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+/* Individual App Card */
+.mega-app-card {
+  display: flex;
+  flex-direction: column;
+  background: #FFFFFF;
+  border: 1.5px solid rgba(0, 0, 0, 0.05);
   border-radius: 16px;
-  height: 100%;
+  overflow: hidden;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+  transition: border-color 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+body.dark .mega-app-card {
+  background: #1F2937;
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.mega-app-card:hover {
+  border-color: var(--app-color, #0066FF);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.09);
+  transform: translateY(-2px);
+}
+
+/* Logo strip — colored band at top */
+.mega-app-logo-strip {
+  width: 100%;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  padding: 8px 14px;
+  box-sizing: border-box;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  transition: background 0.22s ease;
+}
+
+body.dark .mega-app-logo-strip {
+  border-bottom-color: rgba(255, 255, 255, 0.04);
+}
+
+.mega-app-logo {
+  height: 44px;
+  max-width: 130px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+/* Text body */
+.mega-app-body {
+  padding: 12px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mega-app-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mega-app-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mega-app-badge {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.3px;
+}
+
+.mega-app-desc {
+  font-size: 0.78rem;
+  color: #6B7280;
+  line-height: 1.45;
+  margin: 0;
+}
+
+body.dark .mega-app-desc {
+  color: #9CA3AF;
+}
+
+/* Preserve old one-card + mega-menu-col classes for mobile fallback */
+.mega-menu-col {
+  display: flex;
   flex-direction: column;
 }
 
-.one-card .one-icon {
-  background: #0EA5E9;
+.mega-menu-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #6B7280;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 24px;
+}
+
+.mega-menu-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.mega-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.mega-menu-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 8px;
+  border-radius: 12px;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.mega-menu-item:hover {
+  background-color: rgba(0,0,0,0.02);
+}
+
+body.dark .mega-menu-item:hover {
+  background-color: rgba(255,255,255,0.02);
+}
+
+.m-icon {
   width: 48px;
   height: 48px;
-  margin-bottom: 16px;
-  border-radius: 12px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-.one-card h4 {
-  color: #0EA5E9;
-  font-size: 1.25rem;
-  margin-bottom: 8px;
+.mega-menu-item h4 {
+  margin: 0 0 4px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-text);
 }
 
-.one-card p {
-  font-size: 0.9rem;
-  color: #4B5563;
-  line-height: 1.5;
+.mega-menu-item p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #6B7280;
+  line-height: 1.4;
 }
+
 
 .mobile-only-link {
   display: none;
@@ -340,22 +534,51 @@ body.dark .mega-menu-item:hover {
     border-top: 1px solid var(--border-color);
   }
 
-  .one-card {
-    flex-direction: row;
-    align-items: flex-start;
-    padding: 12px 0;
-    height: auto;
-    gap: 16px;
-    background: transparent;
-    border: none;
-  }
-  
-  .one-card .one-icon {
-    margin-bottom: 0;
+  /* Mobile: App grid mega-menu */
+  .mega-menu-apps {
+    width: 100%;
+    left: 0;
+    padding: 0;
   }
 
-  .one-card h4 {
-    font-size: 1.1rem;
-    margin-bottom: 4px;
+  .mega-apps-header {
+    display: none; /* hide the header bar on mobile to save space */
+  }
+
+  .mega-apps-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .mega-app-card {
+    border-radius: 12px;
+  }
+
+  .mega-app-logo-strip {
+    height: 52px;
+    padding: 6px 10px;
+  }
+
+  .mega-app-logo {
+    height: 34px;
+    max-width: 100px;
+  }
+
+  .mega-app-body {
+    padding: 8px 10px 10px;
+    gap: 4px;
+  }
+
+  .mega-app-title {
+    font-size: 0.78rem;
+  }
+
+  .mega-app-badge {
+    font-size: 0.58rem;
+    padding: 2px 6px;
+  }
+
+  .mega-app-desc {
+    font-size: 0.72rem;
   }
 }

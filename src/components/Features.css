@@ -1,5 +1,5 @@
 .features-section {
-  padding: 80px 0 160px;
+  padding: 80px 0 60px;
   position: relative;
 }
 
@@ -71,12 +71,11 @@
   }
 }
 
-.feature-large-card:nth-child(1) { background-color: #F0F9FF; }
-.feature-large-card:nth-child(2) { background-color: #F3E5F5; }
-.feature-large-card:nth-child(3) { background-color: #FFF9DB; }
-.feature-large-card:nth-child(4) { background-color: #E3F2FD; }
-.feature-large-card:nth-child(5) { background-color: #E8F5E9; }
-.feature-large-card:nth-child(6) { background-color: #FFFBEB; }
+.feature-large-card {
+  background-color: #FFFFFF !important;
+  border: 1.5px solid rgba(0, 102, 255, 0.08) !important;
+  box-shadow: 0 30px 70px rgba(0, 102, 255, 0.03), 0 10px 25px rgba(0, 0, 0, 0.008) !important;
+}
 
 /* Content Left */
 .feature-content {
@@ -170,31 +169,628 @@
   overflow: hidden;
 }
 
-.mock-ui {
-  position: absolute;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-  padding: 24px;
-  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-  will-change: transform;
+.features-subtitle {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: #4B5563;
+  margin-top: 14px;
 }
 
-.feature-large-card:hover .mock-base { transform: scale(1.02); }
-.feature-large-card:hover .mock-float-1 { transform: translateY(-10px) translateX(-5px); }
-.feature-large-card:hover .mock-float-2 { transform: translateY(10px) translateX(5px); }
+/* Custom High-Fidelity Mockup Illustration Styles */
 
-.mock-base { width: 80%; height: 60%; z-index: 1; }
-.mock-float-1 { width: 60%; top: 15%; right: -5%; z-index: 2; box-shadow: 0 15px 35px rgba(0,0,0,0.08); }
-.mock-float-2 { width: 65%; bottom: 10%; left: 5%; z-index: 3; }
+/* 1. Performance Badge Mockup */
+.mock-perf-wrapper {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-/* UI Skeletons */
-.skel-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 16px; }
-.skel-avatar { width: 32px; height: 32px; border-radius: 50%; background: #f0f0f0; }
-.skel-title { width: 40%; height: 16px; background: #e0e0e0; border-radius: 8px; }
-.skel-line { width: 100%; height: 12px; background: #f0f0f0; border-radius: 6px; margin-bottom: 12px; }
-.skel-line.short { width: 60%; }
-.skel-btn { width: 80px; height: 32px; background: #0066FF; border-radius: 8px; margin-top: auto; }
+.perf-gauge-core {
+  position: relative;
+  width: 140px;
+  height: 140px;
+}
+
+.perf-gauge-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.gauge-track {
+  fill: none;
+  stroke: rgba(0, 102, 255, 0.08);
+  stroke-width: 8px;
+}
+
+.gauge-fill {
+  fill: none;
+  stroke: #0066FF;
+  stroke-width: 8px;
+  stroke-linecap: round;
+  stroke-dasharray: 251.2;
+  stroke-dashoffset: 62.8; /* 75% filled */
+  animation: fill-gauge 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fill-gauge {
+  0% { stroke-dashoffset: 251.2; }
+  100% { stroke-dashoffset: 62.8; }
+}
+
+.perf-check-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: check-scale 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s both;
+}
+
+@keyframes check-scale {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+.perf-floating-badge {
+  position: absolute;
+  top: 30px;
+  right: -20px;
+  background: #E0F2FE;
+  border: 1px solid #BAE6FD;
+  padding: 6px 12px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 8px 20px rgba(0, 102, 255, 0.06);
+  z-index: 5;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  color: #0369A1;
+  animation: float-badge 3s ease-in-out infinite alternate;
+}
+
+@keyframes float-badge {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-6px); }
+}
+
+
+/* 2. Semua Bisa Jadi Satu Mockup */
+.mock-integ-wrapper {
+  position: relative;
+  width: 280px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+.integ-single-box-left {
+  position: relative;
+  z-index: 5;
+  margin-left: 10px;
+}
+
+.integ-single-box {
+  width: 38px;
+  height: 38px;
+  background: #0066FF;
+  border-radius: 10px;
+  box-shadow: 0 6px 15px rgba(0, 102, 255, 0.2);
+}
+
+.integ-flow-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.integ-flow-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.flow-path {
+  fill: none;
+  stroke: rgba(0, 102, 255, 0.08);
+  stroke-width: 2.5px;
+}
+
+.flow-path-left {
+  fill: none;
+  stroke: rgba(0, 102, 255, 0.15);
+  stroke-width: 2.5px;
+}
+
+.flow-dot {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #0066FF;
+  box-shadow: 0 0 8px #0066FF;
+}
+
+.flow-dot-1 {
+  animation: flow-path-top 2s linear infinite;
+}
+
+.flow-dot-2 {
+  animation: flow-path-mid 2s linear infinite;
+}
+
+.flow-dot-3 {
+  animation: flow-path-bottom 2s linear infinite;
+}
+
+.flow-dot-left {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #0066FF;
+  animation: flow-path-left 2s linear infinite;
+}
+
+@keyframes flow-path-top {
+  0% { left: 24%; top: 50%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: 74%; top: 25%; opacity: 0; }
+}
+
+@keyframes flow-path-mid {
+  0% { left: 24%; top: 50%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: 74%; top: 50%; opacity: 0; }
+}
+
+@keyframes flow-path-bottom {
+  0% { left: 24%; top: 50%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: 74%; top: 75%; opacity: 0; }
+}
+
+@keyframes flow-path-left {
+  0% { left: 5%; top: 50%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: 24%; top: 50%; opacity: 0; }
+}
+
+.integ-servers-middle {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  z-index: 5;
+  margin-left: 20px;
+}
+
+.integ-server-node {
+  width: 32px;
+  height: 32px;
+  background: #FFFFFF;
+  border: 1.5px solid rgba(0, 102, 255, 0.15);
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 102, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.integ-hub-right {
+  position: relative;
+  z-index: 5;
+  margin-right: 15px;
+}
+
+.integ-hub-circle {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #0066FF;
+  box-shadow: 0 8px 25px rgba(0, 102, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* 3. Membantu Bisnis Bertumbuh Mockup */
+.mock-growth-wrapper {
+  position: relative;
+  width: 260px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+.growth-chart-side {
+  flex: 1.2;
+}
+
+.growth-chart-box {
+  position: relative;
+  width: 130px;
+  height: 90px;
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 102, 255, 0.06);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 102, 255, 0.04);
+  padding: 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.growth-chart-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.growth-chart-line {
+  fill: none;
+  stroke: #0066FF;
+  stroke-width: 3px;
+  stroke-linecap: round;
+}
+
+.growth-chart-arrow {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #0066FF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 102, 255, 0.2);
+}
+
+.growth-gauge-side {
+  flex: 0.8;
+  display: flex;
+  justify-content: center;
+}
+
+.growth-gauge-core {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.growth-gauge-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.gauge-fill-95 {
+  fill: none;
+  stroke: #0066FF;
+  stroke-width: 8px;
+  stroke-linecap: round;
+  stroke-dasharray: 251.2;
+  stroke-dashoffset: 12.56; /* 95% filled */
+  animation: fill-gauge-95 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fill-gauge-95 {
+  0% { stroke-dashoffset: 251.2; }
+  100% { stroke-dashoffset: 12.56; }
+}
+
+.growth-percentage-val {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  color: #111827;
+}
+
+
+/* 4. Support Cepat Mockup */
+.mock-support-wrapper {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.support-bubble-box {
+  position: relative;
+  width: 90px;
+  height: 90px;
+}
+
+.support-icon-circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #0066FF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(0, 102, 255, 0.15);
+  z-index: 2;
+  animation: bob-bubble 4s ease-in-out infinite alternate;
+}
+
+@keyframes bob-bubble {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-8px); }
+}
+
+.support-bubble-tail {
+  position: absolute;
+  bottom: 0px;
+  left: 10px;
+  width: 22px;
+  height: 22px;
+  background: #0066FF;
+  transform: rotate(45deg);
+  z-index: 1;
+  animation: bob-bubble 4s ease-in-out infinite alternate;
+}
+
+.support-live-badge {
+  position: absolute;
+  bottom: 15px;
+  right: -25px;
+  background: #DCFCE7;
+  border: 1px solid #BBF7D0;
+  padding: 6px 12px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.06);
+  z-index: 5;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  color: #15803D;
+  animation: float-badge 3.2s ease-in-out infinite alternate;
+}
+
+.live-pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10B981;
+  animation: pulse-dot 1.8s infinite;
+}
+
+@keyframes pulse-dot {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+
+/* 5. Bisa Disesuaikan Mockup */
+.mock-adjust-wrapper {
+  position: relative;
+  width: 240px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  box-sizing: border-box;
+}
+
+.adjust-toggle-core {
+  flex: 1.1;
+  display: flex;
+  justify-content: center;
+}
+
+.toggle-track-active {
+  position: relative;
+  width: 90px;
+  height: 40px;
+  background: #0066FF;
+  border-radius: 25px;
+  box-shadow: 0 8px 20px rgba(0, 102, 255, 0.2);
+}
+
+.toggle-thumb-active {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  animation: slide-toggle 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes slide-toggle {
+  0% { transform: translateX(-50px); }
+  100% { transform: translateX(0); }
+}
+
+.adjust-gear-core {
+  flex: 0.9;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gear-spinner {
+  width: 68px;
+  height: 68px;
+  animation: spin-gear 15s linear infinite;
+}
+
+@keyframes spin-gear {
+  100% { transform: rotate(360deg); }
+}
+
+.gear-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.gear-wrench-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #0066FF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 102, 255, 0.25);
+  z-index: 5;
+}
+
+.adjust-floating-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #F3F4F6;
+  border: 1px solid #E5E7EB;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 9px;
+  color: #374151;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+  animation: float-badge 2.8s ease-in-out infinite alternate;
+}
+
+
+/* 6. Siap Berkembang Mockup */
+.mock-scale-wrapper {
+  position: relative;
+  width: 250px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+.scale-cloud-core {
+  flex: 1.1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scale-cloud-svg {
+  animation: float-cloud 4s ease-in-out infinite alternate;
+}
+
+@keyframes float-cloud {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-6px); }
+}
+
+.scale-arrow-icon {
+  position: absolute;
+  top: calc(50% - 15px);
+  left: calc(50% - 15px);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #0066FF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 15px rgba(0, 102, 255, 0.2);
+  z-index: 5;
+  animation: float-arrow 4s ease-in-out infinite alternate;
+}
+
+@keyframes float-arrow {
+  0% { transform: translateY(2px) scale(0.95); }
+  100% { transform: translateY(-4px) scale(1.05); }
+}
+
+.scale-progress-bar {
+  flex: 0.9;
+  position: relative;
+  width: 100px;
+  height: 8px;
+  background: rgba(0, 102, 255, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.scale-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 75%;
+  background: #0066FF;
+  border-radius: 4px;
+  box-shadow: 0 0 8px rgba(0, 102, 255, 0.4);
+  animation: fill-progress 2s cubic-bezier(0.16, 1, 0.3, 1) infinite alternate;
+}
+
+@keyframes fill-progress {
+  0% { width: 10%; }
+  100% { width: 85%; }
+}
+
+.scale-floating-badge {
+  position: absolute;
+  top: 20px;
+  right: 10px;
+  background: #EFF6FF;
+  border: 1px solid #DBEAFE;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 9px;
+  color: #1E40AF;
+  box-shadow: 0 4px 10px rgba(0, 102, 255, 0.04);
+  animation: float-badge 3.4s ease-in-out infinite alternate;
+}
 
 @media (max-width: 992px) {
   .feature-large-card {
@@ -213,7 +809,7 @@
 }
 
 @media (max-width: 768px) {
-  .features-section { padding-top: 40px; }
+  .features-section { padding: 40px 0 30px; }
   .features-stack {
     gap: 40px;
   }

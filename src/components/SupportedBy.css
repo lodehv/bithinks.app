@@ -1,64 +1,510 @@
 .supported-section {
-  padding: 60px 0 100px;
-  background-color: var(--color-bg);
+  padding: 40px 0 120px;
+  background: radial-gradient(120% 120% at 50% 100%, #FAFBFD 0%, #F4F7FB 100%);
   text-align: center;
   position: relative;
   z-index: 10;
+  overflow: visible;
 }
 
-.supported-title {
-  font-size: 1.125rem;
+/* Symmetrical Main Section Title */
+.supported-main-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 36px;
+  line-height: 44px;
+  color: #1E293B;
+  margin-bottom: 60px;
+  letter-spacing: -0.02em;
+}
+
+.supported-main-title span {
+  font-weight: 800;
+  color: #0066FF;
+  position: relative;
+}
+
+/* macOS Dashboard Window Mockup Frame */
+.scale-mockup-window {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto 50px;
+  background: #FFFFFF;
+  border: 1.5px solid rgba(0, 102, 255, 0.08);
+  border-radius: 28px;
+  box-shadow: 
+    0 40px 90px rgba(0, 102, 255, 0.04), 
+    0 10px 30px rgba(0, 0, 0, 0.005);
+  overflow: visible; /* Ensure tooltip tags never clip */
+  box-sizing: border-box;
+}
+
+/* Titlebar Headers */
+.window-header {
+  height: 48px;
+  background: #F8FAFC;
+  border-bottom: 1.5px solid rgba(0, 102, 255, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 24px;
+  border-top-left-radius: 26px;
+  border-top-right-radius: 26px;
+}
+
+.mac-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.mac-dot.red { background: #FF5F56; }
+.mac-dot.orange { background: #FFBD2E; }
+.mac-dot.green { background: #27C93F; }
+
+/* Dashboard canvas body */
+.window-body {
+  position: relative;
+  width: 100%;
+  padding: 50px 50px 60px;
+  box-sizing: border-box;
+  overflow: visible; /* Ensures floating elements can safely exceed container bounds */
+}
+
+/* Blueprint Grid backdrop */
+.scale-grid-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(0, 102, 255, 0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 102, 255, 0.012) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: center;
+  pointer-events: none;
+}
+
+/* 2:1 Aspect Ratio Lock Wrapper to prevent coordinates from drifting on resize */
+.chart-canvas-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  box-sizing: border-box;
+}
+
+/* Axis Labels */
+.y-axis-label {
+  position: absolute;
+  left: -115px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+  transform-origin: center;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
-  color: var(--color-text-muted);
+  font-size: 11px;
+  color: #94A3B8;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 32px;
+  white-space: nowrap;
 }
 
-.legal-protection {
+.x-axis-label {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  color: #94A3B8;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* SVG Chart paths */
+.scale-chart-svg {
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  position: relative;
+  overflow: visible;
+}
+
+.dotted-grid-line {
+  stroke: rgba(148, 163, 184, 0.12);
+  stroke-width: 1.5px;
+  stroke-dasharray: 4 4;
+}
+
+.axis-line {
+  stroke: rgba(0, 102, 255, 0.08);
+  stroke-width: 2px;
+}
+
+/* Bezier Curve Path */
+.scale-curve-path {
+  fill: none;
+  stroke: #0066FF;
+  stroke-width: 5px;
+  stroke-linecap: round;
+  filter: drop-shadow(0 4px 15px rgba(0, 102, 255, 0.15));
+}
+
+/* Milestone Dot elements */
+.milestone-point {
+  /* No transform/transition here — GSAP clears inline styles after entrance
+     so CSS has full clean ownership. Hover uses filter glow only. */
+  transform-origin: center;
+  transform-box: fill-box;
+  transition: filter 0.35s ease, opacity 0.4s ease;
+}
+
+.milestone-point:hover {
+  cursor: pointer;
+  filter: drop-shadow(0 0 10px rgba(0, 102, 255, 0.55));
+}
+
+.milestone-point.pt-pos {
+  filter: drop-shadow(0 4px 10px rgba(0, 102, 255, 0.2));
+}
+
+.milestone-point.pt-team {
+  filter: drop-shadow(0 4px 10px rgba(0, 102, 255, 0.2));
+}
+
+/* Concentric circular waves in Stage 3 */
+.pulse-wave-wrapper {
+  position: absolute;
+  left: 85%; /* Matches Stage 3 CX=680 (85%) */
+  top: 20%;  /* Matches Stage 3 CY=80 (20%) */
+  transform: translate(-50%, -50%);
+  width: 110px;
+  height: 110px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.pulse-wave {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0, 102, 255, 0.2);
+  transform-origin: center;
+  opacity: 0;
+}
+
+.pulse-wave.wave-1 { animation: pulse-concentric 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite; }
+.pulse-wave.wave-2 { animation: pulse-concentric 2.4s cubic-bezier(0.16, 1, 0.3, 1) 0.8s infinite; }
+.pulse-wave.wave-3 { animation: pulse-concentric 2.4s cubic-bezier(0.16, 1, 0.3, 1) 1.6s infinite; }
+
+@keyframes pulse-concentric {
+  0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0.8; }
+  100% { transform: translate(-50%, -50%) scale(2.6); opacity: 0; }
+}
+
+/* Floating Milestone Card Badges (Mathematically Pinned to Coordinates) */
+.milestone-tag-wrapper {
+  position: absolute;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+/* Stage 1 (BitPos) Pin: CX=180 (22.5%), CY=285 (71.25%) */
+.tag-pos-wrapper {
+  left: 22.5%;
+  top: 71.25%;
+  transform: translate(-50%, calc(-100% - 16px));
+}
+
+/* Stage 2 (+ BitTeam) Pin: CX=420 (52.5%), CY=210 (52.5%) */
+.tag-team-wrapper {
+  left: 52.5%;
+  top: 52.5%;
+  transform: translate(-50%, calc(-100% - 16px));
+}
+
+/* Stage 3 (Upgrade to BitOne) Pin: CX=680 (85%), CY=80 (20%) - Positioned horizontally left */
+.tag-one-wrapper {
+  left: 85%;
+  top: 20%;
+  transform: translate(calc(-100% - 24px), -50%);
+}
+
+.milestone-tag {
+  position: relative;
+  background: #FFFFFF;
+  border: 1.2px solid rgba(0, 102, 255, 0.08);
+  border-radius: 12px;
+  padding: 6px 14px 6px 10px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 20px;
-  max-width: 600px;
-  margin: 0 auto;
+  gap: 8px;
+  box-shadow: 
+    0 12px 30px rgba(0, 102, 255, 0.04),
+    0 4px 10px rgba(0, 0, 0, 0.005);
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  cursor: pointer;
 }
 
-.legal-text {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-text);
-  line-height: 1.6;
+/* Pointer speech bubbles for Stage 1 & 2 (pointing downwards) */
+.tag-pos-wrapper .milestone-tag::after,
+.tag-team-wrapper .milestone-tag::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 10px;
+  height: 10px;
+  background: #FFFFFF;
+  border-right: 1.2px solid rgba(0, 102, 255, 0.08);
+  border-bottom: 1.2px solid rgba(0, 102, 255, 0.08);
 }
 
-.legal-barcode-box {
-  background: white;
-  padding: 16px;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+/* Pointer speech bubble for Stage 3 (pointing to the right) */
+.tag-one-wrapper .milestone-tag::after {
+  content: '';
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  width: 10px;
+  height: 10px;
+  background: #FFFFFF;
+  border-right: 1.2px solid rgba(0, 102, 255, 0.08);
+  border-top: 1.2px solid rgba(0, 102, 255, 0.08);
+}
+
+.tag-icon-box {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
   display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: center;
-  transition: transform 0.3s ease;
 }
 
-.legal-barcode-box:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+.blue-box { 
+  background: rgba(0, 102, 255, 0.08); 
 }
 
-.legal-barcode {
-  max-width: 250px;
-  height: auto;
-  border-radius: 8px;
+.active-blue-box {
+  background: #0066FF;
+}
+
+.tag-label {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  color: #1E293B;
+  white-space: nowrap;
+}
+
+/* Active Highlight Style for BitOne target card */
+.highlight-tag {
+  border: 1.5px solid rgba(0, 102, 255, 0.15);
+  box-shadow: 
+    0 15px 35px rgba(0, 102, 255, 0.08),
+    0 4px 10px rgba(0, 102, 255, 0.01);
+}
+
+/* Interactive lift micro-animations on hover */
+.tag-pos-wrapper:hover {
+  transform: translate(-50%, calc(-100% - 22px));
+}
+
+.tag-team-wrapper:hover {
+  transform: translate(-50%, calc(-100% - 22px));
+}
+
+.tag-one-wrapper:hover {
+  transform: translate(calc(-100% - 30px), -50%);
+}
+
+.milestone-tag:hover {
+  border-color: rgba(0, 102, 255, 0.2);
+  box-shadow: 
+    0 20px 40px rgba(0, 102, 255, 0.1),
+    0 6px 15px rgba(0, 0, 0, 0.01);
+}
+
+/* Bottom capsule subtitle badge */
+.bottom-capsule-badge {
+  display: inline-block;
+  background: #FFFFFF;
+  border: 1.5px solid rgba(0, 102, 255, 0.08);
+  padding: 12px 36px;
+  border-radius: var(--radius-full, 9999px);
+  box-shadow: 
+    0 15px 35px rgba(0, 102, 255, 0.02),
+    0 4px 10px rgba(0, 0, 0, 0.002);
+  margin-top: 15px;
+  transition: all 0.3s ease;
+}
+
+.bottom-capsule-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 20px 40px rgba(0, 102, 255, 0.04),
+    0 6px 15px rgba(0, 0, 0, 0.004);
+}
+
+.bottom-capsule-badge span {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 14.5px;
+  color: #1E293B;
+  letter-spacing: -0.01em;
+}
+
+/* Media Query breakdowns */
+@media (max-width: 992px) {
+  .supported-section {
+    padding: 30px 0 100px;
+  }
+
+  .supported-main-title {
+    font-size: 30px;
+    margin-bottom: 45px;
+    padding: 0 20px;
+  }
+
+  .scale-mockup-window {
+    max-width: 90%;
+  }
+
+  .window-body {
+    padding: 35px 35px 45px;
+  }
+
+  .y-axis-label {
+    left: -95px;
+    font-size: 9.5px;
+  }
+
+  .x-axis-label {
+    font-size: 9.5px;
+  }
+
+  .tag-label {
+    font-size: 11.5px;
+  }
+
+  .tag-icon-box {
+    width: 22px;
+    height: 22px;
+  }
 }
 
 @media (max-width: 768px) {
-  .legal-text {
-    font-size: 0.9rem;
-    padding: 0 20px;
+  .y-axis-label {
+    display: none; /* Hide complexity label on tablets to avoid overlap */
   }
-  .legal-barcode {
-    max-width: 200px;
+
+  .window-body {
+    padding: 30px 20px 40px;
+  }
+}
+
+@media (max-width: 640px) {
+  .supported-main-title {
+    font-size: 24px;
+    line-height: 32px;
+  }
+
+  .window-header {
+    height: 40px;
+    padding: 0 16px;
+  }
+
+  .mac-dot {
+    width: 10px;
+    height: 10px;
+  }
+
+  .window-body {
+    padding: 20px 10px 30px;
+  }
+
+  .scale-mockup-window {
+    border-radius: 20px;
+  }
+
+  .tag-label {
+    font-size: 9.5px;
+  }
+
+  .tag-icon-box {
+    width: 18px;
+    height: 18px;
+  }
+
+  .milestone-tag {
+    padding: 4px 10px 4px 6px;
+    gap: 6px;
+    border-radius: 8px;
+  }
+
+  /* Reposition arrows and padding for compact view */
+  .tag-pos-wrapper {
+    transform: translate(-50%, calc(-100% - 12px));
+  }
+
+  .tag-team-wrapper {
+    transform: translate(-50%, calc(-100% - 12px));
+  }
+
+  .tag-one-wrapper {
+    transform: translate(calc(-100% - 18px), -50%);
+  }
+
+  /* Interactive lift adjustments for mobile touch targets */
+  .tag-pos-wrapper:hover {
+    transform: translate(-50%, calc(-100% - 16px));
+  }
+
+  .tag-team-wrapper:hover {
+    transform: translate(-50%, calc(-100% - 16px));
+  }
+
+  .tag-one-wrapper:hover {
+    transform: translate(calc(-100% - 22px), -50%);
+  }
+
+  .bottom-capsule-badge {
+    padding: 10px 24px;
+    max-width: 85%;
+  }
+
+  .bottom-capsule-badge span {
+    font-size: 11.5px;
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 480px) {
+  .supported-main-title {
+    font-size: 20px;
+    line-height: 28px;
+  }
+
+  .tag-label {
+    font-size: 8.5px;
+  }
+
+  .milestone-tag {
+    gap: 4px;
+    border-radius: 6px;
+  }
+
+  .bottom-capsule-badge span {
+    font-size: 10px;
   }
 }

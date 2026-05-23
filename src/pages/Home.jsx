@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
+import ControlCenter from '../components/ControlCenter';
+import CoreModules from '../components/CoreModules';
+import AppSelector from '../components/AppSelector';
 import SupportedBy from '../components/SupportedBy';
 import Features from '../components/Features';
 import Footer from '../components/Footer';
@@ -24,6 +27,9 @@ function Home() {
       <Navbar />
       <main>
         <Hero />
+        <ControlCenter />
+        <CoreModules />
+        <AppSelector />
         <Features />
         <SupportedBy />
       </main>

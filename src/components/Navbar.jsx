@@ -1,11 +1,73 @@
 import React, { useEffect, useState } from 'react';
 import './Navbar.css';
 import { useAppContext } from '../context/AppContext';
-import { 
-  Sun, Moon, Globe, ChevronDown, 
-  Package, Layers, Store, ShoppingCart, Tag, BarChart2, 
-  Calculator, Wallet, Users, Briefcase, Code, Menu, X
-} from 'lucide-react';
+import { Globe, ChevronDown, ArrowUpRight, Menu, X } from 'lucide-react';
+
+// Same logo imports as AppSelector — real brand logos in the mega-menu
+import bitOneLogo from '../assets/logo_pilihan_fitur/bitone_logo-removebg-preview.png';
+import bitOmniLogo from '../assets/logo_pilihan_fitur/bithinks_omnichannel_logo-removebg-preview.png';
+import bitFineLogo from '../assets/logo_pilihan_fitur/bit_finance_logo-removebg-preview.png';
+import bitPosLogo from '../assets/logo_pilihan_fitur/bithinks_pos_logo_v2-removebg-preview.png';
+import bitTeamLogo from '../assets/logo_pilihan_fitur/bithinks_hrm_logo-removebg-preview.png';
+import bitDevLogo from '../assets/logo_pilihan_fitur/bithinks_dev_logo-removebg-preview.png';
+
+// All 6 apps — same data as AppSelector.jsx
+const APPS = [
+  {
+    id: 'bitone',
+    title: 'Bithinks One',
+    badge: 'BitOne',
+    logo: bitOneLogo,
+    color: '#0066FF',
+    bg: 'rgba(0, 102, 255, 0.08)',
+    desc: 'Kelola semua divisi hanya dengan 1 aplikasi.',
+  },
+  {
+    id: 'bitomni',
+    title: 'Bithinks Omnichannel',
+    badge: 'BitOmni',
+    logo: bitOmniLogo,
+    color: '#FF6B00',
+    bg: 'rgba(255, 107, 0, 0.08)',
+    desc: 'Kelola stok & pesanan di semua marketplace terintegrasi.',
+  },
+  {
+    id: 'bitfine',
+    title: 'Bithinks Finance',
+    badge: 'BitFine',
+    logo: bitFineLogo,
+    color: '#3B82F6',
+    bg: 'rgba(59, 130, 246, 0.08)',
+    desc: 'Laporan keuangan terintegrasi dari semua channel penjualan.',
+  },
+  {
+    id: 'bitpos',
+    title: 'Bithinks POS',
+    badge: 'BitPos',
+    logo: bitPosLogo,
+    color: '#EC4899',
+    bg: 'rgba(236, 72, 153, 0.08)',
+    desc: 'Manajemen penjualan offline secara akurat.',
+  },
+  {
+    id: 'bitteam',
+    title: 'Bithinks Team',
+    badge: 'BitTeam',
+    logo: bitTeamLogo,
+    color: '#10B981',
+    bg: 'rgba(16, 185, 129, 0.08)',
+    desc: 'Manajemen data karyawan, absensi, dan penggajian.',
+  },
+  {
+    id: 'bitdev',
+    title: 'Bithinks Customize',
+    badge: 'BitDev',
+    logo: bitDevLogo,
+    color: '#4B5563',
+    bg: 'rgba(75, 85, 99, 0.08)',
+    desc: 'Buat aplikasi sesukamu sesuai bisnismu.',
+  },
+];
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -14,151 +76,104 @@ const Navbar = () => {
   const { lang, theme, t, toggleLang, toggleTheme } = useAppContext();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const scrollToApp = (appId) => {
+    if (appId) {
+      window.dispatchEvent(new CustomEvent('select-bithinks-app', { detail: appId }));
+    }
+    const el = document.getElementById('app-selector');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setShowProductMenu(false);
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="container">
+        {/* Logo */}
         <a href="/" className="navbar-logo" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
           <img src="/bithinks.jpeg" alt="Logo Bithinks" style={{ height: '40px', borderRadius: '4px' }} />
           <span style={{ backgroundColor: '#EF4444', color: 'white', fontSize: '0.65rem', fontWeight: 800, padding: '2px 8px', borderRadius: '12px', letterSpacing: '1px' }}>BETA</span>
         </a>
-        
+
+        {/* Nav Links */}
         <div className={`navbar-links ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
-          <div 
-            className="navbar-dropdown-wrapper" 
+
+          {/* Produk Dropdown */}
+          <div
+            className="navbar-dropdown-wrapper"
             onMouseEnter={() => setShowProductMenu(true)}
             onMouseLeave={() => setShowProductMenu(false)}
           >
-            <a href="#features" className="navbar-link" style={{ display: 'flex', alignItems: 'center', gap: '4px' }} onClick={(e) => { e.preventDefault(); setShowProductMenu(!showProductMenu); }}>
+            <a
+              href="#app-selector"
+              className="navbar-link"
+              style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+              onClick={(e) => { e.preventDefault(); setShowProductMenu(!showProductMenu); }}
+            >
               {t.navbar.product}
               <ChevronDown size={16} style={{ transform: showProductMenu ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.3s' }} />
             </a>
-            
-            <div className={`mega-menu ${showProductMenu ? 'show' : ''}`}>
-              <div className="mega-menu-content">
-                {/* Bithinks One Column */}
-                <div className="mega-menu-col" style={{ flex: 1.2 }}>
-                  <span className="mega-menu-label">{t.megaMenu.onePretitle}</span>
-                  <div className="mega-menu-list">
-                    <div className="mega-menu-item one-card">
-                      <div className="m-icon one-icon"><Briefcase size={24} color="#FFF" /></div>
-                      <div>
-                        <h4>{t.megaMenu.oneTitle}</h4>
-                        <p>{t.megaMenu.oneDesc}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
 
-                {/* Omnichannel Column */}
-                <div className="mega-menu-col mega-menu-divider" style={{ flex: 2 }}>
-                  <span className="mega-menu-label">{t.megaMenu.pretitle}</span>
-                  <div className="mega-menu-grid">
-                    <div className="mega-menu-item">
-                      <div className="m-icon" style={{ background: '#EFF6FF' }}><Package size={20} color="#2563EB" /></div>
-                      <div>
-                        <h4>{t.megaMenu.omni1Title}</h4>
-                        <p>{t.megaMenu.omni1Desc}</p>
-                      </div>
-                    </div>
-                    <div className="mega-menu-item">
-                      <div className="m-icon" style={{ background: '#FFFBEB' }}><ShoppingCart size={20} color="#D97706" /></div>
-                      <div>
-                        <h4>{t.megaMenu.omni4Title}</h4>
-                        <p>{t.megaMenu.omni4Desc}</p>
-                      </div>
-                    </div>
-                    <div className="mega-menu-item">
-                      <div className="m-icon" style={{ background: '#F5F3FF' }}><Layers size={20} color="#7C3AED" /></div>
-                      <div>
-                        <h4>{t.megaMenu.omni2Title}</h4>
-                        <p>{t.megaMenu.omni2Desc}</p>
-                      </div>
-                    </div>
-                    <div className="mega-menu-item">
-                      <div className="m-icon" style={{ background: '#FDF2F8' }}><Tag size={20} color="#DB2777" /></div>
-                      <div>
-                        <h4>{t.megaMenu.omni5Title}</h4>
-                        <p>{t.megaMenu.omni5Desc}</p>
-                      </div>
-                    </div>
-                    <div className="mega-menu-item">
-                      <div className="m-icon" style={{ background: '#ECFDF5' }}><Store size={20} color="#059669" /></div>
-                      <div>
-                        <h4>{t.megaMenu.omni3Title}</h4>
-                        <p>{t.megaMenu.omni3Desc}</p>
-                      </div>
-                    </div>
-                    <div className="mega-menu-item">
-                      <div className="m-icon" style={{ background: '#ECFEFF' }}><BarChart2 size={20} color="#0891B2" /></div>
-                      <div>
-                        <h4>{t.megaMenu.omni6Title}</h4>
-                        <p>{t.megaMenu.omni6Desc}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            {/* ── App Mega Menu ── */}
+            <div className={`mega-menu mega-menu-apps ${showProductMenu ? 'show' : ''}`}>
 
-                {/* Other Features Column */}
-                <div className="mega-menu-col mega-menu-divider" style={{ flex: 1.2 }}>
-                  <span className="mega-menu-label">{t.megaMenu.otherPretitle}</span>
-                  <div className="mega-menu-list">
-                    <div className="mega-menu-item">
-                      <div className="m-icon" style={{ background: '#FFFBEB' }}><Calculator size={20} color="#F59E0B" /></div>
-                      <div>
-                        <h4>{t.megaMenu.posTitle}</h4>
-                        <p>{t.megaMenu.posDesc}</p>
-                      </div>
+              {/* Header */}
+              <div className="mega-apps-header">
+                <span className="mega-apps-pretitle">Pilih Aplikasi Sesuai Bisnismu</span>
+                <button className="mega-apps-see-all" onClick={() => scrollToApp(null)}>
+                  Lihat Semua <ArrowUpRight size={13} />
+                </button>
+              </div>
+
+              {/* 2 × 3 App Card Grid */}
+              <div className="mega-apps-grid">
+                {APPS.map((app) => (
+                  <button
+                    key={app.id}
+                    className="mega-app-card"
+                    style={{ '--app-color': app.color, '--app-bg': app.bg }}
+                    onClick={() => scrollToApp(app.id)}
+                  >
+                    {/* Logo strip — solid colored band matching app theme */}
+                    <div className="mega-app-logo-strip" style={{ background: app.bg }}>
+                      <img src={app.logo} alt={app.title} className="mega-app-logo" />
                     </div>
-                    <div className="mega-menu-item">
-                      <div className="m-icon" style={{ background: '#EFF6FF' }}><Wallet size={20} color="#3B82F6" /></div>
-                      <div>
-                        <h4>{t.megaMenu.financeTitle}</h4>
-                        <p>{t.megaMenu.financeDesc}</p>
+
+                    {/* Text body */}
+                    <div className="mega-app-body">
+                      <div className="mega-app-name-row">
+                        <span className="mega-app-title">{app.title}</span>
+                        <span
+                          className="mega-app-badge"
+                          style={{ color: app.color, background: app.bg }}
+                        >
+                          {app.badge}
+                        </span>
                       </div>
+                      <p className="mega-app-desc">{app.desc}</p>
                     </div>
-                    <div className="mega-menu-item">
-                      <div className="m-icon" style={{ background: '#ECFDF5' }}><Users size={20} color="#10B981" /></div>
-                      <div>
-                        <h4>{t.megaMenu.hrmTitle}</h4>
-                        <p>{t.megaMenu.hrmDesc}</p>
-                      </div>
-                    </div>
-                    <div className="mega-menu-item">
-                      <div className="m-icon" style={{ background: '#F3F4F6' }}><Code size={20} color="#4B5563" /></div>
-                      <div>
-                        <h4>{t.megaMenu.customTitle}</h4>
-                        <p>{t.megaMenu.customDesc}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                  </button>
+                ))}
               </div>
             </div>
           </div>
-          
+
           <a href="#about" className="navbar-link" onClick={() => setIsMobileMenuOpen(false)}>{t.navbar.about}</a>
           <a href="#pricing" className="navbar-link" onClick={() => setIsMobileMenuOpen(false)}>{t.navbar.pricing}</a>
           <a href="/login" className="navbar-link mobile-only-link" onClick={() => setIsMobileMenuOpen(false)}>{t.navbar.login}</a>
         </div>
 
+        {/* Actions */}
         <div className="navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <button onClick={toggleTheme} className="icon-btn" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text)' }}>
-            {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-          </button>
           <button onClick={toggleLang} className="icon-btn" style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 'bold', color: 'var(--color-text)' }}>
             <Globe size={18} /> {lang.toUpperCase()}
           </button>
-          
           <a href="/login" className="navbar-link login-link-desktop" style={{ fontWeight: 600 }}>{t.navbar.login}</a>
-          
           <button className="mobile-menu-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>

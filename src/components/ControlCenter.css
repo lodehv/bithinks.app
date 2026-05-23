@@ -1,0 +1,574 @@
+/* Section Layout & Background Styling */
+.control-center-section {
+  padding: 85px 0 75px; /* Generous breathing room top, cohesive bottom */
+  position: relative;
+  background-color: var(--color-bg);
+  overflow: hidden;
+}
+
+.control-center-title {
+  font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 40px;
+  color: rgb(18, 18, 18);
+  margin-bottom: 45px;
+  text-align: center; /* Horizontally centered */
+  letter-spacing: -0.02em;
+}
+
+/* Glassmorphic Canvas Card container */
+.control-center-card {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 28px;
+  box-shadow: 0 30px 70px rgba(0, 102, 255, 0.02), 
+              0 10px 30px rgba(0, 0, 0, 0.01);
+  padding: 50px 40px;
+  overflow: visible;
+}
+
+/* Morphing glow background blob behind the diagram */
+.card-bg-gradient {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  height: 70%;
+  background: radial-gradient(circle, rgba(0, 102, 255, 0.04) 0%, rgba(255, 107, 0, 0.02) 60%, rgba(255, 255, 255, 0) 100%);
+  z-index: 1;
+  pointer-events: none;
+  filter: blur(30px);
+}
+
+/* 3-Column Enterprise SaaS Grid Layout */
+.dashboard-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 70px 220px 70px 1fr;
+  align-items: center;
+  width: 100%;
+  z-index: 2;
+  overflow: visible;
+}
+
+/* Dashboard Columns */
+.dashboard-column {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+}
+
+.channels-column {
+  padding-right: 5px;
+}
+
+.ops-column {
+  padding-left: 5px;
+}
+
+/* Column Header Headers */
+.column-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.column-badge {
+  display: inline-block;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: #0066FF;
+  background: rgba(0, 102, 255, 0.08);
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-bottom: 6px;
+}
+
+.column-badge.badge-orange {
+  color: #FF6B00;
+  background: rgba(255, 107, 0, 0.08);
+}
+
+.column-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: #121212;
+  margin: 0;
+}
+
+/* Cards wrapper inside columns */
+.column-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Premium Control Card */
+.control-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(0, 102, 255, 0.12);
+  border-radius: 20px;
+  padding: 18px 20px;
+  gap: 16px;
+  box-shadow: 0 4px 15px rgba(0, 102, 255, 0.01), 
+              0 1px 3px rgba(0, 0, 0, 0.01);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+/* Elegant left side accent highlight */
+.control-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: #0066FF;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.control-card.card-right::before {
+  background: #FF6B00;
+}
+
+/* Hover & Active Card styles */
+.control-card:hover, .control-card.active {
+  transform: translateY(-3px) scale(1.015);
+  background: #FFFFFF;
+  border-color: rgba(0, 102, 255, 0.35);
+  box-shadow: 0 15px 35px rgba(0, 102, 255, 0.08),
+              0 2px 6px rgba(0, 102, 255, 0.02);
+}
+
+.control-card.card-right:hover, .control-card.card-right.active {
+  border-color: rgba(255, 107, 0, 0.35);
+  box-shadow: 0 15px 35px rgba(255, 107, 0, 0.08),
+              0 2px 6px rgba(255, 107, 0, 0.02);
+}
+
+.control-card:hover::before, .control-card.active::before {
+  opacity: 1;
+}
+
+/* Icon Box inside card */
+.card-icon-box {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 102, 255, 0.07);
+  color: #0066FF;
+  box-shadow: inset 0 2px 6px rgba(0, 102, 255, 0.04);
+  transition: all 0.3s ease;
+}
+
+.card-icon-box.orange-icon {
+  background: rgba(255, 107, 0, 0.07);
+  color: #FF6B00;
+  box-shadow: inset 0 2px 6px rgba(255, 107, 0, 0.04);
+}
+
+.control-card:hover .card-icon-box, .control-card.active .card-icon-box {
+  background: #0066FF;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(0, 102, 255, 0.2);
+}
+
+.control-card.card-right:hover .card-icon-box.orange-icon, .control-card.card-right.active .card-icon-box.orange-icon {
+  background: #FF6B00;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(255, 107, 0, 0.2);
+}
+
+/* Info container */
+.card-info-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 2px;
+  padding-right: 32px;
+}
+
+.card-title-text {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: #121212;
+}
+
+.card-desc-text {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+  font-size: 11px;
+  color: #595858;
+}
+
+.card-details-text {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 500;
+  font-size: 9.5px;
+  color: #8C8C8C;
+  line-height: 1.3;
+  margin-top: 1px;
+}
+
+/* Top-right Status Pill */
+.card-status-pill {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(16, 185, 129, 0.06);
+  border: 1px solid rgba(16, 185, 129, 0.16);
+  padding: 2px 6px;
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.status-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #10B981;
+  animation: pulse-dot 1.8s infinite;
+}
+
+.status-text {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 700;
+  font-size: 8px;
+  color: #10B981;
+  letter-spacing: 0.04em;
+}
+
+@keyframes pulse-dot {
+  0% { transform: scale(0.85); opacity: 0.5; }
+  50% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(0.85); opacity: 0.5; }
+}
+
+/* Central Neural Chamber column */
+.core-column {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.core-chamber {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+/* Chamber Background Dotted Grid */
+.chamber-grid-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(rgba(0, 102, 255, 0.1) 1px, transparent 1px);
+  background-size: 16px 16px;
+  opacity: 0.45;
+  border-radius: 20px;
+  border: 1px dashed rgba(0, 102, 255, 0.08);
+}
+
+/* Central Hexagon Hub */
+.central-hub {
+  position: relative;
+  width: 175px;
+  height: 175px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  cursor: pointer;
+  filter: drop-shadow(0 12px 35px rgba(0, 102, 255, 0.15));
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.hub-hexagon-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0066FF 0%, #004ac8 100%);
+  clip-path: polygon(50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%);
+  padding: 4px; /* Creates border space inside clip-path */
+  box-sizing: border-box;
+  transition: all 0.4s ease;
+}
+
+.hub-hexagon-bg::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #FFFFFF;
+  clip-path: polygon(50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%);
+}
+
+.hub-content {
+  position: relative;
+  z-index: 11;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.hub-brand {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: #121212;
+  margin-bottom: 2px;
+}
+
+.hub-tech {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  color: #0066FF;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+}
+
+.hub-core {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+  font-size: 11px;
+  color: #595858;
+}
+
+/* Pulsating interactive glows on hover */
+.central-hub:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 16px 40px rgba(0, 102, 255, 0.22));
+}
+
+.central-hub:hover .hub-hexagon-bg {
+  background: linear-gradient(135deg, #FF6B00 0%, #E05300 100%); /* Orange core spark */
+}
+
+.hub-active {
+  transform: scale(1.03);
+  filter: drop-shadow(0 15px 35px rgba(0, 102, 255, 0.18));
+}
+
+/* Interactive energy rings revolving in 3D background */
+.chamber-energy-ring {
+  position: absolute;
+  width: 195px;
+  height: 195px;
+  border: 1.5px solid rgba(0, 102, 255, 0.12);
+  border-radius: 50%;
+  animation: rotate-ring 15s linear infinite;
+  pointer-events: none;
+}
+
+.chamber-energy-ring.outer-ring {
+  width: 235px;
+  height: 235px;
+  border: 1px dashed rgba(0, 102, 255, 0.08);
+  animation: rotate-ring-reverse 24s linear infinite;
+}
+
+@keyframes rotate-ring {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes rotate-ring-reverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+/* SVG Pipeline Gutters */
+.pipeline-gutter {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pipeline-svg {
+  width: 100%;
+  height: 380px;
+  overflow: visible;
+}
+
+/* Laser Flow Animation Keyframes */
+@keyframes laser-flow {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+.active-running-laser {
+  stroke-dasharray: 6, 6;
+  animation: laser-flow 0.8s linear infinite;
+  filter: drop-shadow(0 2px 6px rgba(0, 200, 255, 0.45));
+}
+
+/* 100% Bulletproof Responsive Collapse Overhaul */
+@media (max-width: 1100px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr 40px 180px 40px 1.1fr;
+  }
+  .central-hub {
+    width: 155px;
+    height: 155px;
+  }
+  .chamber-energy-ring {
+    width: 170px;
+    height: 170px;
+  }
+  .chamber-energy-ring.outer-ring {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+@media (max-width: 992px) {
+  .control-center-section {
+    padding: 70px 0;
+  }
+  
+  .control-center-title {
+    font-size: 28px;
+    margin-bottom: 30px;
+  }
+
+  .control-center-card {
+    padding: 35px 25px;
+    border-radius: 24px;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 45px;
+  }
+
+  .pipeline-gutter {
+    display: none; /* Hide confusing line pipelines on stacked mobile view */
+  }
+
+  .dashboard-column {
+    padding: 0 !important;
+    gap: 16px;
+  }
+
+  .core-column {
+    order: -1; /* Place core engine Bithinks logo at the top as an anchor */
+    margin: 10px auto;
+    width: auto;
+  }
+
+  .core-chamber {
+    height: 210px;
+    width: 260px;
+  }
+
+  .chamber-grid-bg {
+    display: none;
+  }
+
+  .control-card {
+    padding: 16px;
+    border-color: rgba(0, 102, 255, 0.25);
+    background: #FFFFFF;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  }
+  
+  .control-card.card-right {
+    border-color: rgba(255, 107, 0, 0.25);
+  }
+
+  .column-header {
+    align-items: center;
+    text-align: center;
+    margin-bottom: 4px;
+    width: 100%;
+  }
+
+  .card-info-box {
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .control-center-section {
+    padding: 55px 0;
+  }
+
+  .control-center-title {
+    font-size: 24px;
+    line-height: 32px;
+  }
+
+  .control-center-card {
+    padding: 20px 15px;
+  }
+  
+  .control-card {
+    padding: 12px;
+    gap: 12px;
+    border-radius: 16px;
+  }
+
+  .card-icon-box {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+  }
+  
+  .card-title-text {
+    font-size: 13px;
+  }
+  
+  .card-desc-text {
+    font-size: 10px;
+  }
+
+  .card-status-pill {
+    display: none; /* Make card layout clean and simple on narrow screens */
+  }
+}

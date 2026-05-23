@@ -1,0 +1,1492 @@
+/* Business App Selector Section Stylesheet */
+.app-selector-section {
+  position: relative;
+  padding: 85px 0 100px;
+  background-color: var(--color-bg);
+  overflow: hidden;
+}
+
+/* Section Title */
+.app-selector-title {
+  font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 40px;
+  color: rgb(18, 18, 18);
+  margin-bottom: 45px;
+  text-align: left; /* Left-aligned like user screenshot */
+  letter-spacing: -0.02em;
+}
+
+/* Glassmorphic Canvas Card container */
+.app-selector-card {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 28px;
+  box-shadow: 0 30px 70px rgba(0, 102, 255, 0.015), 
+              0 10px 30px rgba(0, 0, 0, 0.008);
+  padding: 45px 35px;
+  overflow: visible;
+  box-sizing: border-box;
+}
+
+/* Ambient glow backdrop inside selection container */
+.selector-bg-radial {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(circle, rgba(0, 102, 255, 0.02) 0%, rgba(255, 255, 255, 0) 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Grid Row for 3-column horizontal flow cards (2 rows of 3) */
+.selector-cards-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Premium 3-column layout as requested */
+  gap: 30px;
+  width: 100%;
+  z-index: 5;
+  overflow: visible;
+}
+
+/* Individual App Card (Clean, premium structured container) */
+.selector-item-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1.5px solid rgba(0, 102, 255, 0.06);
+  border-radius: 24px;
+  padding: 84px 24px 28px; /* Pushed down exactly 84px to accommodate the full-width header banner! */
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  overflow: hidden; /* Clips the top header banner perfectly to the card's rounded top corners! */
+  box-sizing: border-box;
+}
+
+/* K-Style Brand Logo Header Banner Container: Spans 100% full width of the card's top section! */
+.card-logo-badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 68px; /* Substantial uniform height to make all logos extremely prominent */
+  display: flex; /* Robust block-level flex container */
+  align-items: center;
+  justify-content: flex-start; /* Perfectly left-aligned brand logo banner! */
+  background: #0066FF; /* Solid Bithinks Brand Blue header background! */
+  border-bottom: 2px solid #FFFFFF; /* High-contrast white divider boundary! */
+  border-radius: 22px 22px 0 0; /* Matches card's rounded top corners perfectly */
+  padding: 8px 24px; /* Perfectly aligned with the card body's 24px padding */
+  box-sizing: border-box;
+  z-index: 10;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.selector-item-card.active .card-logo-badge {
+  background: #0052cc; /* Deeper high-contrast blue on active card */
+  border-bottom-color: #FFFFFF;
+}
+
+.selector-item-card:hover .card-logo-badge {
+  background: #0052cc; /* Deeper high-contrast blue on hover */
+  border-bottom-color: #FFFFFF;
+}
+
+/* Upper Mockup Area */
+.card-mockup-box {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 18px;
+  transition: all 0.3s ease;
+}
+
+/* Vector Skeleton Graphics Backdrop */
+.mockup-bg-shapes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.2;
+  z-index: 1;
+  pointer-events: none;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+.ske-bar {
+  height: 8px;
+  background: #64748B;
+  border-radius: 4px;
+}
+
+.top-ske {
+  width: 50%;
+  margin-bottom: 12px;
+}
+
+.ske-split {
+  display: flex;
+  gap: 8px;
+}
+
+.ske-box {
+  flex: 1;
+  height: 60px;
+  background: #64748B;
+  border-radius: 6px;
+}
+
+.ske-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 4px solid #64748B;
+  margin-bottom: 8px;
+}
+
+.ske-sync-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ske-sync-line {
+  height: 6px;
+  background: #64748B;
+  border-radius: 3px;
+  width: 70%;
+}
+
+.ske-graph {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 50px;
+  margin-top: 20px;
+}
+
+.ske-graph-bar {
+  flex: 1;
+  background: #64748B;
+  border-radius: 3px;
+}
+
+.ske-screen {
+  width: 100%;
+  height: 70px;
+  border: 2px solid #64748B;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+
+.ske-bill {
+  width: 40px;
+  height: 40px;
+  background: #64748B;
+  border-radius: 4px;
+}
+
+.ske-avatar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.ske-avatar-circle {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #64748B;
+}
+
+.ske-avatar-bar {
+  width: 40px;
+  height: 6px;
+  background: #64748B;
+  border-radius: 3px;
+}
+
+.ske-code-line {
+  height: 6px;
+  background: #64748B;
+  border-radius: 3px;
+  width: 60%;
+  margin-bottom: 6px;
+}
+
+.ske-code-line.short {
+  width: 35%;
+}
+
+/* Transparent Brand Logo Image inside the full-width header banner, perfectly left-aligned */
+.selector-logo-img {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  width: auto;
+  max-width: 170px; /* Large scale branding */
+  object-fit: contain;
+  object-position: left center; /* Force logo and text to align to the far left inside bounding box */
+  margin: 0; /* Guarantee zero auto-margin centering */
+  filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.05));
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Card Title */
+.selector-card-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #1A202C;
+  line-height: 1.4;
+  margin: 0 0 8px 0;
+  align-self: flex-start;
+}
+
+/* Subtle indicator line (lights up to card theme color when active) */
+.selector-indicator-line {
+  width: 32px;
+  height: 3px;
+  background: rgba(0, 0, 0, 0.05);
+  margin-bottom: 12px;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  align-self: flex-start;
+}
+
+/* Card Description */
+.selector-card-desc {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #4A5568;
+  margin: 0;
+  align-self: flex-start;
+}
+
+/* Hover & Selected active styles */
+.selector-item-card:hover {
+  transform: translateY(-4px);
+  background: #FFFFFF;
+  border-color: rgba(0, 102, 255, 0.2);
+  box-shadow: 0 15px 35px rgba(0, 102, 255, 0.03);
+}
+
+.selector-item-card:hover .selector-logo-img {
+  transform: scale(1.05);
+}
+
+.selector-item-card:hover .card-tag-badge {
+  transform: translateY(-2px);
+}
+
+/* Selected Highlight State (Matches reference exactly) */
+.selector-item-card.active {
+  background: #FFFFFF;
+  border: 2px solid #0066FF !important; /* Thick brand blue border */
+  box-shadow: 0 25px 55px rgba(0, 102, 255, 0.12) !important; /* Glowing blue drop shadow */
+  transform: translateY(-4px) scale(1.015);
+  z-index: 10;
+}
+
+.selector-item-card.active .selector-logo-img {
+  transform: scale(1.06);
+  filter: drop-shadow(0 12px 25px var(--card-glow));
+}
+
+.selector-item-card.active .card-mockup-box {
+  background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
+  border-color: rgba(0, 102, 255, 0.08);
+}
+
+.selector-item-card.active .selector-indicator-line {
+  background: var(--card-theme); /* Indicator changes to brand colors */
+  width: 50px; /* Expands dynamically */
+}
+
+/* Responsive Grids */
+@media (max-width: 992px) {
+  .app-selector-section {
+    padding: 70px 0;
+  }
+  
+  .app-selector-title {
+    font-size: 28px;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  .app-selector-card {
+    padding: 30px 20px;
+    border-radius: 24px;
+  }
+
+  .selector-cards-row {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on tablet */
+    gap: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .selector-cards-row {
+    grid-template-columns: repeat(2, 1fr); /* Preserve 2-column mobile showcase standard */
+    gap: 16px;
+  }
+  
+  .selector-item-card {
+    padding: 38px 16px 20px;
+    border-radius: 20px;
+  }
+
+  .card-tag-badge {
+    left: 14px;
+    height: 22px;
+    padding: 0 8px;
+  }
+  
+  .card-tag-badge .badge-text {
+    font-size: 9px;
+  }
+
+  .card-mockup-box {
+    height: 140px;
+    margin-bottom: 14px;
+  }
+
+  .selector-logo-img {
+    max-width: 100px;
+    max-height: 70px;
+  }
+
+  .selector-card-title {
+    font-size: 13px;
+  }
+
+  .selector-indicator-line {
+    margin-bottom: 8px;
+  }
+
+  .selector-card-desc {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-selector-section {
+    padding: 55px 0;
+  }
+
+  .app-selector-title {
+    font-size: 24px;
+    line-height: 32px;
+  }
+
+  .app-selector-card {
+    padding: 20px 10px;
+  }
+
+  .selector-cards-row {
+    gap: 12px;
+  }
+
+  .selector-item-card {
+    padding: 34px 10px 16px;
+    border-radius: 16px;
+  }
+
+  .card-tag-badge {
+    left: 10px;
+    top: -10px;
+  }
+
+  .card-mockup-box {
+    height: 120px;
+    margin-bottom: 12px;
+  }
+
+  .selector-logo-img {
+    max-width: 80px;
+    max-height: 55px;
+  }
+
+  .selector-card-title {
+    font-size: 12px;
+  }
+
+  .selector-card-desc {
+    font-size: 10px;
+  }
+}
+
+/* Dynamic Informative Omnichannel Mockup Styles */
+.mock-omni-skeleton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  box-sizing: border-box;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.ske-omni-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.04);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  flex-shrink: 0;
+}
+
+.shopee-badge {
+  box-shadow: 0 6px 15px rgba(238, 77, 45, 0.16);
+  transform: rotate(-6deg) translateY(6px);
+}
+
+.tiktok-badge {
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.16);
+  transform: rotate(6deg) translateY(-6px);
+}
+
+.ske-omni-logo {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.ske-omni-flow {
+  flex-grow: 1;
+  height: 2px;
+  border-top: 2px dashed rgba(0, 102, 255, 0.2);
+  position: relative;
+  margin: 0 4px;
+}
+
+.flow-left {
+  top: 3px;
+}
+
+.flow-right {
+  top: -3px;
+}
+
+.flow-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #0066FF;
+  top: -4px;
+}
+
+.flow-left .flow-dot {
+  animation: flow-left-to-right 1.5s linear infinite;
+}
+
+.flow-right .flow-dot {
+  animation: flow-right-to-left 1.5s linear infinite;
+}
+
+@keyframes flow-left-to-right {
+  0% { left: 0%; opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+
+@keyframes flow-right-to-left {
+  0% { right: 0%; opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { right: 100%; opacity: 0; }
+}
+
+/* Hover & Active effects for floating marketplace badges */
+.selector-item-card:hover .shopee-badge {
+  transform: rotate(-12deg) translateY(2px) scale(1.1);
+  box-shadow: 0 10px 25px rgba(238, 77, 45, 0.3);
+  border-color: rgba(238, 77, 45, 0.2);
+}
+
+.selector-item-card:hover .tiktok-badge {
+  transform: rotate(12deg) translateY(-2px) scale(1.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+/* Accentuated styling when Omnichannel is the actively selected application card */
+.selector-item-card.active .shopee-badge {
+  transform: rotate(-10deg) translateY(4px) scale(1.08);
+  box-shadow: 0 8px 20px rgba(238, 77, 45, 0.25);
+  border-color: rgba(238, 77, 45, 0.3);
+}
+
+.selector-item-card.active .tiktok-badge {
+  transform: rotate(10deg) translateY(-4px) scale(1.08);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+
+/* ==========================================================================
+   HIGH-FIDELITY ACTIVE MOCKUP GRAPHICS & K-STYLE TOP-LEFT LOGO PLACEMENT
+   ========================================================================== */
+
+/* Technical Blueprint Grid Backdrop */
+.ske-grid-backdrop {
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(0, 102, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 102, 255, 0.02) 1px, transparent 1px);
+  background-size: 15px 15px;
+  background-position: center;
+}
+
+/* General Layout for Active High-Res Mockups (Clean unblocked space) */
+.active-mockup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  padding: 16px;
+  box-sizing: border-box;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Dynamic PNG Image Mockup styling matching user reference */
+.mockup-png-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Keeps true aspect ratio of user-provided mockups */
+  padding: 10px; /* Perfect, symmetric breathing room inside grid */
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.selector-item-card:hover .mockup-png-img {
+  transform: scale(1.04); /* Fluid responsive scale transition on hover */
+}
+
+/* Unified selector-logo-img styles defined above */
+
+/* 1. ERP / Bithinks One (BitOne) Mockup Styles */
+.mock-erp-skeleton {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  padding: 14px 20px; /* Balanced, centered padding! */
+  box-sizing: border-box;
+}
+
+.erp-sidebar {
+  width: 24px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 102, 255, 0.06);
+  border-radius: 8px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 0;
+  box-shadow: 0 4px 10px rgba(0, 102, 255, 0.02);
+  box-sizing: border-box;
+}
+
+.erp-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  margin-bottom: 5px;
+}
+.erp-dot.red { background: #EF4444; }
+.erp-dot.yellow { background: #F59E0B; }
+.erp-dot.green { background: #10B981; }
+
+.erp-sidebar-line {
+  width: 12px;
+  height: 2px;
+  background: #E2E8F0;
+  border-radius: 1px;
+  margin-top: 6px;
+}
+.erp-sidebar-line.short { width: 8px; }
+
+.erp-main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  height: 100%;
+}
+
+.erp-header {
+  height: 18px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 102, 255, 0.06);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6px;
+}
+
+.erp-header-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 7px;
+  font-weight: 700;
+  color: #64748B;
+  transform: scale(0.9);
+}
+
+.erp-user-avatar {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #0066FF;
+}
+
+.erp-grid {
+  flex-grow: 1;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 6px;
+}
+
+.erp-panel-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 102, 255, 0.06);
+  border-radius: 6px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.01);
+  box-sizing: border-box;
+}
+
+.erp-panel-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 6px;
+  font-weight: 700;
+  color: #94A3B8;
+  transform: scale(0.9);
+  align-self: flex-start;
+}
+
+.erp-panel-chart {
+  flex-grow: 1;
+  position: relative;
+  overflow: hidden;
+  background: rgba(0, 102, 255, 0.02);
+  border-radius: 3px;
+  border: 1px dashed rgba(0, 102, 255, 0.1);
+}
+
+.erp-chart-wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60%;
+  background: linear-gradient(180deg, rgba(0, 102, 255, 0.15) 0%, rgba(0, 102, 255, 0) 100%);
+  clip-path: ellipse(60% 40% at 50% 100%);
+}
+
+.bar-panel {
+  justify-content: center;
+  align-items: flex-start;
+  padding-left: 10px;
+}
+
+.erp-panel-bar-item {
+  height: 3px;
+  border-radius: 1.5px;
+  margin-bottom: 5px;
+}
+.erp-panel-bar-item.blue { background: rgba(0, 102, 255, 0.7); }
+.erp-panel-bar-item.green { background: rgba(16, 185, 129, 0.7); }
+.erp-panel-bar-item.orange { background: rgba(255, 107, 0, 0.7); }
+
+/* 2. Finance / Bithinks Finance (BitFine) Mockup Styles */
+.mock-finance-skeleton {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 14px 16px;
+  box-sizing: border-box;
+}
+
+.finance-balance-card {
+  width: 135px;
+  background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+  border: 1.5px solid #334155;
+  border-radius: 10px;
+  padding: 8px 10px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 5;
+  box-sizing: border-box;
+  margin: 0 auto; /* Centered beautifully */
+  animation: finance-float 4s ease-in-out infinite alternate;
+}
+
+@keyframes finance-float {
+  0% { transform: translateY(0) rotate(0.5deg); }
+  100% { transform: translateY(-4px) rotate(-0.5deg); }
+}
+
+.finance-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.finance-card-chip {
+  width: 16px;
+  height: 12px;
+  background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%);
+  border: 0.5px solid #D97706;
+  border-radius: 2px;
+}
+
+.finance-card-number {
+  color: #475569;
+  font-family: 'Montserrat', monospace;
+  font-size: 7.5px;
+  letter-spacing: 1.2px;
+  font-weight: 700;
+  text-align: left;
+}
+
+.finance-card-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 6px;
+  color: #94A3B8;
+  text-align: left;
+  transform: scale(0.9);
+}
+
+.finance-growth-tag {
+  background: rgba(16, 185, 129, 0.15);
+  border: 0.5px solid rgba(16, 185, 129, 0.3);
+  padding: 1px 6px;
+  border-radius: 20px;
+  color: #10B981;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  display: inline-flex;
+}
+
+.finance-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  width: 135px; /* Match balance card width */
+  height: 36px;
+  margin: 0 auto; /* Centered beautifully */
+}
+
+.finance-bar {
+  flex: 1;
+  height: 0;
+  border-radius: 3px 3px 0 0;
+  animation: finance-grow-bar 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.finance-bar.expenses {
+  background: linear-gradient(180deg, #F87171 0%, #EF4444 100%);
+  box-shadow: 0 3px 6px rgba(239, 68, 68, 0.12);
+}
+.finance-bar.revenue {
+  background: linear-gradient(180deg, #60A5FA 0%, #3B82F6 100%);
+  box-shadow: 0 3px 6px rgba(59, 130, 246, 0.12);
+}
+.finance-bar.profit {
+  background: linear-gradient(180deg, #34D399 0%, #10B981 100%);
+  box-shadow: 0 3px 6px rgba(16, 185, 129, 0.12);
+}
+
+/* 3. POS / Bithinks POS (BitPos) Mockup Styles */
+.mock-pos-skeleton {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+.pos-tablet {
+  width: 130px;
+  height: 82px;
+  background: #1E293B;
+  border: 3.5px solid #475569;
+  border-radius: 10px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
+  padding: 4px;
+  box-sizing: border-box;
+  z-index: 5;
+  margin: 0 auto; /* Centered beautifully */
+  transition: transform 0.3s ease;
+}
+
+.pos-screen-layout {
+  width: 100%;
+  height: 100%;
+  background: #F1F5F9;
+  border-radius: 5px;
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  box-sizing: border-box;
+}
+
+.pos-screen-main {
+  flex: 1.3;
+  background: #FFFFFF;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0, 102, 255, 0.05);
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+.pos-products-grid {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2.5px;
+}
+
+.pos-product-item {
+  border-radius: 2px;
+}
+.pos-product-item.blue { background: rgba(59, 130, 246, 0.2); border: 0.5px solid rgba(59, 130, 246, 0.35); }
+.pos-product-item.pink { background: rgba(236, 72, 153, 0.2); border: 0.5px solid rgba(236, 72, 153, 0.35); }
+.pos-product-item.green { background: rgba(16, 185, 129, 0.2); border: 0.5px solid rgba(16, 185, 129, 0.35); }
+.pos-product-item.gold { background: rgba(245, 158, 11, 0.2); border: 0.5px solid rgba(245, 158, 11, 0.35); }
+
+.pos-checkout-sidebar {
+  flex: 0.9;
+  border-left: 1px solid #E2E8F0;
+  padding-left: 3px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-top: 2px;
+}
+
+.pos-sidebar-line {
+  height: 2px;
+  background: #CBD5E1;
+  border-radius: 1px;
+  width: 80%;
+}
+
+.pos-checkout-btn {
+  height: 11px;
+  background: #10B981;
+  border-radius: 2.5px;
+  color: #FFFFFF;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 5.5px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.2px;
+}
+
+.pos-receipt {
+  position: absolute;
+  top: 94px;
+  left: calc(50% + 15px); /* Positioned dynamically relative to centered tablet */
+  width: 60px;
+  height: 44px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-top: 1.5px dashed #CBD5E1;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+  padding: 5px;
+  box-sizing: border-box;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  animation: pos-print 2.5s cubic-bezier(0.25, 1, 0.5, 1) infinite alternate;
+}
+
+@keyframes pos-print {
+  0% { transform: translateY(-10px); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.receipt-line {
+  height: 1.5px;
+  background: #E2E8F0;
+  border-radius: 0.5px;
+}
+.receipt-line.short { width: 50%; }
+
+.receipt-success-dot {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #10B981;
+  color: #FFFFFF;
+  font-size: 6px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 4. HRM / Bithinks Team (BitTeam) Mockup Styles */
+.mock-team-skeleton {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.team-employee-card {
+  width: 120px;
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 102, 255, 0.05);
+  border-radius: 8px;
+  box-shadow: 0 6px 15px rgba(0, 102, 255, 0.015);
+  padding: 8px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 5;
+  margin: 0 auto; /* Centered beautifully */
+  transition: transform 0.3s ease;
+  animation: team-card-float 3.8s ease-in-out infinite alternate;
+}
+
+@keyframes team-card-float {
+  0% { transform: translateY(0) rotate(0.5deg); }
+  100% { transform: translateY(-4px) rotate(-0.5deg); }
+}
+
+.employee-photo-wrapper {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  align-self: center;
+}
+
+.employee-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+}
+
+.presence-dot-active {
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10B981;
+  border: 1.5px solid #FFFFFF;
+  animation: presence-pulse 1.8s infinite;
+}
+
+@keyframes presence-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+  70% { box-shadow: 0 0 0 4px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.employee-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5px;
+}
+
+.employee-name {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 10.5px;
+  color: #1E293B;
+  margin: 0;
+  line-height: 1.2;
+  width: auto;
+  height: auto;
+  background: transparent;
+}
+
+.employee-role {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+  font-size: 8px;
+  color: #64748B;
+  margin: 0;
+  line-height: 1.2;
+  width: auto;
+  height: auto;
+  background: transparent;
+}
+
+.attendance-pills {
+  display: flex;
+  justify-content: center;
+  gap: 3.5px;
+  margin-top: 1.5px;
+}
+
+.att-pill {
+  width: 10px;
+  height: 5px;
+  border-radius: 2.5px;
+}
+.att-pill.present { background: rgba(16, 185, 129, 0.8); }
+.att-pill.off { background: #E2E8F0; }
+
+.team-payroll-badge {
+  position: absolute;
+  bottom: 15px;
+  left: calc(50% + 20px); /* Positioned dynamically relative to centered profile card */
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 102, 255, 0.08);
+  box-shadow: 0 8px 20px rgba(0, 102, 255, 0.06);
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  z-index: 6;
+  animation: payroll-float 4s ease-in-out infinite alternate;
+}
+
+@keyframes payroll-float {
+  0% { transform: translateY(0) rotate(2deg); }
+  100% { transform: translateY(-5px) rotate(-2deg); }
+}
+
+.payroll-icon {
+  font-size: 9px;
+}
+
+.payroll-text {
+  font-size: 7.5px;
+  font-weight: 800;
+  color: #0066FF;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* 5. Developer / Bithinks Customize (BitDev) Mockup Styles */
+.mock-custom-skeleton {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.dev-editor {
+  width: 135px;
+  height: 80px;
+  background: #0F172A;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  z-index: 5;
+  box-sizing: border-box;
+  margin: 0 auto; /* Centered beautifully */
+  animation: editor-float 3.5s ease-in-out infinite alternate;
+}
+
+@keyframes editor-float {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-4px); }
+}
+
+.editor-header {
+  height: 12px;
+  background: #1E293B;
+  border-bottom: 1px solid #334155;
+  border-radius: 6px 6px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0 5px;
+}
+
+.header-dot {
+  width: 3.5px;
+  height: 3.5px;
+  border-radius: 50%;
+}
+.header-dot.red { background: #EF4444; }
+.header-dot.yellow { background: #F59E0B; }
+.header-dot.green { background: #10B981; }
+
+.editor-code {
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.code-line {
+  height: 2.5px;
+  border-radius: 1px;
+}
+.code-line.keyword { background: #C084FC; }
+.code-line.function { background: #60A5FA; }
+.code-line.string { background: #34D399; }
+
+.dev-block {
+  position: absolute;
+  padding: 3px 6px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.06);
+  z-index: 6;
+}
+
+.dev-block .block-label {
+  font-size: 7px;
+  font-weight: 800;
+  color: #FFFFFF;
+  font-family: 'Montserrat', sans-serif;
+  white-space: nowrap;
+}
+
+.block-orange {
+  background: linear-gradient(135deg, #FF8C00 0%, #FF6B00 100%);
+  border: 1px solid #FF6B00;
+  top: 25px;
+  left: calc(50% + 35px); /* Positioned relative to centered editor */
+  transform: rotate(6deg);
+  animation: block-bounce-orange 3.5s ease-in-out infinite alternate;
+}
+
+.block-blue {
+  background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+  border: 1px solid #1D4ED8;
+  bottom: 20px;
+  left: calc(50% - 75px); /* Positioned relative to centered editor */
+  transform: rotate(-6deg);
+  animation: block-bounce-blue 3.5s ease-in-out infinite alternate;
+}
+
+@keyframes block-bounce-orange {
+  0% { transform: translateY(0) rotate(6deg); }
+  100% { transform: translateY(-4px) rotate(3deg); }
+}
+
+@keyframes block-bounce-blue {
+  0% { transform: translateY(0) rotate(-6deg); }
+  100% { transform: translateY(4px) rotate(-3deg); }
+}
+
+/* 6. Bithinks Omnichannel (BitOmni) Mockup Styles */
+.mock-omni-skeleton {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  padding-left: 20px; /* Slight adjust to look balanced */
+  box-sizing: border-box;
+}
+
+.omni-sync-core {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.omni-sync-ring {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(255, 107, 0, 0.25);
+  animation: spin-ring 12s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes spin-ring {
+  100% { transform: rotate(360deg); }
+}
+
+.omni-sync-box {
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 1.5px solid rgba(255, 107, 0, 0.2);
+  box-shadow: 0 8px 22px rgba(255, 107, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FF6B00;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive Overrides for Top-Left Logo Badge on Mobile Viewports */
+@media (max-width: 640px) {
+  .selector-item-card {
+    padding: 68px 16px 20px; /* Pushed down exactly to fit mobile header banner */
+  }
+
+  .card-logo-badge {
+    height: 52px; /* Large uniform mobile banner height */
+    padding: 6px 16px; /* Symmetrically aligned with 16px mobile card body padding */
+    top: 0;
+    left: 0;
+    border-radius: 18px 18px 0 0;
+    background: #0066FF;
+    border-bottom: 1.5px solid #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Consistently left-aligned */
+  }
+  
+  .mock-erp-skeleton {
+    padding: 12px 14px;
+  }
+
+  /* Scale down Omnichannel elements on tablet to prevent clipping */
+  .ske-omni-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+  .omni-sync-ring {
+    width: 62px;
+    height: 62px;
+  }
+  .omni-sync-box {
+    width: 50px;
+    height: 50px;
+    font-size: 8px;
+  }
+  .mock-omni-skeleton {
+    padding: 0 10px;
+  }
+  .ske-omni-flow {
+    margin: 0 2px;
+  }
+
+  /* Scale down Developer / IDE elements on tablet to prevent clipping */
+  .dev-editor {
+    width: 105px;
+    height: 64px;
+  }
+  .editor-header {
+    height: 10px;
+    padding: 0 4px;
+    gap: 2.5px;
+  }
+  .header-dot {
+    width: 2.5px;
+    height: 2.5px;
+  }
+  .editor-code {
+    padding: 4px;
+    gap: 4px;
+  }
+  .code-line {
+    height: 2px;
+  }
+  .dev-block {
+    padding: 2.5px 5px;
+    border-radius: 4px;
+  }
+  .dev-block .block-label {
+    font-size: 6px;
+  }
+  .block-orange {
+    top: 18px;
+    left: calc(50% + 22px);
+  }
+  .block-blue {
+    bottom: 14px;
+    left: calc(50% - 62px);
+  }
+}
+
+@media (max-width: 480px) {
+  .selector-item-card {
+    padding: 60px 10px 16px;
+  }
+
+  .card-logo-badge {
+    height: 46px; /* Uniform small phone banner height */
+    padding: 5px 10px; /* Symmetrically aligned with 10px mobile portrait card padding */
+    top: 0;
+    left: 0;
+    border-radius: 14px 14px 0 0;
+    background: #0066FF;
+    border-bottom: 1.5px solid #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Consistently left-aligned */
+  }
+  
+  .mock-erp-skeleton {
+    padding: 10px 12px;
+  }
+
+  /* Scale down Omnichannel elements on small mobile to prevent clipping */
+  .ske-omni-badge {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+  .omni-sync-ring {
+    width: 50px;
+    height: 50px;
+  }
+  .omni-sync-box {
+    width: 40px;
+    height: 40px;
+    font-size: 7px;
+  }
+  .mock-omni-skeleton {
+    padding: 0 6px;
+  }
+  .ske-omni-flow {
+    margin: 0 1px;
+  }
+  .flow-dot {
+    width: 4px;
+    height: 4px;
+    top: -3px;
+  }
+
+  /* Scale down Developer / IDE elements on small mobile to prevent clipping */
+  .dev-editor {
+    width: 85px;
+    height: 52px;
+  }
+  .editor-header {
+    height: 8px;
+    padding: 0 3px;
+    gap: 2px;
+  }
+  .header-dot {
+    width: 2px;
+    height: 2px;
+  }
+  .editor-code {
+    padding: 3px;
+    gap: 3px;
+  }
+  .code-line {
+    height: 1.5px;
+  }
+  .dev-block {
+    padding: 2px 4px;
+    border-radius: 3px;
+  }
+  .dev-block .block-label {
+    font-size: 5.5px;
+  }
+  .block-orange {
+    top: 15px;
+    left: calc(50% + 15px);
+  }
+  .block-blue {
+    bottom: 10px;
+    left: calc(50% - 50px);
+  }
+}
+
+/* Animations for Logo/Mockup interaction on Hover */
+.selector-item-card:hover .pos-tablet {
+  transform: scale(1.03);
+}
+.selector-item-card:hover .erp-sidebar {
+  transform: scale(1.05);
+}
