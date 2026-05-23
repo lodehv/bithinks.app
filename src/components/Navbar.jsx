@@ -96,7 +96,7 @@ const Navbar = () => {
       <div className="container">
         {/* Logo */}
         <a href="/" className="navbar-logo" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
-          <img src="/bithinks.jpeg" alt="Logo Bithinks" style={{ height: '40px', borderRadius: '4px' }} />
+          <img src="/bithinks.jpeg" alt="Logo Bithinks" style={{ height: '64px', borderRadius: '4px' }} />
           <span style={{ backgroundColor: '#EF4444', color: 'white', fontSize: '0.65rem', fontWeight: 800, padding: '2px 8px', borderRadius: '12px', letterSpacing: '1px' }}>BETA</span>
         </a>
 
