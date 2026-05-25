@@ -1490,3 +1490,45 @@
 .selector-item-card:hover .erp-sidebar {
   transform: scale(1.05);
 }
+
+/* Dynamic CTA Button for Active Cards */
+.selector-cta-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1.5px solid var(--card-theme);
+  color: var(--card-theme);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 20px;
+  margin-top: 14px;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  width: max-content;
+  box-sizing: border-box;
+}
+
+.selector-item-card.active .selector-cta-btn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.selector-cta-btn:hover {
+  background-color: var(--card-theme);
+  color: white;
+  box-shadow: 0 4px 12px var(--card-glow);
+}
+
+.selector-cta-btn span {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.selector-cta-btn:hover span {
+  transform: translateX(4px);
+}

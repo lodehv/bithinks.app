@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Navbar.css';
 import { useAppContext } from '../context/AppContext';
 import { Globe, ChevronDown, ArrowUpRight, Menu, X } from 'lucide-react';
+import { navigateTo } from '../utils/navigation';
 
 // Same logo imports as AppSelector — real brand logos in the mega-menu
 import bitOneLogo from '../assets/logo_pilihan_fitur/bitone_logo-removebg-preview.png';
@@ -38,7 +39,7 @@ const APPS = [
     logo: bitFineLogo,
     color: '#3B82F6',
     bg: 'rgba(59, 130, 246, 0.08)',
-    desc: 'Laporan keuangan terintegrasi dari semua channel penjualan.',
+    desc: 'Laporan keuangan terintegrasi langsung dari semua channel penjualan.',
   },
   {
     id: 'bitpos',
@@ -47,7 +48,7 @@ const APPS = [
     logo: bitPosLogo,
     color: '#EC4899',
     bg: 'rgba(236, 72, 153, 0.08)',
-    desc: 'Manajemen penjualan offline secara akurat.',
+    desc: 'Manajemen Penjualan Offline secara akurat.',
   },
   {
     id: 'bitteam',
@@ -56,7 +57,7 @@ const APPS = [
     logo: bitTeamLogo,
     color: '#10B981',
     bg: 'rgba(16, 185, 129, 0.08)',
-    desc: 'Manajemen data karyawan, absensi, dan penggajian.',
+    desc: 'Manajemen Data Karyawan, Absensi, dan Penggajian.',
   },
   {
     id: 'bitdev',
@@ -82,20 +83,24 @@ const Navbar = () => {
   }, []);
 
   const scrollToApp = (appId) => {
-    if (appId) {
-      window.dispatchEvent(new CustomEvent('select-bithinks-app', { detail: appId }));
-    }
-    const el = document.getElementById('app-selector');
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     setShowProductMenu(false);
     setIsMobileMenuOpen(false);
+    if (appId) {
+      navigateTo(`/${appId}`);
+    } else {
+      navigateTo('/');
+      setTimeout(() => {
+        const el = document.getElementById('app-selector');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 50);
+    }
   };
 
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="container">
         {/* Logo */}
-        <a href="/" className="navbar-logo" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+        <a href="/" className="navbar-logo" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }} onClick={(e) => { e.preventDefault(); navigateTo('/'); }}>
           <img src="/bithinks.jpeg" alt="Logo Bithinks" style={{ height: '64px', borderRadius: '4px' }} />
           <span style={{ backgroundColor: '#EF4444', color: 'white', fontSize: '0.65rem', fontWeight: 800, padding: '2px 8px', borderRadius: '12px', letterSpacing: '1px' }}>BETA</span>
         </a>

@@ -67,7 +67,8 @@ const Hero = () => {
           {/* Left Column: Text and Actions */}
           <div className="hero-left-side">
             <h1 className="hero-left-title">
-              Jalankan Bisnis Anda dalam <span className="highlight-text">Satu Ekosistem Terintegrasi</span>
+              Jalankan Bisnis Anda dalam <br />
+              <span className="highlight-text">Satu Ekosistem Terintegrasi</span>
             </h1>
             
             <p className="hero-left-desc">

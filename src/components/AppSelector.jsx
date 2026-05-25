@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAppContext } from '../context/AppContext';
+import { navigateTo } from '../utils/navigation';
 import './AppSelector.css';
 
 // Import logos dynamically from source assets (using the newly provided background-removed versions!)
@@ -178,7 +179,13 @@ const AppSelector = () => {
                 <div
                   key={card.id}
                   className={`selector-item-card ${isActive ? 'active' : ''}`}
-                  onClick={() => setActiveCard(card.id)}
+                  onClick={() => {
+                    if (isActive) {
+                      navigateTo('/' + card.id);
+                    } else {
+                      setActiveCard(card.id);
+                    }
+                  }}
                   style={{
                     '--card-theme': card.badgeColor,
                     '--card-glow': card.glowColor
@@ -287,6 +294,17 @@ const AppSelector = () => {
 
                   {/* Card Description (Left-aligned & descriptive) */}
                   <p className="selector-card-desc">{card.desc}</p>
+
+                  {/* CTA button (visible on active card) */}
+                  <button 
+                    className="selector-cta-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigateTo('/' + card.id);
+                    }}
+                  >
+                    Pelajari Selengkapnya <span>→</span>
+                  </button>
                 </div>
               );
             })}
