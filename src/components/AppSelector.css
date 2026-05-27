@@ -355,8 +355,8 @@
 
 @media (max-width: 640px) {
   .selector-cards-row {
-    grid-template-columns: repeat(2, 1fr); /* Preserve 2-column mobile showcase standard */
-    gap: 16px;
+    grid-template-columns: 1fr; /* Stack vertically for perfect mobile readability and beautiful layout */
+    gap: 20px;
   }
   
   .selector-item-card {
@@ -417,8 +417,8 @@
   }
 
   .selector-item-card {
-    padding: 34px 10px 16px;
-    border-radius: 16px;
+    padding: 60px 16px 20px;
+    border-radius: 20px;
   }
 
   .card-tag-badge {
@@ -1397,12 +1397,12 @@
 
 @media (max-width: 480px) {
   .selector-item-card {
-    padding: 60px 10px 16px;
+    padding: 60px 16px 20px;
   }
 
   .card-logo-badge {
     height: 46px; /* Uniform small phone banner height */
-    padding: 5px 10px; /* Symmetrically aligned with 10px mobile portrait card padding */
+    padding: 5px 16px; /* Symmetrically aligned with 16px mobile portrait card padding */
     top: 0;
     left: 0;
     border-radius: 14px 14px 0 0;
