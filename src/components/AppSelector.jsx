@@ -303,7 +303,7 @@ const AppSelector = () => {
                       navigateTo('/' + card.id);
                     }}
                   >
-                    Pelajari Selengkapnya <span>→</span>
+                    Pelajari <span className="cta-btn-extra-text">Selengkapnya</span> <span>→</span>
                   </button>
                 </div>
               );
