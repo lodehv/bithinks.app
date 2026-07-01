@@ -48,58 +48,47 @@
 }
 .login-brand img { height: 34px; border-radius: 6px; display: block; }
 
-.login-left-content { position: relative; z-index: 1; }
+.login-left-content { position: relative; z-index: 1; margin: auto 0; }
 .login-left-content h1 {
-  font-size: 2.6rem;
+  font-size: 2.7rem;
   font-weight: 800;
-  line-height: 1.15;
-  margin-bottom: 18px;
+  line-height: 1.14;
+  letter-spacing: -0.015em;
+  margin-bottom: 20px;
   color: #fff;
 }
 .login-left-content p {
   font-size: 1.05rem;
-  color: rgba(255, 255, 255, 0.9);
-  max-width: 380px;
-  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 360px;
+  line-height: 1.65;
 }
 
-/* Logo BitOmni besar + channel chips mengisi ruang bawah panel */
-.auth-hero {
+/* Marketplace terhubung — baris bersih dengan garis pemisah di bawah panel */
+.auth-channels {
   position: relative;
   z-index: 1;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  margin-top: 24px;
-}
-.auth-hero-logo {
-  width: 80%;
-  max-width: 300px;
-  filter: drop-shadow(0 20px 34px rgba(35, 30, 90, 0.32));
-}
-
-/* Badge putih agar warna logo marketplace tidak bertabrakan dengan latar ungu */
-.auth-channels {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 18px;
+  gap: 12px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
 }
 .auth-channels-label {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.9);
-  margin-right: 2px;
+  color: rgba(255, 255, 255, 0.82);
+  margin-right: 4px;
 }
 .auth-chip {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
   background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 6px 16px rgba(35, 30, 90, 0.22);
+  box-shadow: 0 8px 18px rgba(35, 30, 90, 0.20);
 }
 .auth-chip img {
   width: 26px;

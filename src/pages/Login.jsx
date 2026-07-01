@@ -1,6 +1,5 @@
 import { useState } from "react";
 import "./Login.css";
-import bitomniLogo from "../assets/logo_pilihan_fitur/bithinks_omnichannel_logo-removebg-preview.png";
 import shopeeLogo from "../assets/logo_pilihan_fitur/shopee.png";
 import tiktokLogo from "../assets/logo_pilihan_fitur/logo_tiktok.jpg";
 import { ArrowLeft, Mail, KeyRound, Loader2 } from "lucide-react";
@@ -136,13 +135,10 @@ const Login = () => {
           <h1>{t.login.title}</h1>
           <p>{t.login.subtitle}</p>
         </div>
-        <div className="auth-hero">
-          <img className="auth-hero-logo" src={bitomniLogo} alt="Bithinks Omnichannel" />
-          <div className="auth-channels">
-            <span className="auth-channels-label">Terhubung ke</span>
-            <span className="auth-chip"><img src={shopeeLogo} alt="Shopee" /></span>
-            <span className="auth-chip"><img src={tiktokLogo} alt="TikTok Shop" /></span>
-          </div>
+        <div className="auth-channels">
+          <span className="auth-channels-label">Terhubung langsung ke</span>
+          <span className="auth-chip"><img src={shopeeLogo} alt="Shopee" /></span>
+          <span className="auth-chip"><img src={tiktokLogo} alt="TikTok Shop" /></span>
         </div>
         <div className="auth-deco"><span /><span /></div>
       </div>
