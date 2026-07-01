@@ -110,7 +110,7 @@ export default function Dashboard() {
             </div>
           )}
 
-          {activeMenu !== "dashboard" && <BillingBanner sub={sub} onPay={goToPayment} />}
+          {(activeMenu !== "dashboard" || locked) && <BillingBanner sub={sub} onPay={goToPayment} />}
 
           {activeMenu === "dashboard"      && <DashboardHome onMenuClick={setActiveMenu} />}
           {activeMenu === "wms"            && <ModulePlaceholder name="WMS — Manajemen Gudang" icon={Warehouse} />}
