@@ -6,6 +6,16 @@ import api, { getApiErrorMessage } from "../utils/api";
 import { WaHelperButton } from "./register/RegisterShared";
 import { StepCredentials, StepOtp, StepProfile } from "./register/RegisterSteps";
 
+// Validasi password sesuai aturan backend — dicek di langkah 1 agar error muncul
+// tepat di kolom password, bukan baru ketahuan di langkah profil terakhir.
+const validatePassword = (pw) => {
+  if (!pw || pw.length < 8)     return "Password minimal 8 karakter.";
+  if (!/[a-zA-Z]/.test(pw))     return "Password harus mengandung minimal satu huruf.";
+  if (!/[0-9]/.test(pw))        return "Password harus mengandung minimal satu angka.";
+  if (!/[^a-zA-Z0-9]/.test(pw)) return "Password harus mengandung minimal satu karakter spesial (mis. ! @ # $ %).";
+  return null;
+};
+
 const Register = () => {
   const { t, login } = useAppContext();
 
@@ -41,6 +51,10 @@ const Register = () => {
   const handleSendOtp = async (e) => {
     e.preventDefault();
     setError("");
+    // Cek password dulu — supaya tidak terlanjur ke OTP/profil dengan password
+    // yang akan ditolak backend di langkah akhir.
+    const pwError = validatePassword(password);
+    if (pwError) { setError(pwError); return; }
     setLoading(true);
     try {
       await api.post("/api/auth/send-otp", { email, channel: "email", purpose: "register" });

@@ -35,9 +35,12 @@ export function StepCredentials({ email, setEmail, phone, setPhone, password, se
           <input
             type="password" value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Min. 8 karakter, mengandung huruf & angka"
+            placeholder="Buat password yang kuat"
             required minLength={8} disabled={loading}
           />
+          <p style={{ fontSize: "0.78rem", color: "#9CA3AF", marginTop: "6px", lineHeight: 1.45 }}>
+            Minimal 8 karakter, mengandung huruf, angka, dan 1 karakter spesial (mis. <strong>! @ # $ %</strong>).
+          </p>
         </div>
         <div className="form-actions" style={{ marginTop: "24px" }}>
           <SubmitButton loading={loading} label="Kirim Kode OTP" loadingLabel="Mengirim OTP..." icon={<ArrowRight size={18} />} />

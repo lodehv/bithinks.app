@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bithinks Omnichannel - Dokumentasi Integrasi TikTok Shop API</title>
+    
+    <!-- Import Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-primary: #090d16;
+            --bg-secondary: #111726;
+            --bg-tertiary: #1b2336;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-tiktok: #ff0050;
+            --accent-tiktok-cyan: #00f2fe;
+            --accent-green: #10b981;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+            --gradient-tiktok: linear-gradient(135deg, var(--accent-tiktok) 0%, var(--accent-tiktok-cyan) 100%);
+            --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Glow Backgrounds */
+        .ambient-glow-1 {
+            position: absolute;
+            top: -10%;
+            right: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .ambient-glow-2 {
+            position: absolute;
+            top: 40%;
+            left: -10%;
+            width: 45vw;
+            height: 45vw;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, rgba(0, 0, 0, 0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .ambient-glow-3 {
+            position: absolute;
+            bottom: -5%;
+            right: 5%;
+            width: 40vw;
+            height: 40vw;
+            background: radial-gradient(circle, rgba(255, 0, 80, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Container & Navigation */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        header {
+            border-bottom: 1px solid var(--border-color);
+            background-color: rgba(9, 13, 22, 0.8);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 22px;
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .badge-api {
+            background-color: rgba(255, 0, 80, 0.15);
+            border: 1px solid rgba(255, 0, 80, 0.3);
+            color: var(--accent-tiktok-cyan);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--accent-tiktok);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-tiktok);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.4); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 5rem 0 3rem 0;
+            position: relative;
+        }
+
+        .hero-pretitle {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            color: var(--accent-blue);
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -1px;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-title span {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-title span.tiktok-accent {
+            background: var(--gradient-tiktok);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin-bottom: 2rem;
+        }
+
+        /* Quick Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .info-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(59, 130, 246, 0.3);
+            background-color: rgba(17, 23, 38, 0.8);
+        }
+
+        .info-card-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.25rem;
+            color: var(--accent-blue);
+        }
+
+        .info-card.tiktok-card .info-card-icon {
+            color: var(--accent-tiktok);
+            background: rgba(255, 0, 80, 0.05);
+        }
+
+        .info-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .info-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Architecture Section */
+        .section-title-wrapper {
+            text-align: center;
+            margin-bottom: 3.5rem;
+        }
+
+        .section-pretitle {
+            color: var(--accent-cyan);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.25rem;
+            font-weight: 700;
+        }
+
+        .architecture {
+            background-color: rgba(17, 23, 38, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 5rem;
+            box-shadow: var(--card-shadow);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Diagram Alur Data CSS */
+        .diagram-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 3rem 0;
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .diagram-node {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 16px;
+            text-align: center;
+            width: 220px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .diagram-node:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+
+        .diagram-node.bithinks-hub {
+            background: linear-gradient(145deg, #111827 0%, #1e293b 100%);
+            border: 2px solid var(--accent-blue);
+            width: 260px;
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.2);
+        }
+
+        .diagram-node.tiktok-node {
+            border: 2px solid var(--accent-tiktok);
+            box-shadow: 0 0 25px rgba(255, 0, 80, 0.15);
+        }
+
+        .diagram-node-logo {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .diagram-node-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .diagram-node-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .diagram-arrow {
+            flex-grow: 1;
+            height: 2px;
+            background: linear-gradient(90deg, var(--border-color) 0%, var(--accent-blue) 50%, var(--border-color) 100%);
+            position: relative;
+            margin: 0 10px;
+        }
+
+        .diagram-arrow.arrow-tiktok {
+            background: linear-gradient(90deg, var(--accent-blue) 0%, var(--accent-tiktok) 100%);
+        }
+
+        .diagram-arrow::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 8px solid var(--accent-blue);
+        }
+
+        .diagram-arrow.arrow-tiktok::after {
+            border-left-color: var(--accent-tiktok);
+        }
+
+        .diagram-arrow::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-right: 8px solid var(--accent-blue);
+        }
+
+        .flow-label {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            white-space: nowrap;
+            background-color: var(--bg-primary);
+            padding: 2px 8px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        /* Features Section */
+        .features-detailed {
+            margin-bottom: 5rem;
+        }
+
+        .feature-row {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 4rem;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+
+        .feature-row:nth-child(even) {
+            grid-template-columns: 1.2fr 1fr;
+        }
+
+        .feature-row:nth-child(even) .feature-text-col {
+            order: 2;
+        }
+
+        .feature-row:nth-child(even) .feature-visual-col {
+            order: 1;
+        }
+
+        .feature-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .feature-title span.number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            opacity: 0.2;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .feature-desc {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+        .feature-visual-col {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Custom Mini UI Simulator inside visual-col */
+        .simulator-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .sim-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        .sim-status {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--accent-green);
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .sim-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-size: 0.85rem;
+        }
+
+        .sim-row:last-child {
+            border-bottom: none;
+        }
+
+        .sim-platform-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .sim-platform-badge.shopee { background-color: rgba(255,87,34,0.1); color: #ff5722; }
+        .sim-platform-badge.tokopedia { background-color: rgba(3,172,14,0.1); color: #03ac0e; }
+        .sim-platform-badge.tiktok { background-color: rgba(255,0,80,0.1); color: var(--accent-tiktok); }
+        .sim-platform-badge.bithinks { background: rgba(59,130,246,0.1); color: var(--accent-blue); }
+
+        .sim-stock-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            color: #ffffff;
+            transition: var(--transition);
+        }
+
+        .stock-updated {
+            animation: highlightStock 1.5s ease-out;
+        }
+
+        @keyframes highlightStock {
+            0% { color: var(--accent-green); transform: scale(1.2); }
+            100% { color: #ffffff; transform: scale(1); }
+        }
+
+        /* API Scopes Section */
+        .scopes-section {
+            margin-bottom: 5rem;
+        }
+
+        .scope-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+            background-color: var(--bg-secondary);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .scope-table th, .scope-table td {
+            padding: 1.25rem 1.5rem;
+            text-align: left;
+        }
+
+        .scope-table th {
+            background-color: var(--bg-tertiary);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            color: #ffffff;
+            font-size: 0.95rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .scope-table td {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 0.95rem;
+        }
+
+        .scope-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .scope-name {
+            font-family: monospace;
+            color: var(--accent-cyan);
+            background-color: rgba(6, 182, 212, 0.05);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(6, 182, 212, 0.15);
+        }
+
+        .scope-justifikasi {
+            color: var(--text-secondary);
+        }
+
+        /* Security Section */
+        .security-section {
+            background: linear-gradient(135deg, rgba(17, 23, 38, 0.8) 0%, rgba(9, 13, 22, 0.8) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 5rem;
+            box-shadow: var(--card-shadow);
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .security-left {
+            text-align: left;
+        }
+
+        .security-icon-box {
+            width: 60px;
+            height: 60px;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-green);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 24px;
+        }
+
+        .security-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .security-item {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 1.5rem;
+            border-radius: 12px;
+        }
+
+        .security-item h4 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .security-item p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 0;
+            background-color: #05080e;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        footer .bithinks-footer-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        footer p {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Print Specific Styles */
+        @media print {
+            body {
+                background-color: #090d16 !important;
+                color: #f3f4f6 !important;
+            }
+            header {
+                position: static !important;
+            }
+            .container {
+                max-width: 100% !important;
+                padding: 0 1rem !important;
+            }
+            section, .architecture, .info-card, .feature-row, .scope-table, .security-section {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+            .ambient-glow-1, .ambient-glow-2, .ambient-glow-3 {
+                display: none; /* Hide background glows for cleaner PDF printing */
+            }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 968px) {
+            .hero-title { font-size: 2.75rem; }
+            .info-grid { grid-template-columns: 1fr; }
+            .diagram-container {
+                flex-direction: column;
+                gap: 2.5rem;
+                padding: 1rem 0;
+            }
+            .diagram-arrow {
+                width: 2px;
+                height: 40px;
+                margin: 0;
+                background: linear-gradient(180deg, var(--accent-blue) 0%, var(--accent-tiktok) 100%);
+            }
+            .diagram-arrow::after {
+                transform: rotate(90deg);
+                bottom: 0;
+                top: auto;
+                right: -3px;
+            }
+            .diagram-arrow::before {
+                display: none;
+            }
+            .feature-row, .feature-row:nth-child(even) {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .feature-row:nth-child(even) .feature-text-col { order: 1; }
+            .feature-row:nth-child(even) .feature-visual-col { order: 2; }
+            .security-section { grid-template-columns: 1fr; }
+            .security-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient background glows -->
+    <div class="ambient-glow-1"></div>
+    <div class="ambient-glow-2"></div>
+    <div class="ambient-glow-3"></div>
+
+    <!-- Navigation Header -->
+    <header>
+        <div class="container nav-wrapper">
+            <div class="logo-area">
+                <div class="logo-icon">B</div>
+                <div class="logo-text">bithinks</div>
+            </div>
+            <div class="badge-api">
+                <div class="badge-dot"></div>
+                <span>TikTok Shop API Partner</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <!-- Hero Section -->
+        <section class="hero">
+            <span class="hero-pretitle">DOKUMEN INTEGRASI SISTEM</span>
+            <h1 class="hero-title">Layanan Omnichannel <br><span>Bithinks</span> x <span class="tiktok-accent">TikTok Shop API</span></h1>
+            <p class="hero-desc">
+                Bithinks Omnichannel adalah platform System Integrator & Enterprise Resource Planning (ERP) multi-channel yang dikembangkan untuk menghubungkan sistem inventori retail, manajemen pesanan, dan POS fisik merchant secara mulus dengan e-commerce, khususnya melalui integrasi TikTok Shop API.
+            </p>
+        </section>
+
+        <!-- Quick Info Grid -->
+        <section class="info-grid">
+            <div class="info-card">
+                <div class="info-card-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 16-4 4-4-4"></path><path d="M17 20V4"></path><path d="m3 8 4-4 4 4"></path><path d="M7 4v16"></path></svg>
+                </div>
+                <h3>Sinkronisasi Dua Arah</h3>
+                <p>Mengintegrasikan persediaan produk, pesanan, dan katalog harga merchant secara real-time ke seluruh channel e-commerce dari satu dasbor terpusat.</p>
+            </div>
+            <div class="info-card tiktok-card">
+                <div class="info-card-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"></rect><line x1="8" x2="16" y1="21" y2="21"></line><line x1="12" x2="12" y1="17" y2="21"></line></svg>
+                </div>
+                <h3>Manajemen TikTok Shop</h3>
+                <p>Memungkinkan merchant memproses fulfillment pesanan TikTok Shop langsung dari Bithinks ERP, termasuk cetak label pengiriman otomatis.</p>
+            </div>
+            <div class="info-card">
+                <div class="info-card-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                </div>
+                <h3>Keamanan & Kepatuhan</h3>
+                <p>Didesain menggunakan protokol otentikasi resmi OAuth 2.0 TikTok Shop API dengan standardisasi enkripsi data untuk menjaga privasi merchant.</p>
+            </div>
+        </section>
+
+        <!-- Architecture & Data Flow -->
+        <section class="architecture">
+            <div class="section-title-wrapper">
+                <span class="section-pretitle">ARTEFAK INTEGRASI</span>
+                <h2 class="section-title">Arsitektur & Diagram Alur Data</h2>
+            </div>
+            
+            <p style="color: var(--text-secondary); text-align: center; max-width: 800px; margin: 0 auto 2rem auto;">
+                Diagram berikut menggambarkan bagaimana Bithinks menjembatani data di berbagai channel penjualan offline/online merchant dengan TikTok Shop API secara aman dan real-time.
+            </p>
+
+            <div class="diagram-container">
+                <!-- Node 1: Multi-Channel Source -->
+                <div class="diagram-node">
+                    <div class="diagram-node-logo">🏬</div>
+                    <div class="diagram-node-title">Toko Fisik & POS</div>
+                    <div class="diagram-node-subtitle">Bithinks POS / Cabang Retail</div>
+                </div>
+
+                <!-- Arrow -->
+                <div class="diagram-arrow">
+                    <div class="flow-label">1. Update Transaksi</div>
+                </div>
+
+                <!-- Node 2: Core Hub Bithinks -->
+                <div class="diagram-node bithinks-hub">
+                    <div class="diagram-node-logo">⚙️</div>
+                    <div class="diagram-node-title">Bithinks ERP Core</div>
+                    <div class="diagram-node-subtitle">Pusat Sinkronisasi Stok & Pesanan</div>
+                </div>
+
+                <!-- Arrow -->
+                <div class="diagram-arrow arrow-tiktok">
+                    <div class="flow-label">2. Sinkronisasi API</div>
+                </div>
+
+                <!-- Node 3: TikTok API -->
+                <div class="diagram-node tiktok-node">
+                    <div class="diagram-node-logo">🎵</div>
+                    <div class="diagram-node-title">TikTok Shop API</div>
+                    <div class="diagram-node-subtitle">Katalog, Stok, & Pesanan</div>
+                </div>
+            </div>
+
+            <div style="background-color: var(--bg-tertiary); padding: 1.5rem; border-radius: 12px; border-left: 4px solid var(--accent-blue); font-size: 0.95rem;">
+                <strong>Penjelasan Alur:</strong> Ketika produk terjual di retail POS fisik atau marketplace lain, <strong>Bithinks ERP</strong> menerima trigger data stok terbaru. Sistem Bithinks memproses perubahan stok dan langsung menembak API <code>Inventory Management</code> TikTok Shop secara asynchronous agar stok produk di etalase TikTok Shop langsung berubah seketika, mencegah masalah <em>over-selling</em>.
+            </div>
+        </section>
+
+        <!-- Detailed Features Showcase -->
+        <section class="features-detailed">
+            <div class="section-title-wrapper">
+                <span class="section-pretitle">KEMAMPUAN PLATFORM</span>
+                <h2 class="section-title">Fitur Omnichannel yang Dibangun</h2>
+            </div>
+
+            <!-- Feature 1 -->
+            <div class="feature-row">
+                <div class="feature-text-col">
+                    <h3 class="feature-title"><span class="number">01</span> Sinkronisasi Stok & Inventori Real-Time</h3>
+                    <p class="feature-desc">
+                        BitOmni (layanan inti omnichannel Bithinks) bertindak sebagai pusat kebenaran persediaan barang. Saat barang terjual di etalase TikTok Shop Anda, sistem Bithinks otomatis mengurangi stok di gudang fisik utama dan memutakhirkan stok di e-commerce lainnya.
+                    </p>
+                    <ul class="feature-list">
+                        <li>Sinkronisasi instan dalam hitungan detik setelah penjualan terjadi.</li>
+                        <li>Mencegah double-selling & pembatalan pesanan yang merugikan performa toko.</li>
+                        <li>Mendukung set batas stok minimum (safety stock) per cabang / etalase toko.</li>
+                    </ul>
+                </div>
+                <div class="feature-visual-col">
+                    <div class="simulator-header">
+                        <span class="sim-title">Status Stok Produk (Master)</span>
+                        <span class="sim-status">TERKONEKSI</span>
+                    </div>
+                    <div class="sim-row">
+                        <span class="sim-platform-badge bithinks">Bithinks ERP</span>
+                        <span>Stok Fisik Gudang</span>
+                        <span class="sim-stock-value">42 pcs</span>
+                    </div>
+                    <div class="sim-row">
+                        <span class="sim-platform-badge shopee">Shopee</span>
+                        <span>Stok Marketplace</span>
+                        <span class="sim-stock-value">42 pcs</span>
+                    </div>
+                    <div class="sim-row">
+                        <span class="sim-platform-badge tiktok">TikTok Shop</span>
+                        <span>Stok Etalase TikTok</span>
+                        <span class="sim-stock-value stock-updated">42 pcs</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="feature-row">
+                <div class="feature-visual-col" style="background-color: #0f172a; padding: 2rem;">
+                    <!-- Simple UI representation for fulfillment simulator -->
+                    <div class="simulator-header">
+                        <span class="sim-title">Dasbor Proses Pesanan Massal</span>
+                        <span class="sim-status" style="background-color: rgba(59,130,246,0.15); color: var(--accent-blue);">FULFILLMENT</span>
+                    </div>
+                    <div style="font-size: 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; margin-bottom: 8px; background-color: var(--bg-tertiary);">
+                        <div style="display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 4px;">
+                            <span>Pesanan #TTS-9872138</span>
+                            <span style="color: var(--accent-tiktok);">TikTok Shop</span>
+                        </div>
+                        <div style="color: var(--text-secondary); margin-bottom: 6px;">1x Kaos Polos Hitam - M (Rp 75,000)</div>
+                        <div style="display: flex; gap: 8px;">
+                            <span style="background-color: var(--bg-primary); padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; border: 1px solid var(--border-color);">Kurir: J&T</span>
+                            <span style="color: var(--accent-green); font-weight: 500;">✓ AWB Siap Cetak</span>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; background-color: var(--bg-tertiary);">
+                        <div style="display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 4px;">
+                            <span>Pesanan #TTS-9872149</span>
+                            <span style="color: var(--accent-tiktok);">TikTok Shop</span>
+                        </div>
+                        <div style="color: var(--text-secondary); margin-bottom: 6px;">2x Kemeja Flanel Biru - L (Rp 300,000)</div>
+                        <div style="display: flex; gap: 8px;">
+                            <span style="background-color: var(--bg-primary); padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; border: 1px solid var(--border-color);">Kurir: SiCepat</span>
+                            <span style="color: var(--accent-cyan); font-weight: 500;">⚡ Perlu Diatur Pickup</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="feature-text-col">
+                    <h3 class="feature-title"><span class="number">02</span> Manajemen Pesanan & Pemrosesan Otomatis</h3>
+                    <p class="feature-desc">
+                        Bithinks mengumpulkan semua pesanan baru dari TikTok Shop secara real-time. Merchant dapat langsung memproses pesanan tersebut di dalam dashboard Bithinks tanpa harus login bolak-balik ke Seller Center TikTok Shop.
+                    </p>
+                    <ul class="feature-list">
+                        <li>Tarik data pesanan otomatis menggunakan API Webhook.</li>
+                        <li>Proses pesanan massal (Accept Order, Request Pickup/Drop-off) sekali klik.</li>
+                        <li>Pembuatan dan pencetakan Label Pengiriman (Shipping Label/Airway Bill) resmi dari ekspedisi terintegrasi TikTok Shop.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="feature-row">
+                <div class="feature-text-col">
+                    <h3 class="feature-title"><span class="number">03</span> Sinkronisasi Produk & Manajemen Katalog</h3>
+                    <p class="feature-desc">
+                        Mengelola data produk di multi-channel menjadi sangat mudah. Merchant cukup mengunggah satu "Master Product" di platform Bithinks, lalu menyebarkannya ke TikTok Shop beserta gambar, deskripsi, harga khusus, dan variasi warna/ukuran.
+                    </p>
+                    <ul class="feature-list">
+                        <li>Pembuatan produk dan variasi secara massal di TikTok Shop.</li>
+                        <li>Update harga dinamis (misalnya ketika ada event promo) dari satu input pusat.</li>
+                        <li>Manajemen gambar produk dan media teroptimasi sesuai standar ukuran TikTok Shop.</li>
+                    </ul>
+                </div>
+                <div class="feature-visual-col" style="background-color: #0d1e2e;">
+                    <div class="simulator-header">
+                        <span class="sim-title">Katalog Master Bithinks</span>
+                        <span class="sim-status" style="background-color: rgba(6,182,212,0.15); color: var(--accent-cyan);">PUBLISH</span>
+                    </div>
+                    <div style="text-align: center; padding: 1rem 0;">
+                        <div style="font-weight: bold; margin-bottom: 6px;">Baju Koko Modern Premium</div>
+                        <div style="font-family: monospace; color: var(--accent-cyan); font-size: 0.85rem; margin-bottom: 12px;">SKU: BKK-MOD-PRM</div>
+                        
+                        <div style="display: flex; justify-content: center; gap: 20px; font-size: 0.8rem;">
+                            <div style="border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 8px; background-color: var(--bg-tertiary);">
+                                <div style="color: var(--text-secondary); margin-bottom: 4px;">Harga Pusat</div>
+                                <div style="font-weight: bold; color: var(--accent-green);">Rp 150.000</div>
+                            </div>
+                            <div style="border: 1px solid var(--accent-tiktok); padding: 8px 12px; border-radius: 8px; background-color: rgba(255,0,80,0.05);">
+                                <div style="color: var(--accent-tiktok-cyan); margin-bottom: 4px;">Push ke TikTok</div>
+                                <div style="font-weight: bold; color: #ffffff;">Rp 149.000 (Promo)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TikTok Shop API Scopes Justification -->
+        <section class="scopes-section">
+            <div class="section-title-wrapper">
+                <span class="section-pretitle">PERSYARATAN TEKNIS</span>
+                <h2 class="section-title">Justifikasi Akses Scope TikTok Shop API</h2>
+            </div>
+            
+            <p style="color: var(--text-secondary); text-align: center; max-width: 800px; margin: 0 auto 2rem auto;">
+                Bithinks berkomitmen untuk hanya menggunakan hak akses API yang krusial guna menjamin integritas data operasional bisnis merchant kami. Berikut adalah rincian scope API yang kami ajukan:
+            </p>
+
+            <table class="scope-table">
+                <thead>
+                    <tr>
+                        <th style="width: 25%">Scope API</th>
+                        <th style="width: 20%">Modul Terkait</th>
+                        <th style="width: 55%">Tujuan & Justifikasi Penggunaan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="scope-name">product.mgt</span></td>
+                        <td>Manajemen Katalog</td>
+                        <td class="scope-justifikasi">Digunakan untuk mengambil info produk terdaftar di TikTok Shop, mencocokkannya dengan SKU master Bithinks, serta memperbarui deskripsi atau gambar dari dasbor terpadu Bithinks.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scope-name">inventory.mgt</span></td>
+                        <td>Manajemen Stok</td>
+                        <td class="scope-justifikasi">Sangat penting untuk memperbarui kuantitas persediaan stok (stock level) secara real-time begitu ada penjualan di toko offline (POS) atau e-commerce lain, sehingga mencegah <em>over-selling</em>.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scope-name">order.mgt</span></td>
+                        <td>Proses Pesanan</td>
+                        <td class="scope-justifikasi">Digunakan untuk menarik data pesanan baru dari TikTok Shop secara berkala, menampilkan status pembayaran, dan memetakan order tersebut ke dalam antrean fulfillment Bithinks.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scope-name">fulfillment.mgt</span></td>
+                        <td>Logistik & Kurir</td>
+                        <td class="scope-justifikasi">Digunakan untuk memesan kurir penjemputan paket (request pickup), mengambil data tracking AWB, dan mencetak label pengiriman resmi untuk memudahkan operasional warehouse merchant.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scope-name">reverse_logistics.mgt</span></td>
+                        <td>Layanan Pelanggan</td>
+                        <td class="scope-justifikasi">Digunakan untuk mendeteksi pembatalan pesanan atau permintaan retur dari pembeli di TikTok Shop sehingga stok inventori dapat dikembalikan secara otomatis ke gudang merchant.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Security, Privacy, and Compliance -->
+        <section class="security-section">
+            <div class="security-left">
+                <div class="security-icon-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                </div>
+                <h2 class="section-title">Keamanan & Perlindungan Data</h2>
+                <p style="color: var(--text-secondary); margin-top: 1rem;">
+                    Bithinks mengimplementasikan perlindungan data tingkat lanjut untuk mematuhi regulasi privasi pelanggan dan Developer Policy yang ditetapkan oleh TikTok Shop.
+                </p>
+            </div>
+            
+            <div class="security-right">
+                <div class="security-grid">
+                    <div class="security-item">
+                        <h4>OAuth 2.0 Resmi</h4>
+                        <p>Merchant mengotorisasi tokonya menggunakan link login resmi TikTok. Bithinks tidak pernah menyimpan password seller.</p>
+                    </div>
+                    <div class="security-item">
+                        <h4>Enkripsi Token</h4>
+                        <p>Access Token dan Refresh Token TikTok Shop API disimpan di database menggunakan enkripsi standar AES-256 yang aman.</p>
+                    </div>
+                    <div class="security-item">
+                        <h4>Pembatasan Akses (RLS)</h4>
+                        <p>Menggunakan PostgreSQL Row Level Security (RLS) untuk menjamin isolasi data antar tenant (tidak ada kebocoran data toko).</p>
+                    </div>
+                    <div class="security-item">
+                        <h4>Audit Log Lengkap</h4>
+                        <p>Setiap call API dan pembaruan stok dicatat dalam sistem log audit untuk analisis pemecahan masalah (troubleshooting) secara transparan.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="bithinks-footer-logo">bithinks</div>
+            <p>&copy; 2026 Bithinks Omnichannel SaaS Platform. All Rights Reserved.</p>
+            <p style="font-size: 0.8rem; color: #55627a;">Dokumen ini dipersiapkan untuk pengajuan TikTok Developer Platform API Client ID.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

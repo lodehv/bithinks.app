@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useAppContext } from "../../context/AppContext";
 import "./DashboardLayout.css";
 import {
-  Users, DollarSign, Package, ShoppingCart,
-  Store, ClipboardList, Menu, X, LogOut,
+  Store, ClipboardList, Menu, X, LogOut, Warehouse, Boxes, Megaphone,
   ChevronLeft, ChevronRight, LayoutDashboard, Lock, Settings
 } from "lucide-react";
 
@@ -11,18 +10,22 @@ const NAV_SECTIONS = [
   {
     label: "Menu",
     items: [
-      { id: "dashboard",   label: "Dashboard",   icon: LayoutDashboard, module: null      },
-      { id: "orders",      label: "Pesanan",      icon: ClipboardList,   module: null      },
+      { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, module: null },
     ],
   },
   {
     label: "Modul",
     items: [
-      { id: "hrm",         label: "HRM",          icon: Users,           module: "HRM"     },
-      { id: "finance",     label: "Finance",       icon: DollarSign,      module: "Finance"  },
-      { id: "inventory",   label: "Inventori",     icon: Package,         module: "WMS"     },
-      { id: "pos",         label: "POS",           icon: ShoppingCart,    module: "POS"     },
-      { id: "marketplace", label: "Marketplaces",  icon: Store,           module: "ERP"     },
+      { id: "wms",            label: "WMS",            icon: Warehouse,     module: null },
+      { id: "integrasi-toko", label: "Integrasi Toko", icon: Store,         module: null },
+      { id: "pesanan",        label: "Pesanan",        icon: ClipboardList, module: null },
+      { id: "kelola-produk",  label: "Kelola Produk",  icon: Boxes,         module: null },
+    ],
+  },
+  {
+    label: "Analitik",
+    items: [
+      { id: "marketing", label: "Dashboard Marketing", icon: Megaphone, module: null },
     ],
   },
   {
