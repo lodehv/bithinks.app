@@ -123,16 +123,17 @@ const Login = () => {
 
   return (
     <div className="login-page">
+     <div className="auth-card">
       {/* Panel Kiri */}
-      <div className="login-left" style={{ backgroundColor: "#FFF9DB" }}>
+      <div className="login-left">
         <a href="/" className="login-brand">
-          <img src="/bithinks.jpeg" alt="Logo Bithinks" style={{ height: "40px", borderRadius: "4px" }} />
+          <img src="/bithinks.jpeg" alt="Logo Bithinks" />
         </a>
         <div className="login-left-content">
           <h1>{t.login.title}</h1>
           <p>{t.login.subtitle}</p>
         </div>
-        <div />
+        <div className="auth-deco"><span /><span /></div>
       </div>
 
       {/* Panel Kanan */}
@@ -192,7 +193,7 @@ const Login = () => {
 
             <p style={{ textAlign: "center", marginTop: "32px", fontSize: "0.875rem", color: "#6B7280" }}>
               Belum punya akun?{" "}
-              <a href="/register" style={{ color: "#3B82F6", fontWeight: 600, textDecoration: "none" }}>
+              <a href="/register" style={{ color: "#4F46E5", fontWeight: 600, textDecoration: "none" }}>
                 Daftar Sekarang
               </a>
             </p>
@@ -289,6 +290,7 @@ const Login = () => {
         )}
 
       </div>
+     </div>
     </div>
   );
 };

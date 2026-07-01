@@ -4,48 +4,80 @@
   font-family: 'Plus Jakarta Sans', sans-serif;
   min-height: 100vh;
   display: flex;
-  background-color: var(--color-bg-alt);
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background: #EDEEF9;
 }
 
+/* ─── Kartu mengapung (split panel) ──────────────────────────────────────── */
+.auth-card {
+  display: flex;
+  width: 100%;
+  max-width: 1120px;
+  min-height: 660px;
+  background: #fff;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 30px 70px rgba(58, 50, 140, 0.16);
+}
+
+/* ─── Panel kiri (periwinkle) ────────────────────────────────────────────── */
 .login-left {
   flex: 1;
-  background: var(--color-primary-dark);
-  color: white;
-  padding: 60px;
+  background: linear-gradient(160deg, #8B8DF5 0%, #6E70EE 100%);
+  color: #fff;
+  padding: 48px 44px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: relative;
+  overflow: hidden;
 }
 
 .login-brand {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 12px;
   text-decoration: none;
+  background: #fff;
+  padding: 8px 14px;
+  border-radius: 12px;
+  align-self: flex-start;
+  box-shadow: 0 6px 18px rgba(40, 35, 100, 0.18);
 }
+.login-brand img { height: 34px; border-radius: 6px; display: block; }
 
-.login-brand img {
-  height: 50px;
-}
-
+.login-left-content { position: relative; z-index: 1; }
 .login-left-content h1 {
-  font-size: 3rem;
+  font-size: 2.6rem;
   font-weight: 800;
-  margin-bottom: 24px;
-  color: #111827;
+  line-height: 1.15;
+  margin-bottom: 18px;
+  color: #fff;
 }
-
 .login-left-content p {
-  font-size: 1.125rem;
-  color: #111827;
-  opacity: 0.8;
-  max-width: 400px;
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 380px;
+  line-height: 1.6;
 }
 
+/* Bulatan dekoratif lembut */
+.auth-deco { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.auth-deco span {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+}
+.auth-deco span:nth-child(1) { width: 220px; height: 220px; right: -70px; bottom: -60px; }
+.auth-deco span:nth-child(2) { width: 130px; height: 130px; right: 90px; bottom: 120px; background: rgba(255,255,255,0.08); }
+
+/* ─── Panel kanan (form) ─────────────────────────────────────────────────── */
 .login-right {
-  flex: 1.2;
-  padding: 60px 80px;
-  background: var(--color-bg);
+  flex: 1.15;
+  padding: 56px 60px;
+  background: #fff;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -53,7 +85,7 @@
 }
 
 .login-form-container {
-  max-width: 500px;
+  max-width: 440px;
   margin: 0 auto;
   width: 100%;
   animation: fadeIn 0.4s ease forwards;
@@ -73,13 +105,11 @@
 
 .login-right p.subtitle {
   color: var(--color-text-muted);
-  margin-bottom: 40px;
+  margin-bottom: 36px;
   font-size: 1rem;
 }
 
-.form-group {
-  margin-bottom: 20px;
-}
+.form-group { margin-bottom: 20px; }
 
 .form-group label {
   display: block;
@@ -97,15 +127,15 @@
   font-family: inherit;
   font-size: 1rem;
   transition: all 0.2s;
-  background: var(--color-bg-alt);
+  background: #F7F8FC;
   color: var(--color-text);
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #3B82F6;
-  background: var(--color-bg);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: #6366F1;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.14);
 }
 
 .otp-input {
@@ -126,31 +156,32 @@
 .login-page .btn-submit {
   width: 100%;
   padding: 14px;
-  background-color: var(--color-primary);
-  color: #111827;
+  background-color: #4F46E5;
+  color: #fff;
   border: none;
   border-radius: 12px;
   font-weight: 700;
-  font-size: 1.125rem;
+  font-size: 1.05rem;
   cursor: pointer;
   transition: all 0.2s;
   font-family: inherit;
 }
 
 .login-page .btn-submit:hover {
-  background-color: var(--color-primary-dark);
+  background-color: #4338CA;
   transform: translateY(-2px);
 }
+.login-page .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
 
 .login-page .btn-outline {
   width: 100%;
-  padding: 14px;
+  padding: 13px;
   background-color: transparent;
   color: var(--color-text);
   border: 2px solid var(--border-color);
   border-radius: 12px;
   font-weight: 700;
-  font-size: 1.125rem;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s;
   font-family: inherit;
@@ -161,9 +192,9 @@
 }
 
 .login-page .btn-outline:hover {
-  border-color: var(--color-text-light);
-  color: var(--color-text);
-  background-color: var(--color-bg-alt);
+  border-color: #C7C9F9;
+  color: #4F46E5;
+  background-color: #F5F5FE;
 }
 
 .back-home {
@@ -173,24 +204,23 @@
   color: var(--color-text-muted);
   text-decoration: none;
   font-weight: 600;
-  margin-bottom: 40px;
+  margin-bottom: 32px;
   font-size: 0.875rem;
   transition: color 0.2s;
 }
 
-.back-home:hover {
-  color: var(--color-text);
-}
+.back-home:hover { color: var(--color-text); }
 
 @media (max-width: 992px) {
-  .login-page {
+  .login-page { padding: 0; }
+  .auth-card {
     flex-direction: column;
+    border-radius: 0;
+    min-height: 100vh;
+    max-width: none;
+    box-shadow: none;
   }
-  .login-left {
-    padding: 40px;
-    flex: none;
-  }
-  .login-right {
-    padding: 40px 24px;
-  }
+  .login-left { padding: 40px 28px; }
+  .login-left-content h1 { font-size: 2rem; }
+  .login-right { padding: 40px 24px; }
 }

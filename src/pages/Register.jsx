@@ -117,10 +117,11 @@ const Register = () => {
 
   return (
     <div className="register-page">
+     <div className="auth-card">
       {/* Panel Kiri */}
-      <div className="register-left" style={{ backgroundColor: "#FFF9DB" }}>
+      <div className="register-left">
         <a href="/" className="register-brand">
-          <img src="/bithinks.jpeg" alt="Logo Bithinks" style={{ height: "40px", borderRadius: "4px" }} />
+          <img src="/bithinks.jpeg" alt="Logo Bithinks" />
         </a>
         <div className="register-left-content">
           <h1>
@@ -128,7 +129,7 @@ const Register = () => {
           </h1>
           <p>{t.hero.desc}</p>
         </div>
-        <div />
+        <div className="auth-deco"><span /><span /></div>
       </div>
 
       {/* Panel Kanan */}
@@ -181,6 +182,7 @@ const Register = () => {
           )}
         </div>
       </div>
+     </div>
     </div>
   );
 };
