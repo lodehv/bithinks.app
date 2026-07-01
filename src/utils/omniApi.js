@@ -12,6 +12,7 @@ const unwrap = (r) => r.data?.data
 export const omniApi = {
   listStores:        ()            => api.get('/api/omni/stores').then(unwrap),
   connectStore:      (payload)     => api.post('/api/omni/stores', payload).then(unwrap),
+  deleteStore:       (id)          => api.delete(`/api/omni/stores/${id}`).then(unwrap),
   shopeeConnectUrl:  ()            => api.get('/api/omni/shopee/connect').then((r) => r.data?.data?.authUrl),
   tiktokConnectUrl:  ()            => api.get('/api/omni/tiktok/connect').then((r) => r.data?.data?.authUrl),
 

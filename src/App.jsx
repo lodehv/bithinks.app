@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import OAuthDone from './pages/OAuthDone';
 import ProductDetail from './pages/ProductDetail';
 import { AppProvider } from './context/AppContext';
 
@@ -18,6 +19,7 @@ function InnerApp() {
 
   if (route === '/register')            return <Register />;
   if (route === '/login')               return <Login />;
+  if (route.startsWith('/oauth/done'))  return <OAuthDone />;
   if (route.startsWith('/dashboard'))   return <Dashboard />;
   if (route === '/bitone')              return <ProductDetail appId="bitone" />;
   if (route === '/bitomni')             return <ProductDetail appId="bitomni" />;
