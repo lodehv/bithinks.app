@@ -1,16 +1,17 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 import { navigateTo } from '../utils/navigation';
+import { PLANS, PERIODS, rupiah } from '../data/plans';
 import gsap from 'gsap';
 import './ProductDetail.css';
 
 // Import Icons
-import { 
-  ArrowLeft, ArrowRight, Zap, CheckCircle2, TrendingUp, Shield, BarChart3, 
-  Layers, Package, Users, Cpu, FileText, Smartphone, RefreshCw, Landmark, 
-  Calendar, CheckSquare, Clock, Globe, Settings, Terminal
+import {
+  ArrowLeft, ArrowRight, Zap, CheckCircle2, TrendingUp, Shield, BarChart3,
+  Layers, Package, Users, Cpu, FileText, Smartphone, RefreshCw, Landmark,
+  Calendar, CheckSquare, Clock, Globe, Settings, Terminal, Check, Flame
 } from 'lucide-react';
 
 // Import Mockup Images (Matching AppSelector.jsx)
@@ -77,45 +78,45 @@ const productsData = {
   bitomni: {
     name: "Bithinks Omnichannel [BitOmni]",
     badgeText: "BitOmni",
-    tagline: "MARKETPLACE MULTI-CHANNEL SYNC",
-    headline: "Hubungkan Semua Marketplace & Toko Online Anda dalam Detik",
-    description: "BitOmni menghilangkan mimpi buruk salah kelola stok produk di e-commerce. Sinkronisasikan katalog, harga, stok, dan proses pesanan dari Shopee, Tokopedia, dan TikTok Shop secara instan di satu dasbor tunggal. Tingkatkan efisiensi fulfillment order tanpa takut terkena penalti poin toko.",
-    color: "#FF6B00",
-    bgColor: "rgba(255, 107, 0, 0.04)",
-    glowColor: "rgba(255, 107, 0, 0.15)",
+    tagline: "SINKRONISASI & ANALITIK MULTI-TOKO",
+    headline: "Omzet, Profit, & Stok Semua Toko dalam Satu Dashboard Real-Time",
+    description: "BitOmni menarik data penjualan Shopee & TikTok Shop Anda jadi satu laporan yang bisa dipercaya. Lihat profit bersih setelah potongan biaya platform, jaga stok tetap sinkron agar tak over-selling, dan proses semua pesanan tanpa bolak-balik buka seller center.",
+    color: "#4F46E5",
+    bgColor: "rgba(99, 102, 241, 0.06)",
+    glowColor: "rgba(99, 102, 241, 0.18)",
     logo: bitOmniLogo,
     mockupType: "omni",
     stats: [
-      { value: "100%", label: "Stok Tersinkronisasi Otomatis" },
-      { value: "5x", label: "Fulfillment Order Lebih Kilat" },
-      { value: "99.9%", label: "Akurasi Pengiriman Paket" }
+      { value: "Real-Time", label: "Laporan Omzet & Profit Bersih" },
+      { value: "0", label: "Selisih Stok Antar Marketplace" },
+      { value: "−80%", label: "Waktu Kelola Pesanan & Stok" }
     ],
     features: [
       {
-        icon: <RefreshCw color="#FF6B00" size={24} />,
+        icon: <BarChart3 color="#4F46E5" size={24} />,
+        title: "Analitik Omzet & Profit Bersih",
+        desc: "Lihat omzet tiap toko, potongan biaya platform, dan profit bersih Anda yang sebenarnya — bukan sekadar penjualan kotor. Ketahui produk mana yang benar-benar cuan."
+      },
+      {
+        icon: <RefreshCw color="#4F46E5" size={24} />,
         title: "Sinkronisasi Stok Real-Time",
-        desc: "Saat produk terjual di Shopee, BitOmni langsung memotong stok di Tokopedia, TikTok Shop, dan gudang fisik Anda saat itu juga."
+        desc: "Begitu produk laku di satu toko, stok di Shopee, TikTok Shop, dan gudang fisik Anda ikut terpotong saat itu juga. Bebas dari over-selling dan komplain pembeli."
       },
       {
-        icon: <CheckSquare color="#FF6B00" size={24} />,
-        title: "Proses Pesanan Massal",
-        desc: "Terima pesanan, atur pickup kurir, cetak invoice, dan generate label pengiriman (airway bill) ratusan paket sekaligus dalam 1 klik."
+        icon: <CheckSquare color="#4F46E5" size={24} />,
+        title: "Manajemen Pesanan Terpusat",
+        desc: "Terima, proses, atur pickup kurir, dan cetak label pengiriman ratusan pesanan dari semua toko dalam satu layar — tanpa buka seller center satu per satu."
       },
       {
-        icon: <Package color="#FF6B00" size={24} />,
-        title: "Sinkronisasi Katalog Master",
-        desc: "Kelola satu katalog master di Bithinks, lalu push produk baru ke seluruh marketplace secara massal dengan deskripsi dan harga yang disesuaikan."
-      },
-      {
-        icon: <Globe color="#FF6B00" size={24} />,
-        title: "Analitik Penjualan Lintas Channel",
-        desc: "Lihat produk terlaris dan profitabilitas di masing-masing e-commerce untuk mengoptimalkan strategi marketing & inventory."
+        icon: <Layers color="#4F46E5" size={24} />,
+        title: "Katalog Master Sekali Atur",
+        desc: "Kelola satu katalog produk, lalu tayangkan ke semua marketplace sekaligus. Ubah harga dan deskripsi secara massal tanpa input ulang di tiap toko."
       }
     ],
     whyUs: [
-      "Mencegah resiko over-selling (menjual barang yang stok fisiknya sudah habis).",
-      "Menghemat waktu admin marketplace hingga 80%, tidak perlu login ke seller center satu per satu.",
-      "Kompatibel penuh dengan ekspedisi lokal dan regulasi marketplace terupdate."
+      "Tahu profit bersih asli tiap toko setelah semua potongan biaya platform, bukan cuma omzet kotor.",
+      "Stok selalu sinkron di semua marketplace — cegah over-selling yang bikin poin toko kena penalti.",
+      "Hemat waktu admin: kelola pesanan & stok semua toko dari satu tempat, tanpa login bergantian."
     ]
   },
   bitfine: {
@@ -299,6 +300,7 @@ const productsData = {
 const ProductDetail = ({ appId }) => {
   const product = productsData[appId] || productsData.bitone;
   const containerRef = useRef(null);
+  const [period, setPeriod] = useState(PERIODS[0]);
 
   useEffect(() => {
     // Scroll instantly to top on render
@@ -507,34 +509,54 @@ module.exports = async function customWorkflow(ctx) {
                   )}
 
                   {product.mockupType === 'omni' && (
-                    <div className="p-mockup-omni-chamber">
-                      {/* Left Badge */}
-                      <div className="omni-platform-badge shopee-theme">
-                        <img src={shopeeLogo} alt="Shopee" />
-                        <span>Shopee</span>
-                      </div>
-                      
-                      {/* Flow arrow left */}
-                      <div className="omni-chamber-flow-line left">
-                        <div className="flow-dash"></div>
+                    <div className="omni-dash">
+                      <div className="omni-dash-head">
+                        <div className="omni-dash-title">
+                          <span className="omni-dash-live" /> Ringkasan Semua Toko
+                        </div>
+                        <span className="omni-dash-tag">Hari ini</span>
                       </div>
 
-                      {/* Central Chamber */}
-                      <div className="omni-chamber-sync-box" style={{ borderColor: product.color }}>
-                        <div className="sync-ripple" style={{ background: product.color }}></div>
-                        <RefreshCw size={24} color="#FFFFFF" className="spin-icon" />
-                        <span className="sync-text">SYNCHRONIZED</span>
+                      <div className="omni-dash-omzet">
+                        <span className="omni-dash-omzet-label">Total Omzet</span>
+                        <div className="omni-dash-omzet-row">
+                          <span className="omni-dash-omzet-value">Rp 24.850.000</span>
+                          <span className="omni-dash-omzet-trend"><TrendingUp size={13} /> 12,4%</span>
+                        </div>
                       </div>
 
-                      {/* Flow arrow right */}
-                      <div className="omni-chamber-flow-line right">
-                        <div className="flow-dash"></div>
+                      <div className="omni-dash-stores">
+                        <div className="omni-dash-store">
+                          <span className="omni-dash-store-logo"><img src={shopeeLogo} alt="Shopee" /></span>
+                          <div className="omni-dash-store-info">
+                            <span className="name">Shopee</span>
+                            <span className="sub">142 pesanan</span>
+                          </div>
+                          <span className="omni-dash-store-val">Rp 14,2jt</span>
+                        </div>
+                        <div className="omni-dash-store">
+                          <span className="omni-dash-store-logo"><img src={tiktokLogo} alt="TikTok Shop" /></span>
+                          <div className="omni-dash-store-info">
+                            <span className="name">TikTok Shop</span>
+                            <span className="sub">98 pesanan</span>
+                          </div>
+                          <span className="omni-dash-store-val">Rp 10,6jt</span>
+                        </div>
                       </div>
 
-                      {/* Right Badge */}
-                      <div className="omni-platform-badge tiktok-theme">
-                        <img src={tiktokLogo} alt="TikTok Shop" />
-                        <span>TikTok</span>
+                      <div className="omni-dash-foot">
+                        <div className="omni-dash-foot-item">
+                          <span className="lbl">Beban Platform</span>
+                          <span className="val neg">− Rp 1,94jt</span>
+                        </div>
+                        <div className="omni-dash-foot-item">
+                          <span className="lbl">Profit Bersih</span>
+                          <span className="val pos">Rp 8,41jt</span>
+                        </div>
+                      </div>
+
+                      <div className="omni-dash-sync">
+                        <RefreshCw size={13} className="spin-icon" /> Stok tersinkron di semua toko · baru saja
                       </div>
                     </div>
                   )}
@@ -623,6 +645,72 @@ module.exports = async function customWorkflow(ctx) {
             </div>
           </div>
         </section>
+
+        {/* SECTION 3.5: Pricing (khusus BitOmni) */}
+        {appId === 'bitomni' && (
+          <section className="pp-section">
+            <div className="container">
+              <div className="p-section-header">
+                <span className="p-pretitle" style={{ color: product.color }}>HARGA BERLANGGANAN</span>
+                <h2 className="p-section-title">Pilih Paket Sesuai Skala Toko Anda</h2>
+                <p className="p-section-subtitle">
+                  Mulai gratis, upgrade kapan saja. Semua paket sudah termasuk sinkronisasi stok &amp; laporan multi-toko.
+                </p>
+              </div>
+
+              <div className="pp-toggle">
+                {PERIODS.map((p) => (
+                  <button
+                    key={p.key}
+                    className={`pp-toggle-btn ${period.key === p.key ? 'active' : ''}`}
+                    onClick={() => setPeriod(p)}
+                  >
+                    {p.save && <span className="pp-toggle-badge">{p.save}</span>}
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="pp-grid">
+                {PLANS.map((plan) => {
+                  const Icon = plan.icon;
+                  const isFree = plan.price === 0;
+                  const monthly = plan.price * (1 - period.disc);
+                  return (
+                    <div key={plan.key} className={`pp-card ${plan.highlighted ? 'featured' : ''}`}>
+                      {plan.badge && (
+                        <span className="pp-badge"><Flame size={12} /> {plan.badge}</span>
+                      )}
+                      <div className="pp-icon">
+                        {isFree ? <span className="pp-icon-free">FREE</span> : <Icon size={24} />}
+                      </div>
+                      <div className="pp-name">{plan.name}</div>
+                      <div className="pp-desc">{plan.desc}</div>
+                      <div className="pp-price-block">
+                        {isFree ? (
+                          <div className="pp-price">Gratis <span className="pp-per">/ bln</span></div>
+                        ) : (
+                          <>
+                            <div className="pp-price">{rupiah(monthly)} <span className="pp-per">/ bln</span></div>
+                            <div className="pp-note">*Harga termasuk PPN 11%</div>
+                          </>
+                        )}
+                      </div>
+                      <ul className="pp-features">
+                        {plan.features.map((f) => (
+                          <li key={f}><span className="pp-check"><Check size={12} strokeWidth={3} /></span>{f}</li>
+                        ))}
+                      </ul>
+                      <button className="pp-btn" onClick={() => navigateTo('/register')}>
+                        {isFree ? 'Mulai Gratis' : 'Pilih Paket'}
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* SECTION 4: High Impact Bottom CTA */}
         <section className="p-cta-bottom-section">
