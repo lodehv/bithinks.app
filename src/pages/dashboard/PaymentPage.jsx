@@ -6,8 +6,8 @@ import "./PaymentPage.css";
 const rupiah = (n) => "Rp " + Number(n || 0).toLocaleString("id-ID");
 const MAX_PROOF_BYTES = 3 * 1024 * 1024; // 3 MB
 
-export default function PaymentPage({ onBack }) {
-  const [months, setMonths]   = useState(1);
+export default function PaymentPage({ onBack, plan }) {
+  const [months, setMonths]   = useState(plan?.months ?? 1);
   const [info, setInfo]       = useState(null);
   const [proof, setProof]     = useState(null);   // dataURL
   const [note, setNote]       = useState("");
@@ -41,7 +41,9 @@ export default function PaymentPage({ onBack }) {
   };
 
   const bank = info?.bank;
-  const amount = info?.amount ?? 0;
+  // Jika paket dipilih dari halaman pricing, tampilkan total sesuai tier + periode
+  // (monthly sudah termasuk diskon periode). Kalau tidak, pakai perhitungan server.
+  const amount = plan ? Math.round(plan.monthly * plan.months) : (info?.amount ?? 0);
   const latest = info?.latestPayment;
   const pendingReview = !done && latest && (latest.status === "submitted");
 
@@ -52,6 +54,11 @@ export default function PaymentPage({ onBack }) {
       <div className="pay-head">
         <h1>Pembayaran Langganan</h1>
         <p>Aktifkan kembali fitur dengan transfer manual. Setelah bukti dikonfirmasi admin, akun langsung aktif.</p>
+        {plan && (
+          <div className="pay-plan-chip">
+            Paket dipilih: <strong>{plan.name}</strong> · {plan.months} bulan
+          </div>
+        )}
       </div>
 
       {done && (
@@ -81,11 +88,13 @@ export default function PaymentPage({ onBack }) {
           <div className="pay-amount">{rupiah(amount)}</div>
           <div className="pay-amount-sub">untuk {months} bulan langganan</div>
 
-          <div className="pay-months">
-            {[1, 3, 6, 12].map((m) => (
-              <button key={m} className={`pay-month-btn ${months === m ? "active" : ""}`} onClick={() => setMonths(m)}>{m} bln</button>
-            ))}
-          </div>
+          {!plan && (
+            <div className="pay-months">
+              {[1, 3, 6, 12].map((m) => (
+                <button key={m} className={`pay-month-btn ${months === m ? "active" : ""}`} onClick={() => setMonths(m)}>{m} bln</button>
+              ))}
+            </div>
+          )}
 
           {bank && (
             <div style={{ marginTop: 12 }}>

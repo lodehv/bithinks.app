@@ -6,6 +6,7 @@ import StoresTab from "./dashboard/omni/StoresTab";
 import ProductsTab from "./dashboard/omni/ProductsTab";
 import OrdersTab from "./dashboard/omni/OrdersTab";
 import PaymentPage from "./dashboard/PaymentPage";
+import PricingPage from "./dashboard/PricingPage";
 import ModulePlaceholder from "./dashboard/ModulePlaceholder";
 import { subscriptionApi } from "../utils/omniApi";
 import { Warehouse, Megaphone, Settings, Info } from "lucide-react";
@@ -63,6 +64,7 @@ export default function Dashboard() {
   const { isAuthenticated } = useAppContext();
   const [activeMenu, setActiveMenu] = useState("dashboard");
   const [sub, setSub] = useState(null);
+  const [payPlan, setPayPlan] = useState(null); // paket terpilih di halaman pricing
   const [connectNotice, setConnectNotice] = useState(null); // 'ok' | 'failed'
 
   const refreshSub = useCallback(() => {
@@ -86,14 +88,25 @@ export default function Dashboard() {
     return null;
   }
 
-  const goToPayment = () => setActiveMenu("payment");
+  const goToPayment = () => { setPayPlan(null); setActiveMenu("payment"); };
   const title = PAGES[activeMenu]?.title ?? "Dashboard";
   const locked = !!sub?.locked;
 
   return (
     <DashboardLayout activeMenu={activeMenu} onMenuClick={setActiveMenu} pageTitle={title}>
       {activeMenu === "payment" ? (
-        <PaymentPage onBack={() => { refreshSub(); setActiveMenu("dashboard"); }} />
+        payPlan ? (
+          <PaymentPage
+            plan={payPlan}
+            onBack={() => { refreshSub(); setPayPlan(null); }}
+          />
+        ) : (
+          <PricingPage
+            currentPlan={sub?.plan}
+            onBack={() => setActiveMenu("dashboard")}
+            onSelect={(plan) => setPayPlan(plan)}
+          />
+        )
       ) : (
         <>
           {connectNotice && (

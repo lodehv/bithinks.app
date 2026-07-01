@@ -10,7 +10,13 @@
 .pay-back:hover { color: #444; }
 
 .pay-head h1 { font-size: 18px; font-weight: 700; color: #111; margin: 0 0 4px; }
-.pay-head p  { font-size: 13px; color: #999; margin: 0 0 22px; line-height: 1.5; }
+.pay-head p  { font-size: 13px; color: #999; margin: 0 0 14px; line-height: 1.5; }
+.pay-plan-chip {
+  display: inline-block; font-size: 12.5px; color: #C2410C;
+  background: #FFF4EC; border: 1px solid #FCD9B6; border-radius: 8px;
+  padding: 6px 12px; margin-bottom: 22px;
+}
+.pay-plan-chip strong { color: #EA580C; }
 
 .pay-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 @media (max-width: 720px) { .pay-grid { grid-template-columns: 1fr; } }
