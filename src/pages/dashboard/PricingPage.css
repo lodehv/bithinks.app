@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   Pricing / Tier Pembayaran — tema oranye (primary Bithinks)
+   Pricing / Tier Pembayaran — palet indigo / periwinkle
    ═══════════════════════════════════════════════════════════════════════════ */
 .pricing-wrap {
   font-family: "DM Sans", sans-serif;
@@ -25,17 +25,17 @@
 }
 .pricing-chip {
   display: inline-block;
-  color: #F97316;
+  color: #4F46E5;
   background: #fff;
   padding: 2px 16px;
   border-radius: 12px;
-  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.10);
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.12);
 }
 
 /* ─── Toggle periode ─────────────────────────────────────────────────────── */
 .pricing-toggle {
   display: inline-flex; gap: 8px;
-  background: #FFF1E7; padding: 8px;
+  background: #EEF0FF; padding: 8px;
   border-radius: 16px;
 }
 .pt-btn {
@@ -48,8 +48,8 @@
 }
 .pt-btn.active {
   color: #fff;
-  background: linear-gradient(135deg, #FB923C, #F97316);
-  box-shadow: 0 6px 16px rgba(249, 115, 22, 0.32);
+  background: linear-gradient(135deg, #6366F1, #4F46E5);
+  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.32);
 }
 .pt-badge {
   position: absolute; top: -11px; right: 8px;
@@ -78,8 +78,8 @@
 
 /* Kartu highlight (Medium — Best Deal) */
 .plan-card.pro {
-  background: linear-gradient(160deg, #FB923C 0%, #F97316 55%, #EA6A0C 100%);
-  box-shadow: 0 18px 40px rgba(249, 115, 22, 0.35);
+  background: linear-gradient(160deg, #8B8BF7 0%, #6366F1 55%, #4F46E5 100%);
+  box-shadow: 0 18px 40px rgba(79, 70, 229, 0.35);
   color: #fff;
   transform: translateY(-6px);
 }
@@ -96,11 +96,11 @@
 .plan-icon {
   width: 60px; height: 60px; border-radius: 16px;
   display: flex; align-items: center; justify-content: center;
-  background: #FFF1E7; color: #F97316;
+  background: #EEF0FF; color: #4F46E5;
   margin-bottom: 18px;
 }
 .plan-card.pro .plan-icon { background: rgba(255, 255, 255, 0.22); color: #fff; }
-.plan-icon-free { font-size: 13px; font-weight: 800; color: #F97316; letter-spacing: 0.5px; }
+.plan-icon-free { font-size: 13px; font-weight: 800; color: #4F46E5; letter-spacing: 0.5px; }
 
 /* ─── Teks kartu ─────────────────────────────────────────────────────────── */
 .plan-name { font-size: 22px; font-weight: 800; color: #1F2430; margin-bottom: 8px; }
@@ -127,17 +127,17 @@
   flex-shrink: 0;
   width: 18px; height: 18px; border-radius: 50%;
   display: inline-flex; align-items: center; justify-content: center;
-  background: #F97316; color: #fff;
+  background: #4F46E5; color: #fff;
 }
 .plan-card.pro .plan-feat { color: #fff; }
-.plan-card.pro .plan-check { background: #fff; color: #F97316; }
+.plan-card.pro .plan-check { background: #fff; color: #4F46E5; }
 
 /* ─── Tombol ─────────────────────────────────────────────────────────────── */
 .plan-btn {
   width: 100%; border: none; cursor: pointer;
   font-family: inherit; font-size: 15px; font-weight: 700;
   padding: 14px; border-radius: 14px;
-  background: linear-gradient(135deg, #FB923C, #F97316);
+  background: linear-gradient(135deg, #6366F1, #4F46E5);
   color: #fff;
   transition: filter 0.15s ease, opacity 0.15s ease;
 }
@@ -147,9 +147,9 @@
   background: #F1F3F6; color: #9AA2AF;
 }
 .plan-card.pro .plan-btn {
-  background: #fff; color: #F97316;
+  background: #fff; color: #4F46E5;
 }
-.plan-card.pro .plan-btn:hover:not(:disabled) { background: #FFF6EF; }
+.plan-card.pro .plan-btn:hover:not(:disabled) { background: #F0F1FE; }
 
 /* ─── Responsif ──────────────────────────────────────────────────────────── */
 @media (max-width: 1080px) {

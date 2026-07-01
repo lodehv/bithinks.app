@@ -12,11 +12,11 @@
 .pay-head h1 { font-size: 18px; font-weight: 700; color: #111; margin: 0 0 4px; }
 .pay-head p  { font-size: 13px; color: #999; margin: 0 0 14px; line-height: 1.5; }
 .pay-plan-chip {
-  display: inline-block; font-size: 12.5px; color: #C2410C;
-  background: #FFF4EC; border: 1px solid #FCD9B6; border-radius: 8px;
+  display: inline-block; font-size: 12.5px; color: #4338CA;
+  background: #EEF0FF; border: 1px solid #C7C9F9; border-radius: 8px;
   padding: 6px 12px; margin-bottom: 22px;
 }
-.pay-plan-chip strong { color: #EA580C; }
+.pay-plan-chip strong { color: #4338CA; }
 
 .pay-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 @media (max-width: 720px) { .pay-grid { grid-template-columns: 1fr; } }
@@ -30,7 +30,7 @@
 }
 
 .pay-amount-label { font-size: 12.5px; color: #888; }
-.pay-amount { font-size: 30px; font-weight: 800; color: #F97316; line-height: 1.1; margin: 4px 0 2px; }
+.pay-amount { font-size: 30px; font-weight: 800; color: #4F46E5; line-height: 1.1; margin: 4px 0 2px; }
 .pay-amount-sub { font-size: 12px; color: #aaa; }
 
 .pay-months { display: flex; gap: 6px; margin: 16px 0 4px; flex-wrap: wrap; }
@@ -38,7 +38,7 @@
   font-family: inherit; font-size: 12.5px; font-weight: 600; padding: 7px 14px;
   border-radius: 8px; border: 1px solid #E5E5E5; background: #fff; color: #777; cursor: pointer;
 }
-.pay-month-btn.active { background: #FFF4EC; color: #EA580C; border-color: #FCD9B6; }
+.pay-month-btn.active { background: #EEF0FF; color: #4338CA; border-color: #C7C9F9; }
 
 .pay-bank-row {
   display: flex; align-items: center; justify-content: space-between;
@@ -48,10 +48,10 @@
 .pay-bank-label { font-size: 12px; color: #999; }
 .pay-bank-value { font-size: 14px; font-weight: 700; color: #111; font-variant-numeric: tabular-nums; }
 .pay-copy {
-  font-size: 11px; font-weight: 600; color: #F97316; background: none;
-  border: 1px solid #FCD9B6; border-radius: 6px; padding: 4px 9px; cursor: pointer;
+  font-size: 11px; font-weight: 600; color: #4F46E5; background: none;
+  border: 1px solid #C7C9F9; border-radius: 6px; padding: 4px 9px; cursor: pointer;
 }
-.pay-copy:hover { background: #FFF4EC; }
+.pay-copy:hover { background: #EEF0FF; }
 
 .pay-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
 .pay-field label { font-size: 11.5px; font-weight: 600; color: #777; }
@@ -60,23 +60,23 @@
   border: 1px solid #E2E2E2; border-radius: 8px; background: #fff;
 }
 .pay-textarea { padding: 9px 11px; outline: none; resize: vertical; min-height: 64px; }
-.pay-textarea:focus { border-color: #F97316; }
+.pay-textarea:focus { border-color: #4F46E5; }
 
 .pay-file-label {
   display: flex; align-items: center; gap: 8px; padding: 22px; cursor: pointer;
   border-style: dashed; color: #999; justify-content: center; text-align: center;
 }
-.pay-file-label:hover { border-color: #F97316; color: #F97316; }
+.pay-file-label:hover { border-color: #4F46E5; color: #4F46E5; }
 .pay-preview { margin-top: 10px; border-radius: 8px; max-height: 180px; border: 1px solid #EEE; }
 
 .pay-submit {
   width: 100%; justify-content: center; margin-top: 4px;
   display: inline-flex; align-items: center; gap: 8px;
   font-family: inherit; font-size: 13.5px; font-weight: 700; padding: 12px;
-  border-radius: 9px; border: none; cursor: pointer; background: #F97316; color: #fff;
+  border-radius: 9px; border: none; cursor: pointer; background: #4F46E5; color: #fff;
 }
-.pay-submit:hover { background: #EA580C; }
-.pay-submit:disabled { background: #FBD7B5; cursor: not-allowed; }
+.pay-submit:hover { background: #4338CA; }
+.pay-submit:disabled { background: #C7C9F9; cursor: not-allowed; }
 
 .pay-status {
   display: flex; align-items: center; gap: 10px;
