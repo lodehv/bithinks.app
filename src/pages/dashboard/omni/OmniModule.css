@@ -135,9 +135,14 @@
 .spin { animation: omni-spin 0.9s linear infinite; }
 @keyframes omni-spin { to { transform: rotate(360deg); } }
 
-/* ── Integrasi Toko (redesign) ───────────────────────────────────────────── */
-.int-head h1 { font-size: 26px; font-weight: 800; color: #111827; margin: 0 0 6px; letter-spacing: -0.02em; }
+/* ── Integrasi Toko (redesign) — biru primary (#1D4ED8), font DM Sans ─────── */
+.int-page { font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif; }
+.int-head h1 {
+  font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  font-size: 26px; font-weight: 700; color: #111827; margin: 0 0 6px; letter-spacing: -0.01em;
+}
 .int-head p { font-size: 14px; color: #6B7280; margin: 0 0 22px; }
+.int-page .omni-empty-icon { background: #EAF0FF; color: #1D4ED8; }
 
 .int-banner {
   display: flex; align-items: center; gap: 16px;
@@ -146,18 +151,18 @@
 }
 .int-banner-icon {
   width: 56px; height: 56px; border-radius: 14px; flex-shrink: 0;
-  background: #1c3d2e; color: #fff; display: flex; align-items: center; justify-content: center;
+  background: #1D4ED8; color: #fff; display: flex; align-items: center; justify-content: center;
 }
 .int-banner-text { flex: 1; }
 .int-banner-title { font-size: 17px; font-weight: 700; color: #111827; }
 .int-banner-sub { font-size: 13px; color: #8A94A6; margin-top: 2px; }
 .int-add-btn {
   display: inline-flex; align-items: center; gap: 9px;
-  background: #1c3d2e; color: #fff; border: none; border-radius: 12px;
+  background: #1D4ED8; color: #fff; border: none; border-radius: 12px;
   font-family: inherit; font-size: 14px; font-weight: 600; padding: 13px 22px; cursor: pointer;
   transition: background 0.15s; white-space: nowrap;
 }
-.int-add-btn:hover { background: #16311f; }
+.int-add-btn:hover { background: #1E40AF; }
 
 /* Table */
 .int-table-wrap { background: #fff; border: 1px solid #EBEBEB; border-radius: 16px; overflow: hidden; }
@@ -212,7 +217,7 @@
   display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer;
   background: #fff; transition: all 0.15s;
 }
-.mp-card:not(.disabled):hover { border-color: #1c3d2e; box-shadow: 0 8px 20px rgba(28,61,46,0.10); transform: translateY(-2px); }
+.mp-card:not(.disabled):hover { border-color: #1D4ED8; box-shadow: 0 8px 20px rgba(29,78,216,0.12); transform: translateY(-2px); }
 .mp-card.disabled { cursor: not-allowed; opacity: 0.55; background: #FAFAFA; }
 .mp-logo { width: 52px; height: 52px; border-radius: 12px; object-fit: contain; background: #F6F6F6; padding: 8px; }
 .mp-logo-fallback { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; }

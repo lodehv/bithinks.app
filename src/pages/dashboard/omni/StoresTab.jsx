@@ -70,7 +70,7 @@ export default function StoresTab({ locked, onRequirePayment }) {
   const connected = (stores ?? []).filter((s) => s.status === "connected");
 
   return (
-    <div className="omni">
+    <div className="omni int-page">
       <div className="int-head">
         <h1>Integrasi Toko</h1>
         <p>Hubungkan toko marketplace Anda untuk sinkronisasi pesanan otomatis</p>
