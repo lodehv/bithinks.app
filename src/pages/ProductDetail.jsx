@@ -117,7 +117,9 @@ const productsData = {
       "Tahu profit bersih asli tiap toko setelah semua potongan biaya platform, bukan cuma omzet kotor.",
       "Stok selalu sinkron di semua marketplace — cegah over-selling yang bikin poin toko kena penalti.",
       "Hemat waktu admin: kelola pesanan & stok semua toko dari satu tempat, tanpa login bergantian."
-    ]
+    ],
+    ctaTitle: "Siap Naikkan Penjualan Semua Toko Marketplace Kamu?",
+    ctaDesc: "Kelola stok, pesanan, sampai laporan omzet & profit semua toko dari satu tempat. Manajemen multi-toko yang lengkap bikin bisnis jalan tanpa ribet — kamu tinggal fokus jualan dan scale up."
   },
   bitfine: {
     name: "Bithinks Finance [BitFine]",
@@ -715,15 +717,15 @@ module.exports = async function customWorkflow(ctx) {
         {/* SECTION 4: High Impact Bottom CTA */}
         <section className="p-cta-bottom-section">
           <div className="container">
-            <div className="p-cta-box-wrapper" style={{ backgroundImage: `linear-gradient(135deg, ${product.color} 0%, #111827 100%)` }}>
+            <div className="p-cta-box-wrapper" style={{ backgroundColor: product.color }}>
               <div className="p-cta-content">
-                <h2>Siap Scale Up Bisnis Anda Bersama {product.badgeText}?</h2>
+                <h2>{product.ctaTitle || `Siap Scale Up Bisnis Anda Bersama ${product.badgeText}?`}</h2>
                 <p>
-                  Gabung bersama ribuan UMKM dan korporasi Indonesia lainnya yang telah mendigitalisasi operasionalnya secara cerdas bersama Bithinks.
+                  {product.ctaDesc || "Gabung bersama ribuan UMKM dan korporasi Indonesia lainnya yang telah mendigitalisasi operasionalnya secara cerdas bersama Bithinks."}
                 </p>
                 <div className="p-cta-action-row">
                   <button className="p-cta-btn-white" onClick={() => navigateTo('/register')}>
-                    Coba Gratis 14 Hari
+                    Coba Gratis
                   </button>
                   <button 
                     className="p-cta-btn-outline"

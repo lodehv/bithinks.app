@@ -348,7 +348,7 @@
 }
 
 .omni-dash-omzet {
-  background: linear-gradient(135deg, var(--theme-color), #6366F1);
+  background: var(--theme-color);
   border-radius: 14px;
   padding: 14px 16px;
   color: #fff;
@@ -689,7 +689,7 @@
 
 .pp-toggle-btn.active {
   color: #fff;
-  background: linear-gradient(135deg, #6366F1, #4F46E5);
+  background: #4F46E5;
   box-shadow: 0 6px 16px rgba(79, 70, 229, 0.28);
 }
 
@@ -730,7 +730,7 @@
 }
 
 .pp-card.featured {
-  background: linear-gradient(160deg, #8B8DF5 0%, #6366F1 55%, #4F46E5 100%);
+  background: #4F46E5;
   border-color: transparent;
   box-shadow: 0 22px 44px rgba(79, 70, 229, 0.30);
   color: #fff;
@@ -833,7 +833,7 @@
   font-weight: 700;
   padding: 13px;
   border-radius: 13px;
-  background: linear-gradient(135deg, #6366F1, #4F46E5);
+  background: #4F46E5;
   color: #fff;
   transition: filter 0.15s;
 }
@@ -853,7 +853,7 @@
   border-radius: 24px;
   padding: 60px 40px;
   text-align: center;
-  box-shadow: 0 20px 50px rgba(0, 102, 255, 0.15);
+  box-shadow: 0 20px 50px rgba(17, 24, 39, 0.15);
   position: relative;
   overflow: hidden;
 }
