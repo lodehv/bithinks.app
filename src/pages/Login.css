@@ -63,6 +63,17 @@
   line-height: 1.6;
 }
 
+/* Logo BitOmni besar mengisi ruang bawah panel */
+.auth-hero-logo {
+  position: relative;
+  z-index: 1;
+  align-self: center;
+  width: 80%;
+  max-width: 300px;
+  margin-top: 24px;
+  filter: drop-shadow(0 20px 34px rgba(35, 30, 90, 0.32));
+}
+
 /* Bulatan dekoratif lembut */
 .auth-deco { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
 .auth-deco span {

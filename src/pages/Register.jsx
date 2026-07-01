@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./Register.css";
+import bitomniLogo from "../assets/logo_pilihan_fitur/bithinks_omnichannel_logo-removebg-preview.png";
 import { ArrowLeft } from "lucide-react";
 import { useAppContext } from "../context/AppContext";
 import api, { getApiErrorMessage } from "../utils/api";
@@ -129,6 +130,7 @@ const Register = () => {
           </h1>
           <p>{t.hero.desc}</p>
         </div>
+        <img className="auth-hero-logo" src={bitomniLogo} alt="Bithinks Omnichannel" />
         <div className="auth-deco"><span /><span /></div>
       </div>
 
