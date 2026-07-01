@@ -64,15 +64,49 @@
   line-height: 1.6;
 }
 
-/* Logo BitOmni besar mengisi ruang bawah panel */
-.auth-hero-logo {
+/* Logo BitOmni besar + channel chips mengisi ruang bawah panel */
+.auth-hero {
   position: relative;
   z-index: 1;
-  align-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 24px;
+}
+.auth-hero-logo {
   width: 80%;
   max-width: 300px;
-  margin-top: 24px;
   filter: drop-shadow(0 20px 34px rgba(35, 30, 90, 0.32));
+}
+
+/* Badge putih agar warna logo marketplace tidak bertabrakan dengan latar ungu */
+.auth-channels {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+}
+.auth-channels-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  margin-right: 2px;
+}
+.auth-chip {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 16px rgba(35, 30, 90, 0.22);
+}
+.auth-chip img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  border-radius: 6px;
 }
 
 /* Bulatan dekoratif lembut */

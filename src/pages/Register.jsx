@@ -1,6 +1,8 @@
 import { useState } from "react";
 import "./Register.css";
 import bitomniLogo from "../assets/logo_pilihan_fitur/bithinks_omnichannel_logo-removebg-preview.png";
+import shopeeLogo from "../assets/logo_pilihan_fitur/shopee.png";
+import tiktokLogo from "../assets/logo_pilihan_fitur/logo_tiktok.jpg";
 import { ArrowLeft } from "lucide-react";
 import { useAppContext } from "../context/AppContext";
 import api, { getApiErrorMessage } from "../utils/api";
@@ -130,7 +132,14 @@ const Register = () => {
           </h1>
           <p>{t.hero.desc}</p>
         </div>
-        <img className="auth-hero-logo" src={bitomniLogo} alt="Bithinks Omnichannel" />
+        <div className="auth-hero">
+          <img className="auth-hero-logo" src={bitomniLogo} alt="Bithinks Omnichannel" />
+          <div className="auth-channels">
+            <span className="auth-channels-label">Terhubung ke</span>
+            <span className="auth-chip"><img src={shopeeLogo} alt="Shopee" /></span>
+            <span className="auth-chip"><img src={tiktokLogo} alt="TikTok Shop" /></span>
+          </div>
+        </div>
         <div className="auth-deco"><span /><span /></div>
       </div>
 
