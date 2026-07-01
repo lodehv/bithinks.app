@@ -10,9 +10,9 @@ export const translations = {
     },
     hero: {
       badge: "🚀 Sistem Bisnis All-in-One",
-      title1: "Satu dashboard untuk ",
-      titleHighlight: "semua toko online Anda.",
-      desc: "Bithinks menyatukan penjualan dari semua marketplace Anda — omzet, stok, pesanan, sampai potongan biaya platform — jadi satu laporan yang akurat. Nggak perlu lagi rekap manual antar toko: analisa lebih cepat, dan angkanya bisa Anda percaya.",
+      title1: "Jualan di banyak marketplace, ",
+      titleHighlight: "laporannya satu.",
+      desc: "Bithinks merapikan omzet, stok, pesanan, dan biaya platform dari semua toko jadi angka yang benar — biar keputusan Anda nggak lagi nebak-nebak.",
       loginBtn: "Login",
       demoBtn: "Liat Demo-nya"
     },
