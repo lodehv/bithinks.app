@@ -45,14 +45,7 @@
 }
 
 .p-detail-bg-accent {
-  position: absolute;
-  top: -10%;
-  right: -5%;
-  width: 50vw;
-  height: 50vw;
-  background: radial-gradient(circle, var(--theme-glow) 0%, rgba(255,255,255,0) 70%);
-  z-index: 1;
-  pointer-events: none;
+  display: none;
 }
 
 .p-detail-hero-grid {
