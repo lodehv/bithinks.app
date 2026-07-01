@@ -12,18 +12,18 @@ export default function StoresTab({ locked, onRequirePayment }) {
   const [error, setError]     = useState("");
   const [form, setForm]       = useState({ channel: "shopee", name: "", externalId: "" });
 
-  // Penautan Shopee resmi (OAuth) — backend yang pegang Partner Key & tukar token.
-  const connectShopee = async () => {
+  // Penautan resmi (OAuth) — backend yang pegang secret & tukar token.
+  const connectChannel = async (kind) => {
     if (locked) return onRequirePayment?.();
-    setError(""); setConnecting(true);
+    setError(""); setConnecting(kind);
     try {
-      const url = await omniApi.shopeeConnectUrl();
-      if (url) { window.location.href = url; return; } // alihkan ke Shopee
-      setError("Gagal mendapatkan URL otorisasi Shopee.");
+      const url = kind === "tiktok" ? await omniApi.tiktokConnectUrl() : await omniApi.shopeeConnectUrl();
+      if (url) { window.location.href = url; return; } // alihkan ke marketplace
+      setError(`Gagal mendapatkan URL otorisasi ${kind}.`);
       setConnecting(false);
     } catch (err) {
       if (isPaymentRequired(err)) { onRequirePayment?.(); return; }
-      setError(err?.response?.data?.error?.message ?? "Integrasi Shopee belum dikonfigurasi di server.");
+      setError(err?.response?.data?.error?.message ?? `Integrasi ${kind} belum dikonfigurasi di server.`);
       setConnecting(false);
     }
   };
@@ -70,8 +70,13 @@ export default function StoresTab({ locked, onRequirePayment }) {
           >
             <Plus size={15} /> Tambah Manual
           </button>
-          <button className="omni-btn omni-btn-primary" onClick={connectShopee} disabled={connecting || saving}>
-            <StoreIcon size={15} /> {connecting ? "Mengalihkan…" : "Hubungkan Shopee"}
+          <button className="omni-btn omni-btn-primary" onClick={() => connectChannel("shopee")} disabled={!!connecting || saving}
+            style={{ background: "#EE4D2D" }}>
+            <StoreIcon size={15} /> {connecting === "shopee" ? "Mengalihkan…" : "Hubungkan Shopee"}
+          </button>
+          <button className="omni-btn omni-btn-primary" onClick={() => connectChannel("tiktok")} disabled={!!connecting || saving}
+            style={{ background: "#111827" }}>
+            <StoreIcon size={15} /> {connecting === "tiktok" ? "Mengalihkan…" : "Hubungkan TikTok"}
           </button>
         </div>
       </div>

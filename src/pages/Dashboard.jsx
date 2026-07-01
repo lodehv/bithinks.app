@@ -75,7 +75,7 @@ export default function Dashboard() {
     const c = new URLSearchParams(window.location.search).get("connect");
     if (!c) return;
     setActiveMenu("integrasi-toko");
-    setConnectNotice(c === "shopee_ok" ? "ok" : "failed");
+    setConnectNotice(c.endsWith("_ok") ? "ok" : "failed");
     window.history.replaceState({}, "", "/dashboard");
     const t = setTimeout(() => setConnectNotice(null), 6000);
     return () => clearTimeout(t);

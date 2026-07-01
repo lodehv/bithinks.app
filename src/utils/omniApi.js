@@ -13,6 +13,7 @@ export const omniApi = {
   listStores:        ()            => api.get('/api/omni/stores').then(unwrap),
   connectStore:      (payload)     => api.post('/api/omni/stores', payload).then(unwrap),
   shopeeConnectUrl:  ()            => api.get('/api/omni/shopee/connect').then((r) => r.data?.data?.authUrl),
+  tiktokConnectUrl:  ()            => api.get('/api/omni/tiktok/connect').then((r) => r.data?.data?.authUrl),
 
   listProducts:      ()            => api.get('/api/omni/products').then(unwrap),
   createProduct:     (payload)     => api.post('/api/omni/products', payload).then(unwrap),
