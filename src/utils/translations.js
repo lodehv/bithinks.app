@@ -10,9 +10,9 @@ export const translations = {
     },
     hero: {
       badge: "🚀 Sistem Bisnis All-in-One",
-      title1: "Solusi integrasi untuk ",
-      titleHighlight: "seluruh lini bisnis Anda.",
-      desc: "Dirancang untuk mengakomodir segala kebutuhan operasional, menyatukan ekosistem online maupun offline dalam satu platform terpadu.",
+      title1: "Satu dashboard untuk ",
+      titleHighlight: "semua toko online Anda.",
+      desc: "Bithinks menyatukan penjualan dari semua marketplace Anda — omzet, stok, pesanan, sampai potongan biaya platform — jadi satu laporan yang akurat. Nggak perlu lagi rekap manual antar toko: analisa lebih cepat, dan angkanya bisa Anda percaya.",
       loginBtn: "Login",
       demoBtn: "Liat Demo-nya"
     },
@@ -116,7 +116,7 @@ export const translations = {
       title: "Didukung Penuh Oleh"
     },
     footer: {
-      desc: "Solusi untuk mengintegrasikan seluruh lini bisnis Anda. Dirancang untuk mengakomodir segala kebutuhan operasional, menyatukan ekosistem online maupun offline dalam satu platform terpadu.",
+      desc: "Bithinks menyatukan laporan penjualan semua toko online Anda — omzet, stok, pesanan, dan biaya platform — dalam satu dashboard yang akurat dan mudah dianalisa.",
       col1: "PRODUK",
       col2: "SOLUSI",
       col3: "PERUSAHAAN",
