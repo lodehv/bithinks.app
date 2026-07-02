@@ -172,6 +172,10 @@
 }
 .back-home:hover { color: #334155; }
 
+.auth-switch { text-align: center; margin-top: 26px; font-size: 0.9rem; color: #64748B; }
+.auth-switch a { color: #4F46E5; font-weight: 700; text-decoration: none; }
+.auth-switch a:hover { text-decoration: underline; }
+
 /* ─── Responsif ──────────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
   .auth-card { flex-direction: column; }

@@ -219,6 +219,12 @@ const Register = () => {
           {step !== 3 && (
             <WaHelperButton helpText={t.register.helpText} waHelp={t.register.waHelp} />
           )}
+
+          {step === 1 && (
+            <p className="auth-switch">
+              Sudah punya akun? <a href="/login">Masuk di sini</a>
+            </p>
+          )}
         </div>
       </div>
      </div>
