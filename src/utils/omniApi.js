@@ -22,6 +22,7 @@ export const omniApi = {
 
   listOrders:        (status)      => api.get('/api/omni/orders', { params: status ? { status } : {} }).then(unwrap),
   updateOrderStatus: (id, status)  => api.patch(`/api/omni/orders/${id}`, { status }).then(unwrap),
+  syncOrders:        ()            => api.post('/api/omni/orders/sync').then(unwrap),
 }
 
 export const subscriptionApi = {

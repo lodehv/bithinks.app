@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { Inbox, RefreshCw, ShoppingBag, Truck, Wallet, ClipboardList } from "lucide-react";
+import { Inbox, RefreshCw, ShoppingBag, Truck, Wallet, ClipboardList, DownloadCloud } from "lucide-react";
 import { omniApi, isPaymentRequired } from "../../../utils/omniApi";
 import { channelMeta } from "./channels";
 import "./OmniModule.css";
+
+const fmtTime = (d) =>
+  d ? new Date(d).toLocaleString("id-ID", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "—";
 
 const rupiah = (n) => "Rp " + Number(n || 0).toLocaleString("id-ID");
 const rupiahShort = (n) => {
@@ -28,12 +31,34 @@ export default function OrdersTab({ locked, onRequirePayment }) {
   const [orders, setOrders] = useState(null); // semua pesanan (tanpa filter)
   const [filter, setFilter] = useState("");
   const [busy, setBusy]     = useState(null);
+  const [syncing, setSyncing] = useState(false);
+  const [syncMsg, setSyncMsg] = useState(null); // { ok, text }
 
   const load = () => {
     setOrders(null);
     omniApi.listOrders().then(setOrders).catch(() => setOrders([]));
   };
   useEffect(load, []);
+
+  const pullOrders = async () => {
+    if (locked) return onRequirePayment?.();
+    setSyncing(true); setSyncMsg(null);
+    try {
+      const res = await omniApi.syncOrders();
+      const last = res?.latestOrderedAt;
+      const errStore = (res?.stores || []).find((s) => s.error);
+      setSyncMsg({
+        ok: true,
+        text: `${res?.saved ?? 0} pesanan tersinkron dari TikTok.` +
+              (last ? ` Order terakhir: ${fmtTime(last)}.` : "") +
+              (errStore ? ` (Catatan: ${errStore.store} — ${errStore.error})` : ""),
+      });
+      await omniApi.listOrders().then(setOrders).catch(() => {});
+    } catch (err) {
+      if (isPaymentRequired(err)) { onRequirePayment?.(); return; }
+      setSyncMsg({ ok: false, text: err?.response?.data?.error?.message ?? "Gagal menarik pesanan. Coba lagi." });
+    } finally { setSyncing(false); }
+  };
 
   const changeStatus = async (id, status) => {
     if (locked) return onRequirePayment?.();
@@ -81,10 +106,21 @@ export default function OrdersTab({ locked, onRequirePayment }) {
           <div className="omni-toolbar-title">Pesanan Terpusat</div>
           <div className="omni-toolbar-sub">Semua pesanan dari setiap channel dalam satu inbox — tanpa rekap manual.</div>
         </div>
-        <button className="omni-refresh-btn" onClick={load} disabled={orders === null}>
-          <RefreshCw size={14} className={orders === null ? "omni-spin" : ""} /> Segarkan
-        </button>
+        <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+          <button className="omni-refresh-btn" onClick={load} disabled={orders === null}>
+            <RefreshCw size={14} className={orders === null ? "omni-spin" : ""} /> Segarkan
+          </button>
+          <button className="omni-pull-btn" onClick={pullOrders} disabled={syncing}>
+            <DownloadCloud size={15} className={syncing ? "omni-spin" : ""} /> {syncing ? "Menarik…" : "Tarik Pesanan"}
+          </button>
+        </div>
       </div>
+
+      {syncMsg && (
+        <div className={`omni-pill ${syncMsg.ok ? "sync" : "error"}`} style={{ marginBottom: 14, display: "inline-flex" }}>
+          {syncMsg.text}
+        </div>
+      )}
 
       {/* Kartu ringkasan */}
       <div className="omni-stats">
