@@ -68,6 +68,17 @@
 .auth-stat .c3 { color: #7C3AED; }
 .auth-stat .c4 { color: #EA580C; }
 
+/* Blok bawah: statistik + partner marketplace (lega, tidak sesak) */
+.auth-left-bottom { display: flex; flex-direction: column; gap: 22px; }
+.auth-partner { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.auth-partner-label { font-size: 0.82rem; font-weight: 500; color: #64748B; margin-right: 4px; }
+.auth-partner-chip {
+  width: 44px; height: 44px; border-radius: 12px; background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 16px rgba(79, 70, 180, 0.10);
+}
+.auth-partner-chip img { width: 26px; height: 26px; object-fit: contain; border-radius: 6px; }
+
 /* ─── Panel kanan: form ──────────────────────────────────────────────────── */
 .register-right {
   flex: 1;

@@ -1,5 +1,7 @@
 import { useState } from "react";
 import "./Login.css";
+import shopeeLogo from "../assets/logo_pilihan_fitur/shopee.png";
+import tiktokLogo from "../assets/logo_pilihan_fitur/logo_tiktok.jpg";
 import { ArrowLeft, Mail, KeyRound, Loader2 } from "lucide-react";
 import { useAppContext } from "../context/AppContext";
 import api, { getApiErrorMessage } from "../utils/api";
@@ -134,11 +136,18 @@ const Login = () => {
           <h1>{t.login.title}</h1>
           <p>{t.login.subtitle}</p>
         </div>
-        <div className="auth-stats">
-          <div className="auth-stat"><div className="auth-stat-num c1">Real-Time</div><div className="auth-stat-lbl">Laporan Omzet &amp; Profit</div></div>
-          <div className="auth-stat"><div className="auth-stat-num c2">0</div><div className="auth-stat-lbl">Selisih Stok Antar Toko</div></div>
-          <div className="auth-stat"><div className="auth-stat-num c3">−80%</div><div className="auth-stat-lbl">Waktu Kelola Pesanan</div></div>
-          <div className="auth-stat"><div className="auth-stat-num c4">99.9%</div><div className="auth-stat-lbl">Uptime Server</div></div>
+        <div className="auth-left-bottom">
+          <div className="auth-stats">
+            <div className="auth-stat"><div className="auth-stat-num c1">Real-Time</div><div className="auth-stat-lbl">Laporan Omzet &amp; Profit</div></div>
+            <div className="auth-stat"><div className="auth-stat-num c2">0</div><div className="auth-stat-lbl">Selisih Stok Antar Toko</div></div>
+            <div className="auth-stat"><div className="auth-stat-num c3">−80%</div><div className="auth-stat-lbl">Waktu Kelola Pesanan</div></div>
+            <div className="auth-stat"><div className="auth-stat-num c4">99.9%</div><div className="auth-stat-lbl">Uptime Server</div></div>
+          </div>
+          <div className="auth-partner">
+            <span className="auth-partner-label">Terintegrasi resmi dengan</span>
+            <span className="auth-partner-chip"><img src={shopeeLogo} alt="Shopee" /></span>
+            <span className="auth-partner-chip"><img src={tiktokLogo} alt="TikTok Shop" /></span>
+          </div>
         </div>
       </div>
 
