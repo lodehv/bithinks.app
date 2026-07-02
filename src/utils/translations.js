@@ -170,7 +170,7 @@ export const translations = {
     },
     login: {
       title: "Selamat Datang Kembali.",
-      subtitle: "Login ke dashboard Anda dan lanjutkan mengelola kerajaan bisnis Anda bersama Bithinks.",
+      subtitle: "Kelola pesanan, stok, dan laporan omzet semua toko marketplace Anda dari satu dashboard.",
       formTitle: "Masuk Akun",
       formSubtitle: "Masukkan detail kredensial Anda untuk mengakses sistem.",
       emailPhoneLabel: "Alamat Email / Nomor Telepon",
