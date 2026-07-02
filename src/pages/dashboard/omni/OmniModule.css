@@ -130,9 +130,10 @@
 .omni-stat { background: #fff; border: 1px solid #EBEBEB; border-radius: 12px; padding: 15px 18px; }
 .omni-stat-label { font-size: 12px; color: #888; font-weight: 500; display: flex; align-items: center; gap: 6px; }
 .omni-stat-value { font-size: 24px; font-weight: 800; color: #111; margin-top: 8px; letter-spacing: -0.01em; line-height: 1.1; }
-.omni-stat-value.amber { color: #D97706; }
-.omni-stat-value.blue  { color: #2563EB; }
-.omni-stat-value.green { color: #16A34A; }
+/* Warna font konsisten hitam untuk semua kartu ringkasan */
+.omni-stat-value.amber,
+.omni-stat-value.blue,
+.omni-stat-value.green { color: #111; }
 .omni-stat-sub { font-size: 11px; color: #aaa; margin-top: 3px; }
 
 .omni-channel-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
