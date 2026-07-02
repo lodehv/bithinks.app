@@ -397,7 +397,7 @@ const ProductDetail = ({ appId }) => {
   }, [appId]);
 
   return (
-    <div className="app-container" ref={containerRef}>
+    <div className={`app-container${appId === 'bitomni' ? ' ds-omni' : ''}`} ref={containerRef}>
       <Navbar />
       
       <main className="p-detail-main-layout">

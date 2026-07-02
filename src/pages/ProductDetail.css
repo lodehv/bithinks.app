@@ -1108,3 +1108,108 @@
 
   .p-section-title { font-size: 1.7rem; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Design system (Codeverta-inspired) — KHUSUS BitOmni (.ds-omni)
+   Layout/tipografi/spacing/komponen dari stylinghomepage.md; primary = indigo.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.ds-omni {
+  --ds-primary: #4F46E5;
+  --ds-primary-hover: #4338CA;
+  --ds-text: #0A0A0A;
+  --ds-text-2: #737373;
+  --ds-surface-2: #F3F4F6;
+  --ds-border: #E5E5E5;
+  --ds-border-hover: #E2E8F0;
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+.ds-omni .p-detail-main-layout,
+.ds-omni .p-detail-title,
+.ds-omni .p-detail-desc,
+.ds-omni .p-detail-tagline,
+.ds-omni .p-section-title,
+.ds-omni .p-section-subtitle,
+.ds-omni .p-pretitle,
+.ds-omni .p-feature-grid-card h3,
+.ds-omni .p-feature-grid-card p,
+.ds-omni .p-btn-primary,
+.ds-omni .p-btn-secondary,
+.ds-omni .pp-name,
+.ds-omni .pp-price,
+.ds-omni .p-li-text,
+.ds-omni .p-cta-content h2,
+.ds-omni .p-cta-content p {
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+.ds-omni .container { max-width: 1280px; }
+
+/* ── Hero: putih bersih, tipografi tebal ─────────────────────────────────── */
+.ds-omni .p-detail-hero-section { background: #FFFFFF; padding: 64px 0 96px; }
+.ds-omni .p-detail-tagline { color: var(--ds-primary); font-size: 0.875rem; font-weight: 600; letter-spacing: 0.08em; }
+.ds-omni .p-detail-title { font-size: 3.5rem; line-height: 1.06; font-weight: 800; color: var(--ds-text); letter-spacing: -0.025em; }
+.ds-omni .p-detail-desc { font-size: 1.2rem; line-height: 1.65; color: var(--ds-text-2); font-weight: 500; max-width: 560px; }
+.ds-omni .p-detail-stat-value { color: var(--ds-text); }
+.ds-omni .p-detail-stat-card { border-left-color: var(--ds-primary); }
+
+/* ── Tombol pill ─────────────────────────────────────────────────────────── */
+.ds-omni .p-btn-primary {
+  background: var(--ds-primary); color: #fff; height: 56px; padding: 0 32px;
+  border-radius: 9999px; font-weight: 700; font-size: 1rem;
+  box-shadow: rgba(79,70,229,0.2) 0 10px 15px -3px, rgba(79,70,229,0.2) 0 4px 6px -4px;
+}
+.ds-omni .p-btn-primary:hover { background: var(--ds-primary-hover); box-shadow: rgba(79,70,229,0.28) 0 14px 20px -4px; transform: translateY(-2px); }
+.ds-omni .p-btn-secondary { height: 56px; padding: 0 28px; border-radius: 9999px; border: 1px solid var(--ds-border); font-weight: 700; color: var(--ds-text); }
+.ds-omni .p-btn-secondary:hover { background: var(--ds-surface-2); border-color: var(--ds-border-hover); }
+
+/* ── Sections: whitespace lega + latar bergantian ────────────────────────── */
+.ds-omni .p-features-showcase-section { padding: 96px 0; background: #fff; }
+.ds-omni .p-why-choose-section { padding: 96px 0; background: var(--ds-surface-2); }
+.ds-omni .pp-section { padding: 96px 0; background: var(--ds-surface-2); }
+.ds-omni .p-cta-bottom-section { padding: 96px 0 112px; }
+.ds-omni .p-section-header { margin-bottom: 56px; }
+.ds-omni .p-pretitle { color: var(--ds-primary); font-weight: 600; }
+.ds-omni .p-section-title { font-size: 2.25rem; font-weight: 700; color: var(--ds-text); letter-spacing: -0.015em; }
+.ds-omni .p-section-subtitle { font-size: 1.125rem; color: var(--ds-text-2); }
+
+/* ── Kartu fitur: pola card design-system ────────────────────────────────── */
+.ds-omni .p-feature-grid-card {
+  background: #fff; border: 1px solid var(--ds-border); border-radius: 12px; padding: 24px;
+  box-shadow: rgba(0,0,0,0.1) 0 1px 3px 0, rgba(0,0,0,0.1) 0 1px 2px -1px;
+}
+.ds-omni .p-feature-grid-card:hover { transform: none; border-color: var(--ds-border-hover); box-shadow: rgba(0,0,0,0.05) 0 4px 12px 0; }
+.ds-omni .p-feature-grid-icon-box { background: #EEF0FB; border-radius: 12px; }
+.ds-omni .p-feature-grid-card h3 { color: var(--ds-text); font-weight: 700; }
+.ds-omni .p-feature-grid-card p { color: var(--ds-text-2); }
+
+/* ── Why choose ──────────────────────────────────────────────────────────── */
+.ds-omni .p-li-icon-box { background: var(--ds-primary); }
+.ds-omni .p-li-text { color: var(--ds-text); }
+.ds-omni .p-why-subtitle-desc { color: var(--ds-text-2); }
+.ds-omni .p-why-visual-glass { border-radius: 12px; border: 1px solid var(--ds-border); box-shadow: rgba(0,0,0,0.1) 0 1px 3px 0, rgba(0,0,0,0.1) 0 1px 2px -1px; }
+.ds-omni .p-visual-header h4 { color: var(--ds-text); }
+
+/* ── Harga: kartu & tombol pill ──────────────────────────────────────────── */
+.ds-omni .pp-card { border-radius: 12px; border: 1px solid var(--ds-border); }
+.ds-omni .pp-card:hover { box-shadow: rgba(0,0,0,0.05) 0 4px 12px 0; }
+.ds-omni .pp-toggle { background: #E9EAF6; border-radius: 9999px; }
+.ds-omni .pp-toggle-btn { border-radius: 9999px; }
+.ds-omni .pp-btn { border-radius: 9999px; height: 52px; }
+.ds-omni .pp-name { color: var(--ds-text); }
+
+/* ── CTA bawah ───────────────────────────────────────────────────────────── */
+.ds-omni .p-cta-box-wrapper { border-radius: 16px; background: var(--ds-primary); box-shadow: rgba(79,70,229,0.25) 0 20px 40px -12px; }
+.ds-omni .p-cta-btn-white { border-radius: 9999px; height: 56px; padding: 0 32px; font-weight: 700; }
+.ds-omni .p-cta-btn-outline { border-radius: 9999px; height: 56px; padding: 0 32px; font-weight: 700; }
+
+/* ── Responsif tipografi hero ────────────────────────────────────────────── */
+@media (max-width: 991px) {
+  .ds-omni .p-detail-title { font-size: 2.75rem; }
+  .ds-omni .p-detail-desc { max-width: 100%; }
+}
+@media (max-width: 576px) {
+  .ds-omni .p-detail-title { font-size: 2.1rem; }
+  .ds-omni .p-features-showcase-section,
+  .ds-omni .p-why-choose-section,
+  .ds-omni .pp-section,
+  .ds-omni .p-cta-bottom-section { padding: 64px 0; }
+}
