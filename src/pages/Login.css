@@ -16,7 +16,7 @@
 /* ─── Panel kiri: terang + kartu statistik ───────────────────────────────── */
 .login-left {
   flex: 1.05;
-  background: linear-gradient(150deg, #ECEDFB 0%, #F1EDFB 45%, #FBEEF4 100%);
+  background: #F1F1FB;
   color: #0F172A;
   padding: 56px 60px;
   display: flex;
@@ -46,23 +46,22 @@
   max-width: 440px;
 }
 
-/* Kartu statistik 2×2 */
-.auth-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; max-width: 500px; }
-.auth-stat {
-  background: #fff;
-  border-radius: 16px;
-  padding: 20px 22px;
-  box-shadow: 0 10px 28px rgba(79, 70, 180, 0.10);
+/* Daftar fitur yang merepresentasikan layanan (warna solid, tanpa gradasi) */
+.auth-features { display: flex; flex-direction: column; gap: 20px; max-width: 460px; }
+.auth-feature { display: flex; align-items: flex-start; gap: 14px; }
+.auth-feat-icon {
+  width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; color: #fff;
 }
-.auth-stat-num { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.01em; line-height: 1.1; }
-.auth-stat-lbl { font-size: 0.85rem; color: #64748B; font-weight: 500; margin-top: 5px; }
-.auth-stat .c1 { color: #4F46E5; }
-.auth-stat .c2 { color: #0D9488; }
-.auth-stat .c3 { color: #7C3AED; }
-.auth-stat .c4 { color: #EA580C; }
+.auth-feat-icon.i1 { background: #4F46E5; }
+.auth-feat-icon.i2 { background: #0D9488; }
+.auth-feat-icon.i3 { background: #7C3AED; }
+.auth-feat-icon.i4 { background: #EA580C; }
+.auth-feat-title { font-size: 1rem; font-weight: 700; color: #0F172A; }
+.auth-feat-sub { font-size: 0.85rem; color: #64748B; line-height: 1.5; margin-top: 2px; }
 
-/* Blok bawah: statistik + partner marketplace (lega, tidak sesak) */
-.auth-left-bottom { display: flex; flex-direction: column; gap: 22px; }
+/* Blok bawah: fitur + partner marketplace (lega, tidak sesak) */
+.auth-left-bottom { display: flex; flex-direction: column; gap: 26px; }
 .auth-partner { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .auth-partner-label { font-size: 0.82rem; font-weight: 500; color: #64748B; margin-right: 4px; }
 .auth-partner-chip {

@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./Register.css";
 import shopeeLogo from "../assets/logo_pilihan_fitur/shopee.png";
 import tiktokLogo from "../assets/logo_pilihan_fitur/logo_tiktok.jpg";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, RefreshCw, BarChart3, ClipboardList, ShieldCheck } from "lucide-react";
 import { useAppContext } from "../context/AppContext";
 import api, { getApiErrorMessage } from "../utils/api";
 import { WaHelperButton } from "./register/RegisterShared";
@@ -133,11 +133,35 @@ const Register = () => {
           <p>{t.hero.desc}</p>
         </div>
         <div className="auth-left-bottom">
-          <div className="auth-stats">
-            <div className="auth-stat"><div className="auth-stat-num c1">Real-Time</div><div className="auth-stat-lbl">Laporan Omzet &amp; Profit</div></div>
-            <div className="auth-stat"><div className="auth-stat-num c2">0</div><div className="auth-stat-lbl">Selisih Stok Antar Toko</div></div>
-            <div className="auth-stat"><div className="auth-stat-num c3">−80%</div><div className="auth-stat-lbl">Waktu Kelola Pesanan</div></div>
-            <div className="auth-stat"><div className="auth-stat-num c4">99.9%</div><div className="auth-stat-lbl">Uptime Server</div></div>
+          <div className="auth-features">
+            <div className="auth-feature">
+              <span className="auth-feat-icon i1"><RefreshCw size={20} /></span>
+              <div className="auth-feat-text">
+                <div className="auth-feat-title">Stok sinkron real-time</div>
+                <div className="auth-feat-sub">Terjual di satu toko, stok toko lain ikut turun otomatis.</div>
+              </div>
+            </div>
+            <div className="auth-feature">
+              <span className="auth-feat-icon i2"><BarChart3 size={20} /></span>
+              <div className="auth-feat-text">
+                <div className="auth-feat-title">Omzet &amp; profit tergabung</div>
+                <div className="auth-feat-sub">Lihat cuan bersih setelah potongan biaya platform.</div>
+              </div>
+            </div>
+            <div className="auth-feature">
+              <span className="auth-feat-icon i3"><ClipboardList size={20} /></span>
+              <div className="auth-feat-text">
+                <div className="auth-feat-title">Semua pesanan satu layar</div>
+                <div className="auth-feat-sub">Proses &amp; cetak label tanpa buka seller center satu-satu.</div>
+              </div>
+            </div>
+            <div className="auth-feature">
+              <span className="auth-feat-icon i4"><ShieldCheck size={20} /></span>
+              <div className="auth-feat-text">
+                <div className="auth-feat-title">Aman &amp; terenkripsi</div>
+                <div className="auth-feat-sub">Kredensial toko Anda dijaga penuh.</div>
+              </div>
+            </div>
           </div>
           <div className="auth-partner">
             <span className="auth-partner-label">Terintegrasi resmi dengan</span>
