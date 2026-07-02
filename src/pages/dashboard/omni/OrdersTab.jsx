@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Inbox, ShoppingBag, Truck, Wallet, ClipboardList } from "lucide-react";
 import { omniApi, isPaymentRequired } from "../../../utils/omniApi";
 import { channelMeta } from "./channels";
+import OrderCard from "./OrderCard";
 import "./OmniModule.css";
 
 const rupiah = (n) => "Rp " + Number(n || 0).toLocaleString("id-ID");
@@ -20,9 +21,6 @@ const STATUS = [
   { id: "selesai", label: "Selesai" },
   { id: "batal",   label: "Batal" },
 ];
-
-const pillClass = (s) =>
-  s === "selesai" ? "sync" : s === "batal" ? "error" : s === "baru" ? "neutral" : "unsync";
 
 export default function OrdersTab({ locked, onRequirePayment }) {
   const [orders, setOrders] = useState(null); // semua pesanan (tanpa filter)
@@ -132,36 +130,10 @@ export default function OrdersTab({ locked, onRequirePayment }) {
           <p>Pesanan dari Shopee &amp; TikTok Shop akan masuk ke sini secara otomatis setelah toko terhubung.</p>
         </div>
       ) : (
-        <div className="omni-table-wrap">
-          <table className="omni-table">
-            <thead>
-              <tr><th>Channel</th><th>No. Pesanan</th><th>Pelanggan</th><th>Item</th><th>Total</th><th>Status</th><th>Ubah</th></tr>
-            </thead>
-            <tbody>
-              {shown.map((o) => {
-                const m = channelMeta(o.channel);
-                return (
-                  <tr key={o.id}>
-                    <td><span className="omni-pill neutral"><span className="dot" style={{ background: m.color }} />{m.label}</span></td>
-                    <td className="omni-cell-strong">{o.externalOrderNo || o.id.slice(0, 8)}</td>
-                    <td>{o.customerName || <span className="omni-cell-muted">—</span>}</td>
-                    <td className="omni-cell-muted">{o.itemCount} item</td>
-                    <td className="omni-cell-strong">{rupiah(o.total)}</td>
-                    <td><span className={`omni-pill ${pillClass(o.status)}`}>{o.status.toUpperCase()}</span></td>
-                    <td>
-                      <select className="omni-select" style={{ padding: "6px 8px", fontSize: 12 }}
-                        value={o.status} disabled={busy === o.id}
-                        onChange={(e) => changeStatus(o.id, e.target.value)}>
-                        {STATUS.filter((s) => s.id).map((s) => (
-                          <option key={s.id} value={s.id}>{s.label}</option>
-                        ))}
-                      </select>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+        <div className="ord-list">
+          {shown.map((o) => (
+            <OrderCard key={o.id} order={o} onChangeStatus={changeStatus} busy={busy === o.id} />
+          ))}
         </div>
       )}
     </div>
