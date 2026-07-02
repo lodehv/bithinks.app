@@ -1,7 +1,5 @@
 import { useState } from "react";
 import "./Login.css";
-import shopeeLogo from "../assets/logo_pilihan_fitur/shopee.png";
-import tiktokLogo from "../assets/logo_pilihan_fitur/logo_tiktok.jpg";
 import { ArrowLeft, Mail, KeyRound, Loader2 } from "lucide-react";
 import { useAppContext } from "../context/AppContext";
 import api, { getApiErrorMessage } from "../utils/api";
@@ -128,19 +126,20 @@ const Login = () => {
      <div className="auth-card">
       {/* Panel Kiri */}
       <div className="login-left">
-        <a href="/" className="login-brand">
-          <img src="/bithinks.jpeg" alt="Logo Bithinks" />
+        <a href="/" className="auth-brand">
+          <img src="/bithinks.jpeg" alt="Bithinks" />
+          <span>Bithinks</span>
         </a>
         <div className="login-left-content">
           <h1>{t.login.title}</h1>
           <p>{t.login.subtitle}</p>
         </div>
-        <div className="auth-channels">
-          <span className="auth-channels-label">Terhubung langsung ke</span>
-          <span className="auth-chip"><img src={shopeeLogo} alt="Shopee" /></span>
-          <span className="auth-chip"><img src={tiktokLogo} alt="TikTok Shop" /></span>
+        <div className="auth-stats">
+          <div className="auth-stat"><div className="auth-stat-num c1">Real-Time</div><div className="auth-stat-lbl">Laporan Omzet &amp; Profit</div></div>
+          <div className="auth-stat"><div className="auth-stat-num c2">0</div><div className="auth-stat-lbl">Selisih Stok Antar Toko</div></div>
+          <div className="auth-stat"><div className="auth-stat-num c3">−80%</div><div className="auth-stat-lbl">Waktu Kelola Pesanan</div></div>
+          <div className="auth-stat"><div className="auth-stat-num c4">99.9%</div><div className="auth-stat-lbl">Uptime Server</div></div>
         </div>
-        <div className="auth-deco"><span /><span /></div>
       </div>
 
       {/* Panel Kanan */}

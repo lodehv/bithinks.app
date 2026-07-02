@@ -3,115 +3,69 @@
 .login-page {
   font-family: 'Plus Jakarta Sans', sans-serif;
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 32px;
-  background: #EDEEF9;
+  background: #fff;
 }
 
-/* ─── Kartu mengapung (split panel) ──────────────────────────────────────── */
+/* ─── Full-screen split (mengisi seluruh layar) ──────────────────────────── */
 .auth-card {
   display: flex;
   width: 100%;
-  max-width: 1120px;
-  min-height: 660px;
-  background: #fff;
-  border-radius: 28px;
-  overflow: hidden;
-  box-shadow: 0 30px 70px rgba(58, 50, 140, 0.16);
+  min-height: 100vh;
 }
 
-/* ─── Panel kiri (periwinkle) ────────────────────────────────────────────── */
+/* ─── Panel kiri: terang + kartu statistik ───────────────────────────────── */
 .login-left {
-  flex: 1;
-  background: linear-gradient(160deg, #8B8DF5 0%, #6E70EE 100%);
-  color: #fff;
-  padding: 48px 44px;
+  flex: 1.05;
+  background: linear-gradient(150deg, #ECEDFB 0%, #F1EDFB 45%, #FBEEF4 100%);
+  color: #0F172A;
+  padding: 56px 60px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  gap: 40px;
   position: relative;
   overflow: hidden;
 }
 
-.login-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  text-decoration: none;
-  background: #fff;
-  padding: 8px 14px;
-  border-radius: 12px;
-  align-self: flex-start;
-  box-shadow: 0 6px 18px rgba(40, 35, 100, 0.18);
-}
-.login-brand img { height: 34px; border-radius: 6px; display: block; }
+.auth-brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; align-self: flex-start; }
+.auth-brand img { height: 40px; border-radius: 8px; }
+.auth-brand span { font-size: 1.5rem; font-weight: 800; color: #4F46E5; letter-spacing: -0.01em; }
 
-.login-left-content { position: relative; z-index: 1; margin: auto 0; }
 .login-left-content h1 {
-  font-size: 2.7rem;
+  font-size: 2.9rem;
   font-weight: 800;
-  line-height: 1.14;
-  letter-spacing: -0.015em;
+  line-height: 1.16;
+  letter-spacing: -0.02em;
+  color: #0F172A;
   margin-bottom: 20px;
-  color: #fff;
 }
 .login-left-content p {
   font-size: 1.05rem;
-  color: rgba(255, 255, 255, 0.85);
-  max-width: 360px;
   line-height: 1.65;
+  color: #475569;
+  max-width: 440px;
 }
 
-/* Marketplace terhubung — baris bersih dengan garis pemisah di bawah panel */
-.auth-channels {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding-top: 24px;
-  border-top: 1px solid rgba(255, 255, 255, 0.18);
-}
-.auth-channels-label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.82);
-  margin-right: 4px;
-}
-.auth-chip {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+/* Kartu statistik 2×2 */
+.auth-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; max-width: 500px; }
+.auth-stat {
   background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8px 18px rgba(35, 30, 90, 0.20);
+  border-radius: 16px;
+  padding: 20px 22px;
+  box-shadow: 0 10px 28px rgba(79, 70, 180, 0.10);
 }
-.auth-chip img {
-  width: 26px;
-  height: 26px;
-  object-fit: contain;
-  border-radius: 6px;
-}
+.auth-stat-num { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.01em; line-height: 1.1; }
+.auth-stat-lbl { font-size: 0.85rem; color: #64748B; font-weight: 500; margin-top: 5px; }
+.auth-stat .c1 { color: #4F46E5; }
+.auth-stat .c2 { color: #0D9488; }
+.auth-stat .c3 { color: #7C3AED; }
+.auth-stat .c4 { color: #EA580C; }
 
-/* Bulatan dekoratif lembut */
-.auth-deco { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
-.auth-deco span {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.12);
-}
-.auth-deco span:nth-child(1) { width: 220px; height: 220px; right: -70px; bottom: -60px; }
-.auth-deco span:nth-child(2) { width: 130px; height: 130px; right: 90px; bottom: 120px; background: rgba(255,255,255,0.08); }
-
-/* ─── Panel kanan (form) ─────────────────────────────────────────────────── */
+/* ─── Panel kanan: form ──────────────────────────────────────────────────── */
 .login-right {
-  flex: 1.15;
-  padding: 56px 60px;
+  flex: 1;
   background: #fff;
+  padding: 56px 72px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -119,52 +73,32 @@
 }
 
 .login-form-container {
-  max-width: 440px;
+  max-width: 420px;
   margin: 0 auto;
   width: 100%;
   animation: fadeIn 0.4s ease forwards;
 }
-
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.login-right h2 {
-  font-size: 2rem;
-  font-weight: 800;
-  margin-bottom: 12px;
-  color: var(--color-text);
-}
-
-.login-right p.subtitle {
-  color: var(--color-text-muted);
-  margin-bottom: 36px;
-  font-size: 1rem;
-}
+.login-right h2 { font-size: 2rem; font-weight: 800; margin-bottom: 10px; color: #0F172A; }
+.login-right p.subtitle { color: #64748B; margin-bottom: 34px; font-size: 1rem; }
 
 .form-group { margin-bottom: 20px; }
-
-.form-group label {
-  display: block;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--color-text);
-  margin-bottom: 8px;
-}
-
+.form-group label { display: block; font-size: 0.875rem; font-weight: 600; color: #334155; margin-bottom: 8px; }
 .form-group input {
   width: 100%;
-  padding: 12px 16px;
-  border: 1px solid var(--border-color);
+  padding: 13px 16px;
+  border: 1px solid #E2E8F0;
   border-radius: 12px;
   font-family: inherit;
   font-size: 1rem;
   transition: all 0.2s;
-  background: #F7F8FC;
-  color: var(--color-text);
+  background: #F8FAFC;
+  color: #0F172A;
 }
-
 .form-group input:focus {
   outline: none;
   border-color: #6366F1;
@@ -172,24 +106,13 @@
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.14);
 }
 
-.otp-input {
-  text-align: center;
-  font-size: 1.5rem !important;
-  letter-spacing: 12px;
-  font-weight: 700;
-  padding: 16px !important;
-}
+.otp-input { text-align: center; font-size: 1.5rem !important; letter-spacing: 12px; font-weight: 700; padding: 16px !important; }
 
-.form-actions {
-  margin-top: 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
+.form-actions { margin-top: 28px; display: flex; flex-direction: column; gap: 14px; }
 
 .login-page .btn-submit {
   width: 100%;
-  padding: 14px;
+  padding: 15px;
   background-color: #4F46E5;
   color: #fff;
   border: none;
@@ -200,19 +123,15 @@
   transition: all 0.2s;
   font-family: inherit;
 }
-
-.login-page .btn-submit:hover {
-  background-color: #4338CA;
-  transform: translateY(-2px);
-}
+.login-page .btn-submit:hover { background-color: #4338CA; transform: translateY(-2px); }
 .login-page .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
 
 .login-page .btn-outline {
   width: 100%;
   padding: 13px;
-  background-color: transparent;
-  color: var(--color-text);
-  border: 2px solid var(--border-color);
+  background: transparent;
+  color: #334155;
+  border: 2px solid #E2E8F0;
   border-radius: 12px;
   font-weight: 700;
   font-size: 1rem;
@@ -224,37 +143,30 @@
   justify-content: center;
   gap: 10px;
 }
-
-.login-page .btn-outline:hover {
-  border-color: #C7C9F9;
-  color: #4F46E5;
-  background-color: #F5F5FE;
-}
+.login-page .btn-outline:hover { border-color: #C7C9F9; color: #4F46E5; background: #F5F5FE; }
 
 .back-home {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: var(--color-text-muted);
+  color: #94A3B8;
   text-decoration: none;
   font-weight: 600;
-  margin-bottom: 32px;
+  margin-bottom: 28px;
   font-size: 0.875rem;
   transition: color 0.2s;
 }
+.back-home:hover { color: #334155; }
 
-.back-home:hover { color: var(--color-text); }
-
-@media (max-width: 992px) {
-  .login-page { padding: 0; }
-  .auth-card {
-    flex-direction: column;
-    border-radius: 0;
-    min-height: 100vh;
-    max-width: none;
-    box-shadow: none;
-  }
-  .login-left { padding: 40px 28px; }
-  .login-left-content h1 { font-size: 2rem; }
+/* ─── Responsif ──────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .auth-card { flex-direction: column; }
+  .login-left { padding: 40px 28px; gap: 32px; }
+  .login-left-content h1 { font-size: 2.1rem; }
   .login-right { padding: 40px 24px; }
+}
+@media (max-width: 480px) {
+  .auth-stats { gap: 12px; }
+  .auth-stat { padding: 16px; }
+  .auth-stat-num { font-size: 1.5rem; }
 }
