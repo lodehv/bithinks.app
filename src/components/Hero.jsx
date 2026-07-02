@@ -76,7 +76,7 @@ const Hero = () => {
             </p>
             
             <div className="hero-left-actions">
-              <button className="btn btn-pill-cta" onClick={() => window.location.href='/login'}>
+              <button className="btn btn-pill-cta" onClick={() => document.getElementById('app-selector')?.scrollIntoView({ behavior: 'smooth' })}>
                 <span className="btn-text">Pelajari Lebih Lanjut</span>
                 <span className="btn-icon-circle">
                   <ArrowRight size={18} />
