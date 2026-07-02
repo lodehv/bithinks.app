@@ -1144,10 +1144,11 @@
 .ds-omni .container { max-width: 1280px; }
 
 /* ── Hero: putih bersih, tipografi tebal ─────────────────────────────────── */
-.ds-omni .p-detail-hero-section { background: #FFFFFF; padding: 64px 0 96px; }
+.ds-omni .p-detail-hero-section { background: #FFFFFF; padding: 56px 0 88px; }
+.ds-omni .p-detail-hero-grid { align-items: start; }
 .ds-omni .p-detail-tagline { color: var(--ds-primary); font-size: 0.875rem; font-weight: 600; letter-spacing: 0.08em; }
-.ds-omni .p-detail-title { font-size: 3.5rem; line-height: 1.06; font-weight: 800; color: var(--ds-text); letter-spacing: -0.025em; }
-.ds-omni .p-detail-desc { font-size: 1.2rem; line-height: 1.65; color: var(--ds-text-2); font-weight: 500; max-width: 560px; }
+.ds-omni .p-detail-title { font-size: 2.6rem; line-height: 1.12; font-weight: 800; color: var(--ds-text); letter-spacing: -0.02em; }
+.ds-omni .p-detail-desc { font-size: 1.1rem; line-height: 1.65; color: var(--ds-text-2); font-weight: 500; max-width: 560px; }
 .ds-omni .p-detail-stat-value { color: var(--ds-text); }
 .ds-omni .p-detail-stat-card { border-left-color: var(--ds-primary); }
 
@@ -1203,11 +1204,12 @@
 
 /* ── Responsif tipografi hero ────────────────────────────────────────────── */
 @media (max-width: 991px) {
-  .ds-omni .p-detail-title { font-size: 2.75rem; }
+  .ds-omni .p-detail-hero-grid { align-items: center; }
+  .ds-omni .p-detail-title { font-size: 2.25rem; }
   .ds-omni .p-detail-desc { max-width: 100%; }
 }
 @media (max-width: 576px) {
-  .ds-omni .p-detail-title { font-size: 2.1rem; }
+  .ds-omni .p-detail-title { font-size: 1.9rem; }
   .ds-omni .p-features-showcase-section,
   .ds-omni .p-why-choose-section,
   .ds-omni .pp-section,
