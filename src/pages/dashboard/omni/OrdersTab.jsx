@@ -5,13 +5,16 @@ import OrderCard from "./OrderCard";
 import "./ProductMaster.css";
 import "./OmniModule.css";
 
+const isUnpaid = (o) => /unpaid/i.test(o.channelStatus || "");
 const STATUS_TABS = [
-  { id: "",        label: "Semua Pesanan" },
-  { id: "baru",    label: "Pesanan Baru" },
-  { id: "dikemas", label: "Siap Dikirim" },
-  { id: "dikirim", label: "Dikirim" },
-  { id: "selesai", label: "Selesai" },
-  { id: "batal",   label: "Pembatalan" },
+  { id: "all",     label: "Semua Pesanan", match: () => true,                                     count: false },
+  { id: "unpaid",  label: "Belum Dibayar", match: (o) => isUnpaid(o),                              count: true  },
+  { id: "baru",    label: "Pesanan Baru",  match: (o) => o.status === "baru" && !isUnpaid(o),      count: true  },
+  { id: "dikemas", label: "Siap Dikirim",  match: (o) => o.status === "dikemas",                   count: true  },
+  { id: "dikirim", label: "Dikirim",       match: (o) => o.status === "dikirim",                   count: true  },
+  { id: "selesai", label: "Selesai",       match: (o) => o.status === "selesai",                   count: false },
+  { id: "batal",   label: "Pembatalan",    match: (o) => o.status === "batal",                     count: false },
+  { id: "return",  label: "Pengembalian",  match: () => false,                                     count: false },
 ];
 
 const SORTS = [
@@ -25,7 +28,7 @@ const PER_PAGE = [25, 50, 100];
 
 export default function OrdersTab({ locked, onRequirePayment }) {
   const [orders, setOrders] = useState(null);
-  const [tab, setTab]       = useState("");
+  const [tab, setTab]       = useState("all");
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("newest");
   const [sortOpen, setSortOpen] = useState(false);
@@ -49,12 +52,13 @@ export default function OrdersTab({ locked, onRequirePayment }) {
   const all = orders ?? [];
   const counts = useMemo(() => {
     const c = {};
-    STATUS_TABS.forEach((t) => { c[t.id] = t.id ? all.filter((o) => o.status === t.id).length : all.length; });
+    STATUS_TABS.forEach((t) => { c[t.id] = all.filter(t.match).length; });
     return c;
   }, [all]);
 
   const filtered = useMemo(() => {
-    let list = tab ? all.filter((o) => o.status === tab) : all;
+    const active = STATUS_TABS.find((t) => t.id === tab) ?? STATUS_TABS[0];
+    let list = all.filter(active.match);
     const q = search.trim().toLowerCase();
     if (q) list = list.filter((o) =>
       (o.externalOrderNo || "").toLowerCase().includes(q) ||
@@ -97,8 +101,8 @@ export default function OrdersTab({ locked, onRequirePayment }) {
       {/* Tabs status */}
       <div className="pm-tabs po-tabs">
         {STATUS_TABS.map((t) => (
-          <button key={t.id || "all"} className={`pm-tab ${tab === t.id ? "active" : ""}`} onClick={() => setTab(t.id)}>
-            {t.label}{t.id && <span className="pm-tab-count">{counts[t.id]}</span>}
+          <button key={t.id} className={`pm-tab ${tab === t.id ? "active" : ""}`} onClick={() => setTab(t.id)}>
+            {t.label}{t.count && <span className="pm-tab-count">{counts[t.id]}</span>}
           </button>
         ))}
       </div>
