@@ -17,6 +17,12 @@ const STATUS_TABS = [
   { id: "return",  label: "Pengembalian",  match: () => false,                                     count: false },
 ];
 
+// Sub-tab per tab utama. Sub-tab pertama menampung isi; sisanya belum dilacak (0).
+const SUBTABS = {
+  dikemas: { action: "Cocokkan Pesanan", tabs: [["perlu", "Perlu diproses"], ["diproses", "Diproses"], ["telah", "Telah diproses"]] },
+  dikirim: { tabs: [["dalam", "Dalam Pengiriman"], ["terkirim", "Telah Dikirim"], ["gagal", "Pengiriman Gagal"]] },
+};
+
 const SORTS = [
   { id: "newest",     label: "Terbaru" },
   { id: "oldest",     label: "Terlama" },
@@ -66,8 +72,9 @@ export default function OrdersTab({ locked, onRequirePayment }) {
       (o.recipientName || o.customerName || "").toLowerCase().includes(q));
     if (from) { const f = new Date(from); list = list.filter((o) => new Date(o.orderedAt) >= f); }
     if (to)   { const t = new Date(to); t.setHours(23, 59, 59, 999); list = list.filter((o) => new Date(o.orderedAt) <= t); }
-    // Sub-tab "Siap Dikirim": belum melacak sub-status fulfillment → hanya "Perlu diproses" berisi.
-    if (tab === "dikemas" && subTab !== "perlu") list = [];
+    // Sub-tab: hanya sub-tab pertama yang berisi (sub-status belum dilacak).
+    const st = SUBTABS[tab];
+    if (st && subTab !== st.tabs[0][0]) list = [];
     return [...list].sort((a, b) => {
       if (sortBy === "oldest")     return new Date(a.orderedAt) - new Date(b.orderedAt);
       if (sortBy === "total_high") return b.total - a.total;
@@ -77,6 +84,7 @@ export default function OrdersTab({ locked, onRequirePayment }) {
   }, [all, tab, search, from, to, sortBy, subTab]);
 
   useEffect(() => { setPage(1); }, [tab, search, from, to, sortBy, perPage, subTab]);
+  useEffect(() => { const st = SUBTABS[tab]; if (st) setSubTab(st.tabs[0][0]); }, [tab]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
   const pageNow = Math.min(page, totalPages);
@@ -150,17 +158,17 @@ export default function OrdersTab({ locked, onRequirePayment }) {
         </div>
       </div>
 
-      {/* Sub-tab khusus "Siap Dikirim" */}
-      {tab === "dikemas" && (
+      {/* Sub-tab per tab (Siap Dikirim / Dikirim) */}
+      {SUBTABS[tab] && (
         <div className="po-subtabs">
           <div className="po-subtabs-list">
-            {[["perlu", "Perlu diproses", counts.dikemas], ["diproses", "Diproses", 0], ["telah", "Telah diproses", 0]].map(([id, label, n]) => (
+            {SUBTABS[tab].tabs.map(([id, label], i) => (
               <button key={id} className={`po-subtab ${subTab === id ? "active" : ""}`} onClick={() => setSubTab(id)}>
-                {label} ({n})
+                {label} ({i === 0 ? counts[tab] : 0})
               </button>
             ))}
           </div>
-          <button className="pm-btn pm-btn-outline">Cocokkan Pesanan</button>
+          {SUBTABS[tab].action && <button className="pm-btn pm-btn-outline">{SUBTABS[tab].action}</button>}
         </div>
       )}
 
