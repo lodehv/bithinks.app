@@ -1,139 +1,160 @@
 import { useEffect, useMemo, useState } from "react";
-import { Inbox, ShoppingBag, Truck, Wallet, ClipboardList } from "lucide-react";
+import { Search, ChevronDown, SlidersHorizontal, Download, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import { omniApi, isPaymentRequired } from "../../../utils/omniApi";
-import { channelMeta } from "./channels";
 import OrderCard from "./OrderCard";
+import "./ProductMaster.css";
 import "./OmniModule.css";
 
-const rupiah = (n) => "Rp " + Number(n || 0).toLocaleString("id-ID");
-const rupiahShort = (n) => {
-  const v = Number(n || 0);
-  if (v >= 1_000_000) return "Rp " + (v / 1_000_000).toLocaleString("id-ID", { maximumFractionDigits: 1 }) + " jt";
-  if (v >= 1_000) return "Rp " + Math.round(v / 1_000).toLocaleString("id-ID") + " rb";
-  return rupiah(v);
-};
-
-const STATUS = [
-  { id: "",        label: "Semua" },
-  { id: "baru",    label: "Baru" },
-  { id: "dikemas", label: "Dikemas" },
+const STATUS_TABS = [
+  { id: "",        label: "Semua Pesanan" },
+  { id: "baru",    label: "Pesanan Baru" },
+  { id: "dikemas", label: "Siap Dikirim" },
   { id: "dikirim", label: "Dikirim" },
   { id: "selesai", label: "Selesai" },
-  { id: "batal",   label: "Batal" },
+  { id: "batal",   label: "Pembatalan" },
 ];
 
+const SORTS = [
+  { id: "newest",     label: "Terbaru" },
+  { id: "oldest",     label: "Terlama" },
+  { id: "total_high", label: "Total tertinggi" },
+  { id: "total_low",  label: "Total terendah" },
+];
+
+const PER_PAGE = [25, 50, 100];
+
 export default function OrdersTab({ locked, onRequirePayment }) {
-  const [orders, setOrders] = useState(null); // semua pesanan (tanpa filter)
-  const [filter, setFilter] = useState("");
+  const [orders, setOrders] = useState(null);
+  const [tab, setTab]       = useState("");
+  const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState("newest");
+  const [sortOpen, setSortOpen] = useState(false);
+  const [from, setFrom]     = useState("");
+  const [to, setTo]         = useState("");
+  const [perPage, setPerPage] = useState(50);
+  const [page, setPage]     = useState(1);
   const [busy, setBusy]     = useState(null);
 
-  const load = () => {
-    setOrders(null);
-    omniApi.listOrders().then(setOrders).catch(() => setOrders([]));
-  };
+  const load = () => { setOrders(null); omniApi.listOrders().then(setOrders).catch(() => setOrders([])); };
   useEffect(load, []);
 
   const changeStatus = async (id, status) => {
     if (locked) return onRequirePayment?.();
     setBusy(id);
-    try {
-      await omniApi.updateOrderStatus(id, status);
-      load();
-    } catch (err) {
-      if (isPaymentRequired(err)) onRequirePayment?.();
-    } finally { setBusy(null); }
+    try { await omniApi.updateOrderStatus(id, status); load(); }
+    catch (err) { if (isPaymentRequired(err)) onRequirePayment?.(); }
+    finally { setBusy(null); }
   };
 
-  // ─── Ringkasan dihitung dari seluruh pesanan ───────────────────────────────
-  const summary = useMemo(() => {
-    const list = orders ?? [];
-    const by = (s) => list.filter((o) => o.status === s).length;
-    const omzet = list.filter((o) => o.status !== "batal").reduce((a, o) => a + Number(o.total || 0), 0);
-    const channels = {};
-    list.forEach((o) => { channels[o.channel] = (channels[o.channel] || 0) + 1; });
-    return {
-      total: list.length,
-      perluProses: by("baru") + by("dikemas"),
-      dikirim: by("dikirim"),
-      omzet,
-      channels,
-    };
-  }, [orders]);
+  const all = orders ?? [];
+  const counts = useMemo(() => {
+    const c = {};
+    STATUS_TABS.forEach((t) => { c[t.id] = t.id ? all.filter((o) => o.status === t.id).length : all.length; });
+    return c;
+  }, [all]);
 
-  const shown = useMemo(
-    () => (filter ? (orders ?? []).filter((o) => o.status === filter) : (orders ?? [])),
-    [orders, filter]
-  );
+  const filtered = useMemo(() => {
+    let list = tab ? all.filter((o) => o.status === tab) : all;
+    const q = search.trim().toLowerCase();
+    if (q) list = list.filter((o) =>
+      (o.externalOrderNo || "").toLowerCase().includes(q) ||
+      (o.recipientName || o.customerName || "").toLowerCase().includes(q));
+    if (from) { const f = new Date(from); list = list.filter((o) => new Date(o.orderedAt) >= f); }
+    if (to)   { const t = new Date(to); t.setHours(23, 59, 59, 999); list = list.filter((o) => new Date(o.orderedAt) <= t); }
+    return [...list].sort((a, b) => {
+      if (sortBy === "oldest")     return new Date(a.orderedAt) - new Date(b.orderedAt);
+      if (sortBy === "total_high") return b.total - a.total;
+      if (sortBy === "total_low")  return a.total - b.total;
+      return new Date(b.orderedAt) - new Date(a.orderedAt);
+    });
+  }, [all, tab, search, from, to, sortBy]);
 
-  const cards = [
-    { icon: ShoppingBag,  label: "Total Pesanan",  value: summary.total,                sub: "semua channel",       tone: "" },
-    { icon: ClipboardList, label: "Perlu Diproses", value: summary.perluProses,          sub: "baru & dikemas",      tone: "amber" },
-    { icon: Truck,        label: "Dikirim",         value: summary.dikirim,              sub: "dalam pengiriman",    tone: "blue" },
-    { icon: Wallet,       label: "Total Omzet",     value: rupiahShort(summary.omzet),   sub: "di luar pesanan batal", tone: "green" },
-  ];
+  useEffect(() => { setPage(1); }, [tab, search, from, to, sortBy, perPage]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
+  const pageNow = Math.min(page, totalPages);
+  const paged = filtered.slice((pageNow - 1) * perPage, pageNow * perPage);
+
+  const download = () => {
+    const rows = [["No. Pesanan", "Tanggal", "Channel", "Pelanggan", "Status", "Total"],
+      ...filtered.map((o) => [o.externalOrderNo, new Date(o.orderedAt).toLocaleString("id-ID"), o.channel, o.recipientName || o.customerName || "", o.status, o.total])];
+    const csv = rows.map((r) => r.map((c) => `"${String(c ?? "").replace(/"/g, '""')}"`).join(",")).join("\n");
+    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+    const a = document.createElement("a"); a.href = url; a.download = "pesanan.csv"; a.click(); URL.revokeObjectURL(url);
+  };
 
   return (
-    <div>
-      <div className="omni-toolbar">
-        <div>
-          <div className="omni-toolbar-title">Pesanan Terpusat</div>
-          <div className="omni-toolbar-sub">Semua pesanan dari setiap channel dalam satu inbox — tanpa rekap manual.</div>
+    <div className="pm-page">
+      <div className="pm-head">
+        <h1 className="pm-title">Pesanan</h1>
+        <div className="pm-head-actions">
+          <button className="pm-btn pm-btn-outline" onClick={download} disabled={!all.length}>
+            <Download size={16} /> Unduh <ChevronDown size={14} />
+          </button>
         </div>
       </div>
 
-      {/* Kartu ringkasan */}
-      <div className="omni-stats">
-        {cards.map((c) => {
-          const Icon = c.icon;
-          return (
-            <div className="omni-stat" key={c.label}>
-              <div className="omni-stat-label"><Icon size={14} /> {c.label}</div>
-              <div className={`omni-stat-value ${c.tone}`}>{orders === null ? "…" : c.value}</div>
-              <div className="omni-stat-sub">{c.sub}</div>
+      {/* Tabs status */}
+      <div className="pm-tabs po-tabs">
+        {STATUS_TABS.map((t) => (
+          <button key={t.id || "all"} className={`pm-tab ${tab === t.id ? "active" : ""}`} onClick={() => setTab(t.id)}>
+            {t.label}{t.id && <span className="pm-tab-count">{counts[t.id]}</span>}
+          </button>
+        ))}
+      </div>
+
+      {/* Toolbar */}
+      <div className="pm-toolbar po-toolbar">
+        <div className="po-searchgroup">
+          <span className="po-field-select">No. Pesanan <ChevronDown size={14} /></span>
+          <span className="po-search"><Search size={17} /><input placeholder="Cari nomor pesanan" value={search} onChange={(e) => setSearch(e.target.value)} /></span>
+        </div>
+        <div className="pm-sort">
+          <button className="pm-btn pm-btn-outline" onClick={() => setSortOpen((o) => !o)}>Urutkan <ChevronDown size={14} /></button>
+          {sortOpen && (
+            <div className="pm-sort-menu">
+              {SORTS.map((s) => (
+                <div key={s.id} className={`pm-sort-opt ${sortBy === s.id ? "active" : ""}`} onClick={() => { setSortBy(s.id); setSortOpen(false); }}>{s.label}</div>
+              ))}
             </div>
-          );
-        })}
-      </div>
-
-      {/* Breakdown channel */}
-      {orders && orders.length > 0 && (
-        <div className="omni-channel-row">
-          {Object.entries(summary.channels).map(([ch, n]) => {
-            const m = channelMeta(ch);
-            return (
-              <span className="omni-channel-tag" key={ch}>
-                <span className="dot" style={{ background: m.color }} />{m.label}<b>{n}</b>
-              </span>
-            );
-          })}
+          )}
         </div>
-      )}
-
-      {/* Filter status */}
-      <div className="omni-segment">
-        {STATUS.map((s) => {
-          const count = s.id ? (orders ?? []).filter((o) => o.status === s.id).length : (orders ?? []).length;
-          return (
-            <button key={s.id} className={`omni-chip-btn ${filter === s.id ? "active" : ""}`} onClick={() => setFilter(s.id)}>
-              {s.label}{orders && <span className="omni-chip-count">{count}</span>}
-            </button>
-          );
-        })}
+        <div className="po-daterange">
+          <Calendar size={15} />
+          <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} aria-label="Dari" />
+          <span>–</span>
+          <input type="date" value={to} onChange={(e) => setTo(e.target.value)} aria-label="Sampai" />
+        </div>
+        <button className="pm-btn pm-btn-outline">Filter <SlidersHorizontal size={15} /></button>
       </div>
 
+      {/* Sub-bar: pilih semua + pagination */}
+      <div className="po-subbar">
+        <label className="po-selectall"><input type="checkbox" disabled /> Pilih Semua</label>
+        <div className="po-pagination">
+          <button disabled={pageNow <= 1} onClick={() => setPage((p) => Math.max(1, p - 1))}><ChevronLeft size={16} /></button>
+          <span className="po-page-cur">{pageNow}</span>
+          <button disabled={pageNow >= totalPages} onClick={() => setPage((p) => p + 1)}><ChevronRight size={16} /></button>
+          <span className="po-perpage">Per halaman
+            <select value={perPage} onChange={(e) => setPerPage(Number(e.target.value))}>
+              {PER_PAGE.map((n) => <option key={n} value={n}>{n}</option>)}
+            </select>
+          </span>
+        </div>
+      </div>
+
+      {/* List / empty */}
       {orders === null ? (
-        <div className="omni-loading">Memuat pesanan…</div>
-      ) : shown.length === 0 ? (
-        <div className="omni-empty">
-          <div className="omni-empty-icon"><Inbox size={24} /></div>
-          <h3>{filter ? "Tidak ada pesanan pada status ini" : "Belum ada pesanan"}</h3>
-          <p>Pesanan dari Shopee &amp; TikTok Shop akan masuk ke sini secara otomatis setelah toko terhubung.</p>
+        <div className="pm-state">Memuat pesanan…</div>
+      ) : paged.length === 0 ? (
+        <div className="po-empty">
+          <div className="po-empty-illust"><Search size={40} strokeWidth={2.2} /></div>
+          <h3>Tidak ada pesanan yang ditemukan</h3>
+          <p>Coba ubah filter atau pencarian.</p>
         </div>
       ) : (
-        <div className="ord-list">
-          {shown.map((o) => (
-            <OrderCard key={o.id} order={o} onChangeStatus={changeStatus} busy={busy === o.id} />
-          ))}
+        <div className="ord-list po-list">
+          {paged.map((o) => <OrderCard key={o.id} order={o} onChangeStatus={changeStatus} busy={busy === o.id} />)}
         </div>
       )}
     </div>

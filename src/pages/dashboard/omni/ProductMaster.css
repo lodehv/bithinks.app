@@ -130,3 +130,64 @@
   .pm-sync { margin-left: 0; width: 100%; justify-content: center; }
   .pm-search { max-width: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Pesanan — chrome tambahan (tabs status, date range, sub-bar, empty)
+   ═══════════════════════════════════════════════════════════════════════════ */
+.po-tabs { flex-wrap: wrap; }
+.po-toolbar { padding-bottom: 18px; border-bottom: 1px solid #F0F0F2; }
+
+/* Search bergabung: [No. Pesanan ▾][cari] */
+.po-searchgroup {
+  display: flex; align-items: center; height: 46px; flex: 1; min-width: 280px; max-width: 560px;
+  border: 1px solid #E2E4E9; border-radius: 12px; overflow: hidden; background: #fff;
+}
+.po-searchgroup:focus-within { border-color: #6366F1; }
+.po-field-select {
+  display: flex; align-items: center; gap: 6px; height: 100%; padding: 0 14px;
+  background: #FAFAFB; border-right: 1px solid #E2E4E9; color: #374151;
+  font-weight: 600; font-size: 0.9rem; white-space: nowrap;
+}
+.po-search { flex: 1; display: flex; align-items: center; gap: 10px; padding: 0 14px; color: #9AA0AA; }
+.po-search input { flex: 1; border: none; outline: none; font-family: inherit; font-size: 0.95rem; color: #1F2430; background: transparent; }
+
+/* Date range */
+.po-daterange {
+  display: flex; align-items: center; gap: 8px; height: 46px; padding: 0 14px;
+  border: 1px solid #E2E4E9; border-radius: 12px; color: #6B7280; font-size: 0.9rem;
+}
+.po-daterange input { border: none; outline: none; font-family: inherit; font-size: 0.88rem; color: #374151; background: transparent; width: 118px; }
+.po-daterange span { color: #B4B8C2; }
+
+/* Sub-bar */
+.po-subbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 14px 24px; background: #FAFAFB; border-bottom: 1px solid #F0F0F2;
+}
+.po-selectall { display: flex; align-items: center; gap: 10px; font-size: 0.92rem; font-weight: 600; color: #374151; cursor: pointer; }
+.po-selectall input { width: 16px; height: 16px; accent-color: #4F46E5; }
+.po-pagination { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: #374151; }
+.po-pagination > button {
+  width: 30px; height: 30px; border: 1px solid #E2E4E9; background: #fff; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center; cursor: pointer; color: #4F46E5;
+}
+.po-pagination > button:disabled { color: #C7C9D2; cursor: default; }
+.po-page-cur { font-weight: 700; color: #4F46E5; min-width: 18px; text-align: center; }
+.po-perpage { display: flex; align-items: center; gap: 8px; margin-left: 8px; color: #6B7280; }
+.po-perpage select {
+  border: 1px solid #E2E4E9; border-radius: 8px; padding: 5px 8px; font-family: inherit;
+  font-size: 0.88rem; color: #374151; background: #fff; cursor: pointer;
+}
+
+/* List di dalam kartu */
+.po-list { padding: 16px 24px 24px; }
+
+/* Empty state (kaca pembesar) */
+.po-empty { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 72px 24px 84px; text-align: center; }
+.po-empty-illust {
+  width: 92px; height: 92px; border-radius: 50%;
+  background: #EEF0FB; color: #4F46E5;
+  display: flex; align-items: center; justify-content: center; margin-bottom: 6px;
+}
+.po-empty h3 { font-size: 1.15rem; font-weight: 800; color: #1F2430; }
+.po-empty p { font-size: 0.9rem; color: #9AA0AA; }
