@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
 /* ==========================================
    ProductDetail.css - Premium Sub-Homepage Styling
    ========================================== */
@@ -1214,4 +1216,10 @@
   .ds-omni .p-why-choose-section,
   .ds-omni .pp-section,
   .ds-omni .p-cta-bottom-section { padding: 64px 0; }
+}
+
+/* Headline & sub-headline BitOmni → Plus Jakarta Sans */
+.ds-omni .p-detail-title,
+.ds-omni .p-detail-desc {
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
 }
