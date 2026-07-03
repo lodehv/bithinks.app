@@ -114,7 +114,7 @@ export default function DashboardHome({ onMenuClick }) {
                 <div className="marketplace-logos">
                   {connected.slice(0, 6).map((s) => {
                     const m = channelMeta(s.channel);
-                    return <span key={s.id} title={m.label} style={{ width: 26, height: 26, borderRadius: 7, background: m.color, color: "#fff", fontSize: 11, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{m.short}</span>;
+                    return <span key={s.id} title={m.label} style={{ width: 26, height: 26, borderRadius: 7, background: "#1F2937", color: "#fff", fontSize: 11, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{m.short}</span>;
                   })}
                 </div>
               )}
@@ -169,10 +169,10 @@ export default function DashboardHome({ onMenuClick }) {
                   return (
                     <div key={c.channel} style={{ display: "flex", alignItems: "center", gap: 12, padding: "8px 0" }}>
                       <span style={{ width: 90, fontSize: 12.5, fontWeight: 600, color: "#333", display: "flex", alignItems: "center", gap: 7 }}>
-                        <span style={{ width: 8, height: 8, borderRadius: "50%", background: m.color }} />{m.label}
+                        <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#4F46E5" }} />{m.label}
                       </span>
                       <div style={{ flex: 1, height: 8, background: "#F1F1F1", borderRadius: 99, overflow: "hidden" }}>
-                        <div style={{ width: `${(c.total / maxChannel) * 100}%`, height: "100%", background: m.color, borderRadius: 99 }} />
+                        <div style={{ width: `${(c.total / maxChannel) * 100}%`, height: "100%", background: "#4F46E5", borderRadius: 99 }} />
                       </div>
                       <span style={{ width: 110, textAlign: "right", fontSize: 12.5, fontWeight: 700, color: "#111" }}>{rupiah(c.total)}</span>
                     </div>

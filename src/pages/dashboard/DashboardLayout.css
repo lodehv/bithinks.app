@@ -93,12 +93,12 @@
   letter-spacing: 0.05em;
   padding: 2px 8px;
   border-radius: 20px;
-  background: #F97316;
+  background: #4F46E5;
   color: #fff;
 }
 
 .sidebar-billing-badge.active   { background: #16A34A; }
-.sidebar-billing-badge.trial    { background: #F97316; }
+.sidebar-billing-badge.trial    { background: #4F46E5; }
 .sidebar-billing-badge.suspended{ background: #DC2626; }
 
 .sidebar-billing-name {
@@ -157,13 +157,13 @@
 }
 
 .nav-item:hover {
-  background: #FFF4EC;
-  color: #F97316;
+  background: #EEF0FB;
+  color: #4F46E5;
 }
 
 .nav-item.active {
-  background: #FFF4EC;
-  color: #F97316;
+  background: #EEF0FB;
+  color: #4F46E5;
   font-weight: 600;
 }
 
@@ -175,7 +175,7 @@
   top: 5px;
   bottom: 5px;
   width: 3px;
-  background: #F97316;
+  background: #4F46E5;
   border-radius: 0 3px 3px 0;
 }
 
@@ -227,7 +227,7 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: #F97316;
+  background: #4F46E5;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -269,7 +269,7 @@
   flex-shrink: 0;
 }
 
-.logout-btn:hover { color: #F97316; }
+.logout-btn:hover { color: #4F46E5; }
 .sidebar.collapsed .logout-btn { display: none; }
 
 /* ─── Main ─────────────────────────────────────────────────────────────────── */
@@ -316,11 +316,11 @@
 .topbar-tenant-badge {
   font-size: 12px;
   font-weight: 500;
-  color: #F97316;
-  background: #FFF4EC;
+  color: #4F46E5;
+  background: #EEF0FB;
   padding: 5px 12px;
   border-radius: 20px;
-  border: 1px solid #FED7AA;
+  border: 1px solid #C7C9F9;
 }
 
 /* Content */
