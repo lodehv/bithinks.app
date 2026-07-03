@@ -17,10 +17,23 @@ const STATUS_TABS = [
   { id: "return",  label: "Pengembalian",  match: () => false,                                     count: false },
 ];
 
-// Sub-tab per tab utama. Sub-tab pertama menampung isi; sisanya belum dilacak (0).
+// Sub-tab per tab utama. Sub-tab pertama menampung isi; `count` = tampilkan badge angka.
 const SUBTABS = {
-  dikemas: { action: "Cocokkan Pesanan", tabs: [["perlu", "Perlu diproses"], ["diproses", "Diproses"], ["telah", "Telah diproses"]] },
-  dikirim: { tabs: [["dalam", "Dalam Pengiriman"], ["terkirim", "Telah Dikirim"], ["gagal", "Pengiriman Gagal"]] },
+  dikemas: { action: "Cocokkan Pesanan", tabs: [
+    { id: "perlu",    label: "Perlu diproses", count: true },
+    { id: "diproses", label: "Diproses",       count: true },
+    { id: "telah",    label: "Telah diproses", count: true },
+  ] },
+  dikirim: { tabs: [
+    { id: "dalam",    label: "Dalam Pengiriman", count: true },
+    { id: "terkirim", label: "Telah Dikirim",    count: true },
+    { id: "gagal",    label: "Pengiriman Gagal", count: true },
+  ] },
+  batal: { tabs: [
+    { id: "pembatalan",  label: "Pembatalan",                         count: false },
+    { id: "gagal_perlu", label: "Pengiriman Gagal - Perlu Diproses",  count: true  },
+    { id: "gagal_telah", label: "Pengiriman Gagal - Telah Diproses",  count: false },
+  ] },
 };
 
 const SORTS = [
@@ -74,7 +87,7 @@ export default function OrdersTab({ locked, onRequirePayment }) {
     if (to)   { const t = new Date(to); t.setHours(23, 59, 59, 999); list = list.filter((o) => new Date(o.orderedAt) <= t); }
     // Sub-tab: hanya sub-tab pertama yang berisi (sub-status belum dilacak).
     const st = SUBTABS[tab];
-    if (st && subTab !== st.tabs[0][0]) list = [];
+    if (st && subTab !== st.tabs[0].id) list = [];
     return [...list].sort((a, b) => {
       if (sortBy === "oldest")     return new Date(a.orderedAt) - new Date(b.orderedAt);
       if (sortBy === "total_high") return b.total - a.total;
@@ -84,7 +97,7 @@ export default function OrdersTab({ locked, onRequirePayment }) {
   }, [all, tab, search, from, to, sortBy, subTab]);
 
   useEffect(() => { setPage(1); }, [tab, search, from, to, sortBy, perPage, subTab]);
-  useEffect(() => { const st = SUBTABS[tab]; if (st) setSubTab(st.tabs[0][0]); }, [tab]);
+  useEffect(() => { const st = SUBTABS[tab]; if (st) setSubTab(st.tabs[0].id); }, [tab]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
   const pageNow = Math.min(page, totalPages);
@@ -162,9 +175,9 @@ export default function OrdersTab({ locked, onRequirePayment }) {
       {SUBTABS[tab] && (
         <div className="po-subtabs">
           <div className="po-subtabs-list">
-            {SUBTABS[tab].tabs.map(([id, label], i) => (
-              <button key={id} className={`po-subtab ${subTab === id ? "active" : ""}`} onClick={() => setSubTab(id)}>
-                {label} ({i === 0 ? counts[tab] : 0})
+            {SUBTABS[tab].tabs.map((s, i) => (
+              <button key={s.id} className={`po-subtab ${subTab === s.id ? "active" : ""}`} onClick={() => setSubTab(s.id)}>
+                {s.label}{s.count ? ` (${i === 0 ? counts[tab] : 0})` : ""}
               </button>
             ))}
           </div>
