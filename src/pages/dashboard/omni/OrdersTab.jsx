@@ -36,6 +36,7 @@ export default function OrdersTab({ locked, onRequirePayment }) {
   const [to, setTo]         = useState("");
   const [perPage, setPerPage] = useState(50);
   const [page, setPage]     = useState(1);
+  const [subTab, setSubTab] = useState("perlu"); // sub-tab "Siap Dikirim"
   const [busy, setBusy]     = useState(null);
 
   const load = () => { setOrders(null); omniApi.listOrders().then(setOrders).catch(() => setOrders([])); };
@@ -65,15 +66,17 @@ export default function OrdersTab({ locked, onRequirePayment }) {
       (o.recipientName || o.customerName || "").toLowerCase().includes(q));
     if (from) { const f = new Date(from); list = list.filter((o) => new Date(o.orderedAt) >= f); }
     if (to)   { const t = new Date(to); t.setHours(23, 59, 59, 999); list = list.filter((o) => new Date(o.orderedAt) <= t); }
+    // Sub-tab "Siap Dikirim": belum melacak sub-status fulfillment → hanya "Perlu diproses" berisi.
+    if (tab === "dikemas" && subTab !== "perlu") list = [];
     return [...list].sort((a, b) => {
       if (sortBy === "oldest")     return new Date(a.orderedAt) - new Date(b.orderedAt);
       if (sortBy === "total_high") return b.total - a.total;
       if (sortBy === "total_low")  return a.total - b.total;
       return new Date(b.orderedAt) - new Date(a.orderedAt);
     });
-  }, [all, tab, search, from, to, sortBy]);
+  }, [all, tab, search, from, to, sortBy, subTab]);
 
-  useEffect(() => { setPage(1); }, [tab, search, from, to, sortBy, perPage]);
+  useEffect(() => { setPage(1); }, [tab, search, from, to, sortBy, perPage, subTab]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
   const pageNow = Math.min(page, totalPages);
@@ -146,6 +149,20 @@ export default function OrdersTab({ locked, onRequirePayment }) {
           </span>
         </div>
       </div>
+
+      {/* Sub-tab khusus "Siap Dikirim" */}
+      {tab === "dikemas" && (
+        <div className="po-subtabs">
+          <div className="po-subtabs-list">
+            {[["perlu", "Perlu diproses", counts.dikemas], ["diproses", "Diproses", 0], ["telah", "Telah diproses", 0]].map(([id, label, n]) => (
+              <button key={id} className={`po-subtab ${subTab === id ? "active" : ""}`} onClick={() => setSubTab(id)}>
+                {label} ({n})
+              </button>
+            ))}
+          </div>
+          <button className="pm-btn pm-btn-outline">Cocokkan Pesanan</button>
+        </div>
+      )}
 
       {/* List / empty */}
       {orders === null ? (
