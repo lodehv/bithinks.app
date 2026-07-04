@@ -17,13 +17,12 @@ import {
 // Import Mockup Images (Matching AppSelector.jsx)
 import bitOneLogo from '../assets/logo_pilihan_fitur/bitone_logo-removebg-preview.png';
 import bitOmniLogo from '../assets/logo_pilihan_fitur/bithinks_omnichannel_logo-removebg-preview.png';
+import bithinksHeroPage from '../assets/bithinks_hero_page.png';
 import bitFineLogo from '../assets/logo_pilihan_fitur/bit_finance_logo-removebg-preview.png';
 import bitPosLogo from '../assets/logo_pilihan_fitur/bithinks_pos_logo_v2-removebg-preview.png';
 import bitTeamLogo from '../assets/logo_pilihan_fitur/bithinks_hrm_logo-removebg-preview.png';
 import bitDevLogo from '../assets/logo_pilihan_fitur/bithinks_dev_logo-removebg-preview.png';
 
-import shopeeLogo from '../assets/logo_pilihan_fitur/shopee.png';
-import tiktokLogo from '../assets/logo_pilihan_fitur/logo_tiktok.jpg';
 
 import bitOneMockup from '../assets/logo_pilihan_fitur/bitone_mockup.png';
 import financeMockup from '../assets/logo_pilihan_fitur/finance_mockup.png';
@@ -456,7 +455,7 @@ const ProductDetail = ({ appId }) => {
 
               {/* Right Mockup Representation Column */}
               <div className="p-detail-hero-right">
-                <div className="p-detail-hero-mockup" style={{ '--theme-color': product.color }}>
+                <div className={`p-detail-hero-mockup${product.mockupType === 'omni' ? ' omni-hero' : ''}`} style={{ '--theme-color': product.color }}>
                   
                   {/* Decorative grid lines */}
                   <div className="p-detail-mockup-grid"></div>
@@ -511,56 +510,7 @@ module.exports = async function customWorkflow(ctx) {
                   )}
 
                   {product.mockupType === 'omni' && (
-                    <div className="omni-dash">
-                      <div className="omni-dash-head">
-                        <div className="omni-dash-title">
-                          <span className="omni-dash-live" /> Ringkasan Semua Toko
-                        </div>
-                        <span className="omni-dash-tag">Hari ini</span>
-                      </div>
-
-                      <div className="omni-dash-omzet">
-                        <span className="omni-dash-omzet-label">Total Omzet</span>
-                        <div className="omni-dash-omzet-row">
-                          <span className="omni-dash-omzet-value">Rp 24.850.000</span>
-                          <span className="omni-dash-omzet-trend"><TrendingUp size={13} /> 12,4%</span>
-                        </div>
-                      </div>
-
-                      <div className="omni-dash-stores">
-                        <div className="omni-dash-store">
-                          <span className="omni-dash-store-logo"><img src={shopeeLogo} alt="Shopee" /></span>
-                          <div className="omni-dash-store-info">
-                            <span className="name">Shopee</span>
-                            <span className="sub">142 pesanan</span>
-                          </div>
-                          <span className="omni-dash-store-val">Rp 14,2jt</span>
-                        </div>
-                        <div className="omni-dash-store">
-                          <span className="omni-dash-store-logo"><img src={tiktokLogo} alt="TikTok Shop" /></span>
-                          <div className="omni-dash-store-info">
-                            <span className="name">TikTok Shop</span>
-                            <span className="sub">98 pesanan</span>
-                          </div>
-                          <span className="omni-dash-store-val">Rp 10,6jt</span>
-                        </div>
-                      </div>
-
-                      <div className="omni-dash-foot">
-                        <div className="omni-dash-foot-item">
-                          <span className="lbl">Beban Platform</span>
-                          <span className="val neg">− Rp 1,94jt</span>
-                        </div>
-                        <div className="omni-dash-foot-item">
-                          <span className="lbl">Profit Bersih</span>
-                          <span className="val pos">Rp 8,41jt</span>
-                        </div>
-                      </div>
-
-                      <div className="omni-dash-sync">
-                        <RefreshCw size={13} className="spin-icon" /> Stok tersinkron di semua toko · baru saja
-                      </div>
-                    </div>
+                    <img src={bithinksHeroPage} alt="Dashboard BitOmni — ringkasan semua toko" className="p-mockup-img" />
                   )}
                 </div>
               </div>
