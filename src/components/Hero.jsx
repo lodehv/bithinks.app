@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import './Hero.css';
 import { ArrowRight, CheckCircle, TrendingUp, Truck } from 'lucide-react';
-import heroImage from '../assets/gambar_hero_page.png';
+import heroImage from '../assets/bithinks_hero_page.png';
 
 const Hero = () => {
   const contentRef = useRef(null);
