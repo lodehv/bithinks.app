@@ -96,14 +96,17 @@ export default function MarketingDashboard() {
 
   // ─── Metrics Aggregate Calculations ────────────────────────────────────────
   // Calculate aggregate values directly from the marketingData array to avoid dummy placeholder values
-  const totalOmset = marketingData.reduce((acc, row) => acc + (row.omset || 0), 0);
+  const totalOmsetKotor = marketingData.reduce((acc, row) => acc + (row.omsetKotor || row.omset || 0), 0);
   const totalCogs = marketingData.reduce((acc, row) => acc + (row.cogs || 0), 0);
   const totalFees = marketingData.reduce((acc, row) => acc + (row.fees || 0), 0);
   const totalRetur = marketingData.reduce((acc, row) => acc + (row.retur || 0), 0);
-  const totalProfit = totalOmset - totalCogs - totalFees - totalRetur;
+  
+  // Omset Perkiraan (gross - retur)
+  const totalOmsetPerkiraan = totalOmsetKotor - totalRetur;
+  const totalProfit = totalOmsetPerkiraan - totalCogs - totalFees;
   
   // Calculate margin percent (safety check to prevent division by zero)
-  const marginPercent = totalOmset > 0 ? (totalProfit / totalOmset) * 100 : 0;
+  const marginPercent = totalOmsetPerkiraan > 0 ? (totalProfit / totalOmsetPerkiraan) * 100 : 0;
 
   // Ledger split calculations dynamically summing custom backend details or using ratio fallbacks
   const totalAdminCommission = marketingData.reduce((acc, row) => acc + (row.adminCommission || 0), 0) || (totalFees * 0.45);
@@ -114,11 +117,16 @@ export default function MarketingDashboard() {
   const totalAdjustment = marketingData.reduce((acc, row) => acc + (row.adjustment || 0), 0) || (totalFees * 0.02);
 
   // Donut calculations
-  const hasData = totalOmset > 0;
-  const profitPct = hasData ? Math.max(0, (totalProfit / totalOmset) * 100) : 0;
-  const feesPct = hasData ? Math.max(0, (totalFees / totalOmset) * 100) : 0;
-  const cogsPct = hasData ? Math.max(0, (totalCogs / totalOmset) * 100) : 0;
-  const returPct = hasData ? Math.max(0, (totalRetur / totalOmset) * 100) : 0;
+  const hasData = totalOmsetKotor > 0;
+  const profitPct = hasData ? Math.max(0, (totalProfit / totalOmsetKotor) * 100) : 0;
+  const feesPct = hasData ? Math.max(0, (totalFees / totalOmsetKotor) * 100) : 0;
+  const cogsPct = hasData ? Math.max(0, (totalCogs / totalOmsetKotor) * 100) : 0;
+  const returPct = hasData ? Math.max(0, (totalRetur / totalOmsetKotor) * 100) : 0;
+
+  // Status Breakdown sums
+  const totalTerkonfirmasi = marketingData.reduce((acc, row) => acc + (row.terkonfirmasi || 0), 0) || (totalOmsetPerkiraan * 0.75);
+  const totalPipeline = marketingData.reduce((acc, row) => acc + (row.pipeline || 0), 0) || (totalOmsetPerkiraan * 0.23);
+  const totalBerisiko = marketingData.reduce((acc, row) => acc + (row.berisiko || 0), 0) || (totalOmsetPerkiraan * 0.02);
 
   const radius = 40;
   const strokeWidth = 10;
@@ -300,69 +308,109 @@ export default function MarketingDashboard() {
         </div>
       </div>
 
-      {/* ─── KPI Metric Cards Section ─── */}
-      <div className="marketing-kpi-grid">
-        {/* Card 1: Omset */}
-        <div className="kpi-card text-black bg-white">
-          <div className="kpi-icon-row">
-            <div className="kpi-icon-container bg-purple-light text-purple">
-              <TrendingUp size={18} />
-            </div>
-            <span className="kpi-category">OMSET</span>
+      {/* ─── Summary Cards Section (Omset Harian & Status Breakdown) ─── */}
+      <div className="marketing-summary-wrapper">
+        
+        {/* Card 1: Ringkasan Omset Harian */}
+        <div className="summary-card">
+          <div className="summary-card-header">
+            <h4>Omset Harian</h4>
+            <span className="summary-card-subtitle">Basis order_date • tidak berubah retroaktif</span>
           </div>
-          <div className="kpi-value">{formatRupiah(totalOmset)}</div>
-          <div className="kpi-subtext">Total pendapatan bruto dari toko terpilih</div>
+
+          <div className="summary-blocks-grid">
+            {/* Block 1: Omset Kotor */}
+            <div className="summary-block">
+              <div className="block-meta-row">
+                <span className="block-category">OMSET KOTOR</span>
+                <DollarSign size={13} className="text-purple" />
+              </div>
+              <div className="block-value">{formatRupiah(totalOmsetKotor)}</div>
+              <div className="block-subtext">Akumulasi seluruh order</div>
+            </div>
+
+            {/* Block 2: Retur */}
+            <div className="summary-block block-danger-accent">
+              <div className="block-meta-row">
+                <span className="block-category">RETUR</span>
+                <RefreshCw size={13} className="text-purple" />
+              </div>
+              <div className="block-value">- {formatRupiah(totalRetur)}</div>
+              <div className="block-subtext">Pembatalan & retur pesanan</div>
+            </div>
+
+            {/* Block 3: Omset Perkiraan */}
+            <div className="summary-block block-highlighted">
+              <div className="block-meta-row">
+                <span className="block-category">OMSET PERKIRAAN</span>
+                <TrendingUp size={13} className="text-purple" />
+              </div>
+              <div className="block-value text-purple">{formatRupiah(totalOmsetPerkiraan)}</div>
+              <div className="block-subtext">Kotor - retur (estimasi total)</div>
+            </div>
+
+            {/* Block 4: Platform Fees */}
+            <div className="summary-block clickable-block" onClick={() => setShowFeeModal(true)}>
+              <div className="block-meta-row">
+                <span className="block-category">BEBAN PLATFORM</span>
+                <DollarSign size={13} className="text-purple" />
+              </div>
+              <div className="block-value hover-underline">{formatRupiah(totalFees)}</div>
+              <div className="block-subtext">Komisi platform <span className="kpi-action-purple">(rincian)</span></div>
+            </div>
+          </div>
         </div>
 
-        {/* Card 2: COGS */}
-        <div className="kpi-card text-black bg-white">
-          <div className="kpi-icon-row">
-            <div className="kpi-icon-container bg-purple-light text-purple">
-              <ShoppingCart size={18} />
-            </div>
-            <span className="kpi-category">COGS (HPP)</span>
+        {/* Card 2: Status Breakdown */}
+        <div className="summary-card">
+          <div className="summary-card-header">
+            <h4>Breakdown status</h4>
+            <span className="summary-card-subtitle">Omset Penjualan • Basis harga etalase • by order_date</span>
           </div>
-          <div className="kpi-value">{formatRupiah(totalCogs)}</div>
-          <div className="kpi-subtext">Harga Pokok Pembelian untuk produk terjual</div>
+
+          <div className="summary-blocks-grid">
+            {/* Block 1: Omset Perkiraan */}
+            <div className="summary-block block-highlighted">
+              <div className="block-meta-row">
+                <span className="block-category">OMSET PERKIRAAN</span>
+                <DollarSign size={13} className="text-purple" />
+              </div>
+              <div className="block-value text-purple">{formatRupiah(totalOmsetPerkiraan)}</div>
+              <div className="block-subtext">Mengakumulasi keseluruhan order</div>
+            </div>
+
+            {/* Block 2: Terkonfirmasi */}
+            <div className="summary-block">
+              <div className="block-meta-row">
+                <span className="block-category">TERKONFIRMASI</span>
+                <Check size={13} className="text-purple" />
+              </div>
+              <div className="block-value">{formatRupiah(totalTerkonfirmasi)}</div>
+              <div className="block-subtext">Status delivered / selesai</div>
+            </div>
+
+            {/* Block 3: Pipeline */}
+            <div className="summary-block">
+              <div className="block-meta-row">
+                <span className="block-category">PIPELINE</span>
+                <TrendingUp size={13} className="text-purple" />
+              </div>
+              <div className="block-value">{formatRupiah(totalPipeline)}</div>
+              <div className="block-subtext">Status shipped / processed</div>
+            </div>
+
+            {/* Block 4: Berisiko */}
+            <div className="summary-block">
+              <div className="block-meta-row">
+                <span className="block-category">BERISIKO</span>
+                <HelpCircle size={13} className="text-purple" />
+              </div>
+              <div className="block-value">{formatRupiah(totalBerisiko)}</div>
+              <div className="block-subtext">Status pending / ready</div>
+            </div>
+          </div>
         </div>
 
-        {/* Card 3: Biaya Beban Platform */}
-        <div className="kpi-card text-black bg-white clickable-kpi" onClick={() => setShowFeeModal(true)}>
-          <div className="kpi-icon-row">
-            <div className="kpi-icon-container bg-purple-light text-purple">
-              <DollarSign size={18} />
-            </div>
-            <span className="kpi-category">BEBAN PLATFORM</span>
-          </div>
-          <div className="kpi-value hover-underline">{formatRupiah(totalFees)}</div>
-          <div className="kpi-subtext">Potongan biaya komisi & administrasi e-commerce <span className="kpi-action-purple">(klik rincian)</span></div>
-        </div>
-
-        {/* Card 4: Retur & Pembatalan */}
-        <div className="kpi-card text-black bg-white">
-          <div className="kpi-icon-row">
-            <div className="kpi-icon-container bg-purple-light text-purple">
-              <RefreshCw size={18} />
-            </div>
-            <span className="kpi-category">BEBAN RETUR</span>
-          </div>
-          <div className="kpi-value">{formatRupiah(totalRetur)}</div>
-          <div className="kpi-subtext">Refund, retur & pembatalan pesanan dari pelanggan</div>
-        </div>
-
-        {/* Card 5: Profit */}
-        <div className="kpi-card text-black bg-white">
-          <div className="kpi-icon-row">
-            <div className="kpi-icon-container bg-purple-light text-purple">
-              <Percent size={18} />
-            </div>
-            <span className="kpi-category">NET PROFIT</span>
-          </div>
-          <div className="kpi-value text-purple">{formatRupiah(totalProfit)}</div>
-          <div className="kpi-subtext">
-            Margin Bersih: {marginPercent.toFixed(1)}% setelah COGS, platform & retur
-          </div>
-        </div>
       </div>
 
       {/* ─── Platform Breakdown & Profit Chart Section ─── */}

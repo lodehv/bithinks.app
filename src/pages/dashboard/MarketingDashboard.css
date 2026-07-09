@@ -892,3 +892,165 @@
     gap: 20px;
   }
 }
+
+/* ─── Summary Cards Layout (Omset Harian & Status Breakdown) ─── */
+.marketing-summary-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.summary-card {
+  background: #ffffff;
+  border: 1px solid #EBEBEB;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.summary-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-bottom: 1px solid #F3F4F6;
+  padding-bottom: 12px;
+}
+
+.summary-card-header h4 {
+  font-size: 15px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.summary-card-subtitle {
+  font-size: 11px;
+  font-weight: 500;
+  color: #9CA3AF;
+}
+
+/* 2x2 Grid of Blocks inside each Summary Card */
+.summary-blocks-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+/* Individual Blocks */
+.summary-block {
+  background-color: #ffffff;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.summary-block:hover {
+  border-color: #D1D5DB;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.block-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.block-category {
+  font-size: 10px;
+  font-weight: 800;
+  color: #9CA3AF;
+  letter-spacing: 0.5px;
+}
+
+.block-value {
+  font-size: 18px;
+  font-weight: 800;
+  color: #111827;
+  line-height: 1.2;
+}
+
+.block-subtext {
+  font-size: 11px;
+  font-weight: 500;
+  color: #6B7280;
+  line-height: 1.4;
+}
+
+/* Special Highlighting for Omset Perkiraan (Primary Brand Accent) */
+.summary-block.block-highlighted {
+  border-color: #C7C9F9;
+  background-color: #EEF0FB;
+}
+
+.summary-block.block-highlighted:hover {
+  border-color: #4F46E5;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.08);
+}
+
+.summary-block.block-highlighted .block-category {
+  color: #4F46E5;
+}
+
+/* Danger accent for Retur (styled cleanly without AI-slop neon reds) */
+.summary-block.block-danger-accent {
+  border-color: #FCA5A5; /* subtle light red border */
+  background-color: #FEF2F2; /* very soft red backdrop */
+}
+
+.summary-block.block-danger-accent:hover {
+  border-color: #EF4444;
+}
+
+.summary-block.block-danger-accent .block-category {
+  color: #B91C1C;
+}
+
+.summary-block.block-danger-accent .block-value {
+  color: #B91C1C;
+}
+
+/* Clickable blocks */
+.clickable-block {
+  cursor: pointer;
+}
+
+.clickable-block:hover {
+  border-color: #4F46E5;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.05);
+}
+
+.clickable-block:hover .hover-underline {
+  text-decoration: underline;
+  color: #4F46E5;
+}
+
+/* Responsive Overrides for Summary wrapper */
+@media (max-width: 1024px) {
+  .marketing-summary-wrapper {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .summary-card {
+    padding: 16px;
+  }
+  
+  .summary-blocks-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .block-value {
+    font-size: 16px;
+  }
+}
