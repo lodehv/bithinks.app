@@ -112,6 +112,24 @@ export default function MarketingDashboard() {
   const totalHandling = marketingData.reduce((acc, row) => acc + (row.handling || 0), 0) || (totalFees * 0.03);
   const totalAdjustment = marketingData.reduce((acc, row) => acc + (row.adjustment || 0), 0) || (totalFees * 0.02);
 
+  // Donut calculations
+  const hasData = totalOmset > 0;
+  const profitPct = hasData ? Math.max(0, (totalProfit / totalOmset) * 100) : 0;
+  const feesPct = hasData ? Math.max(0, (totalFees / totalOmset) * 100) : 0;
+  const cogsPct = hasData ? Math.max(0, (totalCogs / totalOmset) * 100) : 0;
+
+  const radius = 40;
+  const strokeWidth = 10;
+  const circumference = 2 * Math.PI * radius; // ~251.32
+
+  const profitDash = (profitPct / 100) * circumference;
+  const feesDash = (feesPct / 100) * circumference;
+  const cogsDash = (cogsPct / 100) * circumference;
+
+  const profitOffset = 0;
+  const feesOffset = -profitDash;
+  const cogsOffset = -(profitDash + feesDash);
+
   const formatRupiah = (val) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
@@ -313,7 +331,7 @@ export default function MarketingDashboard() {
             <span className="kpi-category">BEBAN PLATFORM</span>
           </div>
           <div className="kpi-value hover-underline">{formatRupiah(totalFees)}</div>
-          <div className="kpi-subtext">Potongan biaya komisi & administrasi e-commerce (klik rincian)</div>
+          <div className="kpi-subtext">Potongan biaya komisi & administrasi e-commerce <span className="kpi-action-purple">(klik rincian)</span></div>
         </div>
 
         {/* Card 4: Profit */}
@@ -331,77 +349,233 @@ export default function MarketingDashboard() {
         </div>
       </div>
 
-      {/* ─── Platform Breakdown Table ─── */}
-      <div className="marketing-table-card">
-        <div className="table-card-header">
-          <div className="header-title-group">
-            <BarChart3 size={16} className="text-purple" />
-            <h3>Rincian Kinerja Penjualan Platform</h3>
+      {/* ─── Platform Breakdown & Profit Chart Section ─── */}
+      <div className="marketing-bottom-grid">
+        <div className="marketing-table-card">
+          <div className="table-card-header">
+            <div className="header-title-group">
+              <BarChart3 size={16} className="text-purple" />
+              <h3>Rincian Kinerja Penjualan Platform</h3>
+            </div>
+            <div className="header-actions">
+              <HelpCircle size={14} className="text-gray" title="Metrik rincian dihitung otomatis dari log transaksi sinkronisasi toko." />
+            </div>
           </div>
-          <div className="header-actions">
-            <HelpCircle size={14} className="text-gray" title="Metrik rincian dihitung otomatis dari log transaksi sinkronisasi toko." />
+
+          <div className="table-responsive">
+            <table className="marketing-table">
+              <thead>
+                <tr>
+                  <th>Platform</th>
+                  <th>Nama Toko</th>
+                  <th className="text-right">Omset</th>
+                  <th className="text-right">COGS (HPP)</th>
+                  <th className="text-right">Beban Platform</th>
+                  <th className="text-right">Net Profit</th>
+                  <th className="text-right">Margin (%)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {marketingData.length === 0 ? (
+                  <tr>
+                    <td colSpan="7" className="table-empty-row">
+                      <div className="empty-state-container">
+                        <BarChart3 size={32} className="empty-icon text-gray" />
+                        <h4>Tidak Ada Data Transaksi</h4>
+                        <p>
+                          Filter aktif tidak menghasilkan data. Silakan tentukan rentang tanggal yang sesuai, centang platform/toko, atau hubungkan akun API toko Anda untuk menarik data transaksi riil.
+                        </p>
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  marketingData.map((row, idx) => {
+                    const profit = (row.omset || 0) - (row.cogs || 0) - (row.fees || 0);
+                    const margin = row.omset > 0 ? (profit / row.omset) * 100 : 0;
+                    return (
+                      <tr key={idx}>
+                        <td className="font-semibold text-black text-capitalize">{row.platform}</td>
+                        <td>{row.storeName}</td>
+                        <td className="text-right">{formatRupiah(row.omset)}</td>
+                        <td className="text-right">{formatRupiah(row.cogs)}</td>
+                        <td className="text-right">{formatRupiah(row.fees)}</td>
+                        <td className="text-right font-semibold text-black">{formatRupiah(profit)}</td>
+                        <td className="text-right font-semibold text-purple">{margin.toFixed(1)}%</td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+              
+              {/* Show summary totals row only when data exists */}
+              {marketingData.length > 0 && (
+                <tfoot>
+                  <tr className="summary-total-row">
+                    <td colSpan="2" className="font-bold text-black text-left">TOTAL RINGKASAN</td>
+                    <td className="text-right font-bold text-black">{formatRupiah(totalOmset)}</td>
+                    <td className="text-right font-bold text-black">{formatRupiah(totalCogs)}</td>
+                    <td className="text-right font-bold text-black">{formatRupiah(totalFees)}</td>
+                    <td className="text-right font-bold text-purple">{formatRupiah(totalProfit)}</td>
+                    <td className="text-right font-bold text-purple">{marginPercent.toFixed(1)}%</td>
+                  </tr>
+                </tfoot>
+              )}
+            </table>
           </div>
         </div>
 
-        <div className="table-responsive">
-          <table className="marketing-table">
-            <thead>
-              <tr>
-                <th>Platform</th>
-                <th>Nama Toko</th>
-                <th className="text-right">Omset</th>
-                <th className="text-right">COGS (HPP)</th>
-                <th className="text-right">Beban Platform</th>
-                <th className="text-right">Net Profit</th>
-                <th className="text-right">Margin (%)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {marketingData.length === 0 ? (
-                <tr>
-                  <td colSpan="7" className="table-empty-row">
-                    <div className="empty-state-container">
-                      <BarChart3 size={32} className="empty-icon text-gray" />
-                      <h4>Tidak Ada Data Transaksi</h4>
-                      <p>
-                        Filter aktif tidak menghasilkan data. Silakan tentukan rentang tanggal yang sesuai, centang platform/toko, atau hubungkan akun API toko Anda untuk menarik data transaksi riil.
-                      </p>
-                    </div>
-                  </td>
-                </tr>
-              ) : (
-                marketingData.map((row, idx) => {
-                  const profit = (row.omset || 0) - (row.cogs || 0) - (row.fees || 0);
-                  const margin = row.omset > 0 ? (profit / row.omset) * 100 : 0;
-                  return (
-                    <tr key={idx}>
-                      <td className="font-semibold text-black text-capitalize">{row.platform}</td>
-                      <td>{row.storeName}</td>
-                      <td className="text-right">{formatRupiah(row.omset)}</td>
-                      <td className="text-right">{formatRupiah(row.cogs)}</td>
-                      <td className="text-right">{formatRupiah(row.fees)}</td>
-                      <td className="text-right font-semibold text-black">{formatRupiah(profit)}</td>
-                      <td className="text-right font-semibold text-purple">{margin.toFixed(1)}%</td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-            
-            {/* Show summary totals row only when data exists */}
-            {marketingData.length > 0 && (
-              <tfoot>
-                <tr className="summary-total-row">
-                  <td colSpan="2" className="font-bold text-black text-left">TOTAL RINGKASAN</td>
-                  <td className="text-right font-bold text-black">{formatRupiah(totalOmset)}</td>
-                  <td className="text-right font-bold text-black">{formatRupiah(totalCogs)}</td>
-                  <td className="text-right font-bold text-black">{formatRupiah(totalFees)}</td>
-                  <td className="text-right font-bold text-purple">{formatRupiah(totalProfit)}</td>
-                  <td className="text-right font-bold text-purple">{marginPercent.toFixed(1)}%</td>
-                </tr>
-              </tfoot>
-            )}
-          </table>
+        {/* ─── Donut Chart Card ─── */}
+        <div className="marketing-chart-card">
+          <div className="chart-card-header">
+            <div className="header-title-group">
+              <Percent size={16} className="text-purple" />
+              <h3>Proporsi & Margin Omset</h3>
+            </div>
+          </div>
+          
+          <div className="chart-card-body">
+            <div className="donut-chart-container">
+              <svg width="160" height="160" viewBox="0 0 100 100" className="donut-svg">
+                {/* Background Ring */}
+                <circle 
+                  cx="50" 
+                  cy="50" 
+                  r={radius} 
+                  fill="transparent" 
+                  stroke="#F3F4F6" 
+                  strokeWidth={strokeWidth} 
+                />
+                
+                {hasData ? (
+                  <>
+                    {/* COGS Segment (Dark Grey/Charcoal) */}
+                    <circle 
+                      cx="50" 
+                      cy="50" 
+                      r={radius} 
+                      fill="transparent" 
+                      stroke="#111827"
+                      strokeWidth={strokeWidth} 
+                      strokeDasharray={`${cogsDash} ${circumference - cogsDash}`}
+                      strokeDashoffset={cogsOffset}
+                      strokeLinecap="round"
+                      transform="rotate(-90 50 50)"
+                    />
+                    
+                    {/* Platform Fees Segment (Soft Indigo/Light Purple) */}
+                    <circle 
+                      cx="50" 
+                      cy="50" 
+                      r={radius} 
+                      fill="transparent" 
+                      stroke="#818CF8"
+                      strokeWidth={strokeWidth} 
+                      strokeDasharray={`${feesDash} ${circumference - feesDash}`}
+                      strokeDashoffset={feesOffset}
+                      strokeLinecap="round"
+                      transform="rotate(-90 50 50)"
+                    />
+
+                    {/* Net Profit Segment (Brand Purple) */}
+                    <circle 
+                      cx="50" 
+                      cy="50" 
+                      r={radius} 
+                      fill="transparent" 
+                      stroke="#4F46E5"
+                      strokeWidth={strokeWidth} 
+                      strokeDasharray={`${profitDash} ${circumference - profitDash}`}
+                      strokeDashoffset={profitOffset}
+                      strokeLinecap="round"
+                      transform="rotate(-90 50 50)"
+                    />
+                  </>
+                ) : (
+                  /* Balanced Demo Rings when empty to show layout */
+                  <>
+                    {/* COGS demo segment (50%) */}
+                    <circle 
+                      cx="50" 
+                      cy="50" 
+                      r={radius} 
+                      fill="transparent" 
+                      stroke="#111827"
+                      strokeWidth={strokeWidth} 
+                      strokeDasharray={`${circumference * 0.50} ${circumference * 0.50}`}
+                      strokeDashoffset={-(circumference * 0.50)}
+                      strokeLinecap="round"
+                      transform="rotate(-90 50 50)"
+                    />
+                    {/* Platform Fees demo segment (15%) */}
+                    <circle 
+                      cx="50" 
+                      cy="50" 
+                      r={radius} 
+                      fill="transparent" 
+                      stroke="#818CF8"
+                      strokeWidth={strokeWidth} 
+                      strokeDasharray={`${circumference * 0.15} ${circumference * 0.85}`}
+                      strokeDashoffset={-(circumference * 0.35)}
+                      strokeLinecap="round"
+                      transform="rotate(-90 50 50)"
+                    />
+                    {/* Net Profit demo segment (35%) */}
+                    <circle 
+                      cx="50" 
+                      cy="50" 
+                      r={radius} 
+                      fill="transparent" 
+                      stroke="#4F46E5"
+                      strokeWidth={strokeWidth} 
+                      strokeDasharray={`${circumference * 0.35} ${circumference * 0.65}`}
+                      strokeDashoffset={0}
+                      strokeLinecap="round"
+                      transform="rotate(-90 50 50)"
+                    />
+                  </>
+                )}
+              </svg>
+              
+              {/* Centered text */}
+              <div className="donut-center-label">
+                <span className="donut-label-title">TOTAL OMSET</span>
+                <span className="donut-label-value">{formatRupiah(totalOmset)}</span>
+              </div>
+            </div>
+
+            {/* Donut Legend */}
+            <div className="donut-legend-list">
+              <div className="legend-item">
+                <div className="legend-color-dot" style={{ backgroundColor: "#4F46E5" }}></div>
+                <div className="legend-text-group">
+                  <span className="legend-label">Net Profit</span>
+                  <span className="legend-value font-bold text-black">
+                    {formatRupiah(totalProfit)} ({hasData ? profitPct.toFixed(1) : "35.0"}%)
+                  </span>
+                </div>
+              </div>
+              
+              <div className="legend-item">
+                <div className="legend-color-dot" style={{ backgroundColor: "#818CF8" }}></div>
+                <div className="legend-text-group">
+                  <span className="legend-label">Beban Platform</span>
+                  <span className="legend-value font-bold text-black">
+                    {formatRupiah(totalFees)} ({hasData ? feesPct.toFixed(1) : "15.0"}%)
+                  </span>
+                </div>
+              </div>
+
+              <div className="legend-item">
+                <div className="legend-color-dot" style={{ backgroundColor: "#111827" }}></div>
+                <div className="legend-text-group">
+                  <span className="legend-label">COGS (HPP)</span>
+                  <span className="legend-value font-bold text-black">
+                    {formatRupiah(totalCogs)} ({hasData ? cogsPct.toFixed(1) : "50.0"}%)
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

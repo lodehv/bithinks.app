@@ -746,3 +746,143 @@
     gap: 6px;
   }
 }
+
+/* Table & Chart Row Grid */
+.marketing-bottom-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Action Purple Subtext */
+.kpi-action-purple {
+  color: #4F46E5 !important;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Donut Chart Card Styling */
+.marketing-chart-card {
+  background: #ffffff;
+  border: 1px solid #EBEBEB;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-card-header {
+  border-bottom: 1px solid #F3F4F6;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+}
+
+.chart-card-header h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.chart-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Donut Chart Layout */
+.donut-chart-container {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.donut-svg {
+  transform: rotate(0deg);
+  transition: transform 0.3s ease;
+}
+
+.donut-center-label {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  pointer-events: none;
+  width: 100px;
+}
+
+.donut-label-title {
+  font-size: 9px;
+  font-weight: 800;
+  color: #9CA3AF;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.donut-label-value {
+  font-size: 13px;
+  font-weight: 800;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100px;
+}
+
+/* Legend items */
+.donut-legend-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background-color: #FAFAFA;
+  border-radius: 6px;
+  border: 1px solid #F3F4F6;
+}
+
+.legend-color-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-text-group {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 12px;
+}
+
+.legend-label {
+  font-weight: 600;
+  color: #6B7280;
+}
+
+.legend-value {
+  color: #111827;
+}
+
+/* Responsive updates for grid */
+@media (max-width: 1024px) {
+  .marketing-bottom-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
