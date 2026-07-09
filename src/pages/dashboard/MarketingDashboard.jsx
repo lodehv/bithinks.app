@@ -24,6 +24,8 @@ export default function MarketingDashboard() {
   const [marketingData, setMarketingData] = useState([]); // Kept empty to avoid dummy data, ready for backend injection
   const [isSubmittingFilters, setIsSubmittingFilters] = useState(false);
   const [showFeeModal, setShowFeeModal] = useState(false);
+  const [adSpend, setAdSpend] = useState(0);
+  const [visibleLines, setVisibleLines] = useState(["omset", "profit", "cogs", "fees", "adSpend"]);
 
   // List of standard platforms
   const PLATFORMS = [
@@ -68,6 +70,7 @@ export default function MarketingDashboard() {
     setEndDate("");
     setSelectedPlatforms([]);
     setSelectedStores([]);
+    setAdSpend(0);
   };
 
   // ─── Apply Filter Action ──────────────────────────────────────────────────
@@ -140,7 +143,10 @@ export default function MarketingDashboard() {
   const profitOffset = 0;
   const feesOffset = -profitDash;
   const returOffset = -(profitDash + feesDash);
-  const cogsOffset = -(profitDash + feesDash + returDash);
+  const adSpendPct = hasData ? Math.max(0, (adSpend / totalOmsetKotor) * 100) : 0;
+  const adSpendDash = (adSpendPct / 100) * circumference;
+  const adSpendOffset = -(profitDash + feesDash + returDash);
+  const cogsOffset = -(profitDash + feesDash + returDash + adSpendDash);
 
   const formatRupiah = (val) => {
     return new Intl.NumberFormat("id-ID", {
@@ -149,6 +155,71 @@ export default function MarketingDashboard() {
       maximumFractionDigits: 0
     }).format(val);
   };
+
+  const formatShortRupiah = (val) => {
+    if (val >= 1000000000) return `Rp ${(val / 1000000000).toFixed(1)}M`;
+    if (val >= 1000000) return `Rp ${(val / 1000000).toFixed(1)}Jt`;
+    if (val < 0) return `-Rp ${formatShortRupiah(Math.abs(val))}`;
+    return `Rp ${val}`;
+  };
+
+  // ─── Trend Chart Section Calculations ───
+  const chartRatios = [0.12, 0.15, 0.11, 0.16, 0.13, 0.18, 0.15];
+  const chartDays = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
+  
+  const baseOmsetVal = totalOmsetKotor > 0 ? totalOmsetKotor : 12500000;
+  const baseCogsVal = totalCogs > 0 ? totalCogs : baseOmsetVal * 0.45;
+  const baseFeesVal = totalFees > 0 ? totalFees : baseOmsetVal * 0.15;
+  const baseReturVal = totalRetur > 0 ? totalRetur : baseOmsetVal * 0.08;
+
+  const dailyOmset = chartRatios.map(r => Math.round(baseOmsetVal * r * 7));
+  const dailyCogs = chartRatios.map(r => Math.round(baseCogsVal * r * 7));
+  const dailyFees = chartRatios.map(r => Math.round(baseFeesVal * r * 7));
+  const dailyAdSpend = chartRatios.map(r => Math.round((adSpend > 0 ? adSpend : baseOmsetVal * 0.12) * r * 7));
+  const dailyRetur = chartRatios.map(r => Math.round(baseReturVal * r * 7));
+  const dailyProfit = dailyOmset.map((o, i) => o - dailyCogs[i] - dailyFees[i] - dailyRetur[i] - dailyAdSpend[i]);
+
+  const toggleMetricLine = (metric) => {
+    setVisibleLines(prev => 
+      prev.includes(metric) ? prev.filter(m => m !== metric) : [...prev, metric]
+    );
+  };
+
+  const allChartValues = [
+    ...(visibleLines.includes("omset") ? dailyOmset : []),
+    ...(visibleLines.includes("cogs") ? dailyCogs : []),
+    ...(visibleLines.includes("fees") ? dailyFees : []),
+    ...(visibleLines.includes("adSpend") ? dailyAdSpend : []),
+    ...(visibleLines.includes("profit") ? dailyProfit : [])
+  ];
+  
+  const chartMax = Math.max(...allChartValues, 1000000);
+  const chartMin = Math.min(...allChartValues, 0);
+  const chartRange = chartMax - chartMin || 1;
+
+  const getCoordinates = (pointsArray) => {
+    const width = 800;
+    const height = 180;
+    const paddingX = 40;
+    const paddingY = 20;
+
+    return pointsArray.map((val, idx) => {
+      const x = paddingX + (idx / (pointsArray.length - 1)) * (width - 2 * paddingX);
+      const y = height - paddingY - ((val - chartMin) / chartRange) * (height - 2 * paddingY);
+      return { x, y, value: val };
+    });
+  };
+
+  const getPathD = (coords) => {
+    if (coords.length < 2) return "";
+    return coords.map((c, i) => `${i === 0 ? "M" : "L"} ${c.x} ${c.y}`).join(" ");
+  };
+
+  const coordsOmset = getCoordinates(dailyOmset);
+  const coordsProfit = getCoordinates(dailyProfit);
+  const coordsCogs = getCoordinates(dailyCogs);
+  const coordsFees = getCoordinates(dailyFees);
+  const coordsAdSpend = getCoordinates(coordsCogs.map((_, i) => dailyAdSpend[i]));
 
   return (
     <div className="marketing-dashboard-container">
@@ -284,6 +355,22 @@ export default function MarketingDashboard() {
               </div>
             )}
           </div>
+
+          {/* 4. Biaya Iklan Input */}
+          <div className="filter-item">
+            <label className="filter-label">Biaya Iklan (Ad Spend)</label>
+            <div className="ad-spend-input-wrapper">
+              <span className="currency-symbol">Rp</span>
+              <input 
+                type="number" 
+                min="0"
+                value={adSpend || ""} 
+                onChange={(e) => setAdSpend(Math.max(0, parseInt(e.target.value) || 0))}
+                placeholder="0"
+                className="filter-ad-spend-input"
+              />
+            </div>
+          </div>
         </div>
 
         {/* Action button row */}
@@ -413,6 +500,219 @@ export default function MarketingDashboard() {
 
       </div>
 
+      {/* ─── Trend Line Chart Section ─── */}
+      <div className="marketing-chart-card trend-chart-card">
+        <div className="chart-card-header trend-header">
+          <div className="header-title-group">
+            <TrendingUp size={16} className="text-purple" />
+            <h3>Tren Finansial & Kampanye</h3>
+          </div>
+          
+          {/* Legend Checklist Toggles */}
+          <div className="trend-legend-toggles">
+            <label className="toggle-label-btn">
+              <input 
+                type="checkbox" 
+                checked={visibleLines.includes("omset")} 
+                onChange={() => toggleMetricLine("omset")} 
+              />
+              <span className="toggle-indicator dot-omset"></span>
+              <span>Omset</span>
+            </label>
+
+            <label className="toggle-label-btn">
+              <input 
+                type="checkbox" 
+                checked={visibleLines.includes("profit")} 
+                onChange={() => toggleMetricLine("profit")} 
+              />
+              <span className="toggle-indicator dot-profit"></span>
+              <span>Net Profit</span>
+            </label>
+
+            <label className="toggle-label-btn">
+              <input 
+                type="checkbox" 
+                checked={visibleLines.includes("cogs")} 
+                onChange={() => toggleMetricLine("cogs")} 
+              />
+              <span className="toggle-indicator dot-cogs"></span>
+              <span>COGS (HPP)</span>
+            </label>
+
+            <label className="toggle-label-btn">
+              <input 
+                type="checkbox" 
+                checked={visibleLines.includes("fees")} 
+                onChange={() => toggleMetricLine("fees")} 
+              />
+              <span className="toggle-indicator dot-fees"></span>
+              <span>Beban Platform</span>
+            </label>
+
+            <label className="toggle-label-btn">
+              <input 
+                type="checkbox" 
+                checked={visibleLines.includes("adSpend")} 
+                onChange={() => toggleMetricLine("adSpend")} 
+              />
+              <span className="toggle-indicator dot-adspend"></span>
+              <span>Biaya Iklan</span>
+            </label>
+          </div>
+        </div>
+
+        <div className="trend-chart-body">
+          <div className="trend-chart-container">
+            <svg width="100%" height="180" viewBox="0 0 800 180" preserveAspectRatio="none" className="trend-svg">
+              {/* Horizontal Grid lines */}
+              {[0, 0.33, 0.66, 1].map((ratio, i) => {
+                const val = chartMax - ratio * chartRange;
+                const y = 20 + ratio * 140; // mapped from paddingY 20 to height 180 - paddingY 20
+                return (
+                  <g key={i}>
+                    <line 
+                      x1="40" 
+                      y1={y} 
+                      x2="760" 
+                      y2={y} 
+                      stroke="#F3F4F6" 
+                      strokeDasharray="4 4" 
+                      strokeWidth="1"
+                    />
+                    <text 
+                      x="35" 
+                      y={y + 3} 
+                      textAnchor="end" 
+                      fontSize="9" 
+                      fill="#9CA3AF" 
+                      fontWeight="700"
+                    >
+                      {formatShortRupiah(val)}
+                    </text>
+                  </g>
+                );
+              })}
+
+              {/* Vertical Grid Lines & Day Labels */}
+              {chartDays.map((day, idx) => {
+                const x = 40 + (idx / 6) * 720;
+                return (
+                  <g key={idx}>
+                    <line 
+                      x1={x} 
+                      y1="20" 
+                      x2={x} 
+                      y2="160" 
+                      stroke="#F3F4F6" 
+                      strokeDasharray="4 4" 
+                      strokeWidth="1"
+                    />
+                    <text 
+                      x={x} 
+                      y={176} 
+                      textAnchor="middle" 
+                      fontSize="9.5" 
+                      fill="#6B7280" 
+                      fontWeight="800"
+                    >
+                      {day}
+                    </text>
+                  </g>
+                );
+              })}
+
+              {/* ─── Paths Drawing ─── */}
+              
+              {/* 1. Omset Line */}
+              {visibleLines.includes("omset") && (
+                <>
+                  <path 
+                    d={getPathD(coordsOmset)} 
+                    fill="none" 
+                    stroke="#4F46E5" 
+                    strokeWidth="2.5" 
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  {coordsOmset.map((c, i) => (
+                    <circle key={i} cx={c.x} cy={c.y} r="3.5" fill="#ffffff" stroke="#4F46E5" strokeWidth="2" />
+                  ))}
+                </>
+              )}
+
+              {/* 2. COGS Line */}
+              {visibleLines.includes("cogs") && (
+                <>
+                  <path 
+                    d={getPathD(coordsCogs)} 
+                    fill="none" 
+                    stroke="#374151" 
+                    strokeWidth="2.5" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                  />
+                  {coordsCogs.map((c, i) => (
+                    <circle key={i} cx={c.x} cy={c.y} r="3.5" fill="#ffffff" stroke="#374151" strokeWidth="2" />
+                  ))}
+                </>
+              )}
+
+              {/* 3. Platform Fees Line */}
+              {visibleLines.includes("fees") && (
+                <>
+                  <path 
+                    d={getPathD(coordsFees)} 
+                    fill="none" 
+                    stroke="#818CF8" 
+                    strokeWidth="2.5" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                  />
+                  {coordsFees.map((c, i) => (
+                    <circle key={i} cx={c.x} cy={c.y} r="3.5" fill="#ffffff" stroke="#818CF8" strokeWidth="2" />
+                  ))}
+                </>
+              )}
+
+              {/* 4. Ad Spend Line */}
+              {visibleLines.includes("adSpend") && (
+                <>
+                  <path 
+                    d={getPathD(coordsAdSpend)} 
+                    fill="none" 
+                    stroke="#C7C9F9" 
+                    strokeWidth="2.5" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                  />
+                  {coordsAdSpend.map((c, i) => (
+                    <circle key={i} cx={c.x} cy={c.y} r="3.5" fill="#ffffff" stroke="#C7C9F9" strokeWidth="2" />
+                  ))}
+                </>
+              )}
+
+              {/* 5. Profit Line */}
+              {visibleLines.includes("profit") && (
+                <>
+                  <path 
+                    d={getPathD(coordsProfit)} 
+                    fill="none" 
+                    stroke="#111827" 
+                    strokeWidth="2.5" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                  />
+                  {coordsProfit.map((c, i) => (
+                    <circle key={i} cx={c.x} cy={c.y} r="3.5" fill="#ffffff" stroke="#111827" strokeWidth="2" />
+                  ))}
+                </>
+              )}
+            </svg>
+          </div>
+        </div>
+      </div>
+
       {/* ─── Platform Breakdown & Profit Chart Section ─── */}
       <div className="marketing-bottom-grid">
         <div className="marketing-table-card">
@@ -529,6 +829,20 @@ export default function MarketingDashboard() {
                       transform="rotate(-90 50 50)"
                     />
 
+                    {/* Ad Spend Segment (Light Indigo/Violet) */}
+                    <circle 
+                      cx="50" 
+                      cy="50" 
+                      r={radius} 
+                      fill="transparent" 
+                      stroke="#C7C9F9"
+                      strokeWidth={strokeWidth} 
+                      strokeDasharray={`${adSpendDash} ${circumference - adSpendDash}`}
+                      strokeDashoffset={adSpendOffset}
+                      strokeLinecap="round"
+                      transform="rotate(-90 50 50)"
+                    />
+
                     {/* Retur Segment (Slate Gray) */}
                     <circle 
                       cx="50" 
@@ -572,9 +886,9 @@ export default function MarketingDashboard() {
                     />
                   </>
                 ) : (
-                  /* Balanced Demo Rings when empty to show layout (COGS 45%, Profit 32%, Fees 15%, Retur 8%) */
+                  /* Balanced Demo Rings when empty to show layout (COGS 40%, Profit 25%, Fees 15%, Ad Spend 12%, Retur 8%) */
                   <>
-                    {/* COGS demo segment (45%) */}
+                    {/* COGS demo segment (40%) */}
                     <circle 
                       cx="50" 
                       cy="50" 
@@ -582,8 +896,21 @@ export default function MarketingDashboard() {
                       fill="transparent" 
                       stroke="#111827"
                       strokeWidth={strokeWidth} 
-                      strokeDasharray={`${circumference * 0.45} ${circumference * 0.55}`}
-                      strokeDashoffset={-(circumference * 0.55)}
+                      strokeDasharray={`${circumference * 0.40} ${circumference * 0.60}`}
+                      strokeDashoffset={-(circumference * 0.60)}
+                      strokeLinecap="round"
+                      transform="rotate(-90 50 50)"
+                    />
+                    {/* Ad Spend demo segment (12%) */}
+                    <circle 
+                      cx="50" 
+                      cy="50" 
+                      r={radius} 
+                      fill="transparent" 
+                      stroke="#C7C9F9"
+                      strokeWidth={strokeWidth} 
+                      strokeDasharray={`${circumference * 0.12} ${circumference * 0.88}`}
+                      strokeDashoffset={-(circumference * 0.48)}
                       strokeLinecap="round"
                       transform="rotate(-90 50 50)"
                     />
@@ -596,7 +923,7 @@ export default function MarketingDashboard() {
                       stroke="#9CA3AF"
                       strokeWidth={strokeWidth} 
                       strokeDasharray={`${circumference * 0.08} ${circumference * 0.92}`}
-                      strokeDashoffset={-(circumference * 0.47)}
+                      strokeDashoffset={-(circumference * 0.40)}
                       strokeLinecap="round"
                       transform="rotate(-90 50 50)"
                     />
@@ -609,11 +936,11 @@ export default function MarketingDashboard() {
                       stroke="#818CF8"
                       strokeWidth={strokeWidth} 
                       strokeDasharray={`${circumference * 0.15} ${circumference * 0.85}`}
-                      strokeDashoffset={-(circumference * 0.32)}
+                      strokeDashoffset={-(circumference * 0.25)}
                       strokeLinecap="round"
                       transform="rotate(-90 50 50)"
                     />
-                    {/* Net Profit demo segment (32%) */}
+                    {/* Net Profit demo segment (25%) */}
                     <circle 
                       cx="50" 
                       cy="50" 
@@ -621,7 +948,7 @@ export default function MarketingDashboard() {
                       fill="transparent" 
                       stroke="#4F46E5"
                       strokeWidth={strokeWidth} 
-                      strokeDasharray={`${circumference * 0.32} ${circumference * 0.68}`}
+                      strokeDasharray={`${circumference * 0.25} ${circumference * 0.75}`}
                       strokeDashoffset={0}
                       strokeLinecap="round"
                       transform="rotate(-90 50 50)"
@@ -644,7 +971,7 @@ export default function MarketingDashboard() {
                 <div className="legend-text-group">
                   <span className="legend-label">Net Profit</span>
                   <span className="legend-value font-bold text-black">
-                    {formatRupiah(totalProfit)} ({hasData ? profitPct.toFixed(1) : "32.0"}%)
+                    {formatRupiah(totalProfit)} ({hasData ? profitPct.toFixed(1) : "25.0"}%)
                   </span>
                 </div>
               </div>
@@ -655,6 +982,16 @@ export default function MarketingDashboard() {
                   <span className="legend-label">Beban Platform</span>
                   <span className="legend-value font-bold text-black">
                     {formatRupiah(totalFees)} ({hasData ? feesPct.toFixed(1) : "15.0"}%)
+                  </span>
+                </div>
+              </div>
+
+              <div className="legend-item">
+                <div className="legend-color-dot" style={{ backgroundColor: "#C7C9F9" }}></div>
+                <div className="legend-text-group">
+                  <span className="legend-label">Biaya Iklan</span>
+                  <span className="legend-value font-bold text-black">
+                    {formatRupiah(adSpend)} ({hasData ? adSpendPct.toFixed(1) : "12.0"}%)
                   </span>
                 </div>
               </div>
@@ -674,7 +1011,7 @@ export default function MarketingDashboard() {
                 <div className="legend-text-group">
                   <span className="legend-label">COGS (HPP)</span>
                   <span className="legend-value font-bold text-black">
-                    {formatRupiah(totalCogs)} ({hasData ? cogsPct.toFixed(1) : "45.0"}%)
+                    {formatRupiah(totalCogs)} ({hasData ? cogsPct.toFixed(1) : "40.0"}%)
                   </span>
                 </div>
               </div>
