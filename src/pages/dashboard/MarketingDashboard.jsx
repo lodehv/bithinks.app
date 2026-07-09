@@ -478,7 +478,7 @@ export default function MarketingDashboard() {
                 <tfoot>
                   <tr className="summary-total-row">
                     <td colSpan="2" className="font-bold text-black text-left">TOTAL RINGKASAN</td>
-                    <td className="text-right font-bold text-black">{formatRupiah(totalOmset)}</td>
+                    <td className="text-right font-bold text-black">{formatRupiah(totalOmsetKotor)}</td>
                     <td className="text-right font-bold text-black">{formatRupiah(totalCogs)}</td>
                     <td className="text-right font-bold text-black">{formatRupiah(totalFees)}</td>
                     <td className="text-right font-bold text-black">{formatRupiah(totalRetur)}</td>
@@ -633,7 +633,7 @@ export default function MarketingDashboard() {
               {/* Centered text */}
               <div className="donut-center-label">
                 <span className="donut-label-title">TOTAL OMSET</span>
-                <span className="donut-label-value">{formatRupiah(totalOmset)}</span>
+                <span className="donut-label-value">{formatRupiah(totalOmsetKotor)}</span>
               </div>
             </div>
 
