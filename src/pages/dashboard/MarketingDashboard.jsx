@@ -308,15 +308,15 @@ export default function MarketingDashboard() {
         </div>
 
         {/* Card 4: Profit */}
-        <div className="kpi-card text-white bg-dark">
+        <div className="kpi-card text-black bg-white">
           <div className="kpi-icon-row">
-            <div className="kpi-icon-container bg-purple text-white">
+            <div className="kpi-icon-container bg-purple-light text-purple">
               <Percent size={18} />
             </div>
             <span className="kpi-category">NET PROFIT</span>
           </div>
-          <div className="kpi-value text-purple-accent">{formatRupiah(totalProfit)}</div>
-          <div className="kpi-subtext text-gray">
+          <div className="kpi-value text-purple">{formatRupiah(totalProfit)}</div>
+          <div className="kpi-subtext">
             Margin Bersih: {marginPercent.toFixed(1)}% setelah COGS & biaya platform
           </div>
         </div>
