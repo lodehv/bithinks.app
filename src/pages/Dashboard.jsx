@@ -8,6 +8,7 @@ import OrdersTab from "./dashboard/omni/OrdersTab";
 import PaymentPage from "./dashboard/PaymentPage";
 import PricingPage from "./dashboard/PricingPage";
 import ModulePlaceholder from "./dashboard/ModulePlaceholder";
+import MarketingDashboard from "./dashboard/MarketingDashboard";
 import { subscriptionApi } from "../utils/omniApi";
 import { Warehouse, Megaphone, Settings, Info } from "lucide-react";
 
@@ -130,7 +131,7 @@ export default function Dashboard() {
           {activeMenu === "integrasi-toko" && <div className="omni"><StoresTab   locked={locked} onRequirePayment={goToPayment} /></div>}
           {activeMenu === "pesanan"        && <div className="omni"><OrdersTab   locked={locked} onRequirePayment={goToPayment} /></div>}
           {activeMenu === "kelola-produk"  && <div className="omni"><ProductsTab locked={locked} onRequirePayment={goToPayment} /></div>}
-          {activeMenu === "marketing"      && <ModulePlaceholder name="Dashboard Marketing" icon={Megaphone} />}
+          {activeMenu === "marketing"      && <MarketingDashboard />}
           {activeMenu === "settings"       && <ModulePlaceholder name="Pengaturan" icon={Settings} />}
         </>
       )}

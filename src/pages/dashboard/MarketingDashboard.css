@@ -1,0 +1,553 @@
+/* ==========================================================================
+   MarketingDashboard.css - Clean, Premium Primary Dashboard (Black, White, Purple)
+   ========================================================================== */
+
+/* Main Container */
+.marketing-dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  color: #111827;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ─── Filter Panel ─── */
+.marketing-filter-card {
+  background: #ffffff;
+  border: 1px solid #EBEBEB;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.filter-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #F3F4F6;
+}
+
+.filter-header span {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #4B5563;
+}
+
+/* Inputs & Buttons Customization */
+.date-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.date-icon {
+  position: absolute;
+  left: 12px;
+  color: #9CA3AF;
+  pointer-events: none;
+}
+
+.filter-date-input {
+  width: 100%;
+  padding: 10px 12px 10px 36px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  color: #111827;
+  background-color: #ffffff;
+  border: 1px solid #D1D5DB;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.filter-date-input:focus {
+  border-color: #4F46E5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.08);
+}
+
+/* Dropdown popover container */
+.popover-wrapper {
+  position: relative;
+}
+
+.filter-dropdown-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 14px;
+  background-color: #ffffff;
+  border: 1px solid #D1D5DB;
+  border-radius: 8px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  color: #111827;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.filter-dropdown-btn:focus {
+  border-color: #4F46E5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.08);
+}
+
+.filter-dropdown-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 100%;
+  min-width: 220px;
+  background: #ffffff;
+  border: 1px solid #EBEBEB;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  z-index: 50;
+  box-sizing: border-box;
+}
+
+.popover-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid #F3F4F6;
+}
+
+.popover-header span {
+  font-size: 11px;
+  font-weight: 700;
+  color: #4B5563;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.popover-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9CA3AF;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.popover-close:hover {
+  background-color: #F3F4F6;
+  color: #111827;
+}
+
+.popover-list {
+  padding: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Custom Checkbox Design */
+.popover-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.popover-checkbox-row:hover {
+  background-color: #EEF0FB;
+}
+
+.popover-checkbox-row input {
+  display: none;
+}
+
+.checkbox-custom {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid #D1D5DB;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.popover-checkbox-row input:checked + .checkbox-custom {
+  background-color: #4F46E5;
+  border-color: #4F46E5;
+  color: #ffffff;
+}
+
+.popover-checkbox-text {
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.popover-loading, .popover-empty {
+  padding: 16px;
+  text-align: center;
+  font-size: 12px;
+  color: #9CA3AF;
+}
+
+/* Filter Actions Row */
+.filter-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 16px;
+  border-top: 1px solid #F3F4F6;
+}
+
+.btn-filter-clear {
+  background: none;
+  border: 1px solid #E5E7EB;
+  color: #374151;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn-filter-clear:hover {
+  background-color: #F9FAFB;
+  border-color: #D1D5DB;
+}
+
+.btn-filter-apply {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #4F46E5;
+  border: none;
+  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 9px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(79, 70, 229, 0.1);
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.btn-filter-apply:hover {
+  background-color: #4338CA;
+  box-shadow: 0 4px 8px rgba(79, 70, 229, 0.2);
+}
+
+.btn-filter-apply:disabled {
+  background-color: #9CA3AF;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.spin-icon {
+  animation: filterSpin 1.5s linear infinite;
+}
+
+@keyframes filterSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ─── KPI Metric Cards Section ─── */
+.marketing-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.kpi-card {
+  border: 1px solid #EBEBEB;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+}
+
+.kpi-card.bg-white {
+  background-color: #ffffff;
+}
+
+.kpi-card.bg-dark {
+  background-color: #111827;
+  border-color: #1F2937;
+}
+
+.kpi-icon-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.kpi-icon-container {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kpi-icon-container.bg-purple-light {
+  background-color: #EEF0FB;
+}
+
+.kpi-icon-container.bg-purple {
+  background-color: #4F46E5;
+}
+
+.kpi-category {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #9CA3AF;
+}
+
+.kpi-value {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.kpi-card.bg-dark .kpi-value {
+  color: #ffffff;
+}
+
+.text-purple-accent {
+  color: #C7C9F9 !important;
+}
+
+.kpi-subtext {
+  font-size: 11px;
+  font-weight: 500;
+  color: #6B7280;
+  line-height: 1.4;
+}
+
+.kpi-card.bg-dark .kpi-subtext {
+  color: #9CA3AF;
+}
+
+/* ─── Platform Breakdown Table ─── */
+.marketing-table-card {
+  background: #ffffff;
+  border: 1px solid #EBEBEB;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  margin-bottom: 40px;
+}
+
+.table-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #F3F4F6;
+}
+
+.header-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-title-group h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.marketing-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.marketing-table th {
+  padding: 14px 16px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #6B7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.marketing-table td {
+  padding: 16px;
+  font-size: 13px;
+  color: #4B5563;
+  border-bottom: 1px solid #F3F4F6;
+  white-space: nowrap;
+}
+
+.marketing-table tbody tr:hover td {
+  background-color: #FAFAFA;
+}
+
+/* Alignment utilities */
+.text-right {
+  text-align: right !important;
+}
+
+.text-left {
+  text-align: left !important;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.text-black {
+  color: #111827 !important;
+}
+
+.text-purple {
+  color: #4F46E5 !important;
+}
+
+.text-gray {
+  color: #9CA3AF !important;
+}
+
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+/* Empty State Styles */
+.table-empty-row {
+  padding: 0 !important;
+}
+
+.empty-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  background-color: #FAFAFA;
+}
+
+.empty-icon {
+  margin-bottom: 16px;
+}
+
+.empty-state-container h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 8px 0;
+}
+
+.empty-state-container p {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: #6B7280;
+  max-width: 420px;
+  margin: 0;
+}
+
+/* Summary Row */
+.summary-total-row td {
+  background-color: #EEF0FB !important;
+  border-top: 1.5px solid #C7C9F9;
+  border-bottom: 1.5px solid #C7C9F9;
+}
+
+/* ==========================================================================
+   Responsive Overrides
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .filter-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .marketing-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .marketing-dashboard-container {
+    gap: 16px;
+  }
+
+  .marketing-filter-card {
+    padding: 16px;
+  }
+
+  .filter-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .marketing-kpi-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .kpi-card {
+    padding: 16px;
+  }
+  
+  .marketing-table-card {
+    padding: 16px;
+  }
+}
