@@ -99,7 +99,8 @@ export default function MarketingDashboard() {
   const totalOmset = marketingData.reduce((acc, row) => acc + (row.omset || 0), 0);
   const totalCogs = marketingData.reduce((acc, row) => acc + (row.cogs || 0), 0);
   const totalFees = marketingData.reduce((acc, row) => acc + (row.fees || 0), 0);
-  const totalProfit = totalOmset - totalCogs - totalFees;
+  const totalRetur = marketingData.reduce((acc, row) => acc + (row.retur || 0), 0);
+  const totalProfit = totalOmset - totalCogs - totalFees - totalRetur;
   
   // Calculate margin percent (safety check to prevent division by zero)
   const marginPercent = totalOmset > 0 ? (totalProfit / totalOmset) * 100 : 0;
@@ -117,6 +118,7 @@ export default function MarketingDashboard() {
   const profitPct = hasData ? Math.max(0, (totalProfit / totalOmset) * 100) : 0;
   const feesPct = hasData ? Math.max(0, (totalFees / totalOmset) * 100) : 0;
   const cogsPct = hasData ? Math.max(0, (totalCogs / totalOmset) * 100) : 0;
+  const returPct = hasData ? Math.max(0, (totalRetur / totalOmset) * 100) : 0;
 
   const radius = 40;
   const strokeWidth = 10;
@@ -124,11 +126,13 @@ export default function MarketingDashboard() {
 
   const profitDash = (profitPct / 100) * circumference;
   const feesDash = (feesPct / 100) * circumference;
+  const returDash = (returPct / 100) * circumference;
   const cogsDash = (cogsPct / 100) * circumference;
 
   const profitOffset = 0;
   const feesOffset = -profitDash;
-  const cogsOffset = -(profitDash + feesDash);
+  const returOffset = -(profitDash + feesDash);
+  const cogsOffset = -(profitDash + feesDash + returDash);
 
   const formatRupiah = (val) => {
     return new Intl.NumberFormat("id-ID", {
@@ -334,7 +338,19 @@ export default function MarketingDashboard() {
           <div className="kpi-subtext">Potongan biaya komisi & administrasi e-commerce <span className="kpi-action-purple">(klik rincian)</span></div>
         </div>
 
-        {/* Card 4: Profit */}
+        {/* Card 4: Retur & Pembatalan */}
+        <div className="kpi-card text-black bg-white">
+          <div className="kpi-icon-row">
+            <div className="kpi-icon-container bg-purple-light text-purple">
+              <RefreshCw size={18} />
+            </div>
+            <span className="kpi-category">BEBAN RETUR</span>
+          </div>
+          <div className="kpi-value">{formatRupiah(totalRetur)}</div>
+          <div className="kpi-subtext">Refund, retur & pembatalan pesanan dari pelanggan</div>
+        </div>
+
+        {/* Card 5: Profit */}
         <div className="kpi-card text-black bg-white">
           <div className="kpi-icon-row">
             <div className="kpi-icon-container bg-purple-light text-purple">
@@ -344,7 +360,7 @@ export default function MarketingDashboard() {
           </div>
           <div className="kpi-value text-purple">{formatRupiah(totalProfit)}</div>
           <div className="kpi-subtext">
-            Margin Bersih: {marginPercent.toFixed(1)}% setelah COGS & biaya platform
+            Margin Bersih: {marginPercent.toFixed(1)}% setelah COGS, platform & retur
           </div>
         </div>
       </div>
@@ -371,6 +387,7 @@ export default function MarketingDashboard() {
                   <th className="text-right">Omset</th>
                   <th className="text-right">COGS (HPP)</th>
                   <th className="text-right">Beban Platform</th>
+                  <th className="text-right">Retur</th>
                   <th className="text-right">Net Profit</th>
                   <th className="text-right">Margin (%)</th>
                 </tr>
@@ -378,7 +395,7 @@ export default function MarketingDashboard() {
               <tbody>
                 {marketingData.length === 0 ? (
                   <tr>
-                    <td colSpan="7" className="table-empty-row">
+                    <td colSpan="8" className="table-empty-row">
                       <div className="empty-state-container">
                         <BarChart3 size={32} className="empty-icon text-gray" />
                         <h4>Tidak Ada Data Transaksi</h4>
@@ -390,7 +407,7 @@ export default function MarketingDashboard() {
                   </tr>
                 ) : (
                   marketingData.map((row, idx) => {
-                    const profit = (row.omset || 0) - (row.cogs || 0) - (row.fees || 0);
+                    const profit = (row.omset || 0) - (row.cogs || 0) - (row.fees || 0) - (row.retur || 0);
                     const margin = row.omset > 0 ? (profit / row.omset) * 100 : 0;
                     return (
                       <tr key={idx}>
@@ -399,6 +416,7 @@ export default function MarketingDashboard() {
                         <td className="text-right">{formatRupiah(row.omset)}</td>
                         <td className="text-right">{formatRupiah(row.cogs)}</td>
                         <td className="text-right">{formatRupiah(row.fees)}</td>
+                        <td className="text-right text-purple font-semibold">{formatRupiah(row.retur || 0)}</td>
                         <td className="text-right font-semibold text-black">{formatRupiah(profit)}</td>
                         <td className="text-right font-semibold text-purple">{margin.toFixed(1)}%</td>
                       </tr>
@@ -415,6 +433,7 @@ export default function MarketingDashboard() {
                     <td className="text-right font-bold text-black">{formatRupiah(totalOmset)}</td>
                     <td className="text-right font-bold text-black">{formatRupiah(totalCogs)}</td>
                     <td className="text-right font-bold text-black">{formatRupiah(totalFees)}</td>
+                    <td className="text-right font-bold text-black">{formatRupiah(totalRetur)}</td>
                     <td className="text-right font-bold text-purple">{formatRupiah(totalProfit)}</td>
                     <td className="text-right font-bold text-purple">{marginPercent.toFixed(1)}%</td>
                   </tr>
@@ -461,6 +480,20 @@ export default function MarketingDashboard() {
                       strokeLinecap="round"
                       transform="rotate(-90 50 50)"
                     />
+
+                    {/* Retur Segment (Slate Gray) */}
+                    <circle 
+                      cx="50" 
+                      cy="50" 
+                      r={radius} 
+                      fill="transparent" 
+                      stroke="#9CA3AF"
+                      strokeWidth={strokeWidth} 
+                      strokeDasharray={`${returDash} ${circumference - returDash}`}
+                      strokeDashoffset={returOffset}
+                      strokeLinecap="round"
+                      transform="rotate(-90 50 50)"
+                    />
                     
                     {/* Platform Fees Segment (Soft Indigo/Light Purple) */}
                     <circle 
@@ -491,9 +524,9 @@ export default function MarketingDashboard() {
                     />
                   </>
                 ) : (
-                  /* Balanced Demo Rings when empty to show layout */
+                  /* Balanced Demo Rings when empty to show layout (COGS 45%, Profit 32%, Fees 15%, Retur 8%) */
                   <>
-                    {/* COGS demo segment (50%) */}
+                    {/* COGS demo segment (45%) */}
                     <circle 
                       cx="50" 
                       cy="50" 
@@ -501,8 +534,21 @@ export default function MarketingDashboard() {
                       fill="transparent" 
                       stroke="#111827"
                       strokeWidth={strokeWidth} 
-                      strokeDasharray={`${circumference * 0.50} ${circumference * 0.50}`}
-                      strokeDashoffset={-(circumference * 0.50)}
+                      strokeDasharray={`${circumference * 0.45} ${circumference * 0.55}`}
+                      strokeDashoffset={-(circumference * 0.55)}
+                      strokeLinecap="round"
+                      transform="rotate(-90 50 50)"
+                    />
+                    {/* Retur demo segment (8%) */}
+                    <circle 
+                      cx="50" 
+                      cy="50" 
+                      r={radius} 
+                      fill="transparent" 
+                      stroke="#9CA3AF"
+                      strokeWidth={strokeWidth} 
+                      strokeDasharray={`${circumference * 0.08} ${circumference * 0.92}`}
+                      strokeDashoffset={-(circumference * 0.47)}
                       strokeLinecap="round"
                       transform="rotate(-90 50 50)"
                     />
@@ -515,11 +561,11 @@ export default function MarketingDashboard() {
                       stroke="#818CF8"
                       strokeWidth={strokeWidth} 
                       strokeDasharray={`${circumference * 0.15} ${circumference * 0.85}`}
-                      strokeDashoffset={-(circumference * 0.35)}
+                      strokeDashoffset={-(circumference * 0.32)}
                       strokeLinecap="round"
                       transform="rotate(-90 50 50)"
                     />
-                    {/* Net Profit demo segment (35%) */}
+                    {/* Net Profit demo segment (32%) */}
                     <circle 
                       cx="50" 
                       cy="50" 
@@ -527,7 +573,7 @@ export default function MarketingDashboard() {
                       fill="transparent" 
                       stroke="#4F46E5"
                       strokeWidth={strokeWidth} 
-                      strokeDasharray={`${circumference * 0.35} ${circumference * 0.65}`}
+                      strokeDasharray={`${circumference * 0.32} ${circumference * 0.68}`}
                       strokeDashoffset={0}
                       strokeLinecap="round"
                       transform="rotate(-90 50 50)"
@@ -550,7 +596,7 @@ export default function MarketingDashboard() {
                 <div className="legend-text-group">
                   <span className="legend-label">Net Profit</span>
                   <span className="legend-value font-bold text-black">
-                    {formatRupiah(totalProfit)} ({hasData ? profitPct.toFixed(1) : "35.0"}%)
+                    {formatRupiah(totalProfit)} ({hasData ? profitPct.toFixed(1) : "32.0"}%)
                   </span>
                 </div>
               </div>
@@ -566,11 +612,21 @@ export default function MarketingDashboard() {
               </div>
 
               <div className="legend-item">
+                <div className="legend-color-dot" style={{ backgroundColor: "#9CA3AF" }}></div>
+                <div className="legend-text-group">
+                  <span className="legend-label">Beban Retur</span>
+                  <span className="legend-value font-bold text-black">
+                    {formatRupiah(totalRetur)} ({hasData ? returPct.toFixed(1) : "8.0"}%)
+                  </span>
+                </div>
+              </div>
+
+              <div className="legend-item">
                 <div className="legend-color-dot" style={{ backgroundColor: "#111827" }}></div>
                 <div className="legend-text-group">
                   <span className="legend-label">COGS (HPP)</span>
                   <span className="legend-value font-bold text-black">
-                    {formatRupiah(totalCogs)} ({hasData ? cogsPct.toFixed(1) : "50.0"}%)
+                    {formatRupiah(totalCogs)} ({hasData ? cogsPct.toFixed(1) : "45.0"}%)
                   </span>
                 </div>
               </div>
