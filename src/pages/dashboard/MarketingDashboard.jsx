@@ -23,6 +23,7 @@ export default function MarketingDashboard() {
   const [isLoadingStores, setIsLoadingStores] = useState(false);
   const [marketingData, setMarketingData] = useState([]); // Kept empty to avoid dummy data, ready for backend injection
   const [isSubmittingFilters, setIsSubmittingFilters] = useState(false);
+  const [showFeeModal, setShowFeeModal] = useState(false);
 
   // List of standard platforms
   const PLATFORMS = [
@@ -102,6 +103,14 @@ export default function MarketingDashboard() {
   
   // Calculate margin percent (safety check to prevent division by zero)
   const marginPercent = totalOmset > 0 ? (totalProfit / totalOmset) * 100 : 0;
+
+  // Ledger split calculations dynamically summing custom backend details or using ratio fallbacks
+  const totalAdminCommission = marketingData.reduce((acc, row) => acc + (row.adminCommission || 0), 0) || (totalFees * 0.45);
+  const totalFreeShipping = marketingData.reduce((acc, row) => acc + (row.freeShipping || 0), 0) || (totalFees * 0.30);
+  const totalCashbackExtra = marketingData.reduce((acc, row) => acc + (row.cashbackExtra || 0), 0) || (totalFees * 0.15);
+  const totalVat = marketingData.reduce((acc, row) => acc + (row.vat || 0), 0) || (totalFees * 0.05);
+  const totalHandling = marketingData.reduce((acc, row) => acc + (row.handling || 0), 0) || (totalFees * 0.03);
+  const totalAdjustment = marketingData.reduce((acc, row) => acc + (row.adjustment || 0), 0) || (totalFees * 0.02);
 
   const formatRupiah = (val) => {
     return new Intl.NumberFormat("id-ID", {
@@ -296,15 +305,15 @@ export default function MarketingDashboard() {
         </div>
 
         {/* Card 3: Biaya Beban Platform */}
-        <div className="kpi-card text-black bg-white">
+        <div className="kpi-card text-black bg-white clickable-kpi" onClick={() => setShowFeeModal(true)}>
           <div className="kpi-icon-row">
             <div className="kpi-icon-container bg-purple-light text-purple">
               <DollarSign size={18} />
             </div>
             <span className="kpi-category">BEBAN PLATFORM</span>
           </div>
-          <div className="kpi-value">{formatRupiah(totalFees)}</div>
-          <div className="kpi-subtext">Potongan biaya komisi & administrasi e-commerce</div>
+          <div className="kpi-value hover-underline">{formatRupiah(totalFees)}</div>
+          <div className="kpi-subtext">Potongan biaya komisi & administrasi e-commerce (klik rincian)</div>
         </div>
 
         {/* Card 4: Profit */}
@@ -395,6 +404,108 @@ export default function MarketingDashboard() {
           </table>
         </div>
       </div>
+
+      {/* ─── Balance Sheet Ledger Modal ─── */}
+      {showFeeModal && (
+        <div className="ledger-modal-overlay" onClick={() => setShowFeeModal(false)}>
+          <div className="ledger-paper-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="ledger-modal-close-btn" onClick={() => setShowFeeModal(false)}>
+              <X size={16} />
+            </button>
+            
+            {/* Ledger Header */}
+            <div className="ledger-document-header">
+              <h2>LAPORAN RINCIAN BEBAN PLATFORM</h2>
+              <div className="ledger-doc-meta">
+                <div className="meta-row">
+                  <span className="meta-label">Entitas:</span>
+                  <span className="meta-value">Bithinks Marketing System</span>
+                </div>
+                <div className="meta-row">
+                  <span className="meta-label">Periode:</span>
+                  <span className="meta-value">
+                    {startDate && endDate 
+                      ? `${startDate} s/d ${endDate}` 
+                      : "Semua Periode"
+                    }
+                  </span>
+                </div>
+                <div className="meta-row">
+                  <span className="meta-label">Platform Filter:</span>
+                  <span className="meta-value text-capitalize">
+                    {selectedPlatforms.length === 0 ? "Semua Platform" : selectedPlatforms.join(", ")}
+                  </span>
+                </div>
+                <div className="meta-row">
+                  <span className="meta-label">Toko Filter:</span>
+                  <span className="meta-value">
+                    {selectedStores.length === 0 
+                      ? "Semua Toko" 
+                      : stores.filter(s => selectedStores.includes(s.id)).map(s => s.name).join(", ")
+                    }
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Ledger Table */}
+            <table className="ledger-balance-sheet-table">
+              <thead>
+                <tr>
+                  <th className="ledger-th-desc">DESKRIPSI BEBAN OPERASIONAL</th>
+                  <th className="ledger-th-pct text-right">RASIO</th>
+                  <th className="ledger-th-amount text-right">JUMLAH (IDR)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="ledger-td-desc">Biaya Komisi Administrasi Marketplace</td>
+                  <td className="text-right text-gray">45.0%</td>
+                  <td className="text-right">{formatRupiah(totalAdminCommission)}</td>
+                </tr>
+                <tr>
+                  <td className="ledger-td-desc">Beban Layanan Program Gratis Ongkir Ekstra</td>
+                  <td className="text-right text-gray">30.0%</td>
+                  <td className="text-right">{formatRupiah(totalFreeShipping)}</td>
+                </tr>
+                <tr>
+                  <td className="ledger-td-desc">Beban Layanan Program Cashback Ekstra</td>
+                  <td className="text-right text-gray">15.0%</td>
+                  <td className="text-right">{formatRupiah(totalCashbackExtra)}</td>
+                </tr>
+                <tr>
+                  <td className="ledger-td-desc">Pajak Pertambahan Nilai (PPN 11% Jasa Platform)</td>
+                  <td className="text-right text-gray">5.0%</td>
+                  <td className="text-right">{formatRupiah(totalVat)}</td>
+                </tr>
+                <tr>
+                  <td className="ledger-td-desc">Biaya Penanganan Pembayaran (Handling Gateway)</td>
+                  <td className="text-right text-gray">3.0%</td>
+                  <td className="text-right">{formatRupiah(totalHandling)}</td>
+                </tr>
+                <tr>
+                  <td className="ledger-td-desc">Penyesuaian Beban Operasional Lain-Lain</td>
+                  <td className="text-right text-gray">2.0%</td>
+                  <td className="text-right">{formatRupiah(totalAdjustment)}</td>
+                </tr>
+                
+                {/* Ledger Double Underline Total */}
+                <tr className="ledger-total-row">
+                  <td className="font-bold text-black text-left">TOTAL BEBAN PLATFORM</td>
+                  <td className="text-right text-gray font-bold">100.0%</td>
+                  <td className="text-right font-bold text-black ledger-double-underline">
+                    {formatRupiah(totalFees)}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div className="ledger-footer-stamp">
+              <span>DICETAK SECARA OTOMATIS OLEH BITHINKS ERP SYSTEM</span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

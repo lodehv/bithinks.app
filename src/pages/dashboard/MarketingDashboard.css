@@ -551,3 +551,198 @@
     padding: 16px;
   }
 }
+
+/* Clickable KPI Hover Style */
+.clickable-kpi {
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+}
+
+.clickable-kpi:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.08);
+  border-color: #C7C9F9;
+}
+
+.hover-underline {
+  transition: color 0.2s ease;
+}
+
+.clickable-kpi:hover .hover-underline {
+  text-decoration: underline;
+  color: #4F46E5;
+}
+
+/* ─── Ledger Sheet Document Modal ─── */
+.ledger-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(17, 24, 39, 0.4);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: ledgerFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes ledgerFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.ledger-paper-modal {
+  position: relative;
+  background: #ffffff;
+  color: #111827;
+  width: 90%;
+  max-width: 600px;
+  border-radius: 6px;
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(17, 24, 39, 0.05);
+  padding: 40px;
+  box-sizing: border-box;
+  text-align: left;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  animation: ledgerSheetSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes ledgerSheetSlide {
+  from { transform: translateY(12px) scale(0.98); }
+  to { transform: translateY(0) scale(1); }
+}
+
+.ledger-modal-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9CA3AF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.ledger-modal-close-btn:hover {
+  background-color: #F3F4F6;
+  color: #111827;
+}
+
+/* Ledger Document Header */
+.ledger-document-header {
+  border-bottom: 2px solid #111827;
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.ledger-document-header h2 {
+  font-size: 16px;
+  font-weight: 800;
+  color: #111827;
+  letter-spacing: 0.5px;
+  margin: 0 0 16px 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.ledger-doc-meta {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  text-align: left;
+  background-color: #FAFAFA;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #E5E7EB;
+}
+
+.meta-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 11px;
+}
+
+.meta-label {
+  font-weight: 700;
+  color: #6B7280;
+  min-width: 80px;
+}
+
+.meta-value {
+  color: #111827;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Ledger Table Styling */
+.ledger-balance-sheet-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+.ledger-balance-sheet-table th {
+  padding: 10px 8px;
+  font-size: 10px;
+  font-weight: 800;
+  color: #111827;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1.5px solid #111827;
+}
+
+.ledger-balance-sheet-table td {
+  padding: 11px 8px;
+  font-size: 12.5px;
+  color: #111827;
+  border-bottom: 1px dashed #E5E7EB;
+}
+
+.ledger-td-desc {
+  font-weight: 500;
+}
+
+.ledger-total-row td {
+  border-top: 1.5px solid #111827;
+  border-bottom: none;
+  padding-top: 14px;
+}
+
+/* Ledger Balance Sheet Double Underline */
+.ledger-double-underline {
+  border-bottom: 4px double #111827 !important;
+  font-size: 14px;
+  font-weight: 800;
+  padding-bottom: 3px;
+}
+
+.ledger-footer-stamp {
+  margin-top: 32px;
+  border-top: 1px solid #E5E7EB;
+  padding-top: 16px;
+  text-align: center;
+  font-size: 8px;
+  font-weight: 800;
+  color: #9CA3AF;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 480px) {
+  .ledger-paper-modal {
+    padding: 24px 16px;
+  }
+  
+  .ledger-doc-meta {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}
