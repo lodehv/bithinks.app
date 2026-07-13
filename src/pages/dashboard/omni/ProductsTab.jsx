@@ -465,8 +465,8 @@ export default function ProductsTab({ locked, onRequirePayment }) {
             </div>
           </div>
           <div className="card-item-body">
-            <div className="trend-svg-chart-wrapper">
-              <svg width="100%" height="150" viewBox="0 0 450 150" preserveAspectRatio="none" className="trend-svg">
+            <div className="pm-trend-svg-chart-wrapper">
+              <svg width="100%" height="150" viewBox="0 0 450 150" preserveAspectRatio="none" className="pm-trend-svg">
                 {[0, 0.33, 0.66, 1].map((ratio, idx) => {
                   const y = 20 + ratio * 110;
                   return (
