@@ -87,7 +87,14 @@ export default function OrderCard({ order: o, onChangeStatus, busy }) {
                 {(o.items ?? []).map((it, i) => (
                   <tr key={i}>
                     <td className="ord-sku">{it.sku || "—"}</td>
-                    <td>{it.name}</td>
+                    <td>
+                      <div className="ord-item-prod">
+                        <span className="ord-item-thumb">
+                          {it.imageUrl ? <img src={it.imageUrl} alt="" loading="lazy" /> : <Package size={16} />}
+                        </span>
+                        <span>{it.name}</span>
+                      </div>
+                    </td>
                     <td>{it.qty}</td>
                     <td>{rupiah(it.price)}</td>
                     <td style={{ textAlign: "right", fontWeight: 700 }}>{rupiah(it.price * it.qty)}</td>
