@@ -13,35 +13,32 @@ import "./OmniModule.css";
 const rupiah = (n) => "Rp " + Math.round(n || 0).toLocaleString("id-ID");
 
 const getProductCategory = (p) => {
-  if (p?.category) return p.category;
-  const name = (p?.name || "").toLowerCase();
-  if (name.includes("kaos") || name.includes("t-shirt") || name.includes("baju")) {
-    return "Kaos Oversize";
+  let cat = p?.category;
+  if (!cat) {
+    const name = (p?.name || "").toLowerCase();
+    if (name.includes("kaos") || name.includes("t-shirt") || name.includes("baju") || name.includes("hoodie") || name.includes("jacket") || name.includes("jaket") || name.includes("kemeja") || name.includes("flanel")) {
+      cat = "Fashion";
+    } else if (name.includes("susu") || name.includes("oat") || name.includes("kopi") || name.includes("aren") || name.includes("cair") || name.includes("barista")) {
+      cat = "Bahan Minuman";
+    } else if (name.includes("pupuk") || name.includes("pmp")) {
+      cat = "Pertanian & Kebun";
+    } else {
+      cat = "Umum";
+    }
   }
-  if (name.includes("hoodie")) {
-    return "Hoodie";
+  
+  if (cat === "Kaos Oversize" || cat === "Hoodie" || cat === "Jacket" || cat === "Kemeja & Flanel") {
+    return "Fashion";
   }
-  if (name.includes("jacket") || name.includes("jaket")) {
-    return "Jacket";
-  }
-  if (name.includes("kemeja") || name.includes("flanel")) {
-    return "Kemeja & Flanel";
-  }
-  if (name.includes("susu") || name.includes("oat") || name.includes("kopi") || name.includes("aren") || name.includes("cair") || name.includes("barista")) {
-    return "Bahan Minuman";
-  }
-  if (name.includes("pupuk") || name.includes("pmp")) {
-    return "Pertanian & Kebun";
-  }
-  return "Umum";
+  return cat;
 };
 
 const MOCK_PRODUCTS = [
   {
     id: "mock-1",
-    name: "Kaos Oversize Graphic",
+    name: "Fashion",
     sku: "TSH-001",
-    category: "Kaos Oversize",
+    category: "Fashion",
     unit: "pcs",
     masterStock: 320,
     totalKeluar: 2840,
@@ -373,10 +370,10 @@ export default function ProductsTab({ locked, onRequirePayment }) {
             <div className="premium-select-wrapper">
               <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
                 <option value="all">Semua Kategori</option>
-                <option value="Kaos Oversize">Kaos Oversize</option>
-                <option value="Hoodie">Hoodie</option>
-                <option value="Jacket">Jacket</option>
-                <option value="Kemeja & Flanel">Kemeja & Flanel</option>
+                <option value="Fashion">Fashion</option>
+                <option value="Bahan Minuman">Bahan Minuman</option>
+                <option value="Pertanian & Kebun">Pertanian & Kebun</option>
+                <option value="Umum">Umum</option>
               </select>
               <ChevronDown size={12} className="select-chevron-icon" />
             </div>
@@ -575,7 +572,7 @@ export default function ProductsTab({ locked, onRequirePayment }) {
               <div className="label-item-grid">
                 <div className="color-dot bg-purple"></div>
                 <div className="label-text-column">
-                  <span className="label-name text-truncate">Kaos Oversize</span>
+                  <span className="label-name text-truncate">Fashion</span>
                   <div className="label-details-row">
                     <span className="label-val">Rp 55,4jt</span>
                     <span className="label-pct">43%</span>
@@ -655,7 +652,7 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                   <td className="text-right font-semibold text-black">Rp 18.950.000</td>
                 </tr>
                 <tr>
-                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Kaos Oversize Graphic</td>
+                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Fashion</td>
                   <td className="text-right font-semibold text-black">Rp 16.870.000</td>
                 </tr>
                 <tr>
@@ -717,10 +714,10 @@ export default function ProductsTab({ locked, onRequirePayment }) {
               <div className="premium-select-wrapper">
                 <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
                   <option value="all">Semua</option>
-                  <option value="Kaos Oversize">Kaos Oversize</option>
-                  <option value="Hoodie">Hoodie</option>
-                  <option value="Jacket">Jacket</option>
-                  <option value="Kemeja & Flanel">Kemeja & Flanel</option>
+                  <option value="Fashion">Fashion</option>
+                  <option value="Bahan Minuman">Bahan Minuman</option>
+                  <option value="Pertanian & Kebun">Pertanian & Kebun</option>
+                  <option value="Umum">Umum</option>
                 </select>
                 <ChevronDown size={10} className="select-chevron-icon" />
               </div>
