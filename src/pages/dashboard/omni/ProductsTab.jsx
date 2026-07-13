@@ -49,9 +49,9 @@ const MOCK_PRODUCTS = [
   },
   {
     id: "mock-2",
-    name: "Hoodie BitOmni Signature",
+    name: "Fashion",
     sku: "HD-001",
-    category: "Hoodie",
+    category: "Fashion",
     unit: "pcs",
     masterStock: 280,
     totalKeluar: 2150,
@@ -62,9 +62,9 @@ const MOCK_PRODUCTS = [
   },
   {
     id: "mock-3",
-    name: "Jacket Varsity BitOmni",
+    name: "Fashion",
     sku: "JK-001",
-    category: "Jacket",
+    category: "Fashion",
     unit: "pcs",
     masterStock: 120,
     totalKeluar: 1430,
@@ -75,9 +75,9 @@ const MOCK_PRODUCTS = [
   },
   {
     id: "mock-4",
-    name: "Kemeja Flanel Premium",
+    name: "Fashion",
     sku: "SH-001",
-    category: "Kemeja & Flanel",
+    category: "Fashion",
     unit: "pcs",
     masterStock: 150,
     totalKeluar: 1220,
@@ -88,9 +88,9 @@ const MOCK_PRODUCTS = [
   },
   {
     id: "mock-5",
-    name: "Hoodie Essential Black",
+    name: "Fashion",
     sku: "HD-002",
-    category: "Hoodie",
+    category: "Fashion",
     unit: "pcs",
     masterStock: 200,
     totalKeluar: 1180,
@@ -648,7 +648,7 @@ export default function ProductsTab({ locked, onRequirePayment }) {
               </thead>
               <tbody>
                 <tr>
-                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Hoodie BitOmni Signature</td>
+                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Fashion</td>
                   <td className="text-right font-semibold text-black">Rp 18.950.000</td>
                 </tr>
                 <tr>
@@ -656,15 +656,15 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                   <td className="text-right font-semibold text-black">Rp 16.870.000</td>
                 </tr>
                 <tr>
-                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Jacket Varsity BitOmni</td>
+                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Fashion</td>
                   <td className="text-right font-semibold text-black">Rp 15.420.000</td>
                 </tr>
                 <tr>
-                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Hoodie Essential Black</td>
+                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Fashion</td>
                   <td className="text-right font-semibold text-black">Rp 12.230.000</td>
                 </tr>
                 <tr>
-                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Kemeja Flanel Premium</td>
+                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Fashion</td>
                   <td className="text-right font-semibold text-black">Rp 10.980.000</td>
                 </tr>
               </tbody>
