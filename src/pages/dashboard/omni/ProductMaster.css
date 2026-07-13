@@ -838,6 +838,15 @@
   color: #4F46E5;
 }
 
+.action-circle-btn.danger-action:hover {
+  border-color: #FCA5A5;
+  background-color: #FEF2F2;
+}
+
+.action-circle-btn.danger-action:hover svg {
+  color: #EF4444;
+}
+
 .empty-table-state {
   text-align: center;
   padding: 40px 0;

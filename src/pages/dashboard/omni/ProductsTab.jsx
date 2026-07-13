@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   Search, ChevronDown, SlidersHorizontal, Download, Plus, MoreHorizontal,
   Info, ArrowUpDown, PackageOpen, Check, AlertTriangle, RefreshCw, X,
-  Calendar, Layers, TrendingUp, DollarSign, Package, Edit3, ShoppingBag
+  Calendar, Layers, TrendingUp, DollarSign, Package, Edit3, ShoppingBag, Trash2
 } from "lucide-react";
 import { omniApi, isPaymentRequired } from "../../../utils/omniApi";
 import shopeeLogo from "../../../assets/logo_pilihan_fitur/shopee.png";
@@ -783,15 +783,9 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                             <button className="action-circle-btn" onClick={() => openEdit(p)} title="Edit">
                               <Edit3 size={13} className="text-gray" />
                             </button>
-                            <button className="action-circle-btn" onClick={() => setMenuFor(menuFor === p.id ? null : p.id)}>
-                              <MoreHorizontal size={13} className="text-gray" />
+                            <button className="action-circle-btn danger-action" onClick={() => (locked ? onRequirePayment?.() : removeProduct(p))} title="Hapus">
+                              <Trash2 size={13} className="text-gray" />
                             </button>
-                            {menuFor === p.id && (
-                              <div className="pm-atur-menu">
-                                <div className="pm-atur-opt" onClick={() => (locked ? onRequirePayment?.() : openEdit(p))}>Edit</div>
-                                <div className="pm-atur-opt danger" onClick={() => (locked ? onRequirePayment?.() : removeProduct(p))}>Hapus</div>
-                              </div>
-                            )}
                           </div>
                         </td>
                       </tr>
