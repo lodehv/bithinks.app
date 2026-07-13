@@ -356,13 +356,17 @@
 .ord-items td { padding: 12px 14px; border-bottom: 1px solid #F4F4F4; color: #333; }
 .ord-items tr:last-child td { border-bottom: none; }
 .ord-sku { font-family: ui-monospace, monospace; font-size: 12px; color: #555; font-weight: 600; }
+.ord-master { font-size: 12.5px; font-weight: 600; }
+.ord-master.ok { color: #4F46E5; }
+.ord-master.miss { color: #B4B8C2; font-weight: 500; font-style: italic; }
 .ord-note { font-size: 11.5px; color: #a0a0a0; margin: 8px 2px 20px; font-style: italic; }
 
-.ord-fin { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 22px; }
+.ord-fin { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 22px; }
 .ord-fin-card { background: #fff; border: 1px solid #EEE; border-radius: 10px; padding: 12px 14px; }
 .ord-fin-card span { font-size: 11.5px; color: #999; display: block; margin-bottom: 5px; }
 .ord-fin-card b { font-size: 15px; font-weight: 800; color: #111; }
 .ord-fin-card b.neg { color: #DC2626; }
+.ord-fin-card b.pos { color: #059669; }
 
 .ord-grid2 { display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; }
 .ord-addr-name { font-size: 13px; font-weight: 700; color: #222; }

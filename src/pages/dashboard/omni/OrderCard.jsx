@@ -48,7 +48,7 @@ export default function OrderCard({ order: o, onChangeStatus, busy }) {
         <div className="ord-money">
           <div className="ord-money-label">GMV</div>
           <div className="ord-gmv">{rupiah(o.total)}</div>
-          <div className="ord-cogs">COGS —</div>
+          <div className="ord-cogs">COGS {rupiah(o.totalCogs)}</div>
         </div>
 
         <div className="ord-recv">
@@ -76,12 +76,16 @@ export default function OrderCard({ order: o, onChangeStatus, busy }) {
             {logo && <img src={logo} alt={m.label} className="ord-shop-logo" />}
           </div>
 
-          {/* Rincian item (master produk & COGS menyusul) */}
+          {/* Rincian item + pemetaan master produk (COGS/HPP) */}
           <div className="ord-section-title">Rincian Item</div>
           <div className="ord-items-wrap">
             <table className="ord-items">
               <thead>
-                <tr><th>SKU Pesanan</th><th>Produk</th><th>Qty</th><th>Harga</th><th style={{ textAlign: "right" }}>Subtotal</th></tr>
+                <tr>
+                  <th>SKU Pesanan</th><th>Produk</th><th>Master Produk</th>
+                  <th>Qty</th><th>Harga</th><th>HPP</th>
+                  <th style={{ textAlign: "right" }}>Subtotal</th><th style={{ textAlign: "right" }}>COGS</th>
+                </tr>
               </thead>
               <tbody>
                 {(o.items ?? []).map((it, i) => (
@@ -95,22 +99,30 @@ export default function OrderCard({ order: o, onChangeStatus, busy }) {
                         <span>{it.name}</span>
                       </div>
                     </td>
+                    <td>{it.masterName
+                      ? <span className="ord-master ok">{it.masterName}</span>
+                      : <span className="ord-master miss">Belum dipetakan</span>}</td>
                     <td>{it.qty}</td>
                     <td>{rupiah(it.price)}</td>
+                    <td>{rupiah(it.cost)}</td>
                     <td style={{ textAlign: "right", fontWeight: 700 }}>{rupiah(it.price * it.qty)}</td>
+                    <td style={{ textAlign: "right", fontWeight: 700 }}>{rupiah(it.cogs)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <div className="ord-note">Master produk keluar & COGS/HPP otomatis tampil setelah SKU dipetakan ke master produk.</div>
+          {!o.allMapped && (
+            <div className="ord-note">Tambahkan produk dengan SKU yang sama & isi HPP-nya di Produk Master agar COGS/HPP item bertanda "Belum dipetakan" ikut terhitung.</div>
+          )}
 
           {/* Ringkasan keuangan */}
           <div className="ord-fin">
             <div className="ord-fin-card"><span>Harga Sblm Diskon</span><b>{rupiah(o.subtotalGross)}</b></div>
             <div className="ord-fin-card"><span>Diskon Seller</span><b className="neg">{o.sellerDiscount ? "−" + rupiah(o.sellerDiscount) : "—"}</b></div>
             <div className="ord-fin-card"><span>GMV (Omset)</span><b>{rupiah(o.total)}</b></div>
-            <div className="ord-fin-card"><span>Total Bayar</span><b>{rupiah(o.totalPaid ?? o.total)}</b></div>
+            <div className="ord-fin-card"><span>COGS (HPP)</span><b className="neg">{o.totalCogs != null ? "−" + rupiah(o.totalCogs) : "—"}</b></div>
+            <div className="ord-fin-card"><span>Laba Kotor</span><b className={o.totalCogs != null ? "pos" : ""}>{o.totalCogs != null ? rupiah(o.total - o.totalCogs) : "—"}</b></div>
           </div>
 
           {/* Alamat & logistik */}

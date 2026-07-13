@@ -18,6 +18,8 @@ export const omniApi = {
 
   listProducts:      ()            => api.get('/api/omni/products').then(unwrap),
   createProduct:     (payload)     => api.post('/api/omni/products', payload).then(unwrap),
+  updateProduct:     (id, payload) => api.patch(`/api/omni/products/${id}`, payload).then(unwrap),
+  deleteProduct:     (id)          => api.delete(`/api/omni/products/${id}`).then(unwrap),
   syncStock:         ()            => api.post('/api/omni/products/sync').then(unwrap),
 
   listOrders:        (status)      => api.get('/api/omni/orders', { params: status ? { status } : {} }).then(unwrap),
