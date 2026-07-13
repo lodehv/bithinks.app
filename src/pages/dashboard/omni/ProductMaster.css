@@ -209,3 +209,40 @@
   background: #4F46E5; border-radius: 3px 3px 0 0;
 }
 .po-subtabs .pm-btn { height: 38px; padding: 8px 14px; }
+
+/* Filter platform (multi-select + logo) — panel lega */
+.po-filter { position: relative; }
+.po-filter-btn-active { border-color: #C7C9F9 !important; color: #4F46E5 !important; background: #F7F7FE !important; }
+.po-filter-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 18px; height: 18px; padding: 0 5px; margin-left: 2px;
+  background: #4F46E5; color: #fff; font-size: 0.72rem; font-weight: 700; border-radius: 20px;
+}
+.po-filter-backdrop { position: fixed; inset: 0; z-index: 30; }
+.po-filter-panel {
+  position: absolute; top: calc(100% + 8px); right: 0; z-index: 40;
+  background: #fff; border: 1px solid #E7E7EB; border-radius: 14px;
+  box-shadow: 0 16px 42px rgba(20, 20, 50, 0.16); padding: 14px; min-width: 250px;
+}
+.po-filter-head {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 0.75rem; font-weight: 700; color: #8A909C; text-transform: uppercase;
+  letter-spacing: 0.06em; margin-bottom: 8px; padding: 2px 6px;
+}
+.po-filter-reset {
+  background: none; border: none; cursor: pointer; color: #4F46E5;
+  font-size: 0.78rem; font-weight: 700; text-transform: none; letter-spacing: 0;
+}
+.po-filter-opt {
+  display: flex; align-items: center; gap: 13px; padding: 11px 8px;
+  border-radius: 10px; cursor: pointer; transition: background 0.12s;
+}
+.po-filter-opt:hover { background: #F7F7FE; }
+.po-filter-opt input { width: 17px; height: 17px; accent-color: #4F46E5; cursor: pointer; flex-shrink: 0; }
+.po-filter-logo {
+  width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0;
+  background: #fff; border: 1px solid #EEE; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  display: flex; align-items: center; justify-content: center;
+}
+.po-filter-logo img { width: 22px; height: 22px; object-fit: contain; border-radius: 5px; }
+.po-filter-label { font-size: 0.92rem; font-weight: 600; color: #1F2430; }
