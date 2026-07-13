@@ -36,7 +36,7 @@ const getProductCategory = (p) => {
 const MOCK_PRODUCTS = [
   {
     id: "mock-1",
-    name: "Fashion",
+    name: "Kaos Bithink",
     sku: "TSH-001",
     category: "Fashion",
     unit: "pcs",
@@ -49,7 +49,7 @@ const MOCK_PRODUCTS = [
   },
   {
     id: "mock-2",
-    name: "Fashion",
+    name: "Hoodie Bithink",
     sku: "HD-001",
     category: "Fashion",
     unit: "pcs",
@@ -62,7 +62,7 @@ const MOCK_PRODUCTS = [
   },
   {
     id: "mock-3",
-    name: "Fashion",
+    name: "Jacket Bithink",
     sku: "JK-001",
     category: "Fashion",
     unit: "pcs",
@@ -75,7 +75,7 @@ const MOCK_PRODUCTS = [
   },
   {
     id: "mock-4",
-    name: "Fashion",
+    name: "Kemeja Bithink",
     sku: "SH-001",
     category: "Fashion",
     unit: "pcs",
@@ -88,7 +88,7 @@ const MOCK_PRODUCTS = [
   },
   {
     id: "mock-5",
-    name: "Fashion",
+    name: "Sweater Bithink",
     sku: "HD-002",
     category: "Fashion",
     unit: "pcs",
@@ -574,8 +574,8 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                 <div className="label-text-column">
                   <span className="label-name text-truncate">Fashion</span>
                   <div className="label-details-row">
-                    <span className="label-val">Rp 55,4jt</span>
-                    <span className="label-pct">43%</span>
+                    <span className="label-val">Rp 121,1jt</span>
+                    <span className="label-pct">94%</span>
                   </div>
                 </div>
               </div>
@@ -584,43 +584,7 @@ export default function ProductsTab({ locked, onRequirePayment }) {
               <div className="label-item-grid">
                 <div className="color-dot bg-indigo"></div>
                 <div className="label-text-column">
-                  <span className="label-name text-truncate">Hoodie & Sweater</span>
-                  <div className="label-details-row">
-                    <span className="label-val">Rp 34,8jt</span>
-                    <span className="label-pct">27%</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Category 3 */}
-              <div className="label-item-grid">
-                <div className="color-dot bg-blue"></div>
-                <div className="label-text-column">
-                  <span className="label-name text-truncate">Kemeja & Flanel</span>
-                  <div className="label-details-row">
-                    <span className="label-val">Rp 19,3jt</span>
-                    <span className="label-pct">15%</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Category 4 */}
-              <div className="label-item-grid">
-                <div className="color-dot bg-lavender"></div>
-                <div className="label-text-column">
-                  <span className="label-name text-truncate">Jacket</span>
-                  <div className="label-details-row">
-                    <span className="label-val">Rp 11,5jt</span>
-                    <span className="label-pct">9%</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Category 5 */}
-              <div className="label-item-grid">
-                <div className="color-dot bg-light-violet"></div>
-                <div className="label-text-column">
-                  <span className="label-name text-truncate">Aksesoris</span>
+                  <span className="label-name text-truncate">Bahan Minuman</span>
                   <div className="label-details-row">
                     <span className="label-val">Rp 7,6jt</span>
                     <span className="label-pct">6%</span>
@@ -648,23 +612,23 @@ export default function ProductsTab({ locked, onRequirePayment }) {
               </thead>
               <tbody>
                 <tr>
-                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Fashion</td>
+                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Hoodie Bithink</td>
                   <td className="text-right font-semibold text-black">Rp 18.950.000</td>
                 </tr>
                 <tr>
-                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Fashion</td>
+                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Kaos Bithink</td>
                   <td className="text-right font-semibold text-black">Rp 16.870.000</td>
                 </tr>
                 <tr>
-                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Fashion</td>
+                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Jacket Bithink</td>
                   <td className="text-right font-semibold text-black">Rp 15.420.000</td>
                 </tr>
                 <tr>
-                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Fashion</td>
+                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Sweater Bithink</td>
                   <td className="text-right font-semibold text-black">Rp 12.230.000</td>
                 </tr>
                 <tr>
-                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Fashion</td>
+                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Kemeja Bithink</td>
                   <td className="text-right font-semibold text-black">Rp 10.980.000</td>
                 </tr>
               </tbody>
