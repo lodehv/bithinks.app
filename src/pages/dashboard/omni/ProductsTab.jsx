@@ -12,6 +12,30 @@ import "./OmniModule.css";
 
 const rupiah = (n) => "Rp " + Math.round(n || 0).toLocaleString("id-ID");
 
+const getProductCategory = (p) => {
+  if (p?.category) return p.category;
+  const name = (p?.name || "").toLowerCase();
+  if (name.includes("kaos") || name.includes("t-shirt") || name.includes("baju")) {
+    return "Kaos Oversize";
+  }
+  if (name.includes("hoodie")) {
+    return "Hoodie";
+  }
+  if (name.includes("jacket") || name.includes("jaket")) {
+    return "Jacket";
+  }
+  if (name.includes("kemeja") || name.includes("flanel")) {
+    return "Kemeja & Flanel";
+  }
+  if (name.includes("susu") || name.includes("oat") || name.includes("kopi") || name.includes("aren") || name.includes("cair") || name.includes("barista")) {
+    return "Bahan Minuman";
+  }
+  if (name.includes("pupuk") || name.includes("pmp")) {
+    return "Pertanian & Kebun";
+  }
+  return "Umum";
+};
+
 const MOCK_PRODUCTS = [
   {
     id: "mock-1",
@@ -150,7 +174,7 @@ export default function ProductsTab({ locked, onRequirePayment }) {
 
     // Category Filter
     if (selectedCategory !== "all") {
-      list = list.filter(p => (p.category || "Kaos Oversize").toLowerCase() === selectedCategory.toLowerCase());
+      list = list.filter(p => getProductCategory(p).toLowerCase() === selectedCategory.toLowerCase());
     }
 
     // Sort
@@ -772,7 +796,7 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                         </td>
                         <td>
                           <span className="category-badge-chip">
-                            {p.category || "Kaos Oversize"}
+                            {getProductCategory(p)}
                           </span>
                         </td>
                         <td>{p.unit || "pcs"}</td>
@@ -867,7 +891,7 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                 <div className="info-ledger-list">
                   <div className="ledger-row">
                     <span className="ledger-label">Kategori</span>
-                    <span className="ledger-val font-semibold text-black">{selectedProduct.category || "Kaos Oversize"}</span>
+                    <span className="ledger-val font-semibold text-black">{getProductCategory(selectedProduct)}</span>
                   </div>
                   <div className="ledger-row">
                     <span className="ledger-label">Satuan</span>
