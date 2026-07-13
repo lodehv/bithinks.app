@@ -142,7 +142,10 @@ export default function ProductsTab({ locked, onRequirePayment }) {
 
     // Platform Filter
     if (selectedPlatform !== "all") {
-      list = list.filter(p => p.channels?.includes(selectedPlatform));
+      list = list.filter(p => {
+        const active = p.channels?.map(c => typeof c === "string" ? c : c?.channel) || [];
+        return active.includes(selectedPlatform);
+      });
     }
 
     // Category Filter
@@ -231,24 +234,25 @@ export default function ProductsTab({ locked, onRequirePayment }) {
 
   // Render marketplace icon chips cleanly
   const renderMarketplaceIcons = (channels = []) => {
+    const activeChannels = channels.map(c => typeof c === "string" ? c : c?.channel);
     return (
       <div className="marketplace-icon-chips-row">
-        {channels.includes("shopee") && (
+        {activeChannels.includes("shopee") && (
           <span className="marketplace-icon-chip border-orange" title="Shopee">
             <img src={shopeeLogo} alt="Shopee" />
           </span>
         )}
-        {channels.includes("tiktok") && (
+        {activeChannels.includes("tiktok") && (
           <span className="marketplace-icon-chip border-black" title="TikTok Shop">
             <img src={tiktokLogo} alt="TikTok Shop" />
           </span>
         )}
-        {channels.includes("lazada") && (
+        {activeChannels.includes("lazada") && (
           <span className="marketplace-icon-chip border-pink" title="Lazada">
             <span className="initial-avatar bg-pink">L</span>
           </span>
         )}
-        {channels.includes("tokopedia") && (
+        {activeChannels.includes("tokopedia") && (
           <span className="marketplace-icon-chip border-green" title="Tokopedia">
             <span className="initial-avatar bg-green">T</span>
           </span>
