@@ -12,7 +12,6 @@ import "./OmniModule.css";
 
 const rupiah = (n) => "Rp " + Math.round(n || 0).toLocaleString("id-ID");
 
-// High-fidelity Mock Products representing the exact data rows in the mockup image
 const MOCK_PRODUCTS = [
   {
     id: "mock-1",
@@ -89,6 +88,9 @@ export default function ProductsTab({ locked, onRequirePayment }) {
   const [showForm, setShow]     = useState(false);
   const [editingId, setEditing] = useState(null);
   const [menuFor, setMenuFor]   = useState(null);
+  
+  // Mobile detail drawer state
+  const [isMobileDetailOpen, setIsMobileDetailOpen] = useState(false);
   
   // Filter panel dropdown state
   const [selectedPlatform, setSelectedPlatform] = useState("all");
@@ -255,7 +257,6 @@ export default function ProductsTab({ locked, onRequirePayment }) {
     );
   };
 
-  // SVG Line Chart coordinates calculations (Ringkasan Movement & COGS)
   const chartDays = ["01 Jun", "08 Jun", "15 Jun", "22 Jun", "29 Jun", "06 Jul"];
   const movementPoints = [1350, 2010, 1680, 2240, 1920, 2410];
   const cogsPoints = [750, 1150, 910, 1340, 1080, 1560];
@@ -266,7 +267,7 @@ export default function ProductsTab({ locked, onRequirePayment }) {
     const paddingX = 40;
     const paddingY = 20;
 
-    const maxVal = isRightAxis ? 32000000 : 2400; // Left scale = 2.4k pcs, Right scale = 32jt Rp
+    const maxVal = isRightAxis ? 32000000 : 2400; 
     const minVal = 0;
     const range = maxVal - minVal;
 
@@ -287,18 +288,33 @@ export default function ProductsTab({ locked, onRequirePayment }) {
 
   return (
     <div className="pm-master-container">
-      {/* ─── Page Title, Subtitle and Filters ─── */}
-      <div className="pm-header-wrapper">
+      
+      {/* ─── Row 1: Title and Top Actions Row ─── */}
+      <div className="pm-title-action-header">
         <div className="title-section">
           <h1 className="pm-title">Master Produk</h1>
           <p className="pm-subtitle">Kelola master produk & integrasi SKU marketplace secara terpusat</p>
         </div>
+        <div className="pm-header-actions-group">
+          <button className="pm-btn pm-btn-mapping" onClick={() => (locked ? onRequirePayment?.() : sync())}>
+            <Layers size={14} />
+            <span>Mapping SKU</span>
+          </button>
+          <button className="pm-btn pm-btn-add-product" onClick={() => (locked ? onRequirePayment?.() : openAdd())}>
+            <Plus size={14} />
+            <span>Tambah Produk</span>
+          </button>
+        </div>
+      </div>
 
-        <div className="filters-actions-bar">
-          {/* Filters Grid */}
-          <div className="filters-inputs-grid">
-            <div className="filter-input-select-box">
-              <label>Platform</label>
+      {/* ─── Row 2: Filter Toolbar Bar ─── */}
+      <div className="pm-filter-toolbar-row">
+        <div className="filters-inputs-grid">
+          
+          {/* Custom Styled Select: Platform */}
+          <div className="filter-input-select-box">
+            <label>Platform</label>
+            <div className="premium-select-wrapper">
               <select value={selectedPlatform} onChange={(e) => setSelectedPlatform(e.target.value)}>
                 <option value="all">Semua Platform</option>
                 <option value="shopee">Shopee</option>
@@ -306,19 +322,27 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                 <option value="lazada">Lazada</option>
                 <option value="tokopedia">Tokopedia</option>
               </select>
+              <ChevronDown size={12} className="select-chevron-icon" />
             </div>
+          </div>
 
-            <div className="filter-input-select-box">
-              <label>Toko</label>
+          {/* Custom Styled Select: Toko */}
+          <div className="filter-input-select-box">
+            <label>Toko</label>
+            <div className="premium-select-wrapper">
               <select value={selectedStore} onChange={(e) => setSelectedStore(e.target.value)}>
                 <option value="all">Toko BitOmni</option>
                 <option value="shopee-1">Shopee - Toko BitOmni</option>
                 <option value="tiktok-1">TikTok Shop - Toko BitOmni</option>
               </select>
+              <ChevronDown size={12} className="select-chevron-icon" />
             </div>
+          </div>
 
-            <div className="filter-input-select-box">
-              <label>Kategori</label>
+          {/* Custom Styled Select: Kategori */}
+          <div className="filter-input-select-box">
+            <label>Kategori</label>
+            <div className="premium-select-wrapper">
               <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
                 <option value="all">Semua Kategori</option>
                 <option value="Kaos Oversize">Kaos Oversize</option>
@@ -326,118 +350,108 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                 <option value="Jacket">Jacket</option>
                 <option value="Kemeja & Flanel">Kemeja & Flanel</option>
               </select>
+              <ChevronDown size={12} className="select-chevron-icon" />
             </div>
+          </div>
 
-            <div className="filter-input-select-box date-range-picker-input">
-              <label>Periode</label>
-              <div className="date-input-icon-row">
-                <Calendar size={13} className="text-gray" />
-                <span>01 Jun 2026 - 07 Jul 2026</span>
-              </div>
+          {/* Periode Info picker */}
+          <div className="filter-input-select-box date-range-picker-input">
+            <label>Periode</label>
+            <div className="date-input-icon-row">
+              <Calendar size={13} className="text-gray" />
+              <span>01 Jun 2026 - 07 Jul 2026</span>
             </div>
-            
-            <button className="pm-btn pm-btn-export" onClick={download} disabled={!all.length}>
-              <Download size={14} />
-              <span>Export</span>
-            </button>
           </div>
         </div>
-      </div>
 
-      {/* Sub header Action Row */}
-      <div className="pm-sub-actions-row">
-        <button className="pm-btn pm-btn-mapping" onClick={() => (locked ? onRequirePayment?.() : sync())}>
-          <Layers size={14} />
-          <span>Mapping SKU</span>
-        </button>
-        <button className="pm-btn pm-btn-add-product" onClick={() => (locked ? onRequirePayment?.() : openAdd())}>
-          <Plus size={14} />
-          <span>Tambah Produk</span>
+        <button className="pm-btn pm-btn-export" onClick={download} disabled={!all.length}>
+          <Download size={14} />
+          <span>Export</span>
         </button>
       </div>
 
-      {note  && <div className="omni-pill sync"  style={{ margin: "16px 0 0" }}><Check size={12} /> {note}</div>}
-      {error && <div className="omni-pill error" style={{ margin: "16px 0 0" }}><AlertTriangle size={12} /> {error}</div>}
+      {note  && <div className="omni-pill sync"  style={{ margin: "4px 0 0" }}><Check size={12} /> {note}</div>}
+      {error && <div className="omni-pill error" style={{ margin: "4px 0 0" }}><AlertTriangle size={12} /> {error}</div>}
 
-      {/* ─── Row of 5 KPI Summary Cards ─── */}
+      {/* ─── Row of 5 KPI Summary Cards (Vertical Layout) ─── */}
       <div className="pm-kpi-row-grid">
         {/* Card 1: Total Master Produk */}
         <div className="pm-kpi-metric-card">
-          <div className="kpi-icon-badge bg-purple-light text-purple">
-            <Package size={18} />
-          </div>
-          <div className="kpi-content-column">
-            <span className="kpi-label">Total Master Produk</span>
-            <h2 className="kpi-number-value">{totalMasterProdukCount}</h2>
-            <div className="kpi-subtext-row">
-              <span className="subtext-muted">Produk aktif</span>
-              <span className="subtext-trend text-purple">↑ 8 produk baru</span>
+          <div className="kpi-card-header-row">
+            <div className="kpi-icon-badge bg-purple-light text-purple">
+              <Package size={16} />
             </div>
+            <span className="kpi-label">Total Master Produk</span>
+          </div>
+          <h2 className="kpi-number-value">{totalMasterProdukCount}</h2>
+          <div className="kpi-card-footer-row">
+            <span className="subtext-trend text-purple">↑ 8 baru</span>
+            <span className="subtext-muted">Produk aktif</span>
           </div>
         </div>
 
         {/* Card 2: Total SKU Marketplace */}
         <div className="pm-kpi-metric-card">
-          <div className="kpi-icon-badge bg-purple-light text-purple">
-            <Layers size={18} />
-          </div>
-          <div className="kpi-content-column">
-            <span className="kpi-label">Total SKU Marketplace</span>
-            <h2 className="kpi-number-value">{totalSkuMarketplaceCount}</h2>
-            <div className="kpi-subtext-row">
-              <span className="subtext-muted">SKU terhubung</span>
-              <span className="subtext-trend text-purple">↑ 11% dari periode lalu</span>
+          <div className="kpi-card-header-row">
+            <div className="kpi-icon-badge bg-purple-light text-purple">
+              <Layers size={16} />
             </div>
+            <span className="kpi-label">Total SKU Marketplace</span>
+          </div>
+          <h2 className="kpi-number-value">{totalSkuMarketplaceCount}</h2>
+          <div className="kpi-card-footer-row">
+            <span className="subtext-trend text-purple">↑ 11%</span>
+            <span className="subtext-muted">SKU terhubung</span>
           </div>
         </div>
 
         {/* Card 3: Total Movement (Keluar) */}
         <div className="pm-kpi-metric-card">
-          <div className="kpi-icon-badge bg-purple-light text-purple">
-            <TrendingUp size={18} />
-          </div>
-          <div className="kpi-content-column">
-            <span className="kpi-label">Total Movement (Keluar)</span>
-            <h2 className="kpi-number-value">{totalMovementKeluarCount.toLocaleString("id-ID")} <span className="kpi-value-unit">pcs / unit</span></h2>
-            <div className="kpi-subtext-row">
-              <span className="subtext-muted">Keluar / dikirim</span>
-              <span className="subtext-trend text-purple">↑ 14% dari periode lalu</span>
+          <div className="kpi-card-header-row">
+            <div className="kpi-icon-badge bg-purple-light text-purple">
+              <TrendingUp size={16} />
             </div>
+            <span className="kpi-label">Total Movement (Keluar)</span>
+          </div>
+          <h2 className="kpi-number-value">{totalMovementKeluarCount.toLocaleString("id-ID")} <span className="kpi-value-unit">pcs</span></h2>
+          <div className="kpi-card-footer-row">
+            <span className="subtext-trend text-purple">↑ 14%</span>
+            <span className="subtext-muted">Keluar / dikirim</span>
           </div>
         </div>
 
         {/* Card 4: Total COGS */}
         <div className="pm-kpi-metric-card">
-          <div className="kpi-icon-badge bg-purple-light text-purple">
-            <DollarSign size={18} />
-          </div>
-          <div className="kpi-content-column">
-            <span className="kpi-label">Total COGS</span>
-            <h2 className="kpi-number-value">{rupiah(totalCogsSum)}</h2>
-            <div className="kpi-subtext-row">
-              <span className="subtext-muted">Total biaya pokok</span>
-              <span className="subtext-trend text-purple">↑ 9.7% dari periode lalu</span>
+          <div className="kpi-card-header-row">
+            <div className="kpi-icon-badge bg-purple-light text-purple">
+              <DollarSign size={16} />
             </div>
+            <span className="kpi-label">Total COGS</span>
+          </div>
+          <h2 className="kpi-number-value">{rupiah(totalCogsSum)}</h2>
+          <div className="kpi-card-footer-row">
+            <span className="subtext-trend text-purple">↑ 9.7%</span>
+            <span className="subtext-muted">Total biaya pokok</span>
           </div>
         </div>
 
         {/* Card 5: Stok Tersedia (Fisik) */}
         <div className="pm-kpi-metric-card">
-          <div className="kpi-icon-badge bg-purple-light text-purple">
-            <ShoppingBag size={18} />
-          </div>
-          <div className="kpi-content-column">
-            <span className="kpi-label">Stok Tersedia (Fisik)</span>
-            <h2 className="kpi-number-value">{totalStokTersediaSum.toLocaleString("id-ID")} <span className="kpi-value-unit">pcs / unit</span></h2>
-            <div className="kpi-subtext-row">
-              <span className="subtext-muted">Total fisik gudang</span>
-              <span className="subtext-trend text-orange">32 produk low stock</span>
+          <div className="kpi-card-header-row">
+            <div className="kpi-icon-badge bg-purple-light text-purple">
+              <ShoppingBag size={16} />
             </div>
+            <span className="kpi-label">Stok Tersedia (Fisik)</span>
+          </div>
+          <h2 className="kpi-number-value">{totalStokTersediaSum.toLocaleString("id-ID")} <span className="kpi-value-unit">pcs</span></h2>
+          <div className="kpi-card-footer-row">
+            <span className="subtext-trend text-orange">32 low</span>
+            <span className="subtext-muted">Total fisik gudang</span>
           </div>
         </div>
       </div>
 
-      {/* ─── Middle Section (Analytics, Donut Chart, Top 5 Products) ─── */}
+      {/* ─── Middle Section (Analytics: Line Chart, Donut Chart, Top 5 Products) ─── */}
       <div className="pm-analytics-grid-row">
         
         {/* Column 1: Ringkasan Movement & COGS */}
@@ -451,10 +465,8 @@ export default function ProductsTab({ locked, onRequirePayment }) {
             </div>
           </div>
           <div className="card-item-body">
-            {/* SVG Chart */}
             <div className="trend-svg-chart-wrapper">
               <svg width="100%" height="150" viewBox="0 0 450 150" preserveAspectRatio="none" className="trend-svg">
-                {/* Dashed Horizontal Grid Lines */}
                 {[0, 0.33, 0.66, 1].map((ratio, idx) => {
                   const y = 20 + ratio * 110;
                   return (
@@ -462,7 +474,6 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                   );
                 })}
 
-                {/* Vertical grid lines */}
                 {chartDays.map((day, idx) => {
                   const x = 40 + (idx / 5) * 370;
                   return (
@@ -473,26 +484,21 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                   );
                 })}
 
-                {/* Left Y-axis labels (Movement pcs) */}
                 <text x="35" y="23" textAnchor="end" fontSize="8" fill="#9CA3AF" fontWeight="700">2.4k</text>
                 <text x="35" y="59" textAnchor="end" fontSize="8" fill="#9CA3AF" fontWeight="700">1.8k</text>
                 <text x="35" y="95" textAnchor="end" fontSize="8" fill="#9CA3AF" fontWeight="700">1.2k</text>
                 <text x="35" y="131" textAnchor="end" fontSize="8" fill="#9CA3AF" fontWeight="700">0</text>
 
-                {/* Right Y-axis labels (COGS Rp) */}
                 <text x="415" y="23" textAnchor="start" fontSize="8" fill="#9CA3AF" fontWeight="700">32 jt</text>
                 <text x="415" y="59" textAnchor="start" fontSize="8" fill="#9CA3AF" fontWeight="700">24 jt</text>
                 <text x="415" y="95" textAnchor="start" fontSize="8" fill="#9CA3AF" fontWeight="700">16 jt</text>
                 <text x="415" y="131" textAnchor="start" fontSize="8" fill="#9CA3AF" fontWeight="700">0</text>
 
-                {/* Path Lines */}
-                {/* 1. Movement path (Purple) */}
                 <path d={getPathD(coordsMovement)} fill="none" stroke="#4F46E5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 {coordsMovement.map((c, i) => (
                   <circle key={i} cx={c.x} cy={c.y} r="2.5" fill="#ffffff" stroke="#4F46E5" strokeWidth="1.5" />
                 ))}
 
-                {/* 2. COGS path (Light Purple) */}
                 <path d={getPathD(coordsCogs)} fill="none" stroke="#A78BFA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 {coordsCogs.map((c, i) => (
                   <circle key={i} cx={c.x} cy={c.y} r="2.5" fill="#ffffff" stroke="#A78BFA" strokeWidth="1.5" />
@@ -500,7 +506,6 @@ export default function ProductsTab({ locked, onRequirePayment }) {
               </svg>
             </div>
             
-            {/* Chart Legend row */}
             <div className="chart-legend-labels-row">
               <div className="legend-label-chip">
                 <span className="dot bg-purple"></span>
@@ -514,91 +519,90 @@ export default function ProductsTab({ locked, onRequirePayment }) {
           </div>
         </div>
 
-        {/* Column 2: Breakdown COGS per Kategori */}
+        {/* Column 2: Breakdown COGS per Kategori (Legend positioned below chart in a 2-column grid) */}
         <div className="analytics-card-item">
           <div className="card-item-header">
             <h3>Breakdown COGS per Kategori</h3>
             <button className="text-purple-link">Lihat Detail</button>
           </div>
-          <div className="card-item-body flex-row-align">
-            {/* Donut SVG */}
-            <div className="donut-chart-wrapper">
+          <div className="card-item-body vertical-stack-layout">
+            <div className="donut-chart-wrapper centered-donut">
               <svg width="100" height="100" viewBox="0 0 100 100" className="donut-svg">
-                {/* Background base circle */}
                 <circle cx="50" cy="50" r="38" fill="transparent" stroke="#F3F4F6" strokeWidth="8" />
-                
-                {/* Segments: Kaos Oversize 43%, Hoodie & Sweater 27%, Kemeja & Flanel 15%, Jacket 9%, Aksesoris 6% */}
-                {/* Total circumference: 2 * Math.PI * 38 = ~238.76 */}
-                {/* Slices:
-                    - Kaos Oversize (43% = 102.66), offset = 0
-                    - Hoodie (27% = 64.46), offset = -102.66
-                    - Kemeja (15% = 35.81), offset = -167.12
-                    - Jacket (9% = 21.48), offset = -202.93
-                    - Aksesoris (6% = 14.32), offset = -224.41
-                */}
-                {/* 1. Kaos Oversize (Purple) */}
                 <circle cx="50" cy="50" r="38" fill="transparent" stroke="#4F46E5" strokeWidth="8" strokeDasharray="102.66 136.1" strokeDashoffset="0" transform="rotate(-90 50 50)" />
-                {/* 2. Hoodie (Indigo) */}
                 <circle cx="50" cy="50" r="38" fill="transparent" stroke="#818CF8" strokeWidth="8" strokeDasharray="64.46 174.3" strokeDashoffset="-102.66" transform="rotate(-90 50 50)" />
-                {/* 3. Kemeja (Blue) */}
                 <circle cx="50" cy="50" r="38" fill="transparent" stroke="#60A5FA" strokeWidth="8" strokeDasharray="35.81 202.95" strokeDashoffset="-167.12" transform="rotate(-90 50 50)" />
-                {/* 4. Jacket (Lavender) */}
                 <circle cx="50" cy="50" r="38" fill="transparent" stroke="#A78BFA" strokeWidth="8" strokeDasharray="21.48 217.28" strokeDashoffset="-202.93" transform="rotate(-90 50 50)" />
-                {/* 5. Aksesoris (Light Violet) */}
                 <circle cx="50" cy="50" r="38" fill="transparent" stroke="#C7C9F9" strokeWidth="8" strokeDasharray="14.32 224.44" strokeDashoffset="-224.41" transform="rotate(-90 50 50)" />
               </svg>
               <div className="donut-inner-text">
                 <span className="text-small">Total</span>
-                <span className="text-bold">Rp 128,75 jt</span>
+                <span className="text-bold">Rp 128,7jt</span>
               </div>
             </div>
 
-            {/* Donut Legend list */}
-            <div className="donut-labels-list">
-              <div className="label-item">
+            <div className="donut-labels-list-grid">
+              
+              {/* Category 1 */}
+              <div className="label-item-grid">
                 <div className="color-dot bg-purple"></div>
-                <div className="label-info-group">
-                  <span className="label-name">Kaos Oversize</span>
-                  <span className="label-val">Rp 55,41 jt</span>
+                <div className="label-text-column">
+                  <span className="label-name text-truncate">Kaos Oversize</span>
+                  <div className="label-details-row">
+                    <span className="label-val">Rp 55,4jt</span>
+                    <span className="label-pct">43%</span>
+                  </div>
                 </div>
-                <span className="label-pct">43%</span>
               </div>
 
-              <div className="label-item">
+              {/* Category 2 */}
+              <div className="label-item-grid">
                 <div className="color-dot bg-indigo"></div>
-                <div className="label-info-group">
-                  <span className="label-name">Hoodie & Sweater</span>
-                  <span className="label-val">Rp 34,80 jt</span>
+                <div className="label-text-column">
+                  <span className="label-name text-truncate">Hoodie & Sweater</span>
+                  <div className="label-details-row">
+                    <span className="label-val">Rp 34,8jt</span>
+                    <span className="label-pct">27%</span>
+                  </div>
                 </div>
-                <span className="label-pct">27%</span>
               </div>
 
-              <div className="label-item">
+              {/* Category 3 */}
+              <div className="label-item-grid">
                 <div className="color-dot bg-blue"></div>
-                <div className="label-info-group">
-                  <span className="label-name">Kemeja & Flanel</span>
-                  <span className="label-val">Rp 19,33 jt</span>
+                <div className="label-text-column">
+                  <span className="label-name text-truncate">Kemeja & Flanel</span>
+                  <div className="label-details-row">
+                    <span className="label-val">Rp 19,3jt</span>
+                    <span className="label-pct">15%</span>
+                  </div>
                 </div>
-                <span className="label-pct">15%</span>
               </div>
 
-              <div className="label-item">
+              {/* Category 4 */}
+              <div className="label-item-grid">
                 <div className="color-dot bg-lavender"></div>
-                <div className="label-info-group">
-                  <span className="label-name">Jacket</span>
-                  <span className="label-val">Rp 11,57 jt</span>
+                <div className="label-text-column">
+                  <span className="label-name text-truncate">Jacket</span>
+                  <div className="label-details-row">
+                    <span className="label-val">Rp 11,5jt</span>
+                    <span className="label-pct">9%</span>
+                  </div>
                 </div>
-                <span className="label-pct">9%</span>
               </div>
 
-              <div className="label-item">
+              {/* Category 5 */}
+              <div className="label-item-grid">
                 <div className="color-dot bg-light-violet"></div>
-                <div className="label-info-group">
-                  <span className="label-name">Aksesoris</span>
-                  <span className="label-val">Rp 7,64 jt</span>
+                <div className="label-text-column">
+                  <span className="label-name text-truncate">Aksesoris</span>
+                  <div className="label-details-row">
+                    <span className="label-val">Rp 7,6jt</span>
+                    <span className="label-pct">6%</span>
+                  </div>
                 </div>
-                <span className="label-pct">6%</span>
               </div>
+
             </div>
           </div>
         </div>
@@ -606,7 +610,7 @@ export default function ProductsTab({ locked, onRequirePayment }) {
         {/* Column 3: Top 5 Produk (COGS Tertinggi) */}
         <div className="analytics-card-item">
           <div className="card-item-header">
-            <h3>Top 5 Produk (COGS Tertinggi)</h3>
+            <h3>Top 5 Produk (COGS/Harga Pokok)</h3>
             <button className="text-purple-link">Lihat Semua</button>
           </div>
           <div className="card-item-body no-padding">
@@ -614,28 +618,28 @@ export default function ProductsTab({ locked, onRequirePayment }) {
               <thead>
                 <tr>
                   <th>Produk</th>
-                  <th className="text-right">COGS (Rp)</th>
+                  <th className="text-right">COGS</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="font-semibold text-black">Hoodie BitOmni Signature</td>
+                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Hoodie BitOmni Signature</td>
                   <td className="text-right font-semibold text-black">Rp 18.950.000</td>
                 </tr>
                 <tr>
-                  <td className="font-semibold text-black">Kaos Oversize Graphic</td>
+                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Kaos Oversize Graphic</td>
                   <td className="text-right font-semibold text-black">Rp 16.870.000</td>
                 </tr>
                 <tr>
-                  <td className="font-semibold text-black">Jacket Varsity BitOmni</td>
+                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Jacket Varsity BitOmni</td>
                   <td className="text-right font-semibold text-black">Rp 15.420.000</td>
                 </tr>
                 <tr>
-                  <td className="font-semibold text-black">Hoodie Essential Black</td>
+                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Hoodie Essential Black</td>
                   <td className="text-right font-semibold text-black">Rp 12.230.000</td>
                 </tr>
                 <tr>
-                  <td className="font-semibold text-black">Kemeja Flanel Premium</td>
+                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Kemeja Flanel Premium</td>
                   <td className="text-right font-semibold text-black">Rp 10.980.000</td>
                 </tr>
               </tbody>
@@ -645,7 +649,7 @@ export default function ProductsTab({ locked, onRequirePayment }) {
 
       </div>
 
-      {/* ─── Bottom Section (Split-Pane layout: Products Table & Product Details Card) ─── */}
+      {/* ─── Bottom Section (Split-Pane: Products Table & Product Details Card) ─── */}
       <div className="pm-split-layout-wrapper">
         
         {/* Left Hand: Main Products Table */}
@@ -667,37 +671,49 @@ export default function ProductsTab({ locked, onRequirePayment }) {
               )}
             </div>
 
+            {/* Premium Select: Status Produk */}
             <div className="sub-filter-select-box">
               <label>Status Produk</label>
-              <select value={selectedStatus} onChange={(e) => setSelectedStatus(e.target.value)}>
-                <option value="active">Aktif</option>
-                <option value="inactive">Non-aktif</option>
-              </select>
+              <div className="premium-select-wrapper">
+                <select value={selectedStatus} onChange={(e) => setSelectedStatus(e.target.value)}>
+                  <option value="active">Aktif</option>
+                  <option value="inactive">Non-aktif</option>
+                </select>
+                <ChevronDown size={10} className="select-chevron-icon" />
+              </div>
             </div>
 
+            {/* Premium Select: Kategori */}
             <div className="sub-filter-select-box">
               <label>Kategori</label>
-              <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
-                <option value="all">Semua</option>
-                <option value="Kaos Oversize">Kaos Oversize</option>
-                <option value="Hoodie">Hoodie</option>
-                <option value="Jacket">Jacket</option>
-                <option value="Kemeja & Flanel">Kemeja & Flanel</option>
-              </select>
+              <div className="premium-select-wrapper">
+                <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+                  <option value="all">Semua</option>
+                  <option value="Kaos Oversize">Kaos Oversize</option>
+                  <option value="Hoodie">Hoodie</option>
+                  <option value="Jacket">Jacket</option>
+                  <option value="Kemeja & Flanel">Kemeja & Flanel</option>
+                </select>
+                <ChevronDown size={10} className="select-chevron-icon" />
+              </div>
             </div>
 
+            {/* Premium Select: Satuan */}
             <div className="sub-filter-select-box">
               <label>Satuan</label>
-              <select value={selectedUnit} onChange={(e) => setSelectedUnit(e.target.value)}>
-                <option value="all">Semua</option>
-                <option value="pcs">pcs</option>
-                <option value="box">box</option>
-              </select>
+              <div className="premium-select-wrapper">
+                <select value={selectedUnit} onChange={(e) => setSelectedUnit(e.target.value)}>
+                  <option value="all">Semua</option>
+                  <option value="pcs">pcs</option>
+                  <option value="box">box</option>
+                </select>
+                <ChevronDown size={10} className="select-chevron-icon" />
+              </div>
             </div>
 
             <button className="pm-btn pm-btn-filter-more">
               <SlidersHorizontal size={13} />
-              <span>Filter Lainnya</span>
+              <span>Filter</span>
             </button>
           </div>
 
@@ -734,16 +750,19 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                       <tr 
                         key={p.id} 
                         className={`table-row-item ${isSelected ? "row-selected" : ""}`}
-                        onClick={() => setSelectedProductId(p.id)}
+                        onClick={() => {
+                          setSelectedProductId(p.id);
+                          setIsMobileDetailOpen(true);
+                        }}
                       >
                         <td>
                           <div className="table-product-info-cell">
                             <span className="cell-thumbnail">
                               {p.imageUrl ? <img src={p.imageUrl} alt="" /> : <PackageOpen size={14} className="text-gray" />}
                             </span>
-                            <div className="cell-name-sku">
-                              <span className="product-name-txt">{p.name}</span>
-                              <span className="product-sku-txt">{p.sku}</span>
+                            <div className="cell-name-sku text-truncate" style={{ maxWidth: 180 }}>
+                              <span className="product-name-txt text-truncate">{p.name}</span>
+                              <span className="product-sku-txt text-truncate">{p.sku}</span>
                             </div>
                           </div>
                         </td>
@@ -783,7 +802,6 @@ export default function ProductsTab({ locked, onRequirePayment }) {
             </table>
           </div>
 
-          {/* Table Pagination Footer */}
           <div className="pm-table-footer-pagination-row">
             <span className="showing-entries-label">
               Menampilkan 1 - {shown.length} dari {all.length} produk
@@ -811,11 +829,23 @@ export default function ProductsTab({ locked, onRequirePayment }) {
           </div>
         </div>
 
-        {/* Right Hand: Product Detail Side Panel */}
-        <div className="pm-detail-side-panel">
+        {/* Mobile Backdrop Overlay for bottom drawer */}
+        {isMobileDetailOpen && (
+          <div className="mobile-backdrop-overlay" onClick={() => setIsMobileDetailOpen(false)} />
+        )}
+
+        {/* Right Hand: Product Detail Side Panel / Slide-up Bottom Sheet */}
+        <div className={`pm-detail-side-panel ${isMobileDetailOpen ? "mobile-open" : ""}`}>
           {selectedProduct ? (
             <div className="detail-panel-card-content">
-              {/* Product Thumbnail Banner */}
+              {/* Mobile Drawer Notch Bar */}
+              <div className="mobile-drawer-handle-bar"></div>
+
+              {/* Close Button for mobile view */}
+              <button className="mobile-detail-close-btn" onClick={() => setIsMobileDetailOpen(false)}>
+                <X size={16} />
+              </button>
+
               <div className="detail-product-banner">
                 {selectedProduct.imageUrl ? (
                   <img src={selectedProduct.imageUrl} alt="" className="banner-img" />
@@ -826,16 +856,14 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                 )}
               </div>
 
-              {/* Title & SKU code & Status Badge */}
               <div className="detail-title-section-row">
-                <div className="title-sku-group">
-                  <h3 className="detail-product-name">{selectedProduct.name}</h3>
-                  <span className="detail-product-sku">{selectedProduct.sku}</span>
+                <div className="title-sku-group text-truncate" style={{ maxWidth: "80%" }}>
+                  <h3 className="detail-product-name text-truncate">{selectedProduct.name}</h3>
+                  <span className="detail-product-sku text-truncate">{selectedProduct.sku}</span>
                 </div>
                 <span className="detail-status-badge">Aktif</span>
               </div>
 
-              {/* Informasi Produk Table Sheet */}
               <div className="detail-info-block-section">
                 <h4>Informasi Produk</h4>
                 <div className="info-ledger-list">
@@ -868,7 +896,6 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                 </div>
               </div>
 
-              {/* Connected SKU Marketplace channels */}
               <div className="detail-connected-skus-section">
                 <h4>SKU Marketplace Terhubung ({selectedProduct.channels?.length || 0})</h4>
                 <div className="connected-channels-rows-list">
@@ -914,8 +941,11 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                 </div>
               </div>
 
-              {/* CTA button */}
-              <button className="pm-btn pm-btn-detail-link" onClick={() => (locked ? onRequirePayment?.() : openEdit(selectedProduct))}>
+              <button className="pm-btn pm-btn-detail-link" onClick={() => {
+                setIsMobileDetailOpen(false);
+                if (locked) onRequirePayment?.();
+                else openEdit(selectedProduct);
+              }}>
                 Lihat Detail Produk
               </button>
             </div>
