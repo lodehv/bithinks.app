@@ -28,9 +28,10 @@ export const omniApi = {
 }
 
 export const subscriptionApi = {
-  status:        ()            => api.get('/api/subscription/status').then(unwrap),
-  paymentInfo:   (months = 1)  => api.get('/api/subscription/payment', { params: { months } }).then(unwrap),
-  submitPayment: (payload)     => api.post('/api/subscription/payment', payload).then(unwrap),
+  status:   ()            => api.get('/api/subscription/status').then(unwrap),
+  // Buat sesi bayar iPaymu → { paymentUrl, reference, amount, periodMonths }.
+  // Frontend mengarahkan browser ke paymentUrl.
+  checkout: (months = 1)  => api.post('/api/subscription/checkout', { periodMonths: months }).then(unwrap),
 }
 
 /** True bila error berasal dari gate langganan (trial/langganan habis). */
