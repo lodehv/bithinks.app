@@ -4,7 +4,7 @@ import { omniApi, isPaymentRequired } from "../../../utils/omniApi";
 import OrderCard from "./OrderCard";
 import shopeeLogo from "../../../assets/logo_pilihan_fitur/shopee.png";
 import tiktokLogo from "../../../assets/logo_pilihan_fitur/logo_tiktok.jpg";
-import "./ProductMaster.css";
+import "./OrdersPage.css";
 import "./OmniModule.css";
 
 const PLATFORMS = [
@@ -126,37 +126,37 @@ export default function OrdersTab({ locked, onRequirePayment }) {
   };
 
   return (
-    <div className="pm-page">
-      <div className="pm-head">
-        <h1 className="pm-title">Pesanan</h1>
-        <div className="pm-head-actions">
-          <button className="pm-btn pm-btn-outline" onClick={download} disabled={!all.length}>
+    <div className="op-page">
+      <div className="op-head">
+        <h1 className="op-title">Pesanan</h1>
+        <div className="op-head-actions">
+          <button className="op-btn op-btn-outline" onClick={download} disabled={!all.length}>
             <Download size={16} /> Unduh <ChevronDown size={14} />
           </button>
         </div>
       </div>
 
       {/* Tabs status */}
-      <div className="pm-tabs po-tabs">
+      <div className="op-tabs po-tabs">
         {STATUS_TABS.map((t) => (
-          <button key={t.id} className={`pm-tab ${tab === t.id ? "active" : ""}`} onClick={() => setTab(t.id)}>
-            {t.label}{t.count && <span className="pm-tab-count">{counts[t.id]}</span>}
+          <button key={t.id} className={`op-tab ${tab === t.id ? "active" : ""}`} onClick={() => setTab(t.id)}>
+            {t.label}{t.count && <span className="op-tab-count">{counts[t.id]}</span>}
           </button>
         ))}
       </div>
 
       {/* Toolbar */}
-      <div className="pm-toolbar po-toolbar">
+      <div className="op-toolbar po-toolbar">
         <div className="po-searchgroup">
           <span className="po-field-select">No. Pesanan <ChevronDown size={14} /></span>
           <span className="po-search"><Search size={17} /><input placeholder="Cari nomor pesanan" value={search} onChange={(e) => setSearch(e.target.value)} /></span>
         </div>
-        <div className="pm-sort">
-          <button className="pm-btn pm-btn-outline" onClick={() => setSortOpen((o) => !o)}>Urutkan <ChevronDown size={14} /></button>
+        <div className="op-sort">
+          <button className="op-btn op-btn-outline" onClick={() => setSortOpen((o) => !o)}>Urutkan <ChevronDown size={14} /></button>
           {sortOpen && (
-            <div className="pm-sort-menu">
+            <div className="op-sort-menu">
               {SORTS.map((s) => (
-                <div key={s.id} className={`pm-sort-opt ${sortBy === s.id ? "active" : ""}`} onClick={() => { setSortBy(s.id); setSortOpen(false); }}>{s.label}</div>
+                <div key={s.id} className={`op-sort-opt ${sortBy === s.id ? "active" : ""}`} onClick={() => { setSortBy(s.id); setSortOpen(false); }}>{s.label}</div>
               ))}
             </div>
           )}
@@ -168,7 +168,7 @@ export default function OrdersTab({ locked, onRequirePayment }) {
           <input type="date" value={to} onChange={(e) => setTo(e.target.value)} aria-label="Sampai" />
         </div>
         <div className="po-filter">
-          <button className={`pm-btn pm-btn-outline ${channels.size ? "po-filter-btn-active" : ""}`} onClick={() => setFilterOpen((o) => !o)}>
+          <button className={`op-btn op-btn-outline ${channels.size ? "po-filter-btn-active" : ""}`} onClick={() => setFilterOpen((o) => !o)}>
             <SlidersHorizontal size={15} /> Filter{channels.size > 0 && <span className="po-filter-badge">{channels.size}</span>}
           </button>
           {filterOpen && (
@@ -217,13 +217,13 @@ export default function OrdersTab({ locked, onRequirePayment }) {
               </button>
             ))}
           </div>
-          {SUBTABS[tab].action && <button className="pm-btn pm-btn-outline">{SUBTABS[tab].action}</button>}
+          {SUBTABS[tab].action && <button className="op-btn op-btn-outline">{SUBTABS[tab].action}</button>}
         </div>
       )}
 
       {/* List / empty */}
       {orders === null ? (
-        <div className="pm-state">Memuat pesanan…</div>
+        <div className="op-state">Memuat pesanan…</div>
       ) : paged.length === 0 ? (
         <div className="po-empty">
           <div className="po-empty-illust"><Search size={40} strokeWidth={2.2} /></div>
