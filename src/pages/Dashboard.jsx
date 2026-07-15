@@ -7,6 +7,8 @@ import ProductsTab from "./dashboard/omni/ProductsTab";
 import OrdersTab from "./dashboard/omni/OrdersTab";
 import PaymentPage from "./dashboard/PaymentPage";
 import PricingPage from "./dashboard/PricingPage";
+import AdminPanel from "./dashboard/AdminPanel";
+import { ADMIN_EMAIL } from "./dashboard/DashboardLayout";
 import ModulePlaceholder from "./dashboard/ModulePlaceholder";
 import MarketingDashboard from "./dashboard/MarketingDashboard";
 import { subscriptionApi } from "../utils/omniApi";
@@ -22,6 +24,7 @@ const PAGES = {
   marketing:        { title: "Dashboard Marketing"    },
   settings:         { title: "Pengaturan"             },
   payment:          { title: "Pembayaran"             },
+  admin:            { title: "Panel Admin"            },
 };
 
 // ─── Banner billing global (status langganan live) ────────────────────────────
@@ -62,7 +65,8 @@ const billBtn = {
 };
 
 export default function Dashboard() {
-  const { isAuthenticated } = useAppContext();
+  const { isAuthenticated, user } = useAppContext();
+  const isAdmin = (user?.email ?? "").toLowerCase() === ADMIN_EMAIL;
   const [activeMenu, setActiveMenu] = useState("dashboard");
   const [sub, setSub] = useState(null);
   const [payPlan, setPayPlan] = useState(null); // paket terpilih di halaman pricing
@@ -133,6 +137,7 @@ export default function Dashboard() {
           {activeMenu === "kelola-produk"  && <div className="omni"><ProductsTab locked={locked} onRequirePayment={goToPayment} /></div>}
           {activeMenu === "marketing"      && <MarketingDashboard />}
           {activeMenu === "settings"       && <ModulePlaceholder name="Pengaturan" icon={Settings} />}
+          {activeMenu === "admin"          && isAdmin && <AdminPanel />}
         </>
       )}
     </DashboardLayout>

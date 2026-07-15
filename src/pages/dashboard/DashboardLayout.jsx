@@ -3,8 +3,19 @@ import { useAppContext } from "../../context/AppContext";
 import "./DashboardLayout.css";
 import {
   Store, ClipboardList, Menu, X, LogOut, Warehouse, Boxes, Megaphone,
-  ChevronLeft, ChevronRight, LayoutDashboard, Lock, Settings
+  ChevronLeft, ChevronRight, LayoutDashboard, Lock, Settings, ShieldCheck
 } from "lucide-react";
+
+// Email admin platform — hanya user ini yang melihat menu Admin.
+// (Gerbang sebenarnya ditegakkan di backend; ini hanya untuk UI.)
+export const ADMIN_EMAIL = "demo@bithinks.id";
+
+const ADMIN_SECTION = {
+  label: "Admin",
+  items: [
+    { id: "admin", label: "Pelanggan", icon: ShieldCheck, module: null },
+  ],
+};
 
 const NAV_SECTIONS = [
   {
@@ -58,6 +69,10 @@ function Sidebar({ activeMenu, onMenuClick, collapsed, onToggleCollapse, mobileO
 
   const planStatus = tenant?.status ?? "trial";
 
+  // Sisipkan menu Admin hanya untuk email admin platform.
+  const isAdmin = (user?.email ?? "").toLowerCase() === ADMIN_EMAIL;
+  const navSections = isAdmin ? [...NAV_SECTIONS, ADMIN_SECTION] : NAV_SECTIONS;
+
   return (
     <>
       {mobileOpen && <div className="sidebar-overlay" onClick={onCloseMobile} />}
@@ -86,7 +101,7 @@ function Sidebar({ activeMenu, onMenuClick, collapsed, onToggleCollapse, mobileO
 
         {/* Nav */}
         <nav className="sidebar-nav">
-          {NAV_SECTIONS.map((section) => (
+          {navSections.map((section) => (
             <div key={section.label}>
               <div className="nav-section-label">{section.label}</div>
               {section.items.map((item) => {
