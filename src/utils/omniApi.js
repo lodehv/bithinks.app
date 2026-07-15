@@ -37,6 +37,7 @@ export const subscriptionApi = {
 // Panel admin platform (akses khusus demo@bithinks.id — gerbang di backend).
 export const adminApi = {
   subscribers: () => api.get('/api/admin/subscribers').then(unwrap),
+  leads:       () => api.get('/api/admin/leads').then(unwrap),
 }
 
 /** True bila error berasal dari gate langganan (trial/langganan habis). */

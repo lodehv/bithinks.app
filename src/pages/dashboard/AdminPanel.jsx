@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Users, Search, MessageCircle, RefreshCw, ShieldCheck } from "lucide-react";
 import { adminApi } from "../../utils/omniApi";
+import AdminLeads from "./AdminLeads";
 import "./AdminPanel.css";
 
 // wa.me link dari nomor Indonesia (0812… → 62812…).
@@ -24,6 +25,7 @@ const FILTERS = [
 ];
 
 export default function AdminPanel() {
+  const [tab, setTab]     = useState("subscribers"); // 'subscribers' | 'leads'
   const [data, setData]   = useState(null);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
@@ -59,14 +61,24 @@ export default function AdminPanel() {
     <div className="adm">
       <div className="adm-head">
         <div>
-          <h1><ShieldCheck size={20} /> Panel Admin — Pelanggan</h1>
-          <p>Kontrol siapa saja yang berlangganan, status, dan yang perlu ditindaklanjuti.</p>
+          <h1><ShieldCheck size={20} /> Panel Admin</h1>
+          <p>Kontrol pelanggan berlangganan dan lead registrasi yang perlu ditindaklanjuti.</p>
         </div>
-        <button className="adm-refresh" onClick={load} disabled={busy}>
-          <RefreshCw size={14} className={busy ? "spin" : ""} /> Muat ulang
-        </button>
+        {tab === "subscribers" && (
+          <button className="adm-refresh" onClick={load} disabled={busy}>
+            <RefreshCw size={14} className={busy ? "spin" : ""} /> Muat ulang
+          </button>
+        )}
       </div>
 
+      <div className="adm-tabs">
+        <button className={tab === "subscribers" ? "active" : ""} onClick={() => setTab("subscribers")}>Pelanggan</button>
+        <button className={tab === "leads" ? "active" : ""} onClick={() => setTab("leads")}>Registrasi (Lead)</button>
+      </div>
+
+      {tab === "leads" && <AdminLeads />}
+
+      {tab === "subscribers" && <>
       {s && (
         <div className="adm-cards">
           <div className="adm-card"><span>Total</span><strong>{s.total}</strong></div>
@@ -124,6 +136,7 @@ export default function AdminPanel() {
           </tbody>
         </table>
       </div>
+      </>}
     </div>
   );
 }
