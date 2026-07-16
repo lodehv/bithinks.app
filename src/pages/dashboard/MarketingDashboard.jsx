@@ -22,6 +22,7 @@ export default function MarketingDashboard() {
   const [stores, setStores] = useState([]);
   const [isLoadingStores, setIsLoadingStores] = useState(false);
   const [marketingData, setMarketingData] = useState([]); // Kept empty to avoid dummy data, ready for backend injection
+  const [stats, setStats] = useState(null);               // { totals, buckets, meta } dari backend
   const [isSubmittingFilters, setIsSubmittingFilters] = useState(false);
   const [showFeeModal, setShowFeeModal] = useState(false);
   const [adSpend, setAdSpend] = useState(0);
@@ -73,41 +74,50 @@ export default function MarketingDashboard() {
     setAdSpend(0);
   };
 
-  // ─── Apply Filter Action ──────────────────────────────────────────────────
-  const handleApplyFilters = () => {
+  // ─── Ambil metrik dari backend ─────────────────────────────────────────────
+  const fetchStats = (overrides = {}) => {
     setIsSubmittingFilters(true);
-    
-    // Structure the exact parameters for the backend API call
-    const params = {
-      startDate,
-      endDate,
-      platforms: selectedPlatforms,
-      stores: selectedStores
-    };
-
-    console.log("Mengirim filter ke backend:", params);
-    
-    // Developer Backend integration hook placeholder
-    // omniApi.getMarketingStats(params)
-    //   .then(setMarketingData)
-    //   .finally(() => setIsSubmittingFilters(false));
-
-    setTimeout(() => {
-      setIsSubmittingFilters(false);
-    }, 400);
+    return omniApi
+      .getMarketingStats({
+        startDate,
+        endDate,
+        platforms: selectedPlatforms,
+        stores: selectedStores,
+        granularity: "day",
+        ...overrides,
+      })
+      .then((data) => setStats(data))
+      .catch((err) => console.error("Gagal memuat metrik marketing:", err))
+      .finally(() => setIsSubmittingFilters(false));
   };
 
-  // ─── Metrics Aggregate Calculations ────────────────────────────────────────
-  // Calculate aggregate values directly from the marketingData array to avoid dummy placeholder values
-  const totalOmsetKotor = marketingData.reduce((acc, row) => acc + (row.omsetKotor || row.omset || 0), 0);
-  const totalCogs = marketingData.reduce((acc, row) => acc + (row.cogs || 0), 0);
-  const totalFees = marketingData.reduce((acc, row) => acc + (row.fees || 0), 0);
-  const totalRetur = marketingData.reduce((acc, row) => acc + (row.retur || 0), 0);
-  
-  // Omset Perkiraan (gross - retur)
-  const totalOmsetPerkiraan = totalOmsetKotor - totalRetur;
+  // Muat awal (tanpa filter → seluruh data, basis order_date).
+  useEffect(() => {
+    fetchStats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleApplyFilters = () => {
+    fetchStats();
+  };
+
+  // ─── Metrik dari backend (acuan: docs/SPEC-dashboard-marketing.md) ──────────
+  // Angka status dihitung server-side: bucket order_date + as_of + GMV(diskon seller).
+  // Partisi status → Kotor = pipeline+terkonfirmasi+berisiko+retur+dibatalkan (tidak dobel).
+  const t = stats?.totals ?? {};
+  const totalOmsetKotor     = t.omsetKotor     ?? 0;
+  const totalOmsetPerkiraan = t.omsetPerkiraan ?? 0; // pipeline + terkonfirmasi + berisiko
+  const totalPipeline       = t.pipeline       ?? 0;
+  const totalTerkonfirmasi  = t.terkonfirmasi  ?? 0;
+  const totalBerisiko       = t.berisiko       ?? 0;
+  const totalRetur          = t.retur          ?? 0;
+  const totalDibatalkan     = t.dibatalkan     ?? 0;
+
+  // COGS/HPP & beban platform menyusul (belum ada sumber data) → jangan dikarang.
+  const totalCogs = 0;
+  const totalFees = 0;
   const totalProfit = totalOmsetPerkiraan - totalCogs - totalFees;
-  
+
   // Calculate margin percent (safety check to prevent division by zero)
   const marginPercent = totalOmsetPerkiraan > 0 ? (totalProfit / totalOmsetPerkiraan) * 100 : 0;
 
@@ -125,11 +135,6 @@ export default function MarketingDashboard() {
   const feesPct = hasData ? Math.max(0, (totalFees / totalOmsetKotor) * 100) : 0;
   const cogsPct = hasData ? Math.max(0, (totalCogs / totalOmsetKotor) * 100) : 0;
   const returPct = hasData ? Math.max(0, (totalRetur / totalOmsetKotor) * 100) : 0;
-
-  // Status Breakdown sums
-  const totalTerkonfirmasi = marketingData.reduce((acc, row) => acc + (row.terkonfirmasi || 0), 0) || (totalOmsetPerkiraan * 0.75);
-  const totalPipeline = marketingData.reduce((acc, row) => acc + (row.pipeline || 0), 0) || (totalOmsetPerkiraan * 0.23);
-  const totalBerisiko = marketingData.reduce((acc, row) => acc + (row.berisiko || 0), 0) || (totalOmsetPerkiraan * 0.02);
 
   const radius = 40;
   const strokeWidth = 10;
@@ -422,7 +427,7 @@ export default function MarketingDashboard() {
                 <span className="block-category">RETUR</span>
                 <RefreshCw size={13} className="text-purple" />
               </div>
-              <div className="block-value">- {formatRupiah(totalRetur)}</div>
+              <div className="block-value">- {formatRupiah(totalRetur + totalDibatalkan)}</div>
               <div className="block-subtext">Pembatalan & retur pesanan</div>
             </div>
 
@@ -433,7 +438,7 @@ export default function MarketingDashboard() {
                 <TrendingUp size={13} className="text-purple" />
               </div>
               <div className="block-value text-purple">{formatRupiah(totalOmsetPerkiraan)}</div>
-              <div className="block-subtext">Kotor - retur (estimasi total)</div>
+              <div className="block-subtext">Kotor − retur − batal (estimasi total)</div>
             </div>
 
             {/* Block 4: Platform Fees */}

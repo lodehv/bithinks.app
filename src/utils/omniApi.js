@@ -25,6 +25,20 @@ export const omniApi = {
   listOrders:        (status)      => api.get('/api/omni/orders', { params: status ? { status } : {} }).then(unwrap),
   updateOrderStatus: (id, status)  => api.patch(`/api/omni/orders/${id}`, { status }).then(unwrap),
   syncOrders:        ()            => api.post('/api/omni/orders/sync').then(unwrap),
+
+  // Metrik Dashboard Marketing. params: { startDate, endDate, platforms[], stores[], granularity, asOf }
+  // Response: { totals, buckets, meta }. Acuan logika: docs/SPEC-dashboard-marketing.md
+  getMarketingStats: (params = {}) => {
+    const { startDate, endDate, platforms, stores, granularity, asOf } = params
+    const query = {}
+    if (startDate) query.startDate = startDate
+    if (endDate) query.endDate = endDate
+    if (platforms?.length) query.platforms = platforms.join(',')
+    if (stores?.length) query.stores = stores.join(',')
+    if (granularity) query.granularity = granularity
+    if (asOf) query.asOf = asOf
+    return api.get('/api/omni/marketing/stats', { params: query }).then(unwrap)
+  },
 }
 
 export const subscriptionApi = {
