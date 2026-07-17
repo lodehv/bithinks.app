@@ -26,7 +26,7 @@ export default function MarketingDashboard() {
   const [isSubmittingFilters, setIsSubmittingFilters] = useState(false);
   const [showFeeModal, setShowFeeModal] = useState(false);
   const [adSpend, setAdSpend] = useState(0);
-  const [visibleLines, setVisibleLines] = useState(["omset", "profit", "cogs", "fees", "adSpend"]);
+  const [hoverIdx, setHoverIdx] = useState(null); // titik tren yang di-hover
 
   // List of standard platforms
   const PLATFORMS = [
@@ -163,63 +163,45 @@ export default function MarketingDashboard() {
     return `Rp ${val}`;
   };
 
-  // ─── Trend Chart Section Calculations ───
-  const chartRatios = [0.12, 0.15, 0.11, 0.16, 0.13, 0.18, 0.15];
-  const chartDays = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
-  
-  const baseOmsetVal = totalOmsetKotor > 0 ? totalOmsetKotor : 12500000;
-  const baseCogsVal = totalCogs > 0 ? totalCogs : baseOmsetVal * 0.45;
-  const baseFeesVal = totalFees > 0 ? totalFees : baseOmsetVal * 0.15;
-  const baseReturVal = totalRetur > 0 ? totalRetur : baseOmsetVal * 0.08;
+  // ─── Tren Penjualan Harian (data riil dari buckets backend) ─────────────────
+  // 2 seri: Omset (perkiraan) vs Diterima (terkonfirmasi/sudah sampai).
+  const trendData = (Array.isArray(stats?.buckets) ? stats.buckets : []).map((b) => ({
+    date: b.bucket,
+    omset: b.omsetPerkiraan ?? 0,
+    diterima: b.terkonfirmasi ?? 0,
+  }));
+  const hasTrend = trendData.length > 0;
 
-  const dailyOmset = chartRatios.map(r => Math.round(baseOmsetVal * r * 7));
-  const dailyCogs = chartRatios.map(r => Math.round(baseCogsVal * r * 7));
-  const dailyFees = chartRatios.map(r => Math.round(baseFeesVal * r * 7));
-  const dailyAdSpend = chartRatios.map(r => Math.round((adSpend > 0 ? adSpend : baseOmsetVal * 0.12) * r * 7));
-  const dailyRetur = chartRatios.map(r => Math.round(baseReturVal * r * 7));
-  const dailyProfit = dailyOmset.map((o, i) => o - dailyCogs[i] - dailyFees[i] - dailyRetur[i] - dailyAdSpend[i]);
-
-  const toggleMetricLine = (metric) => {
-    setVisibleLines(prev => 
-      prev.includes(metric) ? prev.filter(m => m !== metric) : [...prev, metric]
-    );
+  // Batas atas sumbu Y yang "cantik" (1/2/2.5/5 × 10^k), selalu 0-based.
+  const niceCeil = (v) => {
+    if (v <= 0) return 1;
+    const pow = Math.pow(10, Math.floor(Math.log10(v)));
+    const n = v / pow;
+    const step = n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10;
+    return step * pow;
   };
+  const trendMax = niceCeil(Math.max(1, ...trendData.map((d) => Math.max(d.omset, d.diterima))));
+  const yTicks = [1, 0.75, 0.5, 0.25, 0].map((r) => trendMax * r);
 
-  const allChartValues = [
-    ...(visibleLines.includes("omset") ? dailyOmset : []),
-    ...(visibleLines.includes("cogs") ? dailyCogs : []),
-    ...(visibleLines.includes("fees") ? dailyFees : []),
-    ...(visibleLines.includes("adSpend") ? dailyAdSpend : []),
-    ...(visibleLines.includes("profit") ? dailyProfit : [])
-  ];
-  
-  const chartMax = Math.max(...allChartValues, 1000000);
-  const chartMin = Math.min(...allChartValues, 0);
-  const chartRange = chartMax - chartMin || 1;
+  // Geometri SVG (viewBox 1000×300, skala seragam → tak ada distorsi).
+  const V = { w: 1000, h: 300, l: 68, r: 24, t: 18, b: 46 };
+  const plotW = V.w - V.l - V.r;
+  const plotH = V.h - V.t - V.b;
+  const px = (i) => V.l + (trendData.length <= 1 ? plotW / 2 : (i / (trendData.length - 1)) * plotW);
+  const py = (v) => V.t + plotH - (v / trendMax) * plotH;
+  const linePath = (key) =>
+    trendData.map((d, i) => `${i === 0 ? "M" : "L"} ${px(i).toFixed(1)} ${py(d[key]).toFixed(1)}`).join(" ");
+  const areaPath = () =>
+    hasTrend ? `${linePath("omset")} L ${px(trendData.length - 1).toFixed(1)} ${py(0)} L ${px(0).toFixed(1)} ${py(0)} Z` : "";
 
-  const getCoordinates = (pointsArray) => {
-    const width = 800;
-    const height = 180;
-    const paddingX = 40;
-    const paddingY = 20;
-
-    return pointsArray.map((val, idx) => {
-      const x = paddingX + (idx / (pointsArray.length - 1)) * (width - 2 * paddingX);
-      const y = height - paddingY - ((val - chartMin) / chartRange) * (height - 2 * paddingY);
-      return { x, y, value: val };
-    });
+  const xLabelEvery = Math.max(1, Math.ceil(trendData.length / 8));
+  const formatAxis = (v) => {
+    if (v >= 1e9) return `${(v / 1e9).toFixed(v % 1e9 === 0 ? 0 : 1)}M`;
+    if (v >= 1e6) return `${(v / 1e6).toFixed(v % 1e6 === 0 ? 0 : 1)}Jt`;
+    if (v >= 1e3) return `${Math.round(v / 1e3)}rb`;
+    return `${Math.round(v)}`;
   };
-
-  const getPathD = (coords) => {
-    if (coords.length < 2) return "";
-    return coords.map((c, i) => `${i === 0 ? "M" : "L"} ${c.x} ${c.y}`).join(" ");
-  };
-
-  const coordsOmset = getCoordinates(dailyOmset);
-  const coordsProfit = getCoordinates(dailyProfit);
-  const coordsCogs = getCoordinates(dailyCogs);
-  const coordsFees = getCoordinates(dailyFees);
-  const coordsAdSpend = getCoordinates(coordsCogs.map((_, i) => dailyAdSpend[i]));
+  const fmtDate = (s) => { const [, m, d] = String(s).split("-"); return d ? `${d}/${m}` : s; };
 
   return (
     <div className="marketing-dashboard-container">
@@ -500,216 +482,85 @@ export default function MarketingDashboard() {
 
       </div>
 
-      {/* ─── Trend Line Chart Section ─── */}
+      {/* ─── Tren Penjualan Harian ─── */}
       <div className="marketing-chart-card trend-chart-card">
         <div className="chart-card-header trend-header">
           <div className="header-title-group">
             <TrendingUp size={16} className="text-purple" />
-            <h3>Tren Finansial & Kampanye</h3>
+            <h3>Tren Penjualan Harian</h3>
           </div>
-          
-          {/* Legend Checklist Toggles */}
-          <div className="trend-legend-toggles">
-            <label className="toggle-label-btn">
-              <input 
-                type="checkbox" 
-                checked={visibleLines.includes("omset")} 
-                onChange={() => toggleMetricLine("omset")} 
-              />
-              <span className="toggle-indicator dot-omset"></span>
-              <span>Omset</span>
-            </label>
-
-            <label className="toggle-label-btn">
-              <input 
-                type="checkbox" 
-                checked={visibleLines.includes("profit")} 
-                onChange={() => toggleMetricLine("profit")} 
-              />
-              <span className="toggle-indicator dot-profit"></span>
-              <span>Net Profit</span>
-            </label>
-
-            <label className="toggle-label-btn">
-              <input 
-                type="checkbox" 
-                checked={visibleLines.includes("cogs")} 
-                onChange={() => toggleMetricLine("cogs")} 
-              />
-              <span className="toggle-indicator dot-cogs"></span>
-              <span>COGS (HPP)</span>
-            </label>
-
-            <label className="toggle-label-btn">
-              <input 
-                type="checkbox" 
-                checked={visibleLines.includes("fees")} 
-                onChange={() => toggleMetricLine("fees")} 
-              />
-              <span className="toggle-indicator dot-fees"></span>
-              <span>Beban Platform</span>
-            </label>
-
-            <label className="toggle-label-btn">
-              <input 
-                type="checkbox" 
-                checked={visibleLines.includes("adSpend")} 
-                onChange={() => toggleMetricLine("adSpend")} 
-              />
-              <span className="toggle-indicator dot-adspend"></span>
-              <span>Biaya Iklan</span>
-            </label>
+          <div className="trend-legend">
+            <span className="trend-legend-item"><span className="trend-dot" style={{ background: "#4f46e5" }}></span>Omset</span>
+            <span className="trend-legend-item"><span className="trend-dot" style={{ background: "#059669" }}></span>Diterima</span>
           </div>
         </div>
 
-        <div className="trend-chart-body">
-          <div className="trend-chart-container">
-            <svg width="100%" height="180" viewBox="0 0 800 180" preserveAspectRatio="none" className="trend-svg">
-              {/* Horizontal Grid lines */}
-              {[0, 0.33, 0.66, 1].map((ratio, i) => {
-                const val = chartMax - ratio * chartRange;
-                const y = 20 + ratio * 140; // mapped from paddingY 20 to height 180 - paddingY 20
-                return (
+        <div className="trend-plot">
+          {!hasTrend ? (
+            <div className="trend-empty">
+              <TrendingUp size={26} className="text-gray" />
+              <p>Belum ada data penjualan pada filter ini</p>
+            </div>
+          ) : (
+            <>
+              <svg viewBox="0 0 1000 300" preserveAspectRatio="xMidYMid meet" className="trend-svg-v2" onMouseLeave={() => setHoverIdx(null)}>
+                <defs>
+                  <linearGradient id="omsetFill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#4f46e5" stopOpacity="0.16" />
+                    <stop offset="100%" stopColor="#4f46e5" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+
+                {yTicks.map((v, i) => {
+                  const y = py(v);
+                  return (
+                    <g key={i}>
+                      <line x1={V.l} y1={y} x2={V.w - V.r} y2={y} stroke="#ececeb" strokeWidth="1" />
+                      <text x={V.l - 12} y={y + 4} textAnchor="end" fontSize="12.5" fill="#9ca3af" className="trend-axis-num">{formatAxis(v)}</text>
+                    </g>
+                  );
+                })}
+
+                <path d={areaPath()} fill="url(#omsetFill)" />
+                <path d={linePath("diterima")} fill="none" stroke="#059669" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+                <path d={linePath("omset")} fill="none" stroke="#4f46e5" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+
+                {trendData.length <= 14 && trendData.map((d, i) => (
                   <g key={i}>
-                    <line 
-                      x1="40" 
-                      y1={y} 
-                      x2="760" 
-                      y2={y} 
-                      stroke="#F3F4F6" 
-                      strokeDasharray="4 4" 
-                      strokeWidth="1"
-                    />
-                    <text 
-                      x="35" 
-                      y={y + 3} 
-                      textAnchor="end" 
-                      fontSize="9" 
-                      fill="#9CA3AF" 
-                      fontWeight="700"
-                    >
-                      {formatShortRupiah(val)}
-                    </text>
+                    <circle cx={px(i)} cy={py(d.diterima)} r="3" fill="#fff" stroke="#059669" strokeWidth="2" />
+                    <circle cx={px(i)} cy={py(d.omset)} r="3" fill="#fff" stroke="#4f46e5" strokeWidth="2" />
                   </g>
-                );
-              })}
+                ))}
 
-              {/* Vertical Grid Lines & Day Labels */}
-              {chartDays.map((day, idx) => {
-                const x = 40 + (idx / 6) * 720;
-                return (
-                  <g key={idx}>
-                    <line 
-                      x1={x} 
-                      y1="20" 
-                      x2={x} 
-                      y2="160" 
-                      stroke="#F3F4F6" 
-                      strokeDasharray="4 4" 
-                      strokeWidth="1"
-                    />
-                    <text 
-                      x={x} 
-                      y={176} 
-                      textAnchor="middle" 
-                      fontSize="9.5" 
-                      fill="#6B7280" 
-                      fontWeight="800"
-                    >
-                      {day}
-                    </text>
-                  </g>
-                );
-              })}
+                {trendData.map((d, i) => (
+                  (i % xLabelEvery === 0 || i === trendData.length - 1) && (
+                    <text key={i} x={px(i)} y={V.h - 18} textAnchor="middle" fontSize="12.5" fill="#6b7280">{fmtDate(d.date)}</text>
+                  )
+                ))}
 
-              {/* ─── Paths Drawing ─── */}
-              
-              {/* 1. Omset Line */}
-              {visibleLines.includes("omset") && (
-                <>
-                  <path 
-                    d={getPathD(coordsOmset)} 
-                    fill="none" 
-                    stroke="#4F46E5" 
-                    strokeWidth="2.5" 
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  {coordsOmset.map((c, i) => (
-                    <circle key={i} cx={c.x} cy={c.y} r="3.5" fill="#ffffff" stroke="#4F46E5" strokeWidth="2" />
-                  ))}
-                </>
+                {hoverIdx != null && trendData[hoverIdx] && (
+                  <>
+                    <line x1={px(hoverIdx)} y1={V.t} x2={px(hoverIdx)} y2={py(0)} stroke="#c7c7c4" strokeWidth="1" strokeDasharray="4 4" />
+                    <circle cx={px(hoverIdx)} cy={py(trendData[hoverIdx].omset)} r="5" fill="#fff" stroke="#4f46e5" strokeWidth="2.5" />
+                    <circle cx={px(hoverIdx)} cy={py(trendData[hoverIdx].diterima)} r="5" fill="#fff" stroke="#059669" strokeWidth="2.5" />
+                  </>
+                )}
+
+                {trendData.map((d, i) => {
+                  const bw = plotW / trendData.length;
+                  return <rect key={i} x={V.l + (i / trendData.length) * plotW} y={V.t} width={bw} height={plotH} fill="transparent" onMouseEnter={() => setHoverIdx(i)} />;
+                })}
+              </svg>
+
+              {hoverIdx != null && (
+                <div className="trend-tooltip" style={{ left: `${(px(hoverIdx) / 1000) * 100}%` }}>
+                  <div className="tt-date">{fmtDate(trendData[hoverIdx].date)}</div>
+                  <div className="tt-row"><span className="trend-dot" style={{ background: "#4f46e5" }}></span><span className="tt-name">Omset</span><b>{formatRupiah(trendData[hoverIdx].omset)}</b></div>
+                  <div className="tt-row"><span className="trend-dot" style={{ background: "#059669" }}></span><span className="tt-name">Diterima</span><b>{formatRupiah(trendData[hoverIdx].diterima)}</b></div>
+                </div>
               )}
-
-              {/* 2. COGS Line */}
-              {visibleLines.includes("cogs") && (
-                <>
-                  <path 
-                    d={getPathD(coordsCogs)} 
-                    fill="none" 
-                    stroke="#374151" 
-                    strokeWidth="2.5" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round"
-                  />
-                  {coordsCogs.map((c, i) => (
-                    <circle key={i} cx={c.x} cy={c.y} r="3.5" fill="#ffffff" stroke="#374151" strokeWidth="2" />
-                  ))}
-                </>
-              )}
-
-              {/* 3. Platform Fees Line */}
-              {visibleLines.includes("fees") && (
-                <>
-                  <path 
-                    d={getPathD(coordsFees)} 
-                    fill="none" 
-                    stroke="#818CF8" 
-                    strokeWidth="2.5" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round"
-                  />
-                  {coordsFees.map((c, i) => (
-                    <circle key={i} cx={c.x} cy={c.y} r="3.5" fill="#ffffff" stroke="#818CF8" strokeWidth="2" />
-                  ))}
-                </>
-              )}
-
-              {/* 4. Ad Spend Line */}
-              {visibleLines.includes("adSpend") && (
-                <>
-                  <path 
-                    d={getPathD(coordsAdSpend)} 
-                    fill="none" 
-                    stroke="#C7C9F9" 
-                    strokeWidth="2.5" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round"
-                  />
-                  {coordsAdSpend.map((c, i) => (
-                    <circle key={i} cx={c.x} cy={c.y} r="3.5" fill="#ffffff" stroke="#C7C9F9" strokeWidth="2" />
-                  ))}
-                </>
-              )}
-
-              {/* 5. Profit Line */}
-              {visibleLines.includes("profit") && (
-                <>
-                  <path 
-                    d={getPathD(coordsProfit)} 
-                    fill="none" 
-                    stroke="#111827" 
-                    strokeWidth="2.5" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round"
-                  />
-                  {coordsProfit.map((c, i) => (
-                    <circle key={i} cx={c.x} cy={c.y} r="3.5" fill="#ffffff" stroke="#111827" strokeWidth="2" />
-                  ))}
-                </>
-              )}
-            </svg>
-          </div>
+            </>
+          )}
         </div>
       </div>
 

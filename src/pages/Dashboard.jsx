@@ -12,7 +12,7 @@ import { ADMIN_EMAIL } from "./dashboard/DashboardLayout";
 import ModulePlaceholder from "./dashboard/ModulePlaceholder";
 import MarketingDashboard from "./dashboard/MarketingDashboard";
 import { subscriptionApi } from "../utils/omniApi";
-import { Warehouse, Megaphone, Settings, Info } from "lucide-react";
+import { Warehouse, Settings, Info } from "lucide-react";
 
 // ─── Map menu id → judul halaman ──────────────────────────────────────────────
 const PAGES = {
@@ -21,7 +21,7 @@ const PAGES = {
   "integrasi-toko": { title: "Integrasi Toko"         },
   pesanan:          { title: "Pesanan"                },
   "kelola-produk":  { title: "Kelola Produk"          },
-  marketing:        { title: "Dashboard Marketing"    },
+  marketing:        { title: "Laporan Penjualan"      },
   settings:         { title: "Pengaturan"             },
   payment:          { title: "Pembayaran"             },
   admin:            { title: "Panel Admin"            },

@@ -1223,3 +1223,27 @@
     grid-template-columns: repeat(5, 1fr);
   }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   Tren Penjualan Harian (v2) — grafik omset vs diterima
+   ───────────────────────────────────────────────────────────── */
+.trend-plot { position: relative; width: 100%; padding: 10px 4px 0; }
+.trend-svg-v2 { display: block; width: 100%; height: auto; overflow: visible; }
+.trend-axis-num { font-variant-numeric: tabular-nums; }
+
+.trend-legend { display: flex; gap: 18px; align-items: center; }
+.trend-legend-item { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: #52514e; }
+.trend-dot { width: 9px; height: 9px; border-radius: 999px; display: inline-block; flex: none; }
+
+.trend-empty { display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; min-height: 220px; color: #9ca3af; text-align: center; }
+.trend-empty p { margin: 0; font-size: 13.5px; }
+
+.trend-tooltip { position: absolute; top: 6px; transform: translateX(-50%);
+  background: #ffffff; border: 1px solid rgba(11,11,11,0.10);
+  box-shadow: 0 6px 20px rgba(17,24,39,0.12); border-radius: 10px;
+  padding: 9px 12px; pointer-events: none; min-width: 158px; z-index: 5; }
+.trend-tooltip .tt-date { font-size: 12px; font-weight: 700; color: #0b0b0b; margin-bottom: 6px; }
+.trend-tooltip .tt-row { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: #52514e; padding: 2px 0; }
+.trend-tooltip .tt-row .tt-name { flex: 1; }
+.trend-tooltip .tt-row b { color: #0b0b0b; font-variant-numeric: tabular-nums; }

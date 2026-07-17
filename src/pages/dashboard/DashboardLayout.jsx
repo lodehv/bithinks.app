@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAppContext } from "../../context/AppContext";
 import "./DashboardLayout.css";
 import {
-  Store, ClipboardList, Menu, X, LogOut, Warehouse, Boxes, Megaphone,
+  Store, ClipboardList, Menu, X, LogOut, Warehouse, Boxes, LineChart,
   ChevronLeft, ChevronRight, LayoutDashboard, Lock, Settings, ShieldCheck
 } from "lucide-react";
 
@@ -36,7 +36,7 @@ const NAV_SECTIONS = [
   {
     label: "Analitik",
     items: [
-      { id: "marketing", label: "Dashboard Marketing", icon: Megaphone, module: null },
+      { id: "marketing", label: "Laporan Penjualan", icon: LineChart, module: null },
     ],
   },
   {
