@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { omniApi } from "../../utils/omniApi";
 import { 
   Calendar, Filter, ChevronDown, Check, X, 
@@ -84,6 +84,7 @@ export default function MarketingDashboard() {
         platforms: selectedPlatforms,
         stores: selectedStores,
         granularity: "day",
+        adSpend,
         ...overrides,
       })
       .then((data) => setStats(data))
@@ -113,21 +114,15 @@ export default function MarketingDashboard() {
   const totalRetur          = t.retur          ?? 0;
   const totalDibatalkan     = t.dibatalkan     ?? 0;
 
-  // COGS/HPP & beban platform menyusul (belum ada sumber data) → jangan dikarang.
-  const totalCogs = 0;
-  const totalFees = 0;
+  // Beban platform (PRD: biaya_api) + rincian per platform (cost_breakdown[]).
+  // COGS/HPP menyusul (Master Produk) → cogs_total 0.
+  const totalCogs = stats?.cogs_total ?? 0;
+  const totalFees = stats?.biaya_api ?? 0;
+  const costBreakdown = Array.isArray(stats?.cost_breakdown) ? stats.cost_breakdown : [];
   const totalProfit = totalOmsetPerkiraan - totalCogs - totalFees;
 
   // Calculate margin percent (safety check to prevent division by zero)
   const marginPercent = totalOmsetPerkiraan > 0 ? (totalProfit / totalOmsetPerkiraan) * 100 : 0;
-
-  // Ledger split calculations dynamically summing custom backend details or using ratio fallbacks
-  const totalAdminCommission = marketingData.reduce((acc, row) => acc + (row.adminCommission || 0), 0) || (totalFees * 0.45);
-  const totalFreeShipping = marketingData.reduce((acc, row) => acc + (row.freeShipping || 0), 0) || (totalFees * 0.30);
-  const totalCashbackExtra = marketingData.reduce((acc, row) => acc + (row.cashbackExtra || 0), 0) || (totalFees * 0.15);
-  const totalVat = marketingData.reduce((acc, row) => acc + (row.vat || 0), 0) || (totalFees * 0.05);
-  const totalHandling = marketingData.reduce((acc, row) => acc + (row.handling || 0), 0) || (totalFees * 0.03);
-  const totalAdjustment = marketingData.reduce((acc, row) => acc + (row.adjustment || 0), 0) || (totalFees * 0.02);
 
   // Donut calculations
   const hasData = totalOmsetKotor > 0;
@@ -1073,46 +1068,72 @@ export default function MarketingDashboard() {
               <thead>
                 <tr>
                   <th className="ledger-th-desc">DESKRIPSI BEBAN OPERASIONAL</th>
-                  <th className="ledger-th-pct text-right">RASIO</th>
+                  <th className="ledger-th-pct text-right">SUMBER</th>
                   <th className="ledger-th-amount text-right">JUMLAH (IDR)</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td className="ledger-td-desc">Biaya Komisi Administrasi Marketplace</td>
-                  <td className="text-right text-gray">45.0%</td>
-                  <td className="text-right">{formatRupiah(totalAdminCommission)}</td>
-                </tr>
-                <tr>
-                  <td className="ledger-td-desc">Beban Layanan Program Gratis Ongkir Ekstra</td>
-                  <td className="text-right text-gray">30.0%</td>
-                  <td className="text-right">{formatRupiah(totalFreeShipping)}</td>
-                </tr>
-                <tr>
-                  <td className="ledger-td-desc">Beban Layanan Program Cashback Ekstra</td>
-                  <td className="text-right text-gray">15.0%</td>
-                  <td className="text-right">{formatRupiah(totalCashbackExtra)}</td>
-                </tr>
-                <tr>
-                  <td className="ledger-td-desc">Pajak Pertambahan Nilai (PPN 11% Jasa Platform)</td>
-                  <td className="text-right text-gray">5.0%</td>
-                  <td className="text-right">{formatRupiah(totalVat)}</td>
-                </tr>
-                <tr>
-                  <td className="ledger-td-desc">Biaya Penanganan Pembayaran (Handling Gateway)</td>
-                  <td className="text-right text-gray">3.0%</td>
-                  <td className="text-right">{formatRupiah(totalHandling)}</td>
-                </tr>
-                <tr>
-                  <td className="ledger-td-desc">Penyesuaian Beban Operasional Lain-Lain</td>
-                  <td className="text-right text-gray">2.0%</td>
-                  <td className="text-right">{formatRupiah(totalAdjustment)}</td>
-                </tr>
-                
+                {costBreakdown.length === 0 && (
+                  <tr>
+                    <td className="ledger-td-desc" colSpan={3} style={{ textAlign: "center", color: "#9ca3af", padding: "24px 0" }}>
+                      Belum ada data beban platform pada filter ini
+                    </td>
+                  </tr>
+                )}
+
+                {costBreakdown.map((g) => {
+                  const riilItems = g.items.filter((i) => i.source === "final" || i.source === "preliminary");
+                  const estItems = g.items.filter((i) => i.source === "estimated");
+                  const riilTotal = riilItems.reduce((a, i) => a + i.amount, 0);
+                  const estTotal = estItems.reduce((a, i) => a + i.amount, 0);
+                  return (
+                    <Fragment key={g.platform}>
+                      {/* Header platform */}
+                      <tr className="ledger-platform-header">
+                        <td className="ledger-td-desc font-bold text-black" colSpan={2}>▸ {g.label}</td>
+                        <td className="text-right font-bold text-black">{formatRupiah(g.total)}</td>
+                      </tr>
+
+                      {/* Sudah settlement (riil) */}
+                      {riilItems.length > 0 && (
+                        <tr>
+                          <td className="ledger-td-desc" colSpan={2} style={{ fontStyle: "italic", color: "#16a34a" }}>
+                            Sudah settlement (riil) — {g.final_orders + g.preliminary_orders} order
+                          </td>
+                          <td className="text-right" style={{ color: "#16a34a" }}>{formatRupiah(riilTotal)}</td>
+                        </tr>
+                      )}
+                      {riilItems.map((it, idx) => (
+                        <tr key={`r-${g.platform}-${idx}`}>
+                          <td className="ledger-td-desc" style={{ paddingLeft: 24 }}>{it.label}</td>
+                          <td className="text-right text-gray">riil</td>
+                          <td className="text-right">{formatRupiah(it.amount)}</td>
+                        </tr>
+                      ))}
+
+                      {/* Belum settlement (perkiraan) */}
+                      {estItems.length > 0 && (
+                        <tr>
+                          <td className="ledger-td-desc" colSpan={2} style={{ fontStyle: "italic", color: "#d97706" }}>
+                            Belum settlement (perkiraan) — {g.estimated_orders} order
+                          </td>
+                          <td className="text-right" style={{ color: "#d97706" }}>{formatRupiah(estTotal)}</td>
+                        </tr>
+                      )}
+                      {estItems.map((it, idx) => (
+                        <tr key={`e-${g.platform}-${idx}`}>
+                          <td className="ledger-td-desc" style={{ paddingLeft: 24 }}>{it.label}</td>
+                          <td className="text-right text-gray">perkiraan</td>
+                          <td className="text-right">{formatRupiah(it.amount)}</td>
+                        </tr>
+                      ))}
+                    </Fragment>
+                  );
+                })}
+
                 {/* Ledger Double Underline Total */}
                 <tr className="ledger-total-row">
-                  <td className="font-bold text-black text-left">TOTAL BEBAN PLATFORM</td>
-                  <td className="text-right text-gray font-bold">100.0%</td>
+                  <td className="font-bold text-black text-left" colSpan={2}>TOTAL BEBAN PLATFORM</td>
                   <td className="text-right font-bold text-black ledger-double-underline">
                     {formatRupiah(totalFees)}
                   </td>

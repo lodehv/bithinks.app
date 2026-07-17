@@ -29,7 +29,7 @@ export const omniApi = {
   // Metrik Dashboard Marketing. params: { startDate, endDate, platforms[], stores[], granularity, asOf }
   // Response: { totals, buckets, meta }. Acuan logika: docs/SPEC-dashboard-marketing.md
   getMarketingStats: (params = {}) => {
-    const { startDate, endDate, platforms, stores, granularity, asOf } = params
+    const { startDate, endDate, platforms, stores, granularity, asOf, adSpend } = params
     const query = {}
     if (startDate) query.startDate = startDate
     if (endDate) query.endDate = endDate
@@ -37,6 +37,7 @@ export const omniApi = {
     if (stores?.length) query.stores = stores.join(',')
     if (granularity) query.granularity = granularity
     if (asOf) query.asOf = asOf
+    if (adSpend) query.adSpend = adSpend
     return api.get('/api/omni/marketing/stats', { params: query }).then(unwrap)
   },
 }
