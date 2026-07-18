@@ -28,6 +28,7 @@ import bitOneMockup from '../assets/logo_pilihan_fitur/bitone_mockup.png';
 import financeMockup from '../assets/logo_pilihan_fitur/finance_mockup.png';
 import posMockup from '../assets/logo_pilihan_fitur/pos_mockup.png';
 import hrmMockup from '../assets/logo_pilihan_fitur/hrm_mockup.png';
+import why1Image from '../assets/logo_pilihan_fitur/why_1.png';
 
 const productsData = {
   bitone: {
@@ -547,54 +548,139 @@ module.exports = async function customWorkflow(ctx) {
         {/* SECTION 3: Why Choose Us */}
         <section className="p-why-choose-section">
           <div className="container">
-            <div className="p-why-grid-layout">
-              <div className="p-why-left-text">
-                <span className="p-pretitle" style={{ color: product.color }}>KEUNGGULAN UTAMA</span>
-                <h2 className="p-section-title">Kenapa Harus Memilih {product.badgeText}?</h2>
-                <p className="p-why-subtitle-desc">
-                  Dibandingkan aplikasi kasir atau software pencatatan standar, {product.badgeText} memberikan keandalan kelas atas dan kemudahan integrasi total di bawah ekosistem Bithinks.
-                </p>
-
-                <ul className="p-why-ul">
-                  {product.whyUs.map((liText, idx) => (
-                    <li className="p-why-li" key={idx}>
-                      <div className="p-li-icon-box" style={{ background: product.color }}>
-                        <CheckCircle2 size={16} color="#FFFFFF" />
-                      </div>
-                      <span className="p-li-text">{liText}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="p-why-right-visual">
-                <div className="p-why-visual-glass" style={{ '--glow-color': product.glowColor }}>
-                  <div className="p-visual-header">
-                    <Shield size={28} style={{ color: product.color }} />
-                    <h4>Standar Keamanan Internasional</h4>
-                  </div>
-                  <p>
-                    Data bisnis Anda adalah aset terpenting. Kami menjamin enkripsi database berlapis 256-bit SSL, backup otomatis harian, dan ketersediaan server (uptime guarantee) sebesar 99.9%.
+            {appId === 'bitomni' ? (
+              // Redesigned modern 3-column card section specifically for BitOmni (inspired by reference)
+              <div className="p-why-omni-layout">
+                <div className="p-why-omni-header">
+                  <span className="p-pretitle" style={{ color: product.color }}>KEUNGGULAN UTAMA</span>
+                  <h2 className="p-section-title">Kenapa Harus Memilih {product.badgeText}?</h2>
+                  <p className="p-why-subtitle-desc">
+                    Dibandingkan aplikasi kasir atau software pencatatan standar, {product.badgeText} memberikan keandalan kelas atas dan kemudahan integrasi total di bawah ekosistem Bithinks.
                   </p>
-                  
-                  {/* Visual checklist mockup */}
-                  <div className="p-why-visual-bullets">
-                    <div className="bullet-row">
-                      <Zap size={14} style={{ color: product.color }} />
-                      <span>Server Cloud Latency Rendah (&lt;50ms)</span>
+                </div>
+
+                <div className="p-why-omni-grid">
+                  {/* Card 1: Profit Bersih */}
+                  <div className="p-why-omni-card">
+                    <div className="p-why-omni-img-box">
+                      <img src={why1Image} alt="Analisis Profit Bersih" />
                     </div>
-                    <div className="bullet-row">
-                      <Zap size={14} style={{ color: product.color }} />
-                      <span>Enkripsi Database End-to-End</span>
+                    <h3>Analisis Profit Bersih</h3>
+                    <p>Tahu profit bersih asli tiap toko setelah semua potongan biaya platform, bukan cuma omzet kotor.</p>
+                    <ul className="p-why-omni-list">
+                      <li>
+                        <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
+                        <span>Potongan biaya platform terperinci</span>
+                      </li>
+                      <li>
+                        <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
+                        <span>Kalkulasi laba rugi otomatis</span>
+                      </li>
+                      <li>
+                        <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
+                        <span>Analisis produk paling cuan</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  {/* Card 2: Stok Sinkron */}
+                  <div className="p-why-omni-card">
+                    <div className="p-why-omni-img-box">
+                      <img src={posMockup} alt="Sinkronisasi Stok Real-Time" />
                     </div>
-                    <div className="bullet-row">
-                      <Zap size={14} style={{ color: product.color }} />
-                      <span>Data Recovery Instan & Backup Otomatis</span>
+                    <h3>Sinkronisasi Stok Real-Time</h3>
+                    <p>Stok selalu sinkron di semua marketplace — cegah over-selling yang bikin poin toko kena penalti.</p>
+                    <ul className="p-why-omni-list">
+                      <li>
+                        <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
+                        <span>Sinkronisasi otomatis &lt; 2 detik</span>
+                      </li>
+                      <li>
+                        <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
+                        <span>Multi-gudang & gudang fisik terhubung</span>
+                      </li>
+                      <li>
+                        <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
+                        <span>Bebas penalti poin penalti toko</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  {/* Card 3: Waktu Admin */}
+                  <div className="p-why-omni-card">
+                    <div className="p-why-omni-img-box">
+                      <img src={bithinksHeroPage} alt="Efisiensi Waktu Admin" />
+                    </div>
+                    <h3>Efisiensi Waktu Admin</h3>
+                    <p>Hemat waktu admin: kelola pesanan & stok semua toko dari satu tempat, tanpa login bergantian.</p>
+                    <ul className="p-why-omni-list">
+                      <li>
+                        <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
+                        <span>Proses ratusan pesanan sekaligus</span>
+                      </li>
+                      <li>
+                        <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
+                        <span>Cetak label alamat otomatis massal</span>
+                      </li>
+                      <li>
+                        <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
+                        <span>Satu dashboard untuk semua admin</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              // Original 2-column layout for other products
+              <div className="p-why-grid-layout">
+                <div className="p-why-left-text">
+                  <span className="p-pretitle" style={{ color: product.color }}>KEUNGGULAN UTAMA</span>
+                  <h2 className="p-section-title">Kenapa Harus Memilih {product.badgeText}?</h2>
+                  <p className="p-why-subtitle-desc">
+                    Dibandingkan aplikasi kasir atau software pencatatan standar, {product.badgeText} memberikan keandalan kelas atas dan kemudahan integrasi total di bawah ekosistem Bithinks.
+                  </p>
+
+                  <ul className="p-why-ul">
+                    {product.whyUs.map((liText, idx) => (
+                      <li className="p-why-li" key={idx}>
+                        <div className="p-li-icon-box" style={{ background: product.color }}>
+                          <CheckCircle2 size={16} color="#FFFFFF" />
+                        </div>
+                        <span className="p-li-text">{liText}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="p-why-right-visual">
+                  <div className="p-why-visual-glass" style={{ '--glow-color': product.glowColor }}>
+                    <div className="p-visual-header">
+                      <Shield size={28} style={{ color: product.color }} />
+                      <h4>Standar Keamanan Internasional</h4>
+                    </div>
+                    <p>
+                      Data bisnis Anda adalah aset terpenting. Kami menjamin enkripsi database berlapis 256-bit SSL, backup otomatis harian, dan ketersediaan server (uptime guarantee) sebesar 99.9%.
+                    </p>
+                    
+                    {/* Visual checklist mockup */}
+                    <div className="p-why-visual-bullets">
+                      <div className="bullet-row">
+                        <Zap size={14} style={{ color: product.color }} />
+                        <span>Server Cloud Latency Rendah (&lt;50ms)</span>
+                      </div>
+                      <div className="bullet-row">
+                        <Zap size={14} style={{ color: product.color }} />
+                        <span>Enkripsi Database End-to-End</span>
+                      </div>
+                      <div className="bullet-row">
+                        <Zap size={14} style={{ color: product.color }} />
+                        <span>Data Recovery Instan & Backup Otomatis</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </section>
 
