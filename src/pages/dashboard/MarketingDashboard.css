@@ -603,15 +603,27 @@
   color: #111827;
   width: 90%;
   max-width: 600px;
+  max-height: 90vh;              /* jangan melebihi layar */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;             /* sudut membulat tetap rapi saat isi discroll */
   border-radius: 6px;
-  box-shadow: 
+  box-shadow:
     0 25px 50px -12px rgba(0, 0, 0, 0.15),
     0 0 0 1px rgba(17, 24, 39, 0.05);
-  padding: 40px;
   box-sizing: border-box;
   text-align: left;
   font-family: 'Plus Jakarta Sans', sans-serif;
   animation: ledgerSheetSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Area isi yang bisa discroll — padding pindah ke sini agar frame tetap. */
+.ledger-scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 40px;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 @keyframes ledgerSheetSlide {
@@ -623,7 +635,8 @@
   position: absolute;
   top: 20px;
   right: 20px;
-  background: none;
+  z-index: 3;                   /* tetap di atas isi yang discroll */
+  background: #ffffff;
   border: none;
   cursor: pointer;
   color: #9CA3AF;
@@ -744,9 +757,12 @@
 
 @media (max-width: 480px) {
   .ledger-paper-modal {
+    max-height: 92vh;
+  }
+  .ledger-scroll {
     padding: 24px 16px;
   }
-  
+
   .ledger-doc-meta {
     grid-template-columns: 1fr;
     gap: 6px;

@@ -878,7 +878,8 @@ export default function MarketingDashboard() {
             <button className="ledger-modal-close-btn" onClick={() => setShowFeeModal(false)}>
               <X size={16} />
             </button>
-            
+
+            <div className="ledger-scroll">
             {/* Ledger Header */}
             <div className="ledger-document-header">
               <h2>LAPORAN RINCIAN BEBAN PLATFORM</h2>
@@ -994,6 +995,7 @@ export default function MarketingDashboard() {
 
             <div className="ledger-footer-stamp">
               <span>DICETAK SECARA OTOMATIS OLEH BITHINKS ERP SYSTEM</span>
+            </div>
             </div>
           </div>
         </div>
