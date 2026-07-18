@@ -8,7 +8,7 @@
 .p-detail-main-layout {
   padding-top: 80px; /* Offset for fixed Navbar */
   background-color: #FAFAFA;
-  overflow-x: hidden;
+  overflow: visible;
 }
 
 /* Back Button styling */
