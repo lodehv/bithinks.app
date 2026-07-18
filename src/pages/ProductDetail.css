@@ -1327,7 +1327,7 @@
 /* BitOmni: sembunyikan badge strip (logo + tagline) di atas headline */
 .ds-omni .p-detail-badge-strip { display: none; }
 
-/* ── Redesigned Why Choose Us Section for BitOmni ────────────────────────── */
+/* ── Redesigned Why Choose Us Section for BitOmni (Sticky Stacking Cards) ── */
 .ds-omni .p-why-omni-layout {
   display: flex;
   flex-direction: column;
@@ -1341,67 +1341,93 @@
   margin: 0 auto;
 }
 
-.ds-omni .p-why-omni-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 32px;
+.ds-omni .p-why-omni-stack-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 100%;
 }
 
-.ds-omni .p-why-omni-card {
+/* Base Card Style (Mobile First) */
+.ds-omni .p-why-omni-stack-card {
   background: #FFFFFF;
   border: 1px solid var(--ds-border);
-  border-radius: 20px;
-  padding: 28px;
-  box-shadow: rgba(0, 0, 0, 0.02) 0px 4px 12px;
+  border-radius: 28px;
+  padding: 32px;
+  box-shadow: rgba(0, 0, 0, 0.04) 0px 10px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Stacking and Grid layout on Desktop */
+@media (min-width: 992px) {
+  .ds-omni .p-why-omni-stack-card {
+    position: sticky;
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 48px;
+    align-items: center;
+    padding: 56px;
+    min-height: 480px;
+    box-shadow: rgba(0, 0, 0, 0.04) 0px 20px 50px;
+  }
+  
+  /* Stacking layers with 25px offset to show previous card tops */
+  .ds-omni .p-why-omni-stack-card:nth-child(1) {
+    top: 120px;
+    z-index: 10;
+  }
+  .ds-omni .p-why-omni-stack-card:nth-child(2) {
+    top: 145px;
+    z-index: 20;
+  }
+  .ds-omni .p-why-omni-stack-card:nth-child(3) {
+    top: 170px;
+    z-index: 30;
+  }
+  
+  .ds-omni .p-why-omni-stack-card:hover {
+    transform: translateY(-4px);
+    box-shadow: rgba(79, 70, 229, 0.1) 0px 24px 60px;
+  }
+}
+
+.ds-omni .p-why-omni-stack-left {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
-  transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-.ds-omni .p-why-omni-card:hover {
-  transform: translateY(-6px);
-  border-color: #C7D2FE;
-  box-shadow: rgba(79, 70, 229, 0.08) 0px 16px 32px -8px;
-}
-
-.ds-omni .p-why-omni-img-box {
-  width: 100%;
-  height: 160px;
-  background-color: #F8FAFC;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  margin-bottom: 24px;
-  border: 1px solid rgba(0, 0, 0, 0.03);
-}
-
-.ds-omni .p-why-omni-img-box img {
-  max-width: 90%;
-  max-height: 90%;
-  object-fit: contain;
-  border-radius: 6px;
-  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.04));
-}
-
-.ds-omni .p-why-omni-card h3 {
-  font-size: 1.25rem;
+.ds-omni .p-why-omni-badge {
+  font-size: 0.72rem;
   font-weight: 700;
-  color: #111827;
-  margin: 0 0 12px 0;
-  line-height: 1.4;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  margin-bottom: 20px;
   font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
 }
 
-.ds-omni .p-why-omni-card p {
-  font-size: 0.95rem;
+.ds-omni .p-why-omni-stack-left h3 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 16px 0;
+  line-height: 1.3;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
+}
+
+.ds-omni .p-why-omni-desc {
+  font-size: 1rem;
   line-height: 1.6;
   color: #4B5563;
-  margin: 0 0 24px 0;
-  flex-grow: 1;
+  margin: 0 0 28px 0;
   font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
 }
 
@@ -1417,7 +1443,7 @@
   align-items: center;
   gap: 12px;
   margin-bottom: 14px;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: #374151;
   font-weight: 500;
 }
@@ -1427,8 +1453,8 @@
 }
 
 .ds-omni .p-why-omni-check-icon {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   border: 2px solid #4F46E5;
   display: flex;
@@ -1439,23 +1465,43 @@
 }
 
 .ds-omni .p-why-omni-check-icon svg {
-  width: 10px;
-  height: 10px;
+  width: 11px;
+  height: 11px;
   stroke-width: 4px;
   color: #4F46E5;
 }
 
-/* Responsif */
-@media (max-width: 991px) {
-  .ds-omni .p-why-omni-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
-  }
+/* Right side Image frame */
+.ds-omni .p-why-omni-stack-right {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-@media (max-width: 767px) {
-  .ds-omni .p-why-omni-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
+.ds-omni .p-why-omni-img-wrapper {
+  width: 100%;
+  max-width: 480px;
+  background-color: #F8FAFC;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.01);
+}
+
+.ds-omni .p-why-omni-img-wrapper img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  filter: drop-shadow(0 10px 25px rgba(0,0,0,0.06));
+  transition: transform 0.4s ease;
+}
+
+.ds-omni .p-why-omni-stack-card:hover .p-why-omni-img-wrapper img {
+  transform: scale(1.03);
 }

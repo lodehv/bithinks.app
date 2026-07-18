@@ -551,7 +551,7 @@ module.exports = async function customWorkflow(ctx) {
         <section className="p-why-choose-section">
           <div className="container">
             {appId === 'bitomni' ? (
-              // Redesigned modern 3-column card section specifically for BitOmni (inspired by reference)
+              // Redesigned modern sticky stacking card section specifically for BitOmni (inspired by reference)
               <div className="p-why-omni-layout">
                 <div className="p-why-omni-header">
                   <span className="p-pretitle" style={{ color: product.color }}>KEUNGGULAN UTAMA</span>
@@ -561,74 +561,101 @@ module.exports = async function customWorkflow(ctx) {
                   </p>
                 </div>
 
-                <div className="p-why-omni-grid">
+                <div className="p-why-omni-stack-container">
                   {/* Card 1: Profit Bersih */}
-                  <div className="p-why-omni-card">
-                    <div className="p-why-omni-img-box">
-                      <img src={why1Image} alt="Analisis Profit Bersih" />
+                  <div className="p-why-omni-stack-card">
+                    <div className="p-why-omni-stack-left">
+                      <div className="p-why-omni-badge" style={{ color: product.color, background: '#EEF0FB' }}>
+                        Analisis Profit
+                      </div>
+                      <h3>Analisis Profit Bersih</h3>
+                      <p className="p-why-omni-desc">
+                        Tahu profit bersih asli tiap toko setelah semua potongan biaya platform, bukan cuma omzet kotor.
+                      </p>
+                      <ul className="p-why-omni-list">
+                        <li>
+                          <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
+                          <span>Potongan biaya platform terperinci</span>
+                        </li>
+                        <li>
+                          <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
+                          <span>Kalkulasi laba rugi otomatis</span>
+                        </li>
+                        <li>
+                          <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
+                          <span>Analisis produk paling cuan</span>
+                        </li>
+                      </ul>
                     </div>
-                    <h3>Analisis Profit Bersih</h3>
-                    <p>Tahu profit bersih asli tiap toko setelah semua potongan biaya platform, bukan cuma omzet kotor.</p>
-                    <ul className="p-why-omni-list">
-                      <li>
-                        <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
-                        <span>Potongan biaya platform terperinci</span>
-                      </li>
-                      <li>
-                        <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
-                        <span>Kalkulasi laba rugi otomatis</span>
-                      </li>
-                      <li>
-                        <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
-                        <span>Analisis produk paling cuan</span>
-                      </li>
-                    </ul>
+                    <div className="p-why-omni-stack-right">
+                      <div className="p-why-omni-img-wrapper">
+                        <img src={why1Image} alt="Analisis Profit Bersih" />
+                      </div>
+                    </div>
                   </div>
 
                   {/* Card 2: Stok Sinkron */}
-                  <div className="p-why-omni-card">
-                    <div className="p-why-omni-img-box">
-                      <img src={why2Image} alt="Sinkronisasi Stok Real-Time" />
+                  <div className="p-why-omni-stack-card">
+                    <div className="p-why-omni-stack-left">
+                      <div className="p-why-omni-badge" style={{ color: product.color, background: '#EEF0FB' }}>
+                        Sinkronisasi Stok
+                      </div>
+                      <h3>Sinkronisasi Stok Real-Time</h3>
+                      <p className="p-why-omni-desc">
+                        Stok selalu sinkron di semua marketplace — cegah over-selling yang bikin poin toko kena penalti.
+                      </p>
+                      <ul className="p-why-omni-list">
+                        <li>
+                          <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
+                          <span>Sinkronisasi otomatis &lt; 2 detik</span>
+                        </li>
+                        <li>
+                          <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
+                          <span>Multi-gudang & gudang fisik terhubung</span>
+                        </li>
+                        <li>
+                          <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
+                          <span>Bebas penalti poin penalti toko</span>
+                        </li>
+                      </ul>
                     </div>
-                    <h3>Sinkronisasi Stok Real-Time</h3>
-                    <p>Stok selalu sinkron di semua marketplace — cegah over-selling yang bikin poin toko kena penalti.</p>
-                    <ul className="p-why-omni-list">
-                      <li>
-                        <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
-                        <span>Sinkronisasi otomatis &lt; 2 detik</span>
-                      </li>
-                      <li>
-                        <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
-                        <span>Multi-gudang & gudang fisik terhubung</span>
-                      </li>
-                      <li>
-                        <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
-                        <span>Bebas penalti poin penalti toko</span>
-                      </li>
-                    </ul>
+                    <div className="p-why-omni-stack-right">
+                      <div className="p-why-omni-img-wrapper">
+                        <img src={why2Image} alt="Sinkronisasi Stok Real-Time" />
+                      </div>
+                    </div>
                   </div>
 
                   {/* Card 3: Waktu Admin */}
-                  <div className="p-why-omni-card">
-                    <div className="p-why-omni-img-box">
-                      <img src={why3Image} alt="Efisiensi Waktu Admin" />
+                  <div className="p-why-omni-stack-card">
+                    <div className="p-why-omni-stack-left">
+                      <div className="p-why-omni-badge" style={{ color: product.color, background: '#EEF0FB' }}>
+                        Efisiensi Admin
+                      </div>
+                      <h3>Efisiensi Waktu Admin</h3>
+                      <p className="p-why-omni-desc">
+                        Hemat waktu admin: kelola pesanan & stok semua toko dari satu tempat, tanpa login bergantian.
+                      </p>
+                      <ul className="p-why-omni-list">
+                        <li>
+                          <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
+                          <span>Proses ratusan pesanan sekaligus</span>
+                        </li>
+                        <li>
+                          <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
+                          <span>Cetak label alamat otomatis massal</span>
+                        </li>
+                        <li>
+                          <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
+                          <span>Satu dashboard untuk semua admin</span>
+                        </li>
+                      </ul>
                     </div>
-                    <h3>Efisiensi Waktu Admin</h3>
-                    <p>Hemat waktu admin: kelola pesanan & stok semua toko dari satu tempat, tanpa login bergantian.</p>
-                    <ul className="p-why-omni-list">
-                      <li>
-                        <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
-                        <span>Proses ratusan pesanan sekaligus</span>
-                      </li>
-                      <li>
-                        <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
-                        <span>Cetak label alamat otomatis massal</span>
-                      </li>
-                      <li>
-                        <span className="p-why-omni-check-icon"><Check size={12} strokeWidth={4} /></span>
-                        <span>Satu dashboard untuk semua admin</span>
-                      </li>
-                    </ul>
+                    <div className="p-why-omni-stack-right">
+                      <div className="p-why-omni-img-wrapper">
+                        <img src={why3Image} alt="Efisiensi Waktu Admin" />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
