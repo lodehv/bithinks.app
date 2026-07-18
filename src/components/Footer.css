@@ -53,10 +53,12 @@
 .footer-col ul a {
   color: var(--color-text-light);
   transition: var(--transition);
+  text-decoration: none;
 }
 
 .footer-col ul a:hover {
   color: var(--color-primary);
+  text-decoration: none;
 }
 
 .footer-bottom {
