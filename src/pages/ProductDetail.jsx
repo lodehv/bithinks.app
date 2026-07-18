@@ -29,6 +29,7 @@ import financeMockup from '../assets/logo_pilihan_fitur/finance_mockup.png';
 import posMockup from '../assets/logo_pilihan_fitur/pos_mockup.png';
 import hrmMockup from '../assets/logo_pilihan_fitur/hrm_mockup.png';
 import why1Image from '../assets/logo_pilihan_fitur/why_1.png';
+import why2Image from '../assets/logo_pilihan_fitur/why_2.png';
 
 const productsData = {
   bitone: {
@@ -586,7 +587,7 @@ module.exports = async function customWorkflow(ctx) {
                   {/* Card 2: Stok Sinkron */}
                   <div className="p-why-omni-card">
                     <div className="p-why-omni-img-box">
-                      <img src={posMockup} alt="Sinkronisasi Stok Real-Time" />
+                      <img src={why2Image} alt="Sinkronisasi Stok Real-Time" />
                     </div>
                     <h3>Sinkronisasi Stok Real-Time</h3>
                     <p>Stok selalu sinkron di semua marketplace — cegah over-selling yang bikin poin toko kena penalti.</p>
