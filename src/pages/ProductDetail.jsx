@@ -30,6 +30,7 @@ import posMockup from '../assets/logo_pilihan_fitur/pos_mockup.png';
 import hrmMockup from '../assets/logo_pilihan_fitur/hrm_mockup.png';
 import why1Image from '../assets/logo_pilihan_fitur/why_1.png';
 import why2Image from '../assets/logo_pilihan_fitur/why_2.png';
+import why3Image from '../assets/logo_pilihan_fitur/why_3.png';
 
 const productsData = {
   bitone: {
@@ -610,7 +611,7 @@ module.exports = async function customWorkflow(ctx) {
                   {/* Card 3: Waktu Admin */}
                   <div className="p-why-omni-card">
                     <div className="p-why-omni-img-box">
-                      <img src={bithinksHeroPage} alt="Efisiensi Waktu Admin" />
+                      <img src={why3Image} alt="Efisiensi Waktu Admin" />
                     </div>
                     <h3>Efisiensi Waktu Admin</h3>
                     <p>Hemat waktu admin: kelola pesanan & stok semua toko dari satu tempat, tanpa login bergantian.</p>
