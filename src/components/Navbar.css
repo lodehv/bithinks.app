@@ -50,10 +50,12 @@ body.dark .navbar {
   font-weight: 500;
   color: var(--color-text-muted);
   transition: var(--transition);
+  text-decoration: none;
 }
 
 .navbar-link:hover {
   color: var(--color-text);
+  text-decoration: none;
 }
 
 .navbar-actions {
