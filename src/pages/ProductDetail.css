@@ -1176,13 +1176,99 @@
 
 /* ── Kartu fitur: pola card design-system ────────────────────────────────── */
 .ds-omni .p-feature-grid-card {
-  background: #fff; border: 1px solid var(--ds-border); border-radius: 12px; padding: 24px;
-  box-shadow: rgba(0,0,0,0.1) 0 1px 3px 0, rgba(0,0,0,0.1) 0 1px 2px -1px;
+  background: #FFFFFF;
+  border: 1px solid var(--ds-border);
+  border-radius: 24px;
+  padding: 140px 32px 36px 32px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: rgba(0, 0, 0, 0.03) 0px 8px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
-.ds-omni .p-feature-grid-card:hover { transform: none; border-color: var(--ds-border-hover); box-shadow: rgba(0,0,0,0.05) 0 4px 12px 0; }
-.ds-omni .p-feature-grid-icon-box { background: #EEF0FB; border-radius: 12px; }
-.ds-omni .p-feature-grid-card h3 { color: var(--ds-text); font-weight: 700; }
-.ds-omni .p-feature-grid-card p { color: var(--ds-text-2); }
+
+.ds-omni .p-feature-grid-card:hover {
+  transform: translateY(-6px);
+  border-color: #C7D2FE;
+  box-shadow: rgba(79, 70, 229, 0.12) 0px 20px 40px -10px;
+}
+
+.ds-omni .p-feature-grid-icon-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 110px;
+  height: 110px;
+  border-radius: 0 0 110px 0;
+  background: linear-gradient(135deg, #4F46E5 0%, #312E81 100%) !important;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-top: 28px;
+  padding-left: 28px;
+  margin: 0;
+  z-index: 2;
+  box-shadow: 0 4px 12px rgba(67, 56, 202, 0.15);
+}
+
+/* Bulat cyan kecil di belakang quarter-circle */
+.ds-omni .p-feature-grid-icon-box::before {
+  content: '';
+  position: absolute;
+  top: -15px;
+  left: 80px;
+  width: 50px;
+  height: 50px;
+  background-color: #38BDF8;
+  border-radius: 50%;
+  z-index: -1;
+}
+
+/* Pil sky-blue miring di pojok kanan bawah */
+.ds-omni .p-feature-grid-card::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  right: -30px;
+  width: 140px;
+  height: 44px;
+  background-color: #BAE6FD;
+  border-radius: 9999px;
+  transform: rotate(-45deg);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Pastikan teks berada di atas ornamen dekoratif */
+.ds-omni .p-feature-grid-card h3,
+.ds-omni .p-feature-grid-card p {
+  position: relative;
+  z-index: 2;
+}
+
+.ds-omni .p-feature-grid-icon-box svg {
+  stroke: #FFFFFF !important;
+  width: 28px;
+  height: 28px;
+}
+
+.ds-omni .p-feature-grid-card h3 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.ds-omni .p-feature-grid-card p {
+  font-size: 0.975rem;
+  line-height: 1.65;
+  color: #4B5563;
+  margin: 0;
+}
 
 /* ── Why choose ──────────────────────────────────────────────────────────── */
 .ds-omni .p-li-icon-box { background: var(--ds-primary); }

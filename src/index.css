@@ -39,7 +39,7 @@ body.dark {
 }
 
 body {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'DM Sans', sans-serif;
   background: linear-gradient(135deg, var(--color-bg-alt) 0%, var(--color-bg) 100%);
   background-attachment: fixed;
   min-height: 100vh;
@@ -61,7 +61,7 @@ body {
 
 /* Typography typography */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'DM Sans', sans-serif;
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.02em;
