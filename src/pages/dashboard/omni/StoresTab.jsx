@@ -20,12 +20,21 @@ const MARKETPLACES = [
 const fmtDate = (d) =>
   d ? new Date(d).toLocaleString("id-ID", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "—";
 
+// Pilihan kedalaman tarik data PESANAN saat menghubungkan toko (produk terpisah).
+const DEPTH_OPTIONS = [
+  { key: "all",   title: "Semua riwayat",   desc: "Tarik pesanan sejak toko dibuat (maksimal yang diizinkan marketplace)" },
+  { key: "month", title: "Sebulan terakhir", desc: "Tarik pesanan 30 hari terakhir sampai hari ini" },
+  { key: "now",   title: "Mulai sekarang",   desc: "Hanya pesanan baru sejak toko dihubungkan" },
+];
+
 export default function StoresTab({ locked, onRequirePayment }) {
   const [stores, setStores]     = useState(null);
   const [showModal, setModal]   = useState(false);
   const [connecting, setConn]   = useState(false);
   const [toast, setToast]       = useState("");
   const [error, setError]       = useState("");
+  const [pendingKind, setPendingKind] = useState(null); // marketplace yang menunggu pilihan kedalaman
+  const [depth, setDepth]       = useState(null);       // 'all' | 'month' | 'now'
 
   const load    = () => { setStores(null); omniApi.listStores().then(setStores).catch(() => setStores([])); };
   const reload  = () => omniApi.listStores().then(setStores).catch(() => {});
@@ -45,12 +54,12 @@ export default function StoresTab({ locked, onRequirePayment }) {
   }, []);
 
   // OAuth via POPUP (URL bithinks tidak berubah). Popup dibuka sinkron (anti-blocker).
-  const openOAuth = async (kind) => {
+  const openOAuth = async (kind, chosenDepth) => {
     if (locked) return onRequirePayment?.();
-    setError(""); setModal(false); setConn(kind);
+    setError(""); setModal(false); setPendingKind(null); setConn(kind);
     const popup = window.open("about:blank", "bithinks-oauth", "width=520,height=720");
     try {
-      const url = kind === "tiktok" ? await omniApi.tiktokConnectUrl() : await omniApi.shopeeConnectUrl();
+      const url = kind === "tiktok" ? await omniApi.tiktokConnectUrl(chosenDepth) : await omniApi.shopeeConnectUrl(chosenDepth);
       if (url && popup) { popup.location.href = url; }
       else { popup?.close(); throw new Error("no-url"); }
     } catch (err) {
@@ -144,32 +153,68 @@ export default function StoresTab({ locked, onRequirePayment }) {
         </div>
       )}
 
-      {/* Modal Pilih Marketplace */}
+      {/* Modal Pilih Marketplace → lalu pilih kedalaman tarik data pesanan */}
       {showModal && (
-        <div className="mp-overlay" onClick={() => setModal(false)}>
+        <div className="mp-overlay" onClick={() => { setModal(false); setPendingKind(null); }}>
           <div className="mp-modal" onClick={(e) => e.stopPropagation()}>
             <div className="mp-modal-head">
-              <h3>Pilih Marketplace</h3>
-              <button className="mp-close" onClick={() => setModal(false)}><X size={20} /></button>
+              <h3>{pendingKind ? "Tarik Data Pesanan" : "Pilih Marketplace"}</h3>
+              <button className="mp-close" onClick={() => { setModal(false); setPendingKind(null); }}><X size={20} /></button>
             </div>
-            <div className="mp-grid">
-              {MARKETPLACES.map((mp) => (
-                <div
-                  key={mp.key}
-                  className={`mp-card ${mp.active ? "" : "disabled"}`}
-                  onClick={() => mp.active && openOAuth(mp.key)}
-                >
-                  {!mp.active && <span className="mp-badge">Segera</span>}
-                  {mp.logo
-                    ? <img src={mp.logo} alt={mp.label} className="mp-logo" />
-                    : <span className="mp-logo-fallback" style={{ background: mp.color }}>{mp.label[0]}</span>}
-                  <span className="mp-name">{mp.label}</span>
+
+            {!pendingKind ? (
+              <>
+                <div className="mp-grid">
+                  {MARKETPLACES.map((mp) => (
+                    <div
+                      key={mp.key}
+                      className={`mp-card ${mp.active ? "" : "disabled"}`}
+                      onClick={() => { if (mp.active) { setPendingKind(mp.key); setDepth(null); } }}
+                    >
+                      {!mp.active && <span className="mp-badge">Segera</span>}
+                      {mp.logo
+                        ? <img src={mp.logo} alt={mp.label} className="mp-logo" />
+                        : <span className="mp-logo-fallback" style={{ background: mp.color }}>{mp.label[0]}</span>}
+                      <span className="mp-name">{mp.label}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-            <div className="mp-hint">
-              {connecting ? "Membuka halaman otorisasi…" : "Pilih marketplace yang ingin dihubungkan"}
-            </div>
+                <div className="mp-hint">
+                  {connecting ? "Membuka halaman otorisasi…" : "Pilih marketplace yang ingin dihubungkan"}
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="depth-list">
+                  {DEPTH_OPTIONS.map((op) => (
+                    <label key={op.key} className={`depth-card ${depth === op.key ? "selected" : ""}`}>
+                      <input
+                        type="radio"
+                        name="sync-depth"
+                        checked={depth === op.key}
+                        onChange={() => setDepth(op.key)}
+                      />
+                      <span className="depth-radio" aria-hidden="true"></span>
+                      <span className="depth-text">
+                        <span className="depth-title">{op.title}</span>
+                        <span className="depth-desc">{op.desc}</span>
+                      </span>
+                    </label>
+                  ))}
+                </div>
+                <div className="depth-actions">
+                  <button className="depth-back" onClick={() => setPendingKind(null)}>Kembali</button>
+                  <button
+                    className="depth-confirm"
+                    disabled={!depth}
+                    onClick={() => openOAuth(pendingKind, depth)}
+                  >
+                    Hubungkan
+                  </button>
+                </div>
+                <div className="mp-hint">Berlaku untuk data pesanan (Laporan Penjualan). Produk ditarik terpisah lewat Sync Produk.</div>
+              </>
+            )}
           </div>
         </div>
       )}

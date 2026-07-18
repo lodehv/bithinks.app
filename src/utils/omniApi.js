@@ -13,8 +13,9 @@ export const omniApi = {
   listStores:        ()            => api.get('/api/omni/stores').then(unwrap),
   connectStore:      (payload)     => api.post('/api/omni/stores', payload).then(unwrap),
   deleteStore:       (id)          => api.delete(`/api/omni/stores/${id}`).then(unwrap),
-  shopeeConnectUrl:  ()            => api.get('/api/omni/shopee/connect').then((r) => r.data?.data?.authUrl),
-  tiktokConnectUrl:  ()            => api.get('/api/omni/tiktok/connect').then((r) => r.data?.data?.authUrl),
+  // depth: 'all' | 'month' | 'now' — kedalaman tarik data pesanan pilihan user saat connect.
+  shopeeConnectUrl:  (depth)       => api.get('/api/omni/shopee/connect', { params: depth ? { depth } : {} }).then((r) => r.data?.data?.authUrl),
+  tiktokConnectUrl:  (depth)       => api.get('/api/omni/tiktok/connect', { params: depth ? { depth } : {} }).then((r) => r.data?.data?.authUrl),
 
   listProducts:      ()            => api.get('/api/omni/products').then(unwrap),
   createProduct:     (payload)     => api.post('/api/omni/products', payload).then(unwrap),
