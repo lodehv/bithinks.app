@@ -7,6 +7,7 @@ import {
 import { omniApi, isPaymentRequired } from "../../../utils/omniApi";
 import shopeeLogo from "../../../assets/logo_pilihan_fitur/shopee.png";
 import tiktokLogo from "../../../assets/logo_pilihan_fitur/logo_tiktok.jpg";
+import MarketplaceProductsTab from "./MarketplaceProductsTab";
 import "./ProductMaster.css";
 import "./OmniModule.css";
 
@@ -102,6 +103,7 @@ const MOCK_PRODUCTS = [
 ];
 
 export default function ProductsTab({ locked, onRequirePayment }) {
+  const [activeTab, setActiveTab] = useState("master"); // master | marketplace
   const [products, setProducts] = useState(null);
   const [search, setSearch]     = useState("");
   const [sortBy, setSortBy]     = useState("newest");
@@ -313,7 +315,17 @@ export default function ProductsTab({ locked, onRequirePayment }) {
 
   return (
     <div className="pm-master-container">
-      
+
+      {/* ─── Tab: Master Produk | Produk Marketplaces ─── */}
+      <div className="pm-toptabs">
+        <button className={`pm-toptab ${activeTab === "master" ? "active" : ""}`} onClick={() => setActiveTab("master")}>Master Produk</button>
+        <button className={`pm-toptab ${activeTab === "marketplace" ? "active" : ""}`} onClick={() => setActiveTab("marketplace")}>Produk Marketplaces</button>
+      </div>
+
+      {activeTab === "marketplace" ? (
+        <MarketplaceProductsTab locked={locked} onRequirePayment={onRequirePayment} />
+      ) : (
+      <>
       {/* ─── Row 1: Title and Top Actions Row ─── */}
       <div className="pm-title-action-header">
         <div className="title-section">
@@ -984,6 +996,8 @@ export default function ProductsTab({ locked, onRequirePayment }) {
             </form>
           </div>
         </div>
+      )}
+      </>
       )}
     </div>
   );
