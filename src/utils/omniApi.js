@@ -18,6 +18,9 @@ export const omniApi = {
   tiktokConnectUrl:  (depth)       => api.get('/api/omni/tiktok/connect', { params: depth ? { depth } : {} }).then((r) => r.data?.data?.authUrl),
 
   listProducts:      ()            => api.get('/api/omni/products').then(unwrap),
+  // Produk marketplace (etalase) untuk tab Produk Marketplaces + tautan ke master.
+  listMarketplaceProducts: (channel) => api.get('/api/omni/products/marketplace', { params: { channel } }).then(unwrap),
+  syncProductCatalog: ()            => api.post('/api/omni/products/catalog/sync').then(unwrap),
   createProduct:     (payload)     => api.post('/api/omni/products', payload).then(unwrap),
   updateProduct:     (id, payload) => api.patch(`/api/omni/products/${id}`, payload).then(unwrap),
   deleteProduct:     (id)          => api.delete(`/api/omni/products/${id}`).then(unwrap),
