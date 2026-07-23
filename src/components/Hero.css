@@ -74,7 +74,7 @@
 
 /* Heading & Highlight Text */
 .hero-left-title {
-  font-family: 'Inter', Helvetica, Arial, sans-serif;
+  font-family: 'Montserrat', 'Inter', Helvetica, Arial, sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 42px; /* Reduced from 48px to resolve crowded feel, keeping it highly elegant */
@@ -85,7 +85,7 @@
 }
 
 .hero-left-title .highlight-text {
-  color: #FF6B00; /* Bold Orange Accent */
+  color: #4F46E5; /* Bithinks Purple Indigo Accent (BitOmni theme) */
   position: relative;
   display: inline-block;
   white-space: nowrap; /* Forces "Satu Ekosistem Terintegrasi" to stay on a single line on desktop/laptop viewports */
