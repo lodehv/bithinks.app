@@ -174,7 +174,7 @@
 .illustration-wrapper {
   position: relative;
   width: 100%;
-  max-width: 460px; /* Adjusted to 460px for a slightly larger, bolder visual presence */
+  max-width: 600px; /* Increased to 600px for a larger, bolder visual presence */
   display: flex;
   justify-content: center;
   align-items: center;

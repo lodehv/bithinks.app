@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import './Hero.css';
-import { ArrowRight, CheckCircle, TrendingUp, Truck } from 'lucide-react';
-import heroImage from '../assets/gambar_hero_page.png';
+import { ArrowRight } from 'lucide-react';
+import heroImage from '../assets/hero_bithinks_new.png';
 
 const Hero = () => {
   const contentRef = useRef(null);
@@ -31,26 +31,6 @@ const Hero = () => {
       gsap.fromTo('.hero-main-illustration', 
         { scale: 0.92, opacity: 0, y: 15 },
         { scale: 1, opacity: 1, y: 0, duration: 1.4, delay: 0.3, ease: 'power4.out' }
-      );
-
-      // 5. Layered Staggered pop-in for the floating glassmorphic badges
-      gsap.fromTo('.floating-badge', 
-        { scale: 0.6, opacity: 0, y: 20 },
-        { 
-          scale: 1, 
-          opacity: 1, 
-          y: 0, 
-          duration: 1.2, 
-          stagger: 0.2, 
-          delay: 0.8, 
-          ease: 'back.out(1.5)',
-          onComplete: () => {
-            // Re-apply floating keyframe animations cleanly after entrance transition
-            document.querySelectorAll('.floating-badge').forEach(el => {
-              el.style.transition = 'all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)';
-            });
-          }
-        }
       );
     }, contentRef);
 
@@ -85,44 +65,13 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Right Column: High-Quality 3D Illustration & Floating Badges */}
+          {/* Right Column: High-Quality 3D Illustration */}
           <div className="hero-right-side">
             <div className="illustration-wrapper">
               {/* Soft morphing background blob to ground the illustration */}
               <div className="illustration-bg-blob"></div>
               
               <img src={heroImage} alt="Bithinks Ecosystem Overview" className="hero-main-illustration" />
-
-              {/* Elegant floating glassmorphic badges with micro-animations */}
-              <div className="floating-badge badge-stok float-slow" style={{ opacity: 0 }}>
-                <div className="badge-icon icon-green">
-                  <CheckCircle size={16} />
-                </div>
-                <div className="badge-info">
-                  <span className="badge-title">Stok Sinkron</span>
-                  <span className="badge-sub">Shopee & Tokopedia</span>
-                </div>
-              </div>
-
-              <div className="floating-badge badge-omset float-medium" style={{ opacity: 0 }}>
-                <div className="badge-icon icon-orange">
-                  <TrendingUp size={16} />
-                </div>
-                <div className="badge-info">
-                  <span className="badge-title">Omset UMKM</span>
-                  <span className="badge-sub">+145% Naik Level</span>
-                </div>
-              </div>
-
-              <div className="floating-badge badge-logistik float-fast" style={{ opacity: 0 }}>
-                <div className="badge-icon icon-blue">
-                  <Truck size={16} />
-                </div>
-                <div className="badge-info">
-                  <span className="badge-title">12,450 Paket</span>
-                  <span className="badge-sub">Dikirim Hari Ini</span>
-                </div>
-              </div>
             </div>
           </div>
 
