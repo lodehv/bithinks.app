@@ -9,7 +9,10 @@ const Footer = () => {
       <div className="container">
         <div className="footer-top">
           <div className="footer-brand">
-            <span className="footer-logo-text">Bithinks</span>
+            <div className="brand-logo-container" style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', lineHeight: 1, marginBottom: '16px' }}>
+              <img src="/bithinks.png" alt="Bithinks Logo" style={{ height: '42px', width: 'auto' }} />
+              <span style={{ fontFamily: 'Montserrat, sans-serif', fontSize: '13px', fontWeight: 800, color: '#FFFFFF', letterSpacing: '0.5px', marginTop: '4px', textTransform: 'lowercase' }}>bithinks</span>
+            </div>
             <p>{t.footer.desc}</p>
             <div style={{ marginTop: '24px', display: 'flex', gap: '16px' }}>
               <a href="https://www.instagram.com/bithinks/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-text-light)', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = 'var(--color-primary)'} onMouseOut={(e) => e.currentTarget.style.color = 'var(--color-text-light)'}>

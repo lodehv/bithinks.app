@@ -80,9 +80,9 @@ function Sidebar({ activeMenu, onMenuClick, collapsed, onToggleCollapse, mobileO
       <aside className={`sidebar ${collapsed ? "collapsed" : ""} ${mobileOpen ? "mobile-open" : ""}`}>
 
         {/* Brand */}
-        <div className="sidebar-brand">
-          <img src="/bithinks.jpeg" alt="Logo" />
-          <span className="sidebar-brand-name">Bithinks</span>
+        <div className="sidebar-brand" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '12px 0', gap: '2px', lineHeight: 1 }}>
+          <img src="/bithinks.png" alt="Logo" style={{ height: '36px', width: 'auto' }} />
+          <span className="sidebar-brand-name" style={{ fontFamily: 'Montserrat, sans-serif', fontSize: '11px', fontWeight: 800, letterSpacing: '0.5px', textTransform: 'lowercase', marginTop: '2px' }}>bithinks</span>
         </div>
 
         {/* Billing strip */}

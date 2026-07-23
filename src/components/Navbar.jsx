@@ -100,8 +100,11 @@ const Navbar = () => {
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="container">
         {/* Logo */}
-        <a href="/" className="navbar-logo" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }} onClick={(e) => { e.preventDefault(); navigateTo('/'); }}>
-          <img src="/bithinks.jpeg" alt="Logo Bithinks" style={{ height: '64px', borderRadius: '4px' }} />
+        <a href="/" className="navbar-logo" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }} onClick={(e) => { e.preventDefault(); navigateTo('/'); }}>
+          <div className="brand-logo-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', lineHeight: 1 }}>
+            <img src="/bithinks.png" alt="Logo Bithinks" style={{ height: '38px', width: 'auto', objectFit: 'contain' }} />
+            <span style={{ fontFamily: 'Montserrat, sans-serif', fontSize: '10px', fontWeight: 800, color: '#0F172A', letterSpacing: '0.5px', marginTop: '3px', textTransform: 'lowercase' }}>bithinks</span>
+          </div>
           <span style={{ backgroundColor: '#EF4444', color: 'white', fontSize: '0.65rem', fontWeight: 800, padding: '2px 8px', borderRadius: '12px', letterSpacing: '1px' }}>BETA</span>
         </a>
 

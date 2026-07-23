@@ -122,9 +122,11 @@ const Register = () => {
      <div className="auth-card">
       {/* Panel Kiri */}
       <div className="register-left">
-        <a href="/" className="auth-brand">
-          <img src="/bithinks.jpeg" alt="Bithinks" />
-          <span>Bithinks</span>
+        <a href="/" className="auth-brand" style={{ textDecoration: 'none' }}>
+          <div className="brand-logo-container" style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', lineHeight: 1 }}>
+            <img src="/bithinks.png" alt="Bithinks Logo" style={{ height: '48px', width: 'auto' }} />
+            <span style={{ fontFamily: 'Montserrat, sans-serif', fontSize: '12px', fontWeight: 800, color: '#FFFFFF', letterSpacing: '0.5px', marginTop: '4px', textTransform: 'lowercase' }}>bithinks</span>
+          </div>
         </a>
         <div className="register-left-content">
           <h1>
