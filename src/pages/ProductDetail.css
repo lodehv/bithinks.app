@@ -1292,9 +1292,17 @@
 
 /* ── Responsif tipografi hero ────────────────────────────────────────────── */
 @media (max-width: 991px) {
-  .ds-omni .p-detail-hero-grid { align-items: center; }
+  .ds-omni .p-detail-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    align-items: center;
+  }
   .ds-omni .p-detail-title { font-size: 2.25rem; }
   .ds-omni .p-detail-desc { max-width: 100%; }
+  .p-detail-hero-mockup.omni-hero {
+    margin-top: 0 !important;
+    max-width: 100%;
+  }
 }
 @media (max-width: 576px) {
   .ds-omni .p-detail-title { font-size: 1.9rem; }
@@ -1320,7 +1328,12 @@
   aspect-ratio: auto;
   width: 100%;
   max-width: 780px;
-  margin-top: -65px;
+}
+
+@media (min-width: 992px) {
+  .p-detail-hero-mockup.omni-hero {
+    margin-top: -65px;
+  }
 }
 .p-detail-hero-mockup.omni-hero .p-detail-mockup-grid { display: none; }
 .p-detail-hero-mockup.omni-hero .p-mockup-img {
