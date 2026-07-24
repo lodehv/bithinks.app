@@ -17,7 +17,7 @@ import {
 // Import Mockup Images (Matching AppSelector.jsx)
 import bitOneLogo from '../assets/logo_pilihan_fitur/bitone_logo-removebg-preview.png';
 import bitOmniLogo from '../assets/logo_pilihan_fitur/bithinks_omnichannel_logo-removebg-preview.png';
-import bithinksHeroPage from '../assets/bithinks_hero_page.png';
+import bithinksHeroPage from '../assets/heropage_bitomni_new.png';
 import bitFineLogo from '../assets/logo_pilihan_fitur/bit_finance_logo-removebg-preview.png';
 import bitPosLogo from '../assets/logo_pilihan_fitur/bithinks_pos_logo_v2-removebg-preview.png';
 import bitTeamLogo from '../assets/logo_pilihan_fitur/bithinks_hrm_logo-removebg-preview.png';
