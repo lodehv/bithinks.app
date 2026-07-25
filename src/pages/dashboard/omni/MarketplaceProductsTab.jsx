@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { PackageOpen, RefreshCw, Link2, Check, ImageOff, X, Plus, Trash2 } from "lucide-react";
+import { PackageOpen, RefreshCw, Link2, Check, ImageOff, X, Plus, Trash2, Search } from "lucide-react";
 import { omniApi, isPaymentRequired } from "../../../utils/omniApi";
 import shopeeLogo from "../../../assets/logo_pilihan_fitur/shopee.png";
 import tiktokLogo from "../../../assets/logo_pilihan_fitur/logo_tiktok.jpg";
@@ -22,6 +22,10 @@ export default function MarketplaceProductsTab({ locked, onRequirePayment }) {
   const [masters, setMasters] = useState([]);     // master produk utk dropdown
   const [syncing, setSyncing] = useState(false);
   const [note, setNote] = useState("");
+  const [searchQ, setSearchQ] = useState("");
+  const [mapFilter, setMapFilter] = useState("all"); // all | mapped | unmapped
+  const [storeFilter, setStoreFilter] = useState("all");
+  const [stores, setStores] = useState([]);
 
   // Modal pemetaan per etalase
   const [mapProduct, setMapProduct] = useState(null); // etalase yang sedang dipetakan
@@ -44,7 +48,9 @@ export default function MarketplaceProductsTab({ locked, onRequirePayment }) {
   useEffect(() => {
     loadMappings();
     omniApi.listProducts().then((p) => setMasters(Array.isArray(p) ? p : [])).catch(() => {});
+    omniApi.listStores().then((s) => setStores(Array.isArray(s) ? s : [])).catch(() => {});
   }, []);
+  useEffect(() => { setStoreFilter("all"); }, [channel]);
 
   const syncCatalog = async () => {
     if (locked) return onRequirePayment?.();
@@ -113,6 +119,34 @@ export default function MarketplaceProductsTab({ locked, onRequirePayment }) {
     [masters],
   );
 
+  const channelStores = useMemo(
+    () => stores.filter((s) => s.channel === channel && s.status === "connected"),
+    [stores, channel],
+  );
+
+  const isFullyMapped = (p) => {
+    const total = (p.skus || []).length;
+    return total > 0 && p.skus.every((s) => mappings[s]?.length);
+  };
+
+  const visible = useMemo(() => {
+    let list = products ?? [];
+    const q = searchQ.trim().toLowerCase();
+    if (q) {
+      list = list.filter((p) =>
+        p.title.toLowerCase().includes(q) ||
+        (p.skus || []).some((s) => s.toLowerCase().includes(q)),
+      );
+    }
+    if (storeFilter !== "all") list = list.filter((p) => p.storeId === storeFilter);
+    if (mapFilter === "mapped") list = list.filter((p) => isFullyMapped(p));
+    if (mapFilter === "unmapped") list = list.filter((p) => !isFullyMapped(p));
+    return list;
+  }, [products, searchQ, storeFilter, mapFilter, mappings]);
+
+  const countMapped = useMemo(() => (products ?? []).filter((p) => isFullyMapped(p)).length, [products, mappings]);
+  const countUnmapped = (products?.length ?? 0) - countMapped;
+
   return (
     <div className="mp-products">
       <div className="mp-products-head">
@@ -135,6 +169,37 @@ export default function MarketplaceProductsTab({ locked, onRequirePayment }) {
         ))}
       </div>
 
+      {/* Pencarian · tab pemetaan · filter toko */}
+      <div className="mpp-toolbar">
+        <div className="mpp-search">
+          <Search size={14} className="mpp-search-icon" />
+          <input
+            type="text"
+            placeholder="Cari produk atau SKU…"
+            value={searchQ}
+            onChange={(e) => setSearchQ(e.target.value)}
+          />
+          {searchQ && <button className="mpp-search-clear" onClick={() => setSearchQ("")}><X size={12} /></button>}
+        </div>
+
+        <div className="mpp-map-tabs">
+          <button className={`mpp-map-tab ${mapFilter === "all" ? "active" : ""}`} onClick={() => setMapFilter("all")}>
+            Semua ({products?.length ?? 0})
+          </button>
+          <button className={`mpp-map-tab ${mapFilter === "mapped" ? "active" : ""}`} onClick={() => setMapFilter("mapped")}>
+            Sudah dipetakan ({countMapped})
+          </button>
+          <button className={`mpp-map-tab ${mapFilter === "unmapped" ? "active" : ""}`} onClick={() => setMapFilter("unmapped")}>
+            Belum dipetakan ({countUnmapped})
+          </button>
+        </div>
+
+        <select className="mpp-store-filter" value={storeFilter} onChange={(e) => setStoreFilter(e.target.value)}>
+          <option value="all">Semua Toko</option>
+          {channelStores.map((st) => <option key={st.id} value={st.id}>{st.name}</option>)}
+        </select>
+      </div>
+
       {note && <div className="omni-pill sync" style={{ marginBottom: 12 }}><Check size={12} /> {note}</div>}
 
       {products === null ? (
@@ -147,9 +212,17 @@ export default function MarketplaceProductsTab({ locked, onRequirePayment }) {
             <p>Klik <b>Sync Produk</b> untuk menarik semua produk (aktif &amp; non-aktif) dari toko marketplace-mu.</p>
           </div>
         </div>
+      ) : visible.length === 0 ? (
+        <div className="mp-products-panel">
+          <div className="mp-products-empty">
+            <Search size={26} className="text-gray" />
+            <h4>Tidak ada produk yang cocok</h4>
+            <p>Coba ubah kata kunci, tab pemetaan, atau filter toko.</p>
+          </div>
+        </div>
       ) : (
         <div className="mpp-grid">
-          {products.map((p) => {
+          {visible.map((p) => {
             const total = (p.skus || []).length;
             const done = mappedCount(p);
             const allMapped = total > 0 && done === total;
