@@ -35,7 +35,7 @@ export default function ProductsTab({ locked, onRequirePayment }) {
   const [selectedUnit, setSelectedUnit]         = useState("all");
   const [selectedStatus, setSelectedStatus]     = useState("active");
 
-  const [form, setForm]         = useState({ sku: "", name: "", price: "", costPrice: "", masterStock: "", category: "" });
+  const [form, setForm]         = useState({ name: "", costPrice: "", masterStock: "", category: "", unit: "" });
   const [stats, setStats]       = useState(null);   // dashboard-stats (movement, COGS, kategori, buckets)
   const [chartGran, setChartGran] = useState("day");
   const [saving, setSaving]     = useState(false);
@@ -80,6 +80,10 @@ export default function ProductsTab({ locked, onRequirePayment }) {
     () => Array.from(new Set(all.map((p) => p.category || "Umum"))).sort(),
     [all],
   );
+  const units = useMemo(
+    () => Array.from(new Set(all.map((p) => p.unit || "pcs"))).sort(),
+    [all],
+  );
 
   // Sync selected product ID on load
   useEffect(() => {
@@ -114,6 +118,11 @@ export default function ProductsTab({ locked, onRequirePayment }) {
       list = list.filter((p) => (p.category || "Umum") === selectedCategory);
     }
 
+    // Unit Filter
+    if (selectedUnit !== "all") {
+      list = list.filter((p) => (p.unit || "pcs") === selectedUnit);
+    }
+
     // Sort
     return list.sort((a, b) => {
       if (sortBy === "name")  return a.name.localeCompare(b.name);
@@ -121,14 +130,14 @@ export default function ProductsTab({ locked, onRequirePayment }) {
       if (sortBy === "stock") return (b.masterStock || 0) - (a.masterStock || 0);
       return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
     });
-  }, [all, search, selectedPlatform, selectedCategory, sortBy]);
+  }, [all, search, selectedPlatform, selectedCategory, selectedUnit, sortBy]);
 
   // Find currently selected product object
   const selectedProduct = useMemo(() => {
     return all.find(p => p.id === selectedProductId) || all[0] || null;
   }, [all, selectedProductId]);
 
-  const blankForm = { sku: "", name: "", price: "", costPrice: "", masterStock: "", category: "" };
+  const blankForm = { name: "", costPrice: "", masterStock: "", category: "", unit: "" };
   const openAdd = () => { setEditing(null); setForm(blankForm); setError(""); setShow(true); };
   
   const openEdit = (p) => {
@@ -136,12 +145,11 @@ export default function ProductsTab({ locked, onRequirePayment }) {
     setEditing(p.id); 
     setError("");
     setForm({
-      sku: p.sku ?? "",
       name: p.name ?? "",
-      price: p.price ?? "",
       costPrice: p.costPrice ?? "",
       masterStock: p.masterStock ?? "",
       category: p.category ?? "",
+      unit: p.unit ?? "",
     });
     setShow(true);
   };
@@ -149,12 +157,11 @@ export default function ProductsTab({ locked, onRequirePayment }) {
   const saveProduct = async (e) => {
     e.preventDefault(); setError(""); setSaving(true);
     const payload = {
-      sku: form.sku.trim(), 
       name: form.name.trim(),
-      price: Number(form.price) || 0,
       costPrice: form.costPrice === "" ? null : Number(form.costPrice),
       masterStock: Number(form.masterStock) || 0,
       category: form.category.trim() || null,
+      unit: form.unit.trim() || null,
     };
     try {
       if (editingId) await omniApi.updateProduct(editingId, payload);
@@ -632,8 +639,7 @@ export default function ProductsTab({ locked, onRequirePayment }) {
               <div className="premium-select-wrapper">
                 <select value={selectedUnit} onChange={(e) => setSelectedUnit(e.target.value)}>
                   <option value="all">Semua</option>
-                  <option value="pcs">pcs</option>
-                  <option value="box">box</option>
+                  {units.map((u) => <option key={u} value={u}>{u}</option>)}
                 </select>
                 <ChevronDown size={10} className="select-chevron-icon" />
               </div>
@@ -867,16 +873,8 @@ export default function ProductsTab({ locked, onRequirePayment }) {
             <form onSubmit={saveProduct} className="modal-form">
               <div className="form-grid">
                 <div className="form-item">
-                  <label>SKU Master</label>
-                  <input required value={form.sku} placeholder="KOP-001" onChange={(e) => setForm({ ...form, sku: e.target.value })} />
-                </div>
-                <div className="form-item">
                   <label>Nama Produk</label>
                   <input required value={form.name} placeholder="Kopi Arabica 250g" onChange={(e) => setForm({ ...form, name: e.target.value })} />
-                </div>
-                <div className="form-item">
-                  <label>Harga Jual (Rp)</label>
-                  <input type="number" min="0" value={form.price} placeholder="0" onChange={(e) => setForm({ ...form, price: e.target.value })} />
                 </div>
                 <div className="form-item">
                   <label>HPP / Harga Pokok (Rp)</label>
@@ -887,13 +885,17 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                   <input value={form.category} placeholder="mis. Pupuk" onChange={(e) => setForm({ ...form, category: e.target.value })} />
                 </div>
                 <div className="form-item">
+                  <label>Satuan</label>
+                  <input value={form.unit} placeholder="mis. pcs / botol / kg" onChange={(e) => setForm({ ...form, unit: e.target.value })} />
+                </div>
+                <div className="form-item">
                   <label>Stok Fisik Awal</label>
                   <input type="number" min="0" value={form.masterStock} placeholder="0" onChange={(e) => setForm({ ...form, masterStock: e.target.value })} />
                 </div>
               </div>
               <div className="modal-actions-row">
                 <button className="pm-btn pm-btn-outline" type="button" onClick={() => { setShow(false); setEditing(null); }}>Batal</button>
-                <button className="pm-btn pm-btn-primary" type="submit" disabled={saving || !form.sku.trim() || !form.name.trim()}>
+                <button className="pm-btn pm-btn-primary" type="submit" disabled={saving || !form.name.trim()}>
                   {saving ? "Menyimpan…" : "Simpan Produk"}
                 </button>
               </div>
