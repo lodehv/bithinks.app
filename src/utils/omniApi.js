@@ -21,6 +21,9 @@ export const omniApi = {
   // Produk marketplace (etalase) untuk tab Produk Marketplaces + tautan ke master.
   listMarketplaceProducts: (channel) => api.get('/api/omni/products/marketplace', { params: { channel } }).then(unwrap),
   syncProductCatalog: ()            => api.post('/api/omni/products/catalog/sync').then(unwrap),
+  // Resep (BOM) SKU marketplace → master produk: [{masterProductId, qty}]
+  listSkuMappings:   ()             => api.get('/api/omni/products/sku-mappings').then(unwrap),
+  saveSkuMapping:    (sku, components) => api.put('/api/omni/products/sku-mappings', { sku, components }).then(unwrap),
   createProduct:     (payload)     => api.post('/api/omni/products', payload).then(unwrap),
   updateProduct:     (id, payload) => api.patch(`/api/omni/products/${id}`, payload).then(unwrap),
   deleteProduct:     (id)          => api.delete(`/api/omni/products/${id}`).then(unwrap),
