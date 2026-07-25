@@ -84,18 +84,18 @@ export default function MarketplaceProductsTab({ locked, onRequirePayment }) {
           </div>
         </div>
       ) : (
-        <div className="mp-grid">
+        <div className="mpp-grid">
           {products.map((p) => (
-            <div key={p.id} className={`mp-card ${p.status !== "active" ? "inactive" : ""}`}>
-              <div className="mp-card-img">
+            <div key={p.id} className={`mpp-card ${p.status !== "active" ? "inactive" : ""}`}>
+              <div className="mpp-card-img">
                 {p.imageUrl
                   ? <img src={p.imageUrl} alt={p.title} loading="lazy" />
-                  : <div className="mp-card-noimg"><ImageOff size={22} /></div>}
+                  : <div className="mpp-card-noimg"><ImageOff size={22} /></div>}
                 <span className={`mp-status-badge ${p.status}`}>{p.status === "active" ? "Aktif" : "Non-aktif"}</span>
               </div>
-              <div className="mp-card-body">
-                <div className="mp-card-title" title={p.title}>{p.title}</div>
-                <div className="mp-card-skus">
+              <div className="mpp-card-body">
+                <div className="mpp-card-title" title={p.title}>{p.title}</div>
+                <div className="mpp-card-skus">
                   {(p.skus || []).length === 0
                     ? <span className="mp-sku-empty">Tanpa SKU</span>
                     : p.skus.map((s, i) => <span key={i} className="mp-sku-chip">{s}</span>)}
