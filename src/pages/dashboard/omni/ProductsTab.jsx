@@ -13,94 +13,7 @@ import "./OmniModule.css";
 
 const rupiah = (n) => "Rp " + Math.round(n || 0).toLocaleString("id-ID");
 
-const getProductCategory = (p) => {
-  let cat = p?.category;
-  if (!cat) {
-    const name = (p?.name || "").toLowerCase();
-    if (name.includes("kaos") || name.includes("t-shirt") || name.includes("baju") || name.includes("hoodie") || name.includes("jacket") || name.includes("jaket") || name.includes("kemeja") || name.includes("flanel")) {
-      cat = "Fashion";
-    } else if (name.includes("susu") || name.includes("oat") || name.includes("kopi") || name.includes("aren") || name.includes("cair") || name.includes("barista")) {
-      cat = "Bahan Minuman";
-    } else if (name.includes("pupuk") || name.includes("pmp")) {
-      cat = "Pertanian & Kebun";
-    } else {
-      cat = "Umum";
-    }
-  }
-  
-  if (cat === "Kaos Oversize" || cat === "Hoodie" || cat === "Jacket" || cat === "Kemeja & Flanel") {
-    return "Fashion";
-  }
-  return cat;
-};
 
-const MOCK_PRODUCTS = [
-  {
-    id: "mock-1",
-    name: "Kaos Bithink",
-    sku: "TSH-001",
-    category: "Fashion",
-    unit: "pcs",
-    masterStock: 320,
-    totalKeluar: 2840,
-    costPrice: 5942,
-    price: 55410,
-    channels: ["shopee", "tiktok", "lazada", "tokopedia"],
-    imageUrl: ""
-  },
-  {
-    id: "mock-2",
-    name: "Hoodie Bithink",
-    sku: "HD-001",
-    category: "Fashion",
-    unit: "pcs",
-    masterStock: 280,
-    totalKeluar: 2150,
-    costPrice: 8814,
-    price: 34800,
-    channels: ["shopee", "tiktok", "lazada"],
-    imageUrl: ""
-  },
-  {
-    id: "mock-3",
-    name: "Jacket Bithink",
-    sku: "JK-001",
-    category: "Fashion",
-    unit: "pcs",
-    masterStock: 120,
-    totalKeluar: 1430,
-    costPrice: 10783,
-    price: 19330,
-    channels: ["shopee", "tiktok", "lazada"],
-    imageUrl: ""
-  },
-  {
-    id: "mock-4",
-    name: "Kemeja Bithink",
-    sku: "SH-001",
-    category: "Fashion",
-    unit: "pcs",
-    masterStock: 150,
-    totalKeluar: 1220,
-    costPrice: 8984,
-    price: 11570,
-    channels: ["shopee", "tiktok", "lazada"],
-    imageUrl: ""
-  },
-  {
-    id: "mock-5",
-    name: "Sweater Bithink",
-    sku: "HD-002",
-    category: "Fashion",
-    unit: "pcs",
-    masterStock: 200,
-    totalKeluar: 1180,
-    costPrice: 10364,
-    price: 7640,
-    channels: ["shopee", "lazada"],
-    imageUrl: ""
-  }
-];
 
 export default function ProductsTab({ locked, onRequirePayment }) {
   const [activeTab, setActiveTab] = useState("master"); // master | marketplace
@@ -122,26 +35,51 @@ export default function ProductsTab({ locked, onRequirePayment }) {
   const [selectedUnit, setSelectedUnit]         = useState("all");
   const [selectedStatus, setSelectedStatus]     = useState("active");
 
-  const [form, setForm]         = useState({ sku: "", name: "", price: "", costPrice: "", masterStock: "" });
+  const [form, setForm]         = useState({ sku: "", name: "", price: "", costPrice: "", masterStock: "", category: "" });
+  const [stats, setStats]       = useState(null);   // dashboard-stats (movement, COGS, kategori, buckets)
+  const [chartGran, setChartGran] = useState("day");
   const [saving, setSaving]     = useState(false);
   const [syncing, setSyncing]   = useState(false);
   const [note, setNote]         = useState("");
   const [error, setError]       = useState("");
 
-  const load = () => { 
-    setProducts(null); 
+  const loadStats = (g) =>
+    omniApi.productDashboardStats({ granularity: g }).then(setStats).catch(() => {});
+
+  const load = () => {
+    setProducts(null);
     omniApi.listProducts()
-      .then((data) => {
-        setProducts(data);
-      })
-      .catch(() => setProducts([])); 
+      .then((data) => setProducts(Array.isArray(data) ? data : []))
+      .catch(() => setProducts([]));
+    loadStats(chartGran);
   };
-  
+
   useEffect(load, []);
+  useEffect(() => { loadStats(chartGran); }, [chartGran]);
   const guard = (err) => { if (isPaymentRequired(err)) { onRequirePayment?.(); return true; } return false; };
 
-  // Use database products or fall back to high-fidelity mocks
-  const all = products?.length ? products : MOCK_PRODUCTS;
+  // Data REAL: produk master + statistik movement/COGS per master (dari resep SKU).
+  const statsByMaster = useMemo(
+    () => new Map((stats?.perMaster ?? []).map((m) => [m.masterProductId, m])),
+    [stats],
+  );
+  const all = useMemo(() => (products ?? []).map((p) => {
+    const st = statsByMaster.get(p.id);
+    return {
+      ...p,
+      category: p.category ?? null,
+      totalKeluar: st?.movementQty ?? 0,
+      cogsTotal: st?.cogsTotal ?? 0,
+      avgCogs: st?.avgCogs ?? null,
+      skuCount: st?.skuCount ?? 0,
+      mappedSkus: st?.skus ?? [],
+      mchannels: st?.channels ?? [],
+    };
+  }), [products, statsByMaster]);
+  const categories = useMemo(
+    () => Array.from(new Set(all.map((p) => p.category || "Umum"))).sort(),
+    [all],
+  );
 
   // Sync selected product ID on load
   useEffect(() => {
@@ -173,7 +111,7 @@ export default function ProductsTab({ locked, onRequirePayment }) {
 
     // Category Filter
     if (selectedCategory !== "all") {
-      list = list.filter(p => getProductCategory(p).toLowerCase() === selectedCategory.toLowerCase());
+      list = list.filter((p) => (p.category || "Umum") === selectedCategory);
     }
 
     // Sort
@@ -190,19 +128,20 @@ export default function ProductsTab({ locked, onRequirePayment }) {
     return all.find(p => p.id === selectedProductId) || all[0] || null;
   }, [all, selectedProductId]);
 
-  const blankForm = { sku: "", name: "", price: "", costPrice: "", masterStock: "" };
+  const blankForm = { sku: "", name: "", price: "", costPrice: "", masterStock: "", category: "" };
   const openAdd = () => { setEditing(null); setForm(blankForm); setError(""); setShow(true); };
   
   const openEdit = (p) => {
     setMenuFor(null); 
     setEditing(p.id); 
     setError("");
-    setForm({ 
-      sku: p.sku ?? "", 
-      name: p.name ?? "", 
-      price: p.price ?? "", 
-      costPrice: p.costPrice ?? "", 
-      masterStock: p.masterStock ?? "" 
+    setForm({
+      sku: p.sku ?? "",
+      name: p.name ?? "",
+      price: p.price ?? "",
+      costPrice: p.costPrice ?? "",
+      masterStock: p.masterStock ?? "",
+      category: p.category ?? "",
     });
     setShow(true);
   };
@@ -215,6 +154,7 @@ export default function ProductsTab({ locked, onRequirePayment }) {
       price: Number(form.price) || 0,
       costPrice: form.costPrice === "" ? null : Number(form.costPrice),
       masterStock: Number(form.masterStock) || 0,
+      category: form.category.trim() || null,
     };
     try {
       if (editingId) await omniApi.updateProduct(editingId, payload);
@@ -248,12 +188,14 @@ export default function ProductsTab({ locked, onRequirePayment }) {
     const a = document.createElement("a"); a.href = url; a.download = "produk-master.csv"; a.click(); URL.revokeObjectURL(url);
   };
 
-  // KPI calculations
-  const totalMasterProdukCount = all.length;
-  const totalSkuMarketplaceCount = all.reduce((acc, p) => acc + (p.channels?.length || 0), 0);
-  const totalMovementKeluarCount = all.reduce((acc, p) => acc + (p.totalKeluar || 0), 0);
-  const totalCogsSum = all.reduce((acc, p) => acc + ((p.totalKeluar || 0) * (p.costPrice || 0)), 0);
-  const totalStokTersediaSum = all.reduce((acc, p) => acc + (p.masterStock || 0), 0);
+  // KPI real (dashboard-stats)
+  const totalMasterProdukCount = stats?.kpi?.masterCount ?? all.length;
+  const totalSkuMarketplaceCount = stats?.kpi?.skuMarketplaceTotal ?? 0;
+  const skuMappedCount = stats?.kpi?.skuMapped ?? 0;
+  const totalMovementKeluarCount = stats?.totals?.movementQty ?? 0;
+  const totalCogsSum = stats?.totals?.cogsTotal ?? 0;
+  const hppMissingQty = stats?.totals?.hppMissingQty ?? 0;
+  const totalStokTersediaSum = stats?.kpi?.stockPhysical ?? 0;
 
   // Render marketplace icon chips cleanly
   const renderMarketplaceIcons = (channels = []) => {
@@ -284,34 +226,52 @@ export default function ProductsTab({ locked, onRequirePayment }) {
     );
   };
 
-  const chartDays = ["01 Jun", "08 Jun", "15 Jun", "22 Jun", "29 Jun", "06 Jul"];
-  const movementPoints = [1350, 2010, 1680, 2240, 1920, 2410];
-  const cogsPoints = [750, 1150, 910, 1340, 1080, 1560];
-
-  const getCoordinates = (pointsArray, isRightAxis = false) => {
-    const width = 450;
-    const height = 150;
-    const paddingX = 40;
-    const paddingY = 20;
-
-    const maxVal = isRightAxis ? 32000000 : 2400; 
-    const minVal = 0;
-    const range = maxVal - minVal;
-
-    return pointsArray.map((val, idx) => {
-      const x = paddingX + (idx / (pointsArray.length - 1)) * (width - 2 * paddingX);
-      const y = height - paddingY - ((val - minVal) / range) * (height - 2 * paddingY);
-      return { x, y, value: val };
-    });
+  // Grafik real dari buckets dashboard-stats
+  const chartBuckets = stats?.buckets ?? [];
+  const BLN = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
+  const fmtBucketLabel = (b) => {
+    if (chartGran === "month") { const [y, m] = b.split("-"); return `${BLN[Number(m) - 1]} ${y.slice(2)}`; }
+    const parts = b.split("-"); return `${parts[2]}/${parts[1]}`;
   };
-
-  const getPathD = (coords) => {
-    if (coords.length < 2) return "";
-    return coords.map((c, i) => `${i === 0 ? "M" : "L"} ${c.x} ${c.y}`).join(" ");
+  const niceMax = (v) => {
+    if (v <= 0) return 1;
+    const p = Math.pow(10, Math.floor(Math.log10(v)));
+    const n = v / p;
+    return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10) * p;
   };
+  const maxMove = niceMax(Math.max(1, ...chartBuckets.map((b) => b.movementQty)));
+  const maxCogs = niceMax(Math.max(1, ...chartBuckets.map((b) => b.cogs)));
+  const fmtAxisQty = (v) => (v >= 1000 ? `${(v / 1000).toFixed(v % 1000 === 0 ? 0 : 1)}k` : `${Math.round(v)}`);
+  const fmtAxisRp = (v) => (v >= 1e9 ? `${(v / 1e9).toFixed(1)}M` : v >= 1e6 ? `${(v / 1e6).toFixed(v % 1e6 === 0 ? 0 : 1)} jt` : v >= 1e3 ? `${Math.round(v / 1e3)}rb` : `${Math.round(v)}`);
 
-  const coordsMovement = getCoordinates(movementPoints, false);
-  const coordsCogs = getCoordinates(cogsPoints, true);
+  const getCoordinates = (vals, maxVal) => {
+    const width = 450, height = 150, paddingX = 40, paddingY = 20;
+    const n = vals.length;
+    return vals.map((val, idx) => ({
+      x: paddingX + (n <= 1 ? (width - 2 * paddingX) / 2 : (idx / (n - 1)) * (width - 2 * paddingX)),
+      y: height - paddingY - ((val || 0) / (maxVal || 1)) * (height - 2 * paddingY),
+      value: val,
+    }));
+  };
+  const getPathD = (coords) => (coords.length < 2 ? "" : coords.map((c, i) => `${i === 0 ? "M" : "L"} ${c.x} ${c.y}`).join(" "));
+  const coordsMovement = getCoordinates(chartBuckets.map((b) => b.movementQty), maxMove);
+  const coordsCogs = getCoordinates(chartBuckets.map((b) => b.cogs), maxCogs);
+  const xLabelEvery = Math.max(1, Math.ceil(chartBuckets.length / 6));
+
+  // Donut kategori real
+  const donutColors = ["#4F46E5", "#818CF8", "#60A5FA", "#A78BFA", "#C7C9F9"];
+  const catList = (stats?.byCategory ?? []).filter((c) => c.cogs > 0);
+  const catTotal = catList.reduce((a, c) => a + c.cogs, 0);
+  const DONUT_CIRC = 2 * Math.PI * 38;
+  let donutAcc = 0;
+  const donutSegs = catList.map((c, i) => {
+    const dash = catTotal > 0 ? (c.cogs / catTotal) * DONUT_CIRC : 0;
+    const seg = { ...c, color: donutColors[i % donutColors.length], dash, offset: -donutAcc, pct: catTotal > 0 ? Math.round((c.cogs / catTotal) * 100) : 0 };
+    donutAcc += dash;
+    return seg;
+  });
+  const fmtRpShort = (v) => (v >= 1e9 ? `Rp ${(v / 1e9).toFixed(1)}M` : v >= 1e6 ? `Rp ${(v / 1e6).toFixed(1)}jt` : `Rp ${Math.round(v).toLocaleString("id-ID")}`);
+  const top5 = (stats?.perMaster ?? []).filter((m) => m.cogsTotal > 0).slice(0, 5);
 
   return (
     <div className="pm-master-container">
@@ -382,10 +342,7 @@ export default function ProductsTab({ locked, onRequirePayment }) {
             <div className="premium-select-wrapper">
               <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
                 <option value="all">Semua Kategori</option>
-                <option value="Fashion">Fashion</option>
-                <option value="Bahan Minuman">Bahan Minuman</option>
-                <option value="Pertanian & Kebun">Pertanian & Kebun</option>
-                <option value="Umum">Umum</option>
+                {categories.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
               <ChevronDown size={12} className="select-chevron-icon" />
             </div>
@@ -422,7 +379,6 @@ export default function ProductsTab({ locked, onRequirePayment }) {
           </div>
           <h2 className="kpi-number-value">{totalMasterProdukCount}</h2>
           <div className="kpi-card-footer-row">
-            <span className="subtext-trend text-purple">↑ 8 baru</span>
             <span className="subtext-muted">Produk aktif</span>
           </div>
         </div>
@@ -437,7 +393,7 @@ export default function ProductsTab({ locked, onRequirePayment }) {
           </div>
           <h2 className="kpi-number-value">{totalSkuMarketplaceCount}</h2>
           <div className="kpi-card-footer-row">
-            <span className="subtext-trend text-purple">↑ 11%</span>
+            <span className="subtext-trend text-purple">{skuMappedCount} dipetakan</span>
             <span className="subtext-muted">SKU terhubung</span>
           </div>
         </div>
@@ -452,7 +408,6 @@ export default function ProductsTab({ locked, onRequirePayment }) {
           </div>
           <h2 className="kpi-number-value">{totalMovementKeluarCount.toLocaleString("id-ID")} <span className="kpi-value-unit">pcs</span></h2>
           <div className="kpi-card-footer-row">
-            <span className="subtext-trend text-purple">↑ 14%</span>
             <span className="subtext-muted">Keluar / dikirim</span>
           </div>
         </div>
@@ -467,7 +422,7 @@ export default function ProductsTab({ locked, onRequirePayment }) {
           </div>
           <h2 className="kpi-number-value">{rupiah(totalCogsSum)}</h2>
           <div className="kpi-card-footer-row">
-            <span className="subtext-trend text-purple">↑ 9.7%</span>
+            {hppMissingQty > 0 && <span className="subtext-trend text-orange">{hppMissingQty.toLocaleString("id-ID")} pcs tanpa HPP</span>}
             <span className="subtext-muted">Total biaya pokok</span>
           </div>
         </div>
@@ -482,7 +437,6 @@ export default function ProductsTab({ locked, onRequirePayment }) {
           </div>
           <h2 className="kpi-number-value">{totalStokTersediaSum.toLocaleString("id-ID")} <span className="kpi-value-unit">pcs</span></h2>
           <div className="kpi-card-footer-row">
-            <span className="subtext-trend text-orange">32 low</span>
             <span className="subtext-muted">Total fisik gudang</span>
           </div>
         </div>
@@ -496,9 +450,9 @@ export default function ProductsTab({ locked, onRequirePayment }) {
           <div className="card-item-header">
             <h3>Ringkasan Movement & COGS</h3>
             <div className="card-header-tabs-toggle">
-              <button className="tab-toggle-btn">Hari</button>
-              <button className="tab-toggle-btn">Minggu</button>
-              <button className="tab-toggle-btn active">Bulan</button>
+              <button className={`tab-toggle-btn ${chartGran === "day" ? "active" : ""}`} onClick={() => setChartGran("day")}>Hari</button>
+              <button className={`tab-toggle-btn ${chartGran === "week" ? "active" : ""}`} onClick={() => setChartGran("week")}>Minggu</button>
+              <button className={`tab-toggle-btn ${chartGran === "month" ? "active" : ""}`} onClick={() => setChartGran("month")}>Bulan</button>
             </div>
           </div>
           <div className="card-item-body">
@@ -511,25 +465,21 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                   );
                 })}
 
-                {chartDays.map((day, idx) => {
-                  const x = 40 + (idx / 5) * 370;
-                  return (
-                    <g key={idx}>
-                      <line x1={x} y1="20" x2={x} y2="130" stroke="#F3F4F6" strokeDasharray="3 3" strokeWidth="1" />
-                      <text x={x} y="145" textAnchor="middle" fontSize="8" fill="#9CA3AF" fontWeight="700">{day}</text>
+                {chartBuckets.map((b, idx) => (
+                  (idx % xLabelEvery === 0 || idx === chartBuckets.length - 1) && (
+                    <g key={b.bucket}>
+                      <line x1={coordsMovement[idx]?.x} y1="20" x2={coordsMovement[idx]?.x} y2="130" stroke="#F3F4F6" strokeDasharray="3 3" strokeWidth="1" />
+                      <text x={coordsMovement[idx]?.x} y="145" textAnchor="middle" fontSize="8" fill="#9CA3AF" fontWeight="700">{fmtBucketLabel(b.bucket)}</text>
                     </g>
-                  );
-                })}
+                  )
+                ))}
 
-                <text x="35" y="23" textAnchor="end" fontSize="8" fill="#9CA3AF" fontWeight="700">2.4k</text>
-                <text x="35" y="59" textAnchor="end" fontSize="8" fill="#9CA3AF" fontWeight="700">1.8k</text>
-                <text x="35" y="95" textAnchor="end" fontSize="8" fill="#9CA3AF" fontWeight="700">1.2k</text>
-                <text x="35" y="131" textAnchor="end" fontSize="8" fill="#9CA3AF" fontWeight="700">0</text>
-
-                <text x="415" y="23" textAnchor="start" fontSize="8" fill="#9CA3AF" fontWeight="700">32 jt</text>
-                <text x="415" y="59" textAnchor="start" fontSize="8" fill="#9CA3AF" fontWeight="700">24 jt</text>
-                <text x="415" y="95" textAnchor="start" fontSize="8" fill="#9CA3AF" fontWeight="700">16 jt</text>
-                <text x="415" y="131" textAnchor="start" fontSize="8" fill="#9CA3AF" fontWeight="700">0</text>
+                {[0, 0.33, 0.66, 1].map((ratio, idx) => (
+                  <text key={`l${idx}`} x="35" y={23 + ratio * 110} textAnchor="end" fontSize="8" fill="#9CA3AF" fontWeight="700">{fmtAxisQty(maxMove * (1 - ratio))}</text>
+                ))}
+                {[0, 0.33, 0.66, 1].map((ratio, idx) => (
+                  <text key={`r${idx}`} x="415" y={23 + ratio * 110} textAnchor="start" fontSize="8" fill="#9CA3AF" fontWeight="700">{fmtAxisRp(maxCogs * (1 - ratio))}</text>
+                ))}
 
                 <path d={getPathD(coordsMovement)} fill="none" stroke="#4F46E5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 {coordsMovement.map((c, i) => (
@@ -566,44 +516,34 @@ export default function ProductsTab({ locked, onRequirePayment }) {
             <div className="donut-chart-wrapper centered-donut">
               <svg width="100" height="100" viewBox="0 0 100 100" className="donut-svg">
                 <circle cx="50" cy="50" r="38" fill="transparent" stroke="#F3F4F6" strokeWidth="8" />
-                <circle cx="50" cy="50" r="38" fill="transparent" stroke="#4F46E5" strokeWidth="8" strokeDasharray="102.66 136.1" strokeDashoffset="0" transform="rotate(-90 50 50)" />
-                <circle cx="50" cy="50" r="38" fill="transparent" stroke="#818CF8" strokeWidth="8" strokeDasharray="64.46 174.3" strokeDashoffset="-102.66" transform="rotate(-90 50 50)" />
-                <circle cx="50" cy="50" r="38" fill="transparent" stroke="#60A5FA" strokeWidth="8" strokeDasharray="35.81 202.95" strokeDashoffset="-167.12" transform="rotate(-90 50 50)" />
-                <circle cx="50" cy="50" r="38" fill="transparent" stroke="#A78BFA" strokeWidth="8" strokeDasharray="21.48 217.28" strokeDashoffset="-202.93" transform="rotate(-90 50 50)" />
-                <circle cx="50" cy="50" r="38" fill="transparent" stroke="#C7C9F9" strokeWidth="8" strokeDasharray="14.32 224.44" strokeDashoffset="-224.41" transform="rotate(-90 50 50)" />
+                {donutSegs.map((seg) => (
+                  <circle key={seg.category} cx="50" cy="50" r="38" fill="transparent" stroke={seg.color} strokeWidth="8"
+                    strokeDasharray={`${seg.dash} ${DONUT_CIRC - seg.dash}`} strokeDashoffset={seg.offset} transform="rotate(-90 50 50)" />
+                ))}
               </svg>
               <div className="donut-inner-text">
                 <span className="text-small">Total</span>
-                <span className="text-bold">Rp 128,7jt</span>
+                <span className="text-bold">{fmtRpShort(catTotal)}</span>
               </div>
             </div>
 
             <div className="donut-labels-list-grid">
-              
-              {/* Category 1 */}
-              <div className="label-item-grid">
-                <div className="color-dot bg-purple"></div>
-                <div className="label-text-column">
-                  <span className="label-name text-truncate">Fashion</span>
-                  <div className="label-details-row">
-                    <span className="label-val">Rp 121,1jt</span>
-                    <span className="label-pct">94%</span>
+              {donutSegs.length === 0 ? (
+                <span className="subtext-muted" style={{ fontSize: 11 }}>Belum ada COGS — petakan SKU & isi HPP master</span>
+              ) : (
+                donutSegs.map((seg) => (
+                  <div className="label-item-grid" key={seg.category}>
+                    <div className="color-dot" style={{ background: seg.color }}></div>
+                    <div className="label-text-column">
+                      <span className="label-name text-truncate">{seg.category}</span>
+                      <div className="label-details-row">
+                        <span className="label-val">{fmtRpShort(seg.cogs)}</span>
+                        <span className="label-pct">{seg.pct}%</span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-
-              {/* Category 2 */}
-              <div className="label-item-grid">
-                <div className="color-dot bg-indigo"></div>
-                <div className="label-text-column">
-                  <span className="label-name text-truncate">Bahan Minuman</span>
-                  <div className="label-details-row">
-                    <span className="label-val">Rp 7,6jt</span>
-                    <span className="label-pct">6%</span>
-                  </div>
-                </div>
-              </div>
-
+                ))
+              )}
             </div>
           </div>
         </div>
@@ -623,26 +563,16 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Hoodie Bithink</td>
-                  <td className="text-right font-semibold text-black">Rp 18.950.000</td>
-                </tr>
-                <tr>
-                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Kaos Bithink</td>
-                  <td className="text-right font-semibold text-black">Rp 16.870.000</td>
-                </tr>
-                <tr>
-                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Jacket Bithink</td>
-                  <td className="text-right font-semibold text-black">Rp 15.420.000</td>
-                </tr>
-                <tr>
-                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Sweater Bithink</td>
-                  <td className="text-right font-semibold text-black">Rp 12.230.000</td>
-                </tr>
-                <tr>
-                  <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>Kemeja Bithink</td>
-                  <td className="text-right font-semibold text-black">Rp 10.980.000</td>
-                </tr>
+                {top5.length === 0 ? (
+                  <tr><td colSpan="2" className="subtext-muted" style={{ fontSize: 11.5, padding: "14px 4px" }}>Belum ada COGS tercatat</td></tr>
+                ) : (
+                  top5.map((m) => (
+                    <tr key={m.masterProductId}>
+                      <td className="font-semibold text-black text-truncate" style={{ maxWidth: 140 }}>{m.name}</td>
+                      <td className="text-right font-semibold text-black">{rupiah(m.cogsTotal)}</td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -690,10 +620,7 @@ export default function ProductsTab({ locked, onRequirePayment }) {
               <div className="premium-select-wrapper">
                 <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
                   <option value="all">Semua</option>
-                  <option value="Fashion">Fashion</option>
-                  <option value="Bahan Minuman">Bahan Minuman</option>
-                  <option value="Pertanian & Kebun">Pertanian & Kebun</option>
-                  <option value="Umum">Umum</option>
+                  {categories.map((c) => <option key={c} value={c}>{c}</option>)}
                 </select>
                 <ChevronDown size={10} className="select-chevron-icon" />
               </div>
@@ -745,7 +672,6 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                   </tr>
                 ) : (
                   shown.map((p) => {
-                    const cogsTotalVal = (p.totalKeluar || 0) * (p.costPrice || p.price * 0.45 || 0);
                     const isSelected = p.id === selectedProductId;
                     return (
                       <tr 
@@ -769,16 +695,16 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                         </td>
                         <td>
                           <span className="category-badge-chip">
-                            {getProductCategory(p)}
+                            {p.category || "Umum"}
                           </span>
                         </td>
                         <td>{p.unit || "pcs"}</td>
                         <td className="text-right font-bold text-black">{p.masterStock}</td>
-                        <td className="text-right">{p.totalKeluar?.toLocaleString("id-ID") || "2.840"}</td>
-                        <td className="text-right font-semibold text-black">{rupiah(cogsTotalVal || 16870000)}</td>
-                        <td className="text-right text-gray">{rupiah(p.costPrice || 5942)}</td>
-                        <td className="text-right font-semibold text-black">{(p.channels?.length || 0)} SKU</td>
-                        <td>{renderMarketplaceIcons(p.channels)}</td>
+                        <td className="text-right">{(p.totalKeluar || 0).toLocaleString("id-ID")}</td>
+                        <td className="text-right font-semibold text-black">{rupiah(p.cogsTotal || 0)}</td>
+                        <td className="text-right text-gray">{p.avgCogs != null ? rupiah(p.avgCogs) : "—"}</td>
+                        <td className="text-right font-semibold text-black">{p.skuCount || 0} SKU</td>
+                        <td>{renderMarketplaceIcons(p.mchannels?.length ? p.mchannels : p.channels)}</td>
                         <td className="text-center" onClick={(e) => e.stopPropagation()}>
                           <div className="actions-button-group">
                             <button className="action-circle-btn" onClick={() => openEdit(p)} title="Edit">
@@ -864,7 +790,7 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                 <div className="info-ledger-list">
                   <div className="ledger-row">
                     <span className="ledger-label">Kategori</span>
-                    <span className="ledger-val font-semibold text-black">{getProductCategory(selectedProduct)}</span>
+                    <span className="ledger-val font-semibold text-black">{selectedProduct.category || "Umum"}</span>
                   </div>
                   <div className="ledger-row">
                     <span className="ledger-label">Satuan</span>
@@ -876,62 +802,36 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                   </div>
                   <div className="ledger-row">
                     <span className="ledger-label">Harga Pokok Terakhir</span>
-                    <span className="ledger-val font-semibold text-black">{rupiah(selectedProduct.costPrice || 5942)}</span>
+                    <span className="ledger-val font-semibold text-black">{selectedProduct.costPrice != null ? rupiah(selectedProduct.costPrice) : "—"}</span>
                   </div>
                   <div className="ledger-row">
                     <span className="ledger-label">Total Keluar (periode)</span>
-                    <span className="ledger-val">{selectedProduct.totalKeluar?.toLocaleString("id-ID") || "2.840"} pcs</span>
+                    <span className="ledger-val">{(selectedProduct.totalKeluar || 0).toLocaleString("id-ID")} pcs</span>
                   </div>
                   <div className="ledger-row">
                     <span className="ledger-label">COGS Total (periode)</span>
                     <span className="ledger-val font-bold text-purple">
-                      {rupiah((selectedProduct.totalKeluar || 2840) * (selectedProduct.costPrice || 5942))}
+                      {rupiah(selectedProduct.cogsTotal || 0)}
                     </span>
                   </div>
                 </div>
               </div>
 
               <div className="detail-connected-skus-section">
-                <h4>SKU Marketplace Terhubung ({selectedProduct.channels?.length || 0})</h4>
+                <h4>SKU Marketplace Terhubung ({selectedProduct.mappedSkus?.length || 0})</h4>
                 <div className="connected-channels-rows-list">
-                  {selectedProduct.channels?.includes("shopee") && (
-                    <div className="channel-connection-row">
-                      <img src={shopeeLogo} alt="" className="channel-logo" />
-                      <div className="channel-desc">
-                        <span className="channel-name">Shopee - Toko BitOmni</span>
-                        <span className="connected-sku-tag">SH-{selectedProduct.sku}</span>
+                  {(selectedProduct.mappedSkus ?? []).length === 0 ? (
+                    <span className="subtext-muted" style={{ fontSize: 12 }}>Belum ada SKU dipetakan ke master ini.</span>
+                  ) : (
+                    selectedProduct.mappedSkus.map((skuName) => (
+                      <div className="channel-connection-row" key={skuName}>
+                        <div className="channel-logo-placeholder" style={{ background: "#4F46E5" }}>{skuName[0]?.toUpperCase() || "S"}</div>
+                        <div className="channel-desc">
+                          <span className="channel-name">Resep SKU marketplace</span>
+                          <span className="connected-sku-tag">{skuName}</span>
+                        </div>
                       </div>
-                    </div>
-                  )}
-
-                  {selectedProduct.channels?.includes("tiktok") && (
-                    <div className="channel-connection-row">
-                      <img src={tiktokLogo} alt="" className="channel-logo" />
-                      <div className="channel-desc">
-                        <span className="channel-name">TikTok Shop - Toko BitOmni</span>
-                        <span className="connected-sku-tag">TT-{selectedProduct.sku}</span>
-                      </div>
-                    </div>
-                  )}
-
-                  {selectedProduct.channels?.includes("lazada") && (
-                    <div className="channel-connection-row">
-                      <div className="channel-logo-placeholder bg-pink">L</div>
-                      <div className="channel-desc">
-                        <span className="channel-name">Lazada - Toko BitOmni</span>
-                        <span className="connected-sku-tag">LZ-{selectedProduct.sku}</span>
-                      </div>
-                    </div>
-                  )}
-
-                  {selectedProduct.channels?.includes("tokopedia") && (
-                    <div className="channel-connection-row">
-                      <div className="channel-logo-placeholder bg-green">T</div>
-                      <div className="channel-desc">
-                        <span className="channel-name">Tokopedia - Toko BitOmni</span>
-                        <span className="connected-sku-tag">TKP-{selectedProduct.sku}</span>
-                      </div>
-                    </div>
+                    ))
                   )}
                 </div>
               </div>
@@ -981,6 +881,10 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                 <div className="form-item">
                   <label>HPP / Harga Pokok (Rp)</label>
                   <input type="number" min="0" value={form.costPrice} placeholder="0" onChange={(e) => setForm({ ...form, costPrice: e.target.value })} />
+                </div>
+                <div className="form-item">
+                  <label>Kategori</label>
+                  <input value={form.category} placeholder="mis. Pupuk" onChange={(e) => setForm({ ...form, category: e.target.value })} />
                 </div>
                 <div className="form-item">
                   <label>Stok Fisik Awal</label>
