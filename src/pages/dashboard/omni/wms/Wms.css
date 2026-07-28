@@ -1,0 +1,135 @@
+/* ── WMS (Gudang) — mengikuti sistem desain BitOmni ────────────────────────── */
+/* Warna status konsisten di SEMUA layar: hijau=Aman, oranye=Menipis,
+   merah=Habis, biru=info. Acuan: docs/SPEC-wms-uiux.md §5                     */
+
+.wms { font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif; }
+
+.wms-sub { display: flex; gap: 4px; margin-bottom: 18px; flex-wrap: wrap; }
+.wms-sub button {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: inherit; font-size: 12.5px; font-weight: 600;
+  padding: 7px 14px; border-radius: 8px; cursor: pointer;
+  border: 1px solid #EBEBEB; background: #fff; color: #888; transition: all .12s;
+}
+.wms-sub button.active { border-color: #F97316; color: #C2410C; background: #FFF7ED; }
+
+/* ── KPI ──────────────────────────────────────────────────────────────────── */
+.wms-kpis { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 16px; }
+@media (max-width: 1100px) { .wms-kpis { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 620px)  { .wms-kpis { grid-template-columns: repeat(2, 1fr); } }
+
+.wms-kpi { background: #fff; border: 1px solid #EBEBEB; border-radius: 12px; padding: 14px 16px; }
+.wms-kpi-label { font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: #B4B4B4; }
+.wms-kpi-value { font-size: 20px; font-weight: 700; color: #111; margin-top: 6px; letter-spacing: -.02em; }
+.wms-kpi-value.empty { font-size: 13px; font-weight: 600; color: #C4C4C4; }
+.wms-kpi-note { font-size: 10.5px; color: #A3A3A3; margin-top: 4px; line-height: 1.4; }
+.wms-kpi-value.neg { color: #DC2626; }
+
+/* ── Peringatan (management by exception) ─────────────────────────────────── */
+.wms-alerts { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+.wms-alert {
+  display: flex; align-items: flex-start; gap: 11px;
+  border: 1px solid #EBEBEB; border-radius: 11px; padding: 12px 14px; background: #fff;
+}
+.wms-alert .ico { flex-shrink: 0; margin-top: 1px; }
+.wms-alert-body { flex: 1; min-width: 0; }
+.wms-alert-title { font-size: 12.5px; font-weight: 700; color: #222; }
+.wms-alert-samples { font-size: 11.5px; color: #999; margin-top: 3px; line-height: 1.5; word-break: break-word; }
+.wms-alert-count { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 99px; white-space: nowrap; }
+
+.wms-alert.habis { background: #FEF2F2; border-color: #FECACA; }
+.wms-alert.habis .ico, .wms-alert.habis .wms-alert-count { color: #DC2626; }
+.wms-alert.habis .wms-alert-count { background: #FEE2E2; }
+.wms-alert.menipis { background: #FFFBEB; border-color: #FDE68A; }
+.wms-alert.menipis .ico, .wms-alert.menipis .wms-alert-count { color: #D97706; }
+.wms-alert.menipis .wms-alert-count { background: #FEF3C7; }
+.wms-alert.info .ico, .wms-alert.info .wms-alert-count { color: #2563EB; }
+.wms-alert.info .wms-alert-count { background: #DBEAFE; }
+
+.wms-ok {
+  display: flex; align-items: center; gap: 9px; font-size: 12.5px; color: #16A34A;
+  background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 11px; padding: 12px 14px; margin-bottom: 18px;
+}
+
+/* ── Chip status stok ─────────────────────────────────────────────────────── */
+.wms-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 99px; }
+.wms-chip.aman    { background: #F0FDF4; color: #16A34A; }
+.wms-chip.menipis { background: #FFFBEB; color: #D97706; }
+.wms-chip.habis   { background: #FEF2F2; color: #DC2626; }
+.wms-chip.info    { background: #EFF6FF; color: #2563EB; }
+
+/* ── Grafik mutasi ────────────────────────────────────────────────────────── */
+.wms-panel { background: #fff; border: 1px solid #EBEBEB; border-radius: 12px; padding: 16px 18px; margin-bottom: 16px; }
+.wms-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+.wms-panel-title { font-size: 13px; font-weight: 700; color: #111; }
+.wms-panel-sub { font-size: 11.5px; color: #A3A3A3; margin-top: 2px; }
+.wms-legend { display: flex; gap: 14px; font-size: 11px; color: #888; }
+.wms-legend span { display: inline-flex; align-items: center; gap: 5px; }
+.wms-legend i { width: 9px; height: 9px; border-radius: 3px; display: inline-block; }
+
+.wms-bars { display: flex; align-items: flex-end; gap: 6px; height: 130px; overflow-x: auto; padding-bottom: 4px; }
+.wms-bar-col { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 26px; flex: 1; }
+.wms-bar-pair { display: flex; align-items: flex-end; gap: 2px; height: 104px; }
+.wms-bar { width: 9px; border-radius: 3px 3px 0 0; min-height: 2px; }
+.wms-bar.masuk  { background: #16A34A; }
+.wms-bar.keluar { background: #F97316; }
+.wms-bar-label { font-size: 9.5px; color: #C4C4C4; white-space: nowrap; }
+
+/* ── Tabel stok ───────────────────────────────────────────────────────────── */
+.wms-num { font-variant-numeric: tabular-nums; text-align: right; }
+.wms-num.strong { font-weight: 700; color: #111; }
+.wms-num.neg { color: #DC2626; font-weight: 700; }
+.wms-prod { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.wms-prod img, .wms-prod .ph {
+  width: 34px; height: 34px; border-radius: 8px; object-fit: cover; flex-shrink: 0;
+  background: #F5F5F5; display: flex; align-items: center; justify-content: center; color: #CFCFCF;
+}
+.wms-prod-name { font-size: 12.5px; font-weight: 600; color: #111; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wms-prod-sku { font-size: 10.5px; color: #B4B4B4; margin-top: 1px; }
+.wms-row-clickable { cursor: pointer; }
+
+/* ── Rumus jangkar (transparansi) ─────────────────────────────────────────── */
+.wms-formula {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  font-size: 12px; color: #666; background: #FAFAFA; border: 1px dashed #E5E5E5;
+  border-radius: 9px; padding: 10px 13px;
+}
+.wms-formula b { color: #111; font-weight: 700; }
+.wms-formula .eq { color: #C4C4C4; }
+.wms-formula .res { color: #C2410C; font-weight: 700; }
+
+/* ── Detail produk ────────────────────────────────────────────────────────── */
+.wms-balance-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 14px; }
+@media (max-width: 780px) { .wms-balance-grid { grid-template-columns: repeat(2, 1fr); } }
+.wms-balance { border: 1px solid #EBEBEB; border-radius: 11px; padding: 12px 14px; background: #fff; }
+.wms-balance-label { font-size: 10.5px; font-weight: 600; color: #B4B4B4; text-transform: uppercase; letter-spacing: .05em; }
+.wms-balance-value { font-size: 21px; font-weight: 700; color: #111; margin-top: 5px; letter-spacing: -.02em; }
+.wms-balance.ats { background: #FFF7ED; border-color: #FED7AA; }
+.wms-balance.ats .wms-balance-value { color: #C2410C; }
+.wms-balance-value.neg { color: #DC2626; }
+
+.wms-chan { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 0; border-bottom: 1px solid #F5F5F5; flex-wrap: wrap; }
+.wms-chan:last-child { border-bottom: none; }
+.wms-chan-name { font-size: 12.5px; font-weight: 600; color: #222; }
+.wms-chan-meta { font-size: 11px; color: #A3A3A3; margin-top: 2px; }
+.wms-chan-right { display: flex; align-items: center; gap: 10px; }
+
+.wms-form-inline { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+.wms-note {
+  font-size: 11.5px; color: #92400E; background: #FFFBEB; border: 1px solid #FDE68A;
+  border-radius: 9px; padding: 10px 13px; line-height: 1.55;
+}
+.wms-note.blue { color: #1E40AF; background: #EFF6FF; border-color: #BFDBFE; }
+.wms-msg { font-size: 12px; padding: 9px 12px; border-radius: 8px; margin-bottom: 12px; }
+.wms-msg.ok  { color: #166534; background: #F0FDF4; border: 1px solid #BBF7D0; }
+.wms-msg.err { color: #B91C1C; background: #FEF2F2; border: 1px solid #FECACA; }
+
+/* ── Buku Besar ───────────────────────────────────────────────────────────── */
+.wms-filters { display: flex; gap: 9px; flex-wrap: wrap; margin-bottom: 14px; align-items: flex-end; }
+.wms-delta.plus  { color: #16A34A; font-weight: 700; }
+.wms-delta.minus { color: #DC2626; font-weight: 700; }
+.wms-type { font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 99px; background: #F4F4F5; color: #666; white-space: nowrap; }
+.wms-type.masuk, .wms-type.retur { background: #F0FDF4; color: #16A34A; }
+.wms-type.keluar { background: #FEF2F2; color: #DC2626; }
+.wms-type.alokasi, .wms-type.lepas_alokasi { background: #EFF6FF; color: #2563EB; }
+.wms-type.opname, .wms-type.koreksi { background: #FFFBEB; color: #D97706; }

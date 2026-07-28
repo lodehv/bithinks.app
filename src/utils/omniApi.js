@@ -31,6 +31,23 @@ export const omniApi = {
   deleteProduct:     (id)          => api.delete(`/api/omni/products/${id}`).then(unwrap),
   syncStock:         ()            => api.post('/api/omni/products/sync').then(unwrap),
 
+  // ── WMS (gudang). Acuan: docs/SPEC-wms-uiux.md ──
+  // Semua angka saldo datang JADI dari server (sudah lewat rumus jangkar);
+  // frontend tidak boleh menghitung ulang "Siap Jual" sendiri.
+  wmsSummary:        ()            => api.get('/api/omni/wms/summary').then(unwrap),
+  wmsStock:          (params = {}) => api.get('/api/omni/wms/stock', { params }).then(unwrap),
+  wmsStockDetail:    (id)          => api.get(`/api/omni/wms/stock/${id}`).then(unwrap),
+  // payload: { safetyStock?, channelSafetyStock?: [{ storeId, safetyStock|null }] }
+  wmsSetSafetyStock: (id, payload) => api.patch(`/api/omni/wms/stock/${id}`, payload).then(unwrap),
+  // Penyesuaian stok: { productId, countedQty | delta, type, reason }
+  wmsAdjust:         (payload)     => api.post('/api/omni/wms/adjust', payload).then(unwrap),
+  wmsLedger:         (params = {}) => api.get('/api/omni/wms/ledger', { params }).then(unwrap),
+  wmsLedgerCsvUrl:   (params = {}) => {
+    const q = new URLSearchParams({ ...params, format: 'csv' }).toString()
+    return `/api/omni/wms/ledger?${q}`
+  },
+  wmsReconcile:      (payload = {}) => api.post('/api/omni/wms/reconcile', payload).then(unwrap),
+
   listOrders:        (status)      => api.get('/api/omni/orders', { params: status ? { status } : {} }).then(unwrap),
   updateOrderStatus: (id, status)  => api.patch(`/api/omni/orders/${id}`, { status }).then(unwrap),
   syncOrders:        ()            => api.post('/api/omni/orders/sync').then(unwrap),
