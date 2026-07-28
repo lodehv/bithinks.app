@@ -5,6 +5,7 @@ import DashboardHome from "./dashboard/DashboardHome";
 import StoresTab from "./dashboard/omni/StoresTab";
 import ProductsTab from "./dashboard/omni/ProductsTab";
 import OrdersTab from "./dashboard/omni/OrdersTab";
+import WmsTab from "./dashboard/omni/wms/WmsTab";
 import PaymentPage from "./dashboard/PaymentPage";
 import PricingPage from "./dashboard/PricingPage";
 import AdminPanel from "./dashboard/AdminPanel";
@@ -12,7 +13,7 @@ import { ADMIN_EMAIL } from "./dashboard/DashboardLayout";
 import ModulePlaceholder from "./dashboard/ModulePlaceholder";
 import MarketingDashboard from "./dashboard/MarketingDashboard";
 import { subscriptionApi } from "../utils/omniApi";
-import { Warehouse, Settings, Info } from "lucide-react";
+import { Settings, Info } from "lucide-react";
 
 // ─── Map menu id → judul halaman ──────────────────────────────────────────────
 const PAGES = {
@@ -131,7 +132,7 @@ export default function Dashboard() {
           {(activeMenu !== "dashboard" || locked) && <BillingBanner sub={sub} onPay={goToPayment} />}
 
           {activeMenu === "dashboard"      && <DashboardHome onMenuClick={setActiveMenu} />}
-          {activeMenu === "wms"            && <ModulePlaceholder name="WMS — Manajemen Gudang" icon={Warehouse} />}
+          {activeMenu === "wms"            && <WmsTab      locked={locked} onRequirePayment={goToPayment} />}
           {activeMenu === "integrasi-toko" && <div className="omni"><StoresTab   locked={locked} onRequirePayment={goToPayment} /></div>}
           {activeMenu === "pesanan"        && <div className="omni"><OrdersTab   locked={locked} onRequirePayment={goToPayment} /></div>}
           {activeMenu === "kelola-produk"  && <div className="omni"><ProductsTab locked={locked} onRequirePayment={goToPayment} /></div>}

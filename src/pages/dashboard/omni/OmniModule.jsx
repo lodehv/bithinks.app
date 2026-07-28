@@ -1,16 +1,14 @@
 import { useState } from "react";
-import { Store, Boxes, Inbox, Lock, Warehouse } from "lucide-react";
+import { Store, Boxes, Inbox, Lock } from "lucide-react";
 import "./OmniModule.css";
 import StoresTab from "./StoresTab";
 import ProductsTab from "./ProductsTab";
 import OrdersTab from "./OrdersTab";
-import WmsTab from "./wms/WmsTab";
 
 const TABS = [
   { id: "stores",   label: "Toko Terhubung", icon: Store },
   { id: "products", label: "Produk & Stok",  icon: Boxes },
   { id: "orders",   label: "Pesanan",        icon: Inbox },
-  { id: "wms",      label: "Gudang",         icon: Warehouse },
 ];
 
 export default function OmniModule({ locked = false, onRequirePayment }) {
@@ -37,7 +35,6 @@ export default function OmniModule({ locked = false, onRequirePayment }) {
       {tab === "stores"   && <StoresTab   locked={locked} onRequirePayment={onRequirePayment} />}
       {tab === "products" && <ProductsTab locked={locked} onRequirePayment={onRequirePayment} />}
       {tab === "orders"   && <OrdersTab   locked={locked} onRequirePayment={onRequirePayment} />}
-      {tab === "wms"      && <WmsTab      locked={locked} onRequirePayment={onRequirePayment} />}
     </div>
   );
 }
