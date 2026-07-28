@@ -1,6 +1,6 @@
 /* ── WMS (Gudang) ──────────────────────────────────────────────────────────────
-   Palet mengikuti sistem dashboard yang sudah ada (DashboardLayout.css &
-   MarketingDashboard.css), BUKAN palet oranye milik OmniModule.css lama:
+   Palet & tipografi mengikuti sistem dashboard yang sudah ada
+   (DashboardLayout.css & MarketingDashboard.css), BUKAN warisan OmniModule.css:
 
      indigo   #4F46E5   aksi & angka jangkar      indigo wash  #EEF0FB
      indigo   #C7C9F9   garis lembut               indigo mid   #818CF8
@@ -18,12 +18,19 @@
    Konsekuensi bagusnya: urutan gawatnya tetap terbaca oleh mata yang sulit
    membedakan merah-hijau, karena yang membedakan kontras — bukan warnanya.
 
-   Penimpaan kelas omni-* semuanya dikunci di dalam `.wms` agar tab Pesanan,
-   Kelola Produk, dan Toko Terhubung tidak ikut berubah.
+   TIPOGRAFI — Plus Jakarta Sans, memakai skala MarketingDashboard.css:
+     angka besar 24-26px · judul panel 15px · badan & tabel 13px
+     meta 12px · label kapital 11.5px
+   Kelas omni-* bawaan memakai skala lama yang lebih kecil (10.5-12.5px),
+   jadi ukurannya ikut ditimpa di sini.
+
+   Semua penimpaan dikunci di dalam `.wms` agar tab Pesanan, Kelola Produk,
+   dan Toko Terhubung tidak ikut berubah.
    ───────────────────────────────────────────────────────────────────────────── */
 
 .wms {
-  font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  font-size: 13px;
 
   --wms-indigo:      #4F46E5;
   --wms-indigo-dark: #4338CA;
@@ -44,24 +51,38 @@
 }
 
 /* ── Penimpaan kelas bersama, hanya di dalam WMS ───────────────────────────── */
+.wms .omni-btn                    { font-size: 13.5px; padding: 9px 16px; }
 .wms .omni-btn-primary            { background: var(--wms-indigo); color: #fff; }
 .wms .omni-btn-primary:hover      { background: var(--wms-indigo-dark); }
 .wms .omni-btn-primary:disabled   { background: var(--wms-indigo-soft); cursor: not-allowed; }
 .wms .omni-btn-ghost              { background: #fff; color: var(--wms-ink-2); border-color: var(--wms-rule-2); }
 .wms .omni-btn-ghost:hover        { background: var(--wms-surface-2); border-color: var(--wms-indigo-soft); }
+
+.wms .omni-toolbar-title          { font-size: 16px; color: var(--wms-ink); }
+.wms .omni-toolbar-sub            { font-size: 13px; color: var(--wms-muted); }
+
+.wms .omni-field label            { font-size: 12.5px; color: var(--wms-muted); }
+.wms .omni-input,
+.wms .omni-select                 { font-size: 14px; padding: 10px 12px; color: var(--wms-ink); }
 .wms .omni-input:focus,
 .wms .omni-select:focus           { border-color: var(--wms-indigo); }
+
+.wms .omni-table th               { font-size: 11px; color: var(--wms-faint); padding: 12px 16px; }
+.wms .omni-table td               { font-size: 13px; color: var(--wms-ink-2); padding: 14px 16px; }
+.wms .omni-cell-muted             { font-size: 12.5px; color: var(--wms-faint); }
+
 .wms .omni-empty-icon             { background: var(--wms-indigo-wash); color: var(--wms-indigo); }
-.wms .omni-toolbar-title          { color: var(--wms-ink); }
-.wms .omni-table td               { color: var(--wms-ink-2); }
-.wms .omni-cell-muted             { color: var(--wms-faint); }
+.wms .omni-empty h3               { font-size: 15px; color: var(--wms-ink); }
+.wms .omni-empty p                { font-size: 13px; color: var(--wms-muted); }
+.wms .omni-loading,
+.wms .omni-inline-msg             { font-size: 13.5px; color: var(--wms-muted); }
 
 /* ── Sub-navigasi ─────────────────────────────────────────────────────────── */
-.wms-sub { display: flex; gap: 6px; margin-bottom: 18px; flex-wrap: wrap; }
+.wms-sub { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
 .wms-sub button {
-  display: inline-flex; align-items: center; gap: 7px;
-  font-family: inherit; font-size: 12.5px; font-weight: 600;
-  padding: 8px 15px; border-radius: 8px; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: inherit; font-size: 13.5px; font-weight: 600;
+  padding: 9px 16px; border-radius: 8px; cursor: pointer;
   border: 1px solid var(--wms-rule); background: #fff; color: var(--wms-muted);
   transition: all .12s;
 }
@@ -73,20 +94,20 @@
 }
 
 /* ── KPI ──────────────────────────────────────────────────────────────────── */
-.wms-kpis { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 16px; }
-@media (max-width: 1100px) { .wms-kpis { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 620px)  { .wms-kpis { grid-template-columns: repeat(2, 1fr); } }
+.wms-kpis { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 18px; }
+@media (max-width: 1250px) { .wms-kpis { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 660px)  { .wms-kpis { grid-template-columns: repeat(2, 1fr); } }
 
-.wms-kpi { background: #fff; border: 1px solid var(--wms-rule); border-radius: 12px; padding: 14px 16px; }
+.wms-kpi { background: #fff; border: 1px solid var(--wms-rule); border-radius: 12px; padding: 16px 18px; }
 .wms-kpi-label {
-  font-size: 10.5px; font-weight: 600; text-transform: uppercase;
-  letter-spacing: .05em; color: var(--wms-faint);
+  font-size: 11.5px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .04em; color: var(--wms-faint);
 }
 .wms-kpi-value {
-  font-size: 20px; font-weight: 700; color: var(--wms-ink);
-  margin-top: 6px; letter-spacing: -.02em; font-variant-numeric: tabular-nums;
+  font-size: 24px; font-weight: 700; color: var(--wms-ink);
+  margin-top: 7px; letter-spacing: -.025em; font-variant-numeric: tabular-nums;
 }
-.wms-kpi-value.empty { font-size: 13px; font-weight: 600; color: var(--wms-faint); }
+.wms-kpi-value.empty { font-size: 14px; font-weight: 600; color: var(--wms-faint); }
 /* Minus = oversell terlanjur terjadi. Ditandai garis bawah pekat, bukan indigo:
    indigo di layar ini berarti "normal & aktif", justru kebalikan maksudnya. */
 .wms-kpi-value.neg {
@@ -94,23 +115,23 @@
   box-shadow: inset 0 -3px 0 var(--wms-ink);
   padding-bottom: 1px;
 }
-.wms-kpi-note { font-size: 10.5px; color: var(--wms-faint); margin-top: 4px; line-height: 1.45; }
+.wms-kpi-note { font-size: 11.5px; color: var(--wms-faint); margin-top: 5px; line-height: 1.5; }
 
 /* ── Peringatan ───────────────────────────────────────────────────────────── */
-.wms-alerts { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+.wms-alerts { display: flex; flex-direction: column; gap: 9px; margin-bottom: 20px; }
 .wms-alert {
-  display: flex; align-items: flex-start; gap: 11px;
+  display: flex; align-items: flex-start; gap: 12px;
   background: #fff;
   border: 1px solid var(--wms-rule);
   border-left: 3px solid var(--wms-rule-2);
-  border-radius: 11px; padding: 12px 14px;
+  border-radius: 11px; padding: 14px 16px;
 }
 .wms-alert .ico { flex-shrink: 0; margin-top: 1px; color: var(--wms-muted); }
 .wms-alert-body { flex: 1; min-width: 0; }
-.wms-alert-title { font-size: 12.5px; font-weight: 700; color: var(--wms-ink); }
-.wms-alert-samples { font-size: 11.5px; color: var(--wms-muted); margin-top: 3px; line-height: 1.5; word-break: break-word; }
+.wms-alert-title { font-size: 14px; font-weight: 700; color: var(--wms-ink); }
+.wms-alert-samples { font-size: 12.5px; color: var(--wms-muted); margin-top: 4px; line-height: 1.55; word-break: break-word; }
 .wms-alert-count {
-  font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 99px;
+  font-size: 13px; font-weight: 700; padding: 4px 11px; border-radius: 99px;
   white-space: nowrap; background: var(--wms-surface-3); color: var(--wms-muted);
   font-variant-numeric: tabular-nums;
 }
@@ -129,17 +150,17 @@
 .wms-alert.info .wms-alert-count { background: var(--wms-indigo-wash); color: var(--wms-indigo); }
 
 .wms-ok {
-  display: flex; align-items: center; gap: 9px; font-size: 12.5px;
+  display: flex; align-items: center; gap: 10px; font-size: 13.5px; font-weight: 500;
   color: var(--wms-indigo); background: var(--wms-indigo-wash);
   border: 1px solid var(--wms-indigo-soft); border-radius: 11px;
-  padding: 12px 14px; margin-bottom: 18px;
+  padding: 14px 16px; margin-bottom: 20px;
 }
 
 /* ── Chip status stok ─────────────────────────────────────────────────────── */
 .wms-chip {
   display: inline-flex; align-items: center; gap: 5px;
-  font-size: 10.5px; font-weight: 700; letter-spacing: .01em;
-  padding: 3px 10px; border-radius: 99px; white-space: nowrap;
+  font-size: 11.5px; font-weight: 700; letter-spacing: .01em;
+  padding: 4px 11px; border-radius: 99px; white-space: nowrap;
   border: 1px solid transparent;
 }
 .wms-chip.aman    { background: #fff; color: var(--wms-muted); border-color: var(--wms-rule-2); }
@@ -150,60 +171,60 @@
 /* ── Panel & grafik ───────────────────────────────────────────────────────── */
 .wms-panel {
   background: #fff; border: 1px solid var(--wms-rule); border-radius: 12px;
-  padding: 16px 18px; margin-bottom: 16px;
+  padding: 18px 20px; margin-bottom: 16px;
 }
-.wms-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
-.wms-panel-title { font-size: 13px; font-weight: 700; color: var(--wms-ink); }
-.wms-panel-sub { font-size: 11.5px; color: var(--wms-faint); margin-top: 2px; }
-.wms-legend { display: flex; gap: 14px; font-size: 11px; color: var(--wms-muted); }
-.wms-legend span { display: inline-flex; align-items: center; gap: 5px; }
-.wms-legend i { width: 9px; height: 9px; border-radius: 3px; display: inline-block; }
+.wms-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.wms-panel-title { font-size: 15px; font-weight: 700; color: var(--wms-ink); letter-spacing: -.01em; }
+.wms-panel-sub { font-size: 12.5px; color: var(--wms-faint); margin-top: 3px; line-height: 1.5; }
+.wms-legend { display: flex; gap: 16px; font-size: 12px; color: var(--wms-muted); }
+.wms-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.wms-legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
 .wms-legend i.masuk  { background: var(--wms-indigo-soft); }
 .wms-legend i.keluar { background: var(--wms-indigo); }
 
-.wms-bars { display: flex; align-items: flex-end; gap: 6px; height: 130px; overflow-x: auto; padding-bottom: 4px; }
-.wms-bar-col { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 26px; flex: 1; }
-.wms-bar-pair { display: flex; align-items: flex-end; gap: 2px; height: 104px; }
-.wms-bar { width: 9px; border-radius: 3px 3px 0 0; min-height: 2px; }
+.wms-bars { display: flex; align-items: flex-end; gap: 7px; height: 142px; overflow-x: auto; padding-bottom: 4px; }
+.wms-bar-col { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 28px; flex: 1; }
+.wms-bar-pair { display: flex; align-items: flex-end; gap: 3px; height: 112px; }
+.wms-bar { width: 10px; border-radius: 3px 3px 0 0; min-height: 2px; }
 .wms-bar.masuk  { background: var(--wms-indigo-soft); }
 .wms-bar.keluar { background: var(--wms-indigo); }
-.wms-bar-label { font-size: 9.5px; color: var(--wms-faint); white-space: nowrap; }
+.wms-bar-label { font-size: 10.5px; color: var(--wms-faint); white-space: nowrap; }
 
 /* ── Tabel stok ───────────────────────────────────────────────────────────── */
-.wms-num { font-variant-numeric: tabular-nums; text-align: right; }
-.wms-num.strong { font-weight: 700; color: var(--wms-ink); }
+.wms-num { font-variant-numeric: tabular-nums; text-align: right; font-size: 13.5px; }
+.wms-num.strong { font-weight: 700; color: var(--wms-ink); font-size: 14px; }
 /* Lihat catatan di .wms-kpi-value.neg — minus ditandai bobot, bukan rona. */
 .wms-num.neg { color: var(--wms-ink); font-weight: 700; text-decoration: underline 2px var(--wms-ink); text-underline-offset: 3px; }
-.wms-prod { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.wms-prod { display: flex; align-items: center; gap: 11px; min-width: 0; }
 .wms-prod img, .wms-prod .ph {
-  width: 34px; height: 34px; border-radius: 8px; object-fit: cover; flex-shrink: 0;
+  width: 38px; height: 38px; border-radius: 8px; object-fit: cover; flex-shrink: 0;
   background: var(--wms-surface-3); display: flex; align-items: center;
   justify-content: center; color: var(--wms-faint);
 }
-.wms-prod-name { font-size: 12.5px; font-weight: 600; color: var(--wms-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.wms-prod-sku { font-size: 10.5px; color: var(--wms-faint); margin-top: 1px; }
+.wms-prod-name { font-size: 13.5px; font-weight: 600; color: var(--wms-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wms-prod-sku { font-size: 11.5px; color: var(--wms-faint); margin-top: 2px; }
 .wms-row-clickable { cursor: pointer; }
 
 /* ── Rumus jangkar ────────────────────────────────────────────────────────── */
 .wms-formula {
-  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-  font-size: 12px; color: var(--wms-muted);
+  display: flex; align-items: center; gap: 9px; flex-wrap: wrap;
+  font-size: 13.5px; color: var(--wms-muted);
   background: var(--wms-surface-2); border: 1px solid var(--wms-rule);
-  border-radius: 9px; padding: 10px 13px;
+  border-radius: 10px; padding: 13px 16px;
   font-variant-numeric: tabular-nums;
 }
-.wms-formula b { color: var(--wms-ink); font-weight: 700; }
+.wms-formula b { color: var(--wms-ink); font-weight: 700; font-size: 15px; }
 .wms-formula .eq { color: var(--wms-faint); }
-.wms-formula .res { color: var(--wms-indigo); font-weight: 700; }
+.wms-formula .res { color: var(--wms-indigo); font-weight: 700; font-size: 15px; }
 
 /* ── Kartu lima saldo ─────────────────────────────────────────────────────── */
-.wms-balance-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 14px; }
-@media (max-width: 780px) { .wms-balance-grid { grid-template-columns: repeat(2, 1fr); } }
-.wms-balance { border: 1px solid var(--wms-rule); border-radius: 11px; padding: 12px 14px; background: #fff; }
-.wms-balance-label { font-size: 10.5px; font-weight: 600; color: var(--wms-faint); text-transform: uppercase; letter-spacing: .05em; }
+.wms-balance-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 16px; }
+@media (max-width: 900px) { .wms-balance-grid { grid-template-columns: repeat(2, 1fr); } }
+.wms-balance { border: 1px solid var(--wms-rule); border-radius: 11px; padding: 15px 17px; background: #fff; }
+.wms-balance-label { font-size: 11.5px; font-weight: 600; color: var(--wms-faint); text-transform: uppercase; letter-spacing: .04em; }
 .wms-balance-value {
-  font-size: 21px; font-weight: 700; color: var(--wms-ink);
-  margin-top: 5px; letter-spacing: -.02em; font-variant-numeric: tabular-nums;
+  font-size: 26px; font-weight: 700; color: var(--wms-ink);
+  margin-top: 6px; letter-spacing: -.03em; font-variant-numeric: tabular-nums;
 }
 /* Siap Jual adalah angka jangkarnya — satu-satunya kartu yang diberi warna. */
 .wms-balance.ats { background: var(--wms-indigo-wash); border-color: var(--wms-indigo-soft); }
@@ -217,19 +238,19 @@
 .wms-balance.ats .wms-balance-value.neg { color: var(--wms-ink); }
 
 /* ── Sebaran channel ──────────────────────────────────────────────────────── */
-.wms-chan { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--wms-rule); flex-wrap: wrap; }
+.wms-chan { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--wms-rule); flex-wrap: wrap; }
 .wms-chan:last-child { border-bottom: none; }
-.wms-chan-name { font-size: 12.5px; font-weight: 600; color: var(--wms-ink); font-variant-numeric: tabular-nums; }
-.wms-chan-meta { font-size: 11px; color: var(--wms-faint); margin-top: 2px; }
-.wms-chan-right { display: flex; align-items: center; gap: 10px; }
+.wms-chan-name { font-size: 14px; font-weight: 600; color: var(--wms-ink); font-variant-numeric: tabular-nums; }
+.wms-chan-meta { font-size: 12px; color: var(--wms-faint); margin-top: 3px; }
+.wms-chan-right { display: flex; align-items: center; gap: 12px; }
 
 /* ── Formulir & catatan ───────────────────────────────────────────────────── */
-.wms-form-inline { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+.wms-form-inline { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
 .wms-note {
-  font-size: 11.5px; line-height: 1.55;
+  font-size: 13px; line-height: 1.6;
   color: var(--wms-ink-2); background: var(--wms-surface-2);
   border: 1px solid var(--wms-rule); border-left: 3px solid var(--wms-ink);
-  border-radius: 0 9px 9px 0; padding: 10px 13px;
+  border-radius: 0 10px 10px 0; padding: 13px 16px;
 }
 .wms-note strong { color: var(--wms-ink); }
 .wms-note.blue {
@@ -238,18 +259,18 @@
 }
 .wms-note.blue strong { color: var(--wms-indigo); }
 
-.wms-msg { font-size: 12px; padding: 9px 12px; border-radius: 8px; margin-bottom: 12px; }
+.wms-msg { font-size: 13px; padding: 11px 14px; border-radius: 9px; margin-bottom: 14px; }
 .wms-msg.ok  { color: var(--wms-indigo); background: var(--wms-indigo-wash); border: 1px solid var(--wms-indigo-soft); }
 .wms-msg.err { color: var(--wms-ink); background: #fff; border: 1px solid var(--wms-ink); }
 
 /* ── Buku Besar ───────────────────────────────────────────────────────────── */
-.wms-filters { display: flex; gap: 9px; flex-wrap: wrap; margin-bottom: 14px; align-items: flex-end; }
-.wms-delta { font-variant-numeric: tabular-nums; }
+.wms-filters { display: flex; gap: 11px; flex-wrap: wrap; margin-bottom: 16px; align-items: flex-end; }
+.wms-delta { font-variant-numeric: tabular-nums; font-size: 13.5px; }
 .wms-delta.plus  { color: var(--wms-indigo); font-weight: 700; }
 .wms-delta.minus { color: var(--wms-ink); font-weight: 700; }
 
 .wms-type {
-  font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 99px;
+  font-size: 11.5px; font-weight: 700; padding: 4px 10px; border-radius: 99px;
   white-space: nowrap; background: var(--wms-surface-3); color: var(--wms-muted);
   border: 1px solid transparent;
 }
