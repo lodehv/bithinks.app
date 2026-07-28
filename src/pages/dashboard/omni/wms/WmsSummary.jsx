@@ -43,8 +43,8 @@ function MovementChart({ data }) {
           <div className="wms-panel-sub">30 hari terakhir · memakai jam barang benar-benar bergerak</div>
         </div>
         <div className="wms-legend">
-          <span><i style={{ background: "#16A34A" }} /> Masuk</span>
-          <span><i style={{ background: "#F97316" }} /> Keluar</span>
+          <span><i className="masuk" /> Masuk</span>
+          <span><i className="keluar" /> Keluar</span>
         </div>
       </div>
       {data.length === 0 ? (
