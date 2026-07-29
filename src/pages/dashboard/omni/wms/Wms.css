@@ -94,20 +94,35 @@
 }
 
 /* ── KPI ──────────────────────────────────────────────────────────────────── */
-.wms-kpis { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 18px; }
-@media (max-width: 1250px) { .wms-kpis { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 660px)  { .wms-kpis { grid-template-columns: repeat(2, 1fr); } }
+/* auto-fit, BUKAN jumlah kolom tetap + media query. Media query membaca lebar
+   VIEWPORT, padahal ruang yang tersedia adalah lebar KONTEN (viewport dikurangi
+   sidebar). Akibatnya di layar lebar tetap dipaksa 6 kolom walau kontennya sempit,
+   sehingga kartu menyempit dan nilai rupiah patah. auto-fit mengikuti lebar yang
+   benar-benar ada, dan ikut menyesuaikan saat sidebar disembunyikan. */
+.wms-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px; margin-bottom: 18px;
+}
 
 .wms-kpi { background: #fff; border: 1px solid var(--wms-rule); border-radius: 12px; padding: 16px 18px; }
 .wms-kpi-label {
   font-size: 11.5px; font-weight: 600; text-transform: uppercase;
   letter-spacing: .04em; color: var(--wms-faint);
 }
+/* 24px adalah ukuran angka HERO (satu angka tunggal) di MarketingDashboard.
+   Di sini enam kartu berjajar: pada lebar dashboard biasa tiap kartu hanya
+   menyisakan ~136px untuk teks, jadi ukuran hero terbaca berteriak DAN membuat
+   nilai rupiah panjang patah dua baris. 18px muat dengan tenang. */
 .wms-kpi-value {
-  font-size: 24px; font-weight: 700; color: var(--wms-ink);
-  margin-top: 7px; letter-spacing: -.025em; font-variant-numeric: tabular-nums;
+  font-size: 18px; font-weight: 700; color: var(--wms-ink);
+  margin-top: 6px; letter-spacing: -.02em; font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
-.wms-kpi-value.empty { font-size: 14px; font-weight: 600; color: var(--wms-faint); }
+/* "Rp 647.596.800" = 14 karakter; pada 18px butuh ~143px sehingga tetap mepet.
+   Nilai sepanjang itu turun sekali lagi agar pasti satu baris. */
+.wms-kpi-value.long  { font-size: 15px; letter-spacing: -.01em; }
+.wms-kpi-value.empty { font-size: 13px; font-weight: 600; color: var(--wms-faint); white-space: normal; }
 /* Minus = oversell terlanjur terjadi. Ditandai garis bawah pekat, bukan indigo:
    indigo di layar ini berarti "normal & aktif", justru kebalikan maksudnya. */
 .wms-kpi-value.neg {

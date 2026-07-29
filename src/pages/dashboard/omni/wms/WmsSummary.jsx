@@ -21,10 +21,13 @@ const ALERT_TONE = {
 
 function Kpi({ label, value, note, negative }) {
   const empty = value === null || value === undefined;
+  // Nilai panjang (nominal rupiah) dikecilkan sedikit agar tidak patah dua baris
+  // di kartu yang berbagi lebar dengan lima kartu lain.
+  const long = !empty && String(value).length >= 12;
   return (
     <div className="wms-kpi">
       <div className="wms-kpi-label">{label}</div>
-      <div className={`wms-kpi-value ${empty ? "empty" : ""} ${negative ? "neg" : ""}`}>
+      <div className={`wms-kpi-value ${empty ? "empty" : ""} ${long ? "long" : ""} ${negative ? "neg" : ""}`}>
         {empty ? "Belum ada data" : value}
       </div>
       {note && <div className="wms-kpi-note">{note}</div>}
