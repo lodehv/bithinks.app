@@ -220,6 +220,26 @@
 .wms-prod-sku { font-size: 11.5px; color: var(--wms-faint); margin-top: 2px; }
 .wms-row-clickable { cursor: pointer; }
 
+/* ── Ubah cepat di dalam tabel ─────────────────────────────────────────────
+   Pensil disembunyikan sampai barisnya disentuh mouse: kalau selalu tampil,
+   enam ikon per layar membuat tabel ramai dan angkanya jadi sulit dibaca.
+   Tetap terlihat saat fokus keyboard agar bisa diakses tanpa mouse. */
+.wms-cell-edit { display: inline-flex; align-items: center; gap: 7px; justify-content: flex-end; }
+.wms-edit-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; padding: 0; flex-shrink: 0;
+  border: 1px solid var(--wms-rule-2); border-radius: 6px;
+  background: #fff; color: var(--wms-muted); cursor: pointer;
+  opacity: 0; transition: opacity .12s, color .12s, border-color .12s;
+}
+.wms-row-clickable:hover .wms-edit-btn { opacity: 1; }
+.wms-edit-btn:focus-visible { opacity: 1; outline: 2px solid var(--wms-indigo); outline-offset: 1px; }
+.wms-edit-btn:hover { color: var(--wms-indigo); border-color: var(--wms-indigo-soft); background: var(--wms-indigo-wash); }
+
+.wms-edit-row > td { background: var(--wms-surface-2); cursor: default; }
+.wms-edit-bar { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
+.wms-edit-note { font-size: 12px; color: var(--wms-muted); margin-top: 9px; line-height: 1.5; }
+
 /* ── Rumus jangkar ────────────────────────────────────────────────────────── */
 .wms-formula {
   display: flex; align-items: center; gap: 9px; flex-wrap: wrap;

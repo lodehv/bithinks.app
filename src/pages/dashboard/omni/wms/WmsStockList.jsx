@@ -2,16 +2,17 @@ import { useEffect, useMemo, useState } from "react";
 import { Package, Search } from "lucide-react";
 import { omniApi } from "../../../../utils/omniApi";
 import WmsProductDetail from "./WmsProductDetail";
+import WmsStockRow from "./WmsStockRow";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Daftar Produk & Stok — tabel utama dengan lima saldo (SPEC §4.2).
+// Daftar Produk & Stok (SPEC §4.2).
 // Urutan datang dari server: Habis di atas, lalu Menipis. Yang butuh tindakan
 // tidak boleh tenggelam di bawah.
+//
+// Kolom Terkunci Pesanan dan Channel tidak ditampilkan di tabel ini agar ringkas;
+// keduanya tetap ada di halaman detail produk. Baris & kolom yang bisa diubah
+// langsung diatur di WmsStockRow.
 // ─────────────────────────────────────────────────────────────────────────────
-
-const num = (n) => (n ?? 0).toLocaleString("id-ID");
-
-const STATUS_LABEL = { aman: "Aman", menipis: "Menipis", habis: "Habis" };
 
 const FILTERS = [
   { id: "all", label: "Semua" },
@@ -19,43 +20,6 @@ const FILTERS = [
   { id: "menipis", label: "Menipis" },
   { id: "aman", label: "Aman" },
 ];
-
-function StockRow({ row, onOpen }) {
-  return (
-    <tr className="wms-row-clickable" onClick={() => onOpen(row.productId)}>
-      <td>
-        <div className="wms-prod">
-          {row.imageUrl
-            ? <img src={row.imageUrl} alt="" />
-            : <div className="ph"><Package size={15} /></div>}
-          <div style={{ minWidth: 0 }}>
-            <div className="wms-prod-name">{row.name}</div>
-            <div className="wms-prod-sku">{row.sku}{row.category ? ` · ${row.category}` : ""}</div>
-          </div>
-        </div>
-      </td>
-      <td className="wms-num">{num(row.onHand)}</td>
-      <td className="wms-num">{num(row.allocated)}</td>
-      <td className={`wms-num strong ${row.availableToSell < 0 ? "neg" : ""}`}>{num(row.availableToSell)}</td>
-      <td className="wms-num">{num(row.safetyStock)}</td>
-      <td className="wms-num">
-        {row.incoming > 0
-          ? <span className="wms-chip info">+{num(row.incoming)} dtg</span>
-          : <span className="omni-cell-muted">—</span>}
-      </td>
-      <td>
-        {row.channels.length === 0
-          ? <span className="omni-cell-muted">Belum ada toko</span>
-          : <span className="omni-cell-muted">
-              {row.channelsPending === 0
-                ? `${row.channels.length} channel selaras`
-                : `${row.channelsPending} dari ${row.channels.length} menunggu`}
-            </span>}
-      </td>
-      <td><span className={`wms-chip ${row.status}`}>{STATUS_LABEL[row.status]}</span></td>
-    </tr>
-  );
-}
 
 export default function WmsStockList({ locked, onRequirePayment, initialFilter }) {
   const [rows, setRows] = useState(null);
@@ -113,7 +77,8 @@ export default function WmsStockList({ locked, onRequirePayment, initialFilter }
         <div>
           <div className="omni-toolbar-title">Produk & Stok</div>
           <div className="omni-toolbar-sub">
-            Siap Jual = Stok Fisik − Terkunci Pesanan − Cadangan. Klik baris untuk rincian & penyesuaian.
+            Tersedia = Stok Fisik − Terkunci Pesanan − Cadangan. Klik ikon pensil untuk mengubah
+            Stok Fisik atau Cadangan, atau klik baris untuk rincian lengkap.
           </div>
         </div>
       </div>
@@ -160,16 +125,23 @@ export default function WmsStockList({ locked, onRequirePayment, initialFilter }
               <tr>
                 <th>Produk</th>
                 <th style={{ textAlign: "right" }}>Stok Fisik</th>
-                <th style={{ textAlign: "right" }}>Terkunci</th>
-                <th style={{ textAlign: "right" }}>Siap Jual</th>
+                <th style={{ textAlign: "right" }}>Tersedia</th>
                 <th style={{ textAlign: "right" }}>Cadangan</th>
-                <th style={{ textAlign: "right" }}>Dalam Perjalanan</th>
-                <th>Channel</th>
+                <th style={{ textAlign: "right" }}>Stok Akan Datang</th>
                 <th>Status</th>
               </tr>
             </thead>
             <tbody>
-              {shown.map((row) => <StockRow key={row.productId} row={row} onOpen={setOpenId} />)}
+              {shown.map((row) => (
+                <WmsStockRow
+                  key={row.productId}
+                  row={row}
+                  onOpen={setOpenId}
+                  locked={locked}
+                  onRequirePayment={onRequirePayment}
+                  onSaved={() => setReloadKey((k) => k + 1)}
+                />
+              ))}
             </tbody>
           </table>
         </div>
