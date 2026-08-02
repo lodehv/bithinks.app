@@ -51,7 +51,7 @@ export default function WmsTab({ locked, onRequirePayment }) {
         <WmsStockList locked={locked} onRequirePayment={onRequirePayment} initialFilter={stockFilter} />
       )}
       {view === "ledger" && <WmsLedger />}
-      {view === "outbound" && <WmsOutbound />}
+      {view === "outbound" && <WmsOutbound locked={locked} onRequirePayment={onRequirePayment} />}
     </div>
   );
 }

@@ -1,10 +1,10 @@
 import { useState } from "react";
+import WmsOutboundScan from "./WmsOutboundScan";
+import WmsOutboundPick from "./WmsOutboundPick";
 import { ScanLine, Keyboard, ClipboardList, MinusCircle, PackageMinus } from "lucide-react";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Outbound (Barang Keluar) — kerangka navigasi. Alurnya belum ditetapkan, jadi
-// tiap panel sengaja dibiarkan kosong alih-alih diisi tampilan sementara yang
-// nanti harus dibongkar lagi.
+// Outbound (Barang Keluar) — navigasi dua kelompok.
 //
 //   Outbound
 //   ├── Pengurangan Stok Tersedia
@@ -39,7 +39,7 @@ const GROUPS = [
   },
 ];
 
-export default function WmsOutbound() {
+export default function WmsOutbound({ locked, onRequirePayment }) {
   const [groupId, setGroupId] = useState(GROUPS[0].id);
   const [subId, setSubId] = useState(GROUPS[0].subs[0].id);
 
@@ -79,18 +79,19 @@ export default function WmsOutbound() {
           ))}
         </div>
 
-        <div className="omni-empty">
-          <div className="omni-empty-icon"><SubIcon size={22} /></div>
-          <h3>{sub.label}</h3>
-          <p>Alurnya belum ditetapkan, jadi layar ini sengaja masih kosong.</p>
-        </div>
+        {sub.id === "scan" ? (
+          <WmsOutboundScan locked={locked} onRequirePayment={onRequirePayment} />
+        ) : sub.id === "picking" ? (
+          <WmsOutboundPick locked={locked} onRequirePayment={onRequirePayment} />
+        ) : (
+          <div className="omni-empty">
+            <div className="omni-empty-icon"><SubIcon size={22} /></div>
+            <h3>{sub.label}</h3>
+            <p>Alurnya belum ditetapkan, jadi layar ini sengaja masih kosong.</p>
+          </div>
+        )}
       </div>
 
-      <div className="wms-note" style={{ marginTop: 16 }}>
-        <strong>Catatan keadaan sekarang:</strong> pergerakan stok otomatis dari pesanan sedang
-        dimatikan, jadi pesanan yang masuk tidak menurunkan Stok Fisik maupun Tersedia. Semua
-        angka disetel manual di tab Produk &amp; Stok sampai alur outbound ini ditetapkan.
-      </div>
     </div>
   );
 }

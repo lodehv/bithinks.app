@@ -50,6 +50,16 @@ export const omniApi = {
   },
   wmsReconcile:      (payload = {}) => api.post('/api/omni/wms/reconcile', payload).then(unwrap),
 
+  // ── Outbound: scan resi (Tersedia turun) → picking list (Stok Fisik turun) ──
+  // Penolakan scan (resi tak dikenal / sudah dipindai / resep belum ada) datang
+  // sebagai { ok:false, message } di dalam data, BUKAN sebagai HTTP error —
+  // layar pemindaian dipakai beruntun dan harus tetap hidup.
+  wmsOutbound:       ()            => api.get('/api/omni/wms/outbound').then(unwrap),
+  wmsOutboundDetail: (id)          => api.get(`/api/omni/wms/outbound/${id}`).then(unwrap),
+  wmsOutboundScan:   (payload)     => api.post('/api/omni/wms/outbound/scan', payload).then(unwrap),
+  wmsOutboundClose:  (id)          => api.post(`/api/omni/wms/outbound/${id}`).then(unwrap),
+  wmsOutboundPick:   (code)        => api.post('/api/omni/wms/outbound/pick', { code }).then(unwrap),
+
   listOrders:        (status)      => api.get('/api/omni/orders', { params: status ? { status } : {} }).then(unwrap),
   updateOrderStatus: (id, status)  => api.patch(`/api/omni/orders/${id}`, { status }).then(unwrap),
   syncOrders:        ()            => api.post('/api/omni/orders/sync').then(unwrap),

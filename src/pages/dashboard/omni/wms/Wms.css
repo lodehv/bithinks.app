@@ -316,6 +316,69 @@
 .wms-msg.ok  { color: var(--wms-indigo); background: var(--wms-indigo-wash); border: 1px solid var(--wms-indigo-soft); }
 .wms-msg.err { color: var(--wms-ink); background: #fff; border: 1px solid var(--wms-ink); }
 
+/* ── Outbound: pemindaian ─────────────────────────────────────────────────── */
+.wms-scan-bar { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 16px; }
+/* Kolom pemindaian dibuat besar & jelas — dipakai sambil berdiri di gudang,
+   sering dengan sarung tangan, dan harus terbaca sekilas dari jarak sejengkal. */
+.wms-scan-input { font-size: 16px !important; padding: 13px 14px !important; letter-spacing: .02em; }
+
+.wms-scan-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 14px; }
+@media (max-width: 900px) { .wms-scan-grid { grid-template-columns: 1fr; } }
+
+.wms-feed { display: flex; flex-direction: column; gap: 8px; max-height: 420px; overflow-y: auto; }
+.wms-feed-row {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 10px 12px; border-radius: 9px;
+  border: 1px solid var(--wms-rule); background: #fff;
+}
+.wms-feed-row .ico { flex-shrink: 0; margin-top: 1px; }
+.wms-feed-row.ok  { border-left: 3px solid var(--wms-indigo); }
+.wms-feed-row.ok .ico { color: var(--wms-indigo); }
+.wms-feed-row.err { border-left: 3px solid var(--wms-ink); background: var(--wms-surface-2); }
+.wms-feed-row.err .ico { color: var(--wms-ink); }
+.wms-feed-resi { font-size: 13px; font-weight: 700; color: var(--wms-ink); font-variant-numeric: tabular-nums; }
+.wms-feed-msg { font-size: 12.5px; color: var(--wms-muted); margin-top: 2px; line-height: 1.5; }
+.wms-feed-items { font-size: 12px; color: var(--wms-indigo); margin-top: 4px; line-height: 1.5; }
+
+/* ── Lembar Picking List (layar & cetak) ──────────────────────────────────── */
+.wms-sheet {
+  background: #fff; border: 1px solid var(--wms-rule); border-radius: 12px;
+  padding: 26px 28px; color: var(--wms-ink);
+}
+.wms-sheet-head {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 24px; flex-wrap: wrap; padding-bottom: 18px; margin-bottom: 18px;
+  border-bottom: 2px solid var(--wms-ink);
+}
+.wms-sheet-title { font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
+.wms-sheet-meta { font-size: 12.5px; color: var(--wms-muted); margin-top: 3px; font-variant-numeric: tabular-nums; }
+.wms-sheet-barcode svg { display: block; }
+
+.wms-sheet-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.wms-sheet-table th {
+  text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--wms-muted); padding: 8px 10px; border-bottom: 1px solid var(--wms-rule-2);
+}
+.wms-sheet-table td { padding: 11px 10px; border-bottom: 1px solid var(--wms-rule-soft, #F3F4F6); }
+.wms-sheet-box {
+  display: inline-block; width: 18px; height: 18px;
+  border: 1.5px solid var(--wms-ink); border-radius: 3px;
+}
+.wms-sheet-foot { margin-top: 18px; font-size: 12px; color: var(--wms-muted); line-height: 1.55; }
+
+@media print {
+  /* Sisakan lembarnya saja: sidebar, tab, dan tombol tidak ikut tercetak. */
+  body * { visibility: hidden; }
+  .wms-sheet, .wms-sheet * { visibility: visible; }
+  .wms-sheet {
+    position: absolute; left: 0; top: 0; width: 100%;
+    border: none; border-radius: 0; padding: 0;
+  }
+  .wms-noprint { display: none !important; }
+  .wms-sheet-table tr { break-inside: avoid; }
+  @page { margin: 14mm; }
+}
+
 /* ── Buku Besar ───────────────────────────────────────────────────────────── */
 .wms-filters { display: flex; gap: 11px; flex-wrap: wrap; margin-bottom: 16px; align-items: flex-end; }
 .wms-delta { font-variant-numeric: tabular-nums; font-size: 13.5px; }
