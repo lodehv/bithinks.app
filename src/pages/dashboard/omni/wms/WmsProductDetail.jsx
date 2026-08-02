@@ -6,7 +6,9 @@ import WmsLedgerTable from "./WmsLedgerTable";
 // ─────────────────────────────────────────────────────────────────────────────
 // Detail Produk — kartu 5 saldo (dengan rumus jangkar terlihat), sebaran channel,
 // antrean pesanan, dan mini Buku Besar (SPEC §4.3).
-// Transparansi rumus = kepercayaan: user harus bisa melihat dari mana Siap Jual datang.
+// Sejak 2 Agu 2026 Tersedia adalah angka TERSIMPAN yang disetel manual, bukan hasil
+// rumus. Karena itu barisan rumus jangkar diganti keterangan sifat tiap angka —
+// menampilkan rumus yang sudah tidak berlaku justru menyesatkan.
 // ─────────────────────────────────────────────────────────────────────────────
 
 const num = (n) => (n ?? 0).toLocaleString("id-ID");
@@ -48,7 +50,7 @@ export default function WmsProductDetail({ productId, locked, onRequirePayment, 
     try {
       const d = await omniApi.wmsPatchStock(productId, { safetyStock: Number(buffer) || 0 });
       setData(d);
-      setMsg({ type: "ok", text: `Cadangan disimpan. Siap Jual kini ${num(d.product.availableToSell)}.` });
+      setMsg({ type: "ok", text: "Cadangan disimpan. Tersedia tidak ikut berubah — keduanya berdiri sendiri." });
     } catch (err) { guard(err); } finally { setBusy(false); }
   };
 
@@ -98,20 +100,19 @@ export default function WmsProductDetail({ productId, locked, onRequirePayment, 
         <Balance label="Stok Fisik" value={p.onHand} />
         <Balance label="Terkunci Pesanan" value={p.allocated} />
         <Balance label="Cadangan" value={p.safetyStock} />
-        <Balance label="Siap Jual" value={p.availableToSell} ats />
-        <Balance label="Dalam Perjalanan" value={p.incoming} />
+        <Balance label="Tersedia" value={p.availableToSell} ats />
+        <Balance label="Stok Akan Datang" value={p.incoming} />
       </div>
 
       <div className="wms-formula" style={{ marginBottom: 16 }}>
-        Stok Fisik <b>{num(p.onHand)}</b>
-        <span className="eq">−</span> Terkunci <b>{num(p.allocated)}</b>
-        <span className="eq">−</span> Cadangan <b>{num(p.safetyStock)}</b>
-        <span className="eq">=</span> Siap Jual <span className="res">{num(p.availableToSell)}</span>
+        Tiap angka berdiri sendiri — mengubah satu tidak menggeser yang lain.
+        <span className="eq">·</span> <b>Stok Fisik</b> digerakkan penyesuaian
+        <span className="eq">·</span> <b>Tersedia</b> &amp; <b>Cadangan</b> disetel manual
       </div>
 
       {p.availableToSell <= 0 && (
         <div className="wms-note" style={{ marginBottom: 16 }}>
-          Siap Jual sudah habis — produk ini seharusnya <strong>distop di semua channel</strong> agar
+          Tersedia sudah habis — produk ini seharusnya <strong>distop di semua channel</strong> agar
           tidak ada pesanan baru yang tak bisa dipenuhi.
         </div>
       )}
@@ -169,7 +170,7 @@ export default function WmsProductDetail({ productId, locked, onRequirePayment, 
             ))}
             {channels.some((c) => !c.inSync) && (
               <div className="wms-note blue" style={{ marginTop: 12 }}>
-                Angka Siap Jual belum bisa didorong otomatis ke marketplace — izin ubah-stok
+                Angka Tersedia belum bisa didorong otomatis ke marketplace — izin ubah-stok
                 Shopee/TikTok belum aktif untuk aplikasi ini. Sementara itu perbarui stok di
                 Seller Center memakai angka <strong>seharusnya tampil</strong> di atas.
               </div>

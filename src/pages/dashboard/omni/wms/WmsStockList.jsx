@@ -77,8 +77,8 @@ export default function WmsStockList({ locked, onRequirePayment, initialFilter }
         <div>
           <div className="omni-toolbar-title">Produk & Stok</div>
           <div className="omni-toolbar-sub">
-            Tersedia = Stok Fisik − Terkunci Pesanan − Cadangan. Klik ikon pensil untuk mengubah
-            Stok Fisik atau Cadangan, atau klik baris untuk rincian lengkap.
+            Tiap angka berdiri sendiri — mengubah satu tidak menggeser yang lain. Klik ikon
+            pensil untuk mengubah, atau klik baris untuk rincian lengkap.
           </div>
         </div>
       </div>
@@ -114,7 +114,7 @@ export default function WmsStockList({ locked, onRequirePayment, initialFilter }
           <h3>{(rows ?? []).length === 0 ? "Belum ada produk master" : "Tidak ada yang cocok"}</h3>
           <p>
             {(rows ?? []).length === 0
-              ? "Tambahkan produk master di tab Produk & Stok, lalu petakan resep SKU marketplace agar stok ikut terpotong otomatis."
+              ? "Tambahkan produk master di Kelola Produk terlebih dahulu, lalu stoknya bisa diatur di sini."
               : "Ubah kata kunci atau filter untuk melihat produk lain."}
           </p>
         </div>

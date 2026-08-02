@@ -9,10 +9,9 @@ import { omniApi, isPaymentRequired } from "../../../../utils/omniApi";
 //
 //   Stok Fisik  → barang nyata bertambah/berkurang. Dicatat sebagai mutasi
 //                 "Koreksi Manual" di Buku Besar; angka lama tidak ditimpa.
-//   Tersedia    → angka TURUNAN (fisik − terkunci − cadangan). Mengubahnya
-//                 berarti menggeser stok fisiknya. Server yang membalik rumus
-//                 itu — frontend tidak menghitung saldo sendiri.
-//   Cadangan    → setelan, bukan pergerakan barang. Tidak masuk Buku Besar.
+//   Tersedia    → angka yang boleh dijual. Saldo TERSIMPAN yang disetel manual,
+//                 berdiri sendiri dari Stok Fisik maupun Cadangan.
+//   Cadangan    → ambang peringatan menipis. Tidak mengurangi angka mana pun.
 //   Akan Datang → barang yang dipesan tapi belum tiba, jadi juga bukan
 //                 pergerakan. Tidak menambah Stok Fisik sampai barang diterima.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -22,9 +21,9 @@ const num = (n) => (n ?? 0).toLocaleString("id-ID");
 const STATUS_LABEL = { aman: "Aman", menipis: "Menipis", habis: "Habis" };
 
 const FIELDS = {
-  fisik:    { label: "Stok Fisik", note: "Perubahan barang nyata — tercatat sebagai Koreksi Manual di Buku Besar." },
-  tersedia: { label: "Tersedia", note: "Tersedia = Stok Fisik − Terkunci − Cadangan, jadi menyetelnya akan menggeser Stok Fisik." },
-  cadangan: { label: "Cadangan", note: "Cadangan menahan sebagian stok agar tidak ikut terjual. Stok Fisik tidak berubah." },
+  fisik:    { label: "Stok Fisik", note: "Jumlah barang nyata di gudang — tercatat sebagai Koreksi Manual di Buku Besar. Tersedia tidak ikut berubah." },
+  tersedia: { label: "Tersedia", note: "Angka yang boleh dijual. Berdiri sendiri — tidak menggeser Stok Fisik, dan tidak ikut bergeser saat Stok Fisik atau Cadangan diubah." },
+  cadangan: { label: "Cadangan", note: "Ambang peringatan menipis. Tidak mengurangi Tersedia maupun Stok Fisik." },
   datang:   { label: "Stok Akan Datang", note: "Barang yang dipesan tapi belum tiba. Belum menambah Stok Fisik." },
 };
 
@@ -83,7 +82,7 @@ export default function WmsStockRow({ row, onOpen, locked, onRequirePayment, onS
       if (mode === "fisik") {
         await omniApi.wmsAdjust({ productId: row.productId, countedQty: n, type: "koreksi" });
       } else if (mode === "tersedia") {
-        await omniApi.wmsAdjust({ productId: row.productId, availableQty: n, type: "koreksi" });
+        await omniApi.wmsPatchStock(row.productId, { available: n });
       } else if (mode === "cadangan") {
         await omniApi.wmsPatchStock(row.productId, { safetyStock: n });
       } else {

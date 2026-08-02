@@ -128,9 +128,9 @@ export default function WmsSummary({ locked, onRequirePayment, onOpenList }) {
         />
         <Kpi label="Stok Fisik" value={num(kpi.stokFisik)} />
         <Kpi label="Terkunci Pesanan" value={num(kpi.terkunci)} />
-        <Kpi label="Siap Jual" value={num(kpi.siapJual)} negative={kpi.siapJual < 0} />
+        <Kpi label="Tersedia" value={num(kpi.siapJual)} negative={kpi.siapJual < 0} />
         <Kpi
-          label="Dalam Perjalanan"
+          label="Stok Akan Datang"
           value={num(kpi.dalamPerjalanan)}
           note={kpi.dalamPerjalanan === 0 ? "Barang Masuk (PO) belum aktif" : null}
         />
@@ -169,10 +169,10 @@ export default function WmsSummary({ locked, onRequirePayment, onOpenList }) {
       <MovementChart data={movement} />
 
       <div className="wms-note">
-        <strong>Batas jujur anti-oversell.</strong> Shopee dan TikTok menerima pesanan sendiri-sendiri,
-        jadi ada jeda antara pesanan masuk di satu channel dan angka baru sampai ke channel lain.
-        Sistem ini <em>meminimalkan</em> oversell — lewat Cadangan, propagasi cepat, dan rekonsiliasi —
-        bukan menjaminnya nol.
+        <strong>Stok tidak lagi bergerak otomatis.</strong> Pesanan yang masuk tidak menurunkan
+        Stok Fisik maupun Tersedia — keempat angka disetel manual dan berdiri sendiri, menunggu
+        alur baru disusun. Laporan COGS di Kelola Produk tidak terpengaruh karena dihitung
+        langsung dari pesanan dan resep SKU, bukan dari saldo gudang.
       </div>
     </div>
   );
