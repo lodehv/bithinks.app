@@ -1,52 +1,55 @@
 import { useState } from "react";
-import { ScanLine, Keyboard, ClipboardList, MinusCircle } from "lucide-react";
+import { ScanLine, Keyboard, ClipboardList, MinusCircle, PackageMinus } from "lucide-react";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Outbound (Barang Keluar) — kerangka navigasi bertingkat. Alurnya belum
-// ditetapkan, jadi tiap panel sengaja dibiarkan kosong alih-alih diisi tampilan
-// sementara yang nanti harus dibongkar lagi.
+// Outbound (Barang Keluar) — kerangka navigasi. Alurnya belum ditetapkan, jadi
+// tiap panel sengaja dibiarkan kosong alih-alih diisi tampilan sementara yang
+// nanti harus dibongkar lagi.
 //
 //   Outbound
-//   └── Pengurangan Stok Tersedia          (tingkat 1)
-//       ├── Scan                            (tingkat 2)
-//       │   └── Scan Picking List           (tingkat 3)
-//       └── Input Nomor Pesanan             (tingkat 2, manual)
+//   ├── Pengurangan Stok Tersedia
+//   │   ├── Scan
+//   │   └── Input Nomor Pesanan          (manual)
+//   └── Pengurangan Stok Fisik
+//       └── Scan Picking List
 //
-// Tingkat 1 baru berisi satu menu karena disebut sebagai "yang pertama"; ruang
-// untuk menu berikutnya sudah siap tanpa perlu menata ulang.
+// Pemisahan ini mengikuti dua peristiwa yang memang beda waktunya: stok TERSEDIA
+// berkurang saat pesanan masuk (barang masih di rak, tapi sudah tidak boleh
+// dijual lagi), sedangkan stok FISIK baru berkurang saat barang benar-benar
+// diambil dari rak lewat picking list.
 // ─────────────────────────────────────────────────────────────────────────────
 
-const LEVEL1 = [
-  { id: "pengurangan", label: "Pengurangan Stok Tersedia", icon: MinusCircle },
+const GROUPS = [
+  {
+    id: "tersedia",
+    label: "Pengurangan Stok Tersedia",
+    icon: MinusCircle,
+    subs: [
+      { id: "scan", label: "Scan", icon: ScanLine },
+      { id: "manual", label: "Input Nomor Pesanan", icon: Keyboard },
+    ],
+  },
+  {
+    id: "fisik",
+    label: "Pengurangan Stok Fisik",
+    icon: PackageMinus,
+    subs: [
+      { id: "picking", label: "Scan Picking List", icon: ClipboardList },
+    ],
+  },
 ];
-
-const LEVEL2 = [
-  { id: "scan", label: "Scan", icon: ScanLine },
-  { id: "manual", label: "Input Nomor Pesanan", icon: Keyboard },
-];
-
-const LEVEL3_SCAN = [
-  { id: "picking", label: "Scan Picking List", icon: ClipboardList },
-];
-
-/** Panel kosong yang jujur: menyebut namanya, tanpa berpura-pura sudah berfungsi. */
-function Placeholder({ title, icon }) {
-  return (
-    <div className="omni-empty">
-      <div className="omni-empty-icon">{icon}</div>
-      <h3>{title}</h3>
-      <p>Alurnya belum ditetapkan, jadi layar ini sengaja masih kosong.</p>
-    </div>
-  );
-}
 
 export default function WmsOutbound() {
-  const [lvl1, setLvl1] = useState("pengurangan");
-  const [lvl2, setLvl2] = useState("scan");
-  const [lvl3, setLvl3] = useState("picking");
+  const [groupId, setGroupId] = useState(GROUPS[0].id);
+  const [subId, setSubId] = useState(GROUPS[0].subs[0].id);
 
-  const activeL2 = LEVEL2.find((v) => v.id === lvl2);
-  const activeL3 = LEVEL3_SCAN.find((v) => v.id === lvl3);
+  const group = GROUPS.find((g) => g.id === groupId) ?? GROUPS[0];
+  const sub = group.subs.find((s) => s.id === subId) ?? group.subs[0];
+  const SubIcon = sub.icon;
+
+  // Pindah kelompok selalu memilih ulang sub pertamanya, supaya tidak menyisakan
+  // pilihan milik kelompok sebelumnya yang tak ada di kelompok ini.
+  const pickGroup = (g) => { setGroupId(g.id); setSubId(g.subs[0].id); };
 
   return (
     <div>
@@ -60,39 +63,28 @@ export default function WmsOutbound() {
       </div>
 
       <div className="wms-sub level2">
-        {LEVEL1.map((v) => (
-          <button key={v.id} className={lvl1 === v.id ? "active" : ""} onClick={() => setLvl1(v.id)}>
-            <v.icon size={13} /> {v.label}
+        {GROUPS.map((g) => (
+          <button key={g.id} className={groupId === g.id ? "active" : ""} onClick={() => pickGroup(g)}>
+            <g.icon size={13} /> {g.label}
           </button>
         ))}
       </div>
 
-      {lvl1 === "pengurangan" && (
-        <div className="wms-nest">
-          <div className="wms-sub level3">
-            {LEVEL2.map((v) => (
-              <button key={v.id} className={lvl2 === v.id ? "active" : ""} onClick={() => setLvl2(v.id)}>
-                <v.icon size={13} /> {v.label}
-              </button>
-            ))}
-          </div>
-
-          {lvl2 === "scan" ? (
-            <div className="wms-nest">
-              <div className="wms-sub level3">
-                {LEVEL3_SCAN.map((v) => (
-                  <button key={v.id} className={lvl3 === v.id ? "active" : ""} onClick={() => setLvl3(v.id)}>
-                    <v.icon size={13} /> {v.label}
-                  </button>
-                ))}
-              </div>
-              <Placeholder title={activeL3?.label ?? "Scan"} icon={<ClipboardList size={22} />} />
-            </div>
-          ) : (
-            <Placeholder title={activeL2?.label ?? "Input Nomor Pesanan"} icon={<Keyboard size={22} />} />
-          )}
+      <div className="wms-nest">
+        <div className="wms-sub level3">
+          {group.subs.map((s) => (
+            <button key={s.id} className={subId === s.id ? "active" : ""} onClick={() => setSubId(s.id)}>
+              <s.icon size={13} /> {s.label}
+            </button>
+          ))}
         </div>
-      )}
+
+        <div className="omni-empty">
+          <div className="omni-empty-icon"><SubIcon size={22} /></div>
+          <h3>{sub.label}</h3>
+          <p>Alurnya belum ditetapkan, jadi layar ini sengaja masih kosong.</p>
+        </div>
+      </div>
 
       <div className="wms-note" style={{ marginTop: 16 }}>
         <strong>Catatan keadaan sekarang:</strong> pergerakan stok otomatis dari pesanan sedang
