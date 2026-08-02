@@ -46,7 +46,7 @@ export default function WmsProductDetail({ productId, locked, onRequirePayment, 
   const saveBuffer = async () => {
     setBusy(true); setMsg(null);
     try {
-      const d = await omniApi.wmsSetSafetyStock(productId, { safetyStock: Number(buffer) || 0 });
+      const d = await omniApi.wmsPatchStock(productId, { safetyStock: Number(buffer) || 0 });
       setData(d);
       setMsg({ type: "ok", text: `Cadangan disimpan. Siap Jual kini ${num(d.product.availableToSell)}.` });
     } catch (err) { guard(err); } finally { setBusy(false); }

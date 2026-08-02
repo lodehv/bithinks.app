@@ -37,9 +37,11 @@ export const omniApi = {
   wmsSummary:        ()            => api.get('/api/omni/wms/summary').then(unwrap),
   wmsStock:          (params = {}) => api.get('/api/omni/wms/stock', { params }).then(unwrap),
   wmsStockDetail:    (id)          => api.get(`/api/omni/wms/stock/${id}`).then(unwrap),
-  // payload: { safetyStock?, channelSafetyStock?: [{ storeId, safetyStock|null }] }
-  wmsSetSafetyStock: (id, payload) => api.patch(`/api/omni/wms/stock/${id}`, payload).then(unwrap),
-  // Penyesuaian stok: { productId, countedQty | delta, type, reason }
+  // payload: { safetyStock?, incoming?, channelSafetyStock?: [{ storeId, safetyStock|null }] }
+  // Cadangan & Stok Akan Datang = setelan, bukan pergerakan barang → tidak masuk Buku Besar.
+  wmsPatchStock:     (id, payload) => api.patch(`/api/omni/wms/stock/${id}`, payload).then(unwrap),
+  // Penyesuaian stok: { productId, countedQty | availableQty | delta, type, reason? }
+  // availableQty = target kolom Tersedia; server yang membalik rumusnya jadi stok fisik.
   wmsAdjust:         (payload)     => api.post('/api/omni/wms/adjust', payload).then(unwrap),
   wmsLedger:         (params = {}) => api.get('/api/omni/wms/ledger', { params }).then(unwrap),
   wmsLedgerCsvUrl:   (params = {}) => {
