@@ -99,20 +99,27 @@ export default function WmsStockRow({ row, onOpen, locked, onRequirePayment, onS
     setSaving(true);
     setError("");
     try {
+      // Hasil simpan dikembalikan ke induk supaya barisnya bisa diperbarui DI
+      // TEMPAT. Memuat ulang seluruh daftar akan mengurutkannya lagi, dan baris
+      // yang baru saja diedit melompat entah ke mana — persis saat mata operator
+      // masih tertuju ke situ.
+      let updated = null;
       if (mode === "fisik") {
-        if (fisikMode === "opname") {
-          await omniApi.wmsAdjust({ productId: row.productId, countedQty: n, type: "opname" });
-        } else {
-          const signed = fisikMode === "kurangi" ? -n : n;
-          await omniApi.wmsAdjust({ productId: row.productId, delta: signed, type: "koreksi" });
-        }
+        const res = fisikMode === "opname"
+          ? await omniApi.wmsAdjust({ productId: row.productId, countedQty: n, type: "opname" })
+          : await omniApi.wmsAdjust({
+              productId: row.productId,
+              delta: fisikMode === "kurangi" ? -n : n,
+              type: "koreksi",
+            });
+        updated = res?.detail?.product ?? null;
       } else if (mode === "cadangan") {
-        await omniApi.wmsPatchStock(row.productId, { safetyStock: n });
+        updated = (await omniApi.wmsPatchStock(row.productId, { safetyStock: n }))?.product ?? null;
       } else {
-        await omniApi.wmsPatchStock(row.productId, { incoming: n });
+        updated = (await omniApi.wmsPatchStock(row.productId, { incoming: n }))?.product ?? null;
       }
       close();
-      onSaved();
+      onSaved(updated);
     } catch (err) {
       if (isPaymentRequired(err)) { onRequirePayment?.(); return; }
       setError(err?.response?.data?.error?.message ?? "Gagal menyimpan perubahan.");

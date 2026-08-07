@@ -30,6 +30,7 @@ export default function WmsStockList({ locked, onRequirePayment, initialFilter }
   const [category, setCategory] = useState("all");
   const [openId, setOpenId] = useState(null);
   const [reloadKey, setReloadKey] = useState(0);
+  const [justEdited, setJustEdited] = useState(() => new Set());
 
   useEffect(() => {
     let alive = true;
@@ -46,6 +47,25 @@ export default function WmsStockList({ locked, onRequirePayment, initialFilter }
     if (initialFilter === "habis" || initialFilter === "menipis") setStatus(initialFilter);
   }
 
+  /**
+   * Perbarui satu baris DI TEMPAT. Urutan daftar (Habis di atas, lalu Menipis)
+   * hanya dihitung ulang saat halaman dimuat — bukan tiap kali menyimpan. Kalau
+   * diurutkan ulang tiap simpan, produk yang baru saja diperbaiki langsung
+   * melompat ke bagian bawah dan operator kehilangan jejak apa yang barusan
+   * dikerjakannya. Angka & statusnya tetap ikut berubah, cuma posisinya diam.
+   */
+  const applyRowUpdate = (updated) => {
+    if (!updated?.productId) { setReloadKey((k) => k + 1); return; }
+    setRows((prev) => (prev ?? []).map(
+      (r) => (r.productId === updated.productId ? { ...r, ...updated } : r),
+    ));
+    // Baris yang baru diedit ditahan tetap terlihat walau statusnya berubah dan
+    // tak lagi cocok dengan penyaring aktif. Tanpa ini, memperbaiki produk
+    // "Habis" membuat barisnya lenyap seketika — terasa seperti hilang, bukan
+    // seperti selesai. Ia baru menyesuaikan diri saat penyaring diganti.
+    setJustEdited((prev) => new Set(prev).add(updated.productId));
+  };
+
   const counts = useMemo(() => {
     const c = { habis: 0, menipis: 0, aman: 0 };
     for (const r of rows ?? []) if (c[r.status] !== undefined) c[r.status] += 1;
@@ -59,12 +79,14 @@ export default function WmsStockList({ locked, onRequirePayment, initialFilter }
 
   const shown = useMemo(() => {
     let list = rows ?? [];
-    if (status !== "all") list = list.filter((r) => r.status === status);
+    if (status !== "all") {
+      list = list.filter((r) => r.status === status || justEdited.has(r.productId));
+    }
     if (category !== "all") list = list.filter((r) => r.category === category);
     const q = search.trim().toLowerCase();
     if (q) list = list.filter((r) => r.name.toLowerCase().includes(q) || r.sku.toLowerCase().includes(q));
     return list;
-  }, [rows, status, category, search]);
+  }, [rows, status, category, search, justEdited]);
 
   if (openId) {
     return (
@@ -100,7 +122,10 @@ export default function WmsStockList({ locked, onRequirePayment, initialFilter }
             aria-pressed={status === c.id}
             // Menekan kartu yang sedang aktif mengembalikan daftar ke semua produk,
             // supaya tidak ada jalan buntu tanpa tombol "reset" tersendiri.
-            onClick={() => setStatus(status === c.id ? "all" : c.id)}
+            onClick={() => {
+              setJustEdited(new Set());
+              setStatus(status === c.id ? "all" : c.id);
+            }}
           >
             <span className="wms-status-card-label">{c.label}</span>
             <span className="wms-status-card-count">{counts[c.id]}</span>
@@ -112,7 +137,9 @@ export default function WmsStockList({ locked, onRequirePayment, initialFilter }
       {status !== "all" && (
         <div className="wms-status-active">
           Menampilkan {STATUS_CARDS.find((c) => c.id === status)?.label.toLowerCase()} saja.
-          <button type="button" onClick={() => setStatus("all")}>Tampilkan semua produk</button>
+          <button type="button" onClick={() => { setJustEdited(new Set()); setStatus("all"); }}>
+            Tampilkan semua produk
+          </button>
         </div>
       )}
 
@@ -167,7 +194,7 @@ export default function WmsStockList({ locked, onRequirePayment, initialFilter }
                   onOpen={setOpenId}
                   locked={locked}
                   onRequirePayment={onRequirePayment}
-                  onSaved={() => setReloadKey((k) => k + 1)}
+                  onSaved={applyRowUpdate}
                 />
               ))}
             </tbody>
