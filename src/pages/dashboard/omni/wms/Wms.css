@@ -422,6 +422,32 @@
 .wms-bar-text { font-size: 11.5px; font-weight: 600; color: var(--wms-muted); white-space: nowrap; }
 @media (prefers-reduced-motion: reduce) { .wms-bar-fill { transition: none; } }
 
+/* Sel "Stok Akan Datang": angka + bar kecil, bisa diklik untuk melihat asalnya. */
+.wms-incoming {
+  display: inline-flex; align-items: center; gap: 9px; justify-content: flex-end;
+  font-family: inherit; background: none; border: none; padding: 4px 6px;
+  border-radius: 7px; cursor: pointer; min-width: 130px;
+}
+.wms-incoming:hover { background: var(--wms-indigo-wash); }
+.wms-incoming:focus-visible { outline: 2px solid var(--wms-indigo); outline-offset: 1px; }
+.wms-incoming-qty {
+  font-size: 13.5px; font-weight: 700; color: var(--wms-indigo);
+  font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.wms-incoming .wms-bar-track { min-width: 44px; }
+.wms-incoming .wms-bar-text { display: none; }
+
+/* Rincian PO per produk. */
+.wms-po-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.wms-po-row {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 11px 14px; border-radius: 9px;
+  border: 1px solid var(--wms-rule); background: #fff;
+}
+.wms-po-row .ico { color: var(--wms-indigo); flex-shrink: 0; }
+.wms-po-qty { font-size: 12.5px; color: var(--wms-muted); text-align: right; min-width: 130px; }
+.wms-po-qty strong { color: var(--wms-ink); }
+
 /* Pemilih produk saat menyusun PO. */
 .wms-picker {
   border: 1px solid var(--wms-rule); border-radius: 10px;

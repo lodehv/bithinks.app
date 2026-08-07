@@ -4,6 +4,7 @@ import { omniApi, isPaymentRequired } from "../../../../utils/omniApi";
 import WmsInboundForm from "./WmsInboundForm";
 import WmsInboundDetail from "./WmsInboundDetail";
 import WmsCompanyForm from "./WmsCompanyForm";
+import FulfillBar from "./WmsFulfillBar";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Barang Masuk (PO) — daftar, buat, terima.
@@ -25,20 +26,6 @@ const STATUS = {
 const tgl = (d) => (d ? new Date(d).toLocaleDateString("id-ID", {
   day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Jakarta",
 }) : "—");
-
-/** Bar pemenuhan — sepintas terlihat berapa bagian PO yang sudah tiba. */
-export function FulfillBar({ ordered, received }) {
-  const pct = ordered > 0 ? Math.min(100, Math.round((received / ordered) * 100)) : 0;
-  const penuh = ordered > 0 && received >= ordered;
-  return (
-    <div className="wms-bar-wrap" title={`${num(received)} dari ${num(ordered)} sudah tiba`}>
-      <div className={`wms-bar-track ${penuh ? "penuh" : ""}`}>
-        <div className="wms-bar-fill" style={{ width: `${pct}%` }} />
-      </div>
-      <span className="wms-bar-text">{penuh ? "Terpenuhi" : `${pct}%`}</span>
-    </div>
-  );
-}
 
 export default function WmsInbound({ locked, onRequirePayment }) {
   const [rows, setRows] = useState(null);

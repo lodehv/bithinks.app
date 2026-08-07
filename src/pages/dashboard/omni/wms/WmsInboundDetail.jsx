@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { ArrowLeft, Printer, PackageCheck } from "lucide-react";
 import { omniApi } from "../../../../utils/omniApi";
-import { FulfillBar } from "./WmsInbound";
+import FulfillBar from "./WmsFulfillBar";
 import WmsInboundDoc from "./WmsInboundDoc";
 
 // ─────────────────────────────────────────────────────────────────────────────

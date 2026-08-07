@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Package, Pencil, Check, X, Plus, Minus, ClipboardCheck } from "lucide-react";
+import { Package, Pencil, Check, X, Plus, Minus, ClipboardCheck, PackagePlus } from "lucide-react";
+import FulfillBar from "./WmsFulfillBar";
 import { omniApi, isPaymentRequired } from "../../../../utils/omniApi";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -11,7 +12,8 @@ import { omniApi, isPaymentRequired } from "../../../../utils/omniApi";
 //                     Hanya scan resi & perubahan Stok Fisik yang menggerakkannya.
 //   Stok Dialokasikan TURUNAN (Fisik − Tersedia), jadi juga tanpa tombol.
 //   Cadangan          ambang peringatan menipis saja.
-//   Akan Datang       barang dipesan tapi belum tiba.
+//   Akan Datang       TURUNAN sisa PO yang belum tiba — tanpa tombol ubah.
+//                     Diklik untuk melihat PO mana saja yang menyumbangnya.
 // ─────────────────────────────────────────────────────────────────────────────
 
 const num = (n) => (n ?? 0).toLocaleString("id-ID");
@@ -21,8 +23,11 @@ const STATUS_LABEL = { aman: "Aman", menipis: "Menipis", habis: "Habis" };
 const FIELDS = {
   fisik:    { label: "Stok Fisik" },
   cadangan: { label: "Cadangan", note: "Ambang peringatan menipis. Tidak mengurangi angka mana pun." },
-  datang:   { label: "Stok Akan Datang", note: "Barang yang dipesan tapi belum tiba. Belum menambah Stok Fisik." },
 };
+
+const tglSingkat = (d) => (d ? new Date(d).toLocaleDateString("id-ID", {
+  day: "2-digit", month: "short", timeZone: "Asia/Jakarta",
+}) : "—");
 
 /**
  * Tiga cara mengubah Stok Fisik, mengikuti §06 dokumen sistem stok. Dipisah
@@ -75,11 +80,8 @@ export default function WmsStockRow({ row, onOpen, locked, onRequirePayment, onS
 
   const editable = !locked;
 
-  const current = {
-    fisik: row.onHand,
-    cadangan: row.safetyStock,
-    datang: row.incoming,
-  };
+  const current = { fisik: row.onHand, cadangan: row.safetyStock };
+  const po = row.incomingOrders ?? [];
 
   const open = (which) => {
     setMode(which);
@@ -113,10 +115,8 @@ export default function WmsStockRow({ row, onOpen, locked, onRequirePayment, onS
               type: "koreksi",
             });
         updated = res?.detail?.product ?? null;
-      } else if (mode === "cadangan") {
-        updated = (await omniApi.wmsPatchStock(row.productId, { safetyStock: n }))?.product ?? null;
       } else {
-        updated = (await omniApi.wmsPatchStock(row.productId, { incoming: n }))?.product ?? null;
+        updated = (await omniApi.wmsPatchStock(row.productId, { safetyStock: n }))?.product ?? null;
       }
       close();
       onSaved(updated);
@@ -156,14 +156,22 @@ export default function WmsStockRow({ row, onOpen, locked, onRequirePayment, onS
 
         <EditableCell value={row.safetyStock} editable={editable} onEdit={() => open("cadangan")} />
 
-        <EditableCell
-          value={row.incoming}
-          editable={editable}
-          onEdit={() => open("datang")}
-          render={() => (row.incoming > 0
-            ? <span className="wms-chip info">+{num(row.incoming)}</span>
-            : <span className="omni-cell-muted">—</span>)}
-        />
+        {/* Turunan sisa PO — tanpa tombol ubah. Diklik untuk melihat asalnya. */}
+        <td className="wms-num">
+          {po.length === 0 ? (
+            <span className="omni-cell-muted">—</span>
+          ) : (
+            <button
+              type="button"
+              className="wms-incoming"
+              onClick={(e) => { e.stopPropagation(); setMode(mode === "po" ? null : "po"); }}
+              title={`${po.length} PO belum tuntas`}
+            >
+              <span className="wms-incoming-qty">+{num(row.incoming)}</span>
+              <FulfillBar ordered={row.incomingOrdered} received={row.incomingReceived} />
+            </button>
+          )}
+        </td>
 
         <td><span className={`wms-chip ${row.status}`}>{STATUS_LABEL[row.status]}</span></td>
       </tr>
@@ -171,6 +179,38 @@ export default function WmsStockRow({ row, onOpen, locked, onRequirePayment, onS
       {mode && (
         <tr className="wms-edit-row" onClick={(e) => e.stopPropagation()}>
           <td colSpan={7}>
+            {mode === "po" ? (
+              <div>
+                <div className="wms-ledger-detail-label" style={{ marginBottom: 10 }}>
+                  {po.length} PO belum tuntas · {num(row.incoming)} unit belum tiba
+                </div>
+                <div className="wms-po-list">
+                  {po.map((o) => (
+                    <div className="wms-po-row" key={o.id}>
+                      <span className="ico"><PackagePlus size={14} /></span>
+                      <div style={{ minWidth: 0, flex: 1 }}>
+                        <div className="wms-prod-name">{o.code}</div>
+                        <div className="wms-prod-sku">
+                          {o.supplier || "Tanpa supplier"} · perkiraan tiba {tglSingkat(o.expectedAt)}
+                        </div>
+                      </div>
+                      <div className="wms-po-qty">
+                        <strong>{num(o.qtyReceived)}</strong> dari {num(o.qtyOrdered)} tiba
+                        <div className="wms-prod-sku">sisa {num(o.sisa)}</div>
+                      </div>
+                      <div style={{ minWidth: 130 }}>
+                        <FulfillBar ordered={o.qtyOrdered} received={o.qtyReceived} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="wms-edit-note">
+                  Angka ini turunan sisa PO — tidak bisa diketik langsung. Ia berkurang sendiri
+                  saat barang diterima di tab Barang Masuk.
+                </div>
+              </div>
+            ) : null}
+
             {mode === "fisik" && (
               <div className="wms-sub level3" style={{ marginBottom: 12 }}>
                 {FISIK_MODES.map((m) => (
@@ -186,6 +226,7 @@ export default function WmsStockRow({ row, onOpen, locked, onRequirePayment, onS
               </div>
             )}
 
+            {mode !== "po" && (
             <div className="wms-edit-bar">
               <div className="omni-field" style={{ maxWidth: 190 }}>
                 <label>
@@ -220,6 +261,7 @@ export default function WmsStockRow({ row, onOpen, locked, onRequirePayment, onS
                 )}
               </div>
             </div>
+            )}
 
             {error && <div className="wms-msg err" style={{ marginTop: 10 }}>{error}</div>}
           </td>
