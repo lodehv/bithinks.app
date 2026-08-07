@@ -408,6 +408,58 @@
   padding: 0; cursor: pointer; text-decoration: underline;
 }
 
+/* ── Barang Masuk (PO) ────────────────────────────────────────────────────── */
+/* Bar pemenuhan: sepintas terlihat berapa bagian PO yang sudah tiba. Penuh
+   ditandai isian pekat — bukan cuma 100%, karena "terpenuhi" adalah keadaan
+   yang layak dikenali tanpa membaca angka. */
+.wms-bar-wrap { display: flex; align-items: center; gap: 9px; }
+.wms-bar-track {
+  flex: 1; min-width: 70px; height: 7px; border-radius: 99px;
+  background: var(--wms-surface-3); overflow: hidden;
+}
+.wms-bar-fill { height: 100%; background: var(--wms-indigo); border-radius: 99px; transition: width .2s ease; }
+.wms-bar-track.penuh .wms-bar-fill { background: var(--wms-ink); }
+.wms-bar-text { font-size: 11.5px; font-weight: 600; color: var(--wms-muted); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .wms-bar-fill { transition: none; } }
+
+/* Pemilih produk saat menyusun PO. */
+.wms-picker {
+  border: 1px solid var(--wms-rule); border-radius: 10px;
+  margin-bottom: 14px; overflow: hidden; background: #fff;
+}
+.wms-picker-row {
+  display: flex; width: 100%; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 10px 14px; background: none; border: none;
+  border-bottom: 1px solid var(--wms-rule-soft, #F3F4F6);
+  font-family: inherit; text-align: left; cursor: pointer; color: var(--wms-muted);
+}
+.wms-picker-row:last-child { border-bottom: none; }
+.wms-picker-row:hover { background: var(--wms-indigo-wash); color: var(--wms-indigo); }
+.wms-picker-row .wms-prod-name, .wms-picker-row .wms-prod-sku { display: block; }
+
+.wms-company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+.wms-logo-preview {
+  max-height: 56px; max-width: 200px; object-fit: contain;
+  border: 1px solid var(--wms-rule); border-radius: 8px; padding: 6px; background: #fff;
+}
+.wms-logo-empty {
+  display: flex; align-items: center; justify-content: center;
+  height: 56px; width: 140px; border-radius: 8px;
+  border: 1px dashed var(--wms-rule-2); color: var(--wms-faint); font-size: 12px;
+}
+
+/* Dokumen PO */
+.wms-sheet-logo { max-height: 52px; max-width: 170px; object-fit: contain; }
+.wms-sheet-company { font-size: 16px; font-weight: 800; letter-spacing: -.01em; color: var(--wms-ink); }
+.wms-doc-grid {
+  display: flex; flex-wrap: wrap; gap: 14px 36px;
+  padding-bottom: 16px; margin-bottom: 4px;
+}
+.wms-sheet-table tfoot td { padding: 12px 10px; border-top: 2px solid var(--wms-ink); border-bottom: none; }
+.wms-doc-sign { display: flex; gap: 48px; margin-top: 40px; flex-wrap: wrap; }
+.wms-doc-sign > div { min-width: 200px; }
+.wms-doc-sign-line { border-bottom: 1px solid var(--wms-ink); height: 46px; margin-bottom: 6px; }
+
 /* ── Outbound: pemindaian ─────────────────────────────────────────────────── */
 .wms-scan-bar { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 16px; }
 /* Kolom pemindaian dibuat besar & jelas — dipakai sambil berdiri di gudang,

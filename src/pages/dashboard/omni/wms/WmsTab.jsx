@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { BookOpen, LayoutDashboard, Truck, Warehouse } from "lucide-react";
+import { BookOpen, LayoutDashboard, PackagePlus, Truck, Warehouse } from "lucide-react";
 import WmsSummary from "./WmsSummary";
 import WmsStockList from "./WmsStockList";
 import WmsLedger from "./WmsLedger";
 import WmsOutbound from "./WmsOutbound";
+import WmsInbound from "./WmsInbound";
 import "./Wms.css";
 import "../OmniModule.css";
 
@@ -17,6 +18,7 @@ const VIEWS = [
   { id: "summary", label: "Ringkasan Stok", icon: LayoutDashboard },
   { id: "stock", label: "Produk & Stok", icon: Warehouse },
   { id: "ledger", label: "Buku Besar Stok", icon: BookOpen },
+  { id: "inbound", label: "Barang Masuk", icon: PackagePlus },
   { id: "outbound", label: "Outbound", icon: Truck },
 ];
 
@@ -51,6 +53,7 @@ export default function WmsTab({ locked, onRequirePayment }) {
         <WmsStockList locked={locked} onRequirePayment={onRequirePayment} initialFilter={stockFilter} />
       )}
       {view === "ledger" && <WmsLedger />}
+      {view === "inbound" && <WmsInbound locked={locked} onRequirePayment={onRequirePayment} />}
       {view === "outbound" && <WmsOutbound locked={locked} onRequirePayment={onRequirePayment} />}
     </div>
   );

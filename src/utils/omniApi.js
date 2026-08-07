@@ -60,6 +60,17 @@ export const omniApi = {
   wmsOutboundClose:  (id)          => api.post(`/api/omni/wms/outbound/${id}`).then(unwrap),
   wmsOutboundPick:   (code)        => api.post('/api/omni/wms/outbound/pick', { code }).then(unwrap),
 
+  // ── Barang Masuk (PO). Membuat PO TIDAK menambah stok — hanya penerimaan. ──
+  wmsInbound:        (params = {}) => api.get('/api/omni/wms/inbound', { params }).then(unwrap),
+  wmsInboundCreate:  (payload)     => api.post('/api/omni/wms/inbound', payload).then(unwrap),
+  wmsInboundDetail:  (id)          => api.get(`/api/omni/wms/inbound/${id}`).then(unwrap),
+  // receipts: [{ itemId, qty }] — sebagian didukung, sisanya tetap "akan datang".
+  wmsInboundReceive: (id, receipts) => api.post(`/api/omni/wms/inbound/${id}`, { receipts }).then(unwrap),
+
+  // Identitas perusahaan pelanggan — kop dokumen PO yang dikirim ke supplier.
+  companyProfile:    ()            => api.get('/api/omni/settings/company').then(unwrap),
+  saveCompanyProfile:(payload)     => api.patch('/api/omni/settings/company', payload).then(unwrap),
+
   listOrders:        (status)      => api.get('/api/omni/orders', { params: status ? { status } : {} }).then(unwrap),
   updateOrderStatus: (id, status)  => api.patch(`/api/omni/orders/${id}`, { status }).then(unwrap),
   syncOrders:        ()            => api.post('/api/omni/orders/sync').then(unwrap),
