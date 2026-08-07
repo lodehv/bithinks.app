@@ -1,14 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
-import { ArrowLeft, ClipboardCheck, Shield } from "lucide-react";
+import { ArrowLeft, ClipboardCheck, Shield, ScanLine, PackagePlus } from "lucide-react";
 import { omniApi, isPaymentRequired } from "../../../../utils/omniApi";
 import WmsLedgerTable from "./WmsLedgerTable";
+import FulfillBar from "./WmsFulfillBar";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Detail Produk — kartu 5 saldo (dengan rumus jangkar terlihat), sebaran channel,
-// antrean pesanan, dan mini Buku Besar (SPEC §4.3).
-// Sejak 2 Agu 2026 Tersedia adalah angka TERSIMPAN yang disetel manual, bukan hasil
-// rumus. Karena itu barisan rumus jangkar diganti keterangan sifat tiap angka —
-// menampilkan rumus yang sudah tidak berlaku justru menyesatkan.
+// Detail Produk — kartu saldo, asal tiap angka, sebaran channel, dan mini Buku Besar.
+//
+// Mengikuti model tiga angka: `Stok Fisik = Stok Tersedia + Stok Dialokasikan`.
+// Tiap angka yang bukan hasil ketikan user dibuat bisa DITELUSURI ke asalnya —
+// Dialokasikan ke sesi outbound yang resinya sudah dipindai, Akan Datang ke PO
+// yang belum tuntas. Angka turunan tanpa asal-usul cepat jadi angka yang tak
+// dipercaya siapa pun.
 // ─────────────────────────────────────────────────────────────────────────────
 
 const num = (n) => (n ?? 0).toLocaleString("id-ID");
@@ -50,7 +53,7 @@ export default function WmsProductDetail({ productId, locked, onRequirePayment, 
     try {
       const d = await omniApi.wmsPatchStock(productId, { safetyStock: Number(buffer) || 0 });
       setData(d);
-      setMsg({ type: "ok", text: "Cadangan disimpan. Tersedia tidak ikut berubah — keduanya berdiri sendiri." });
+      setMsg({ type: "ok", text: "Cadangan disimpan. Ia hanya ambang peringatan menipis — tidak mengurangi angka mana pun." });
     } catch (err) { guard(err); } finally { setBusy(false); }
   };
 
@@ -77,7 +80,7 @@ export default function WmsProductDetail({ productId, locked, onRequirePayment, 
   if (data === null) return <div className="omni-loading">Memuat detail stok…</div>;
   if (data === false) return <div className="omni-inline-msg">Gagal memuat detail produk.</div>;
 
-  const { product: p, channels, queue, ledger } = data;
+  const { product: p, channels, claims, ledger } = data;
 
   return (
     <div>
@@ -98,44 +101,93 @@ export default function WmsProductDetail({ productId, locked, onRequirePayment, 
 
       <div className="wms-balance-grid">
         <Balance label="Stok Fisik" value={p.onHand} />
-        <Balance label="Terkunci Pesanan" value={p.allocated} />
+        <Balance label="Stok Tersedia" value={p.availableToSell} ats />
+        <Balance label="Stok Dialokasikan" value={p.allocated} />
         <Balance label="Cadangan" value={p.safetyStock} />
-        <Balance label="Tersedia" value={p.availableToSell} ats />
         <Balance label="Stok Akan Datang" value={p.incoming} />
       </div>
 
       <div className="wms-formula" style={{ marginBottom: 16 }}>
-        Tiap angka berdiri sendiri — mengubah satu tidak menggeser yang lain.
-        <span className="eq">·</span> <b>Stok Fisik</b> digerakkan penyesuaian
-        <span className="eq">·</span> <b>Tersedia</b> &amp; <b>Cadangan</b> disetel manual
+        Stok Fisik <b>{num(p.onHand)}</b>
+        <span className="eq">=</span> Tersedia <b>{num(p.availableToSell)}</b>
+        <span className="eq">+</span> Dialokasikan <span className="res">{num(p.allocated)}</span>
       </div>
 
       {p.availableToSell <= 0 && (
         <div className="wms-note" style={{ marginBottom: 16 }}>
-          Tersedia sudah habis — produk ini seharusnya <strong>distop di semua channel</strong> agar
-          tidak ada pesanan baru yang tak bisa dipenuhi.
+          Stok Tersedia sudah habis — produk ini seharusnya <strong>distop di semua channel</strong>
+          agar tidak ada pesanan baru yang tak bisa dipenuhi.
         </div>
       )}
 
       <div className="wms-panel">
         <div className="wms-panel-head">
           <div>
-            <div className="wms-panel-title">Antrean Pesanan</div>
-            <div className="wms-panel-sub">Dua angka ini sengaja dipisah — terkunci belum tentu sudah keluar gudang.</div>
+            <div className="wms-panel-title">
+              <ScanLine size={13} style={{ verticalAlign: "-2px" }} /> Asal Stok Dialokasikan
+            </div>
+            <div className="wms-panel-sub">
+              Sesi outbound yang resinya sudah dipindai tapi picking list-nya belum — barangnya
+              masih di rak, tapi sudah terikat pesanan.
+            </div>
           </div>
         </div>
-        <div style={{ display: "flex", gap: 28, flexWrap: "wrap" }}>
-          <div>
-            <div className="wms-balance-label">Terkunci (belum dikirim)</div>
-            <div className="wms-balance-value">{num(queue.terkunci)}</div>
-            <div className="wms-kpi-note">dari {num(queue.orders.terkunci)} pesanan</div>
+        {claims.length === 0 ? (
+          <div className="wms-kpi-note">
+            Belum ada yang dialokasikan. Angka Dialokasikan naik saat resi dipindai di tab Outbound.
           </div>
+        ) : (
+          <div className="wms-po-list">
+            {claims.map((c) => (
+              <div className="wms-po-row" key={c.id}>
+                <span className="ico"><ScanLine size={14} /></span>
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <div className="wms-prod-name">{c.code}</div>
+                  <div className="wms-prod-sku">
+                    {c.status === "siap_pick" ? "Picking list sudah dicetak" : "Masih menerima pindaian resi"}
+                  </div>
+                </div>
+                <div className="wms-po-qty"><strong>{num(c.qty)}</strong> unit terikat</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="wms-panel">
+        <div className="wms-panel-head">
           <div>
-            <div className="wms-balance-label">Sudah keluar fisik</div>
-            <div className="wms-balance-value">{num(queue.dikirim)}</div>
-            <div className="wms-kpi-note">dari {num(queue.orders.dikirim)} pesanan</div>
+            <div className="wms-panel-title">
+              <PackagePlus size={13} style={{ verticalAlign: "-2px" }} /> Stok Akan Datang
+            </div>
+            <div className="wms-panel-sub">
+              PO yang belum tuntas. Angkanya berkurang sendiri saat barang diterima —
+              tidak bisa diketik langsung.
+            </div>
           </div>
         </div>
+        {(p.incomingOrders ?? []).length === 0 ? (
+          <div className="wms-kpi-note">Tidak ada PO yang belum tuntas untuk produk ini.</div>
+        ) : (
+          <div className="wms-po-list">
+            {p.incomingOrders.map((o) => (
+              <div className="wms-po-row" key={o.id}>
+                <span className="ico"><PackagePlus size={14} /></span>
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <div className="wms-prod-name">{o.code}</div>
+                  <div className="wms-prod-sku">{o.supplier || "Tanpa supplier"}</div>
+                </div>
+                <div className="wms-po-qty">
+                  <strong>{num(o.qtyReceived)}</strong> dari {num(o.qtyOrdered)} tiba
+                  <div className="wms-prod-sku">sisa {num(o.sisa)}</div>
+                </div>
+                <div style={{ minWidth: 130 }}>
+                  <FulfillBar ordered={o.qtyOrdered} received={o.qtyReceived} />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="wms-panel">
@@ -183,7 +235,7 @@ export default function WmsProductDetail({ productId, locked, onRequirePayment, 
         <div className="wms-panel-head">
           <div>
             <div className="wms-panel-title"><Shield size={13} style={{ verticalAlign: "-2px" }} /> Cadangan (buffer anti-oversell)</div>
-            <div className="wms-panel-sub">Unit yang sengaja ditahan agar jeda sinkron antar channel tidak berujung oversell.</div>
+            <div className="wms-panel-sub">Ambang peringatan menipis. Tidak mengurangi Stok Tersedia maupun Stok Fisik.</div>
           </div>
         </div>
         <div className="wms-form-inline">
