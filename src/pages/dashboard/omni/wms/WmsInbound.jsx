@@ -16,6 +16,25 @@ import FulfillBar from "./WmsFulfillBar";
 // ─────────────────────────────────────────────────────────────────────────────
 
 const num = (n) => (n ?? 0).toLocaleString("id-ID");
+const rupiah = (n) => "Rp " + Math.round(n || 0).toLocaleString("id-ID");
+
+/**
+ * Nominal di bawah angka unit. Kalau ada item tanpa HPP, angkanya ditulis
+ * sebagai batas bawah ("min.") — bukan seolah-olah sudah pasti. Menampilkan
+ * total yang diam-diam kurang lebih berbahaya daripada mengaku belum lengkap,
+ * karena nominal PO dipakai untuk mencocokkan tagihan supplier.
+ */
+function Nominal({ value, parsial }) {
+  if (!value) return null;
+  return (
+    <div
+      className="wms-num-sub"
+      title={parsial ? "Sebagian produk belum punya HPP — nilai sebenarnya lebih besar." : undefined}
+    >
+      {parsial ? "min. " : ""}{rupiah(value)}
+    </div>
+  );
+}
 
 const STATUS = {
   draft:    { label: "Belum ada yang tiba", chip: "aman" },
@@ -140,8 +159,14 @@ export default function WmsInbound({ locked, onRequirePayment }) {
                   </td>
                   <td>{r.supplier || <span className="omni-cell-muted">—</span>}</td>
                   <td className="omni-cell-muted">{tgl(r.expectedAt)}</td>
-                  <td className="wms-num">{num(r.dipesan)}</td>
-                  <td className="wms-num strong">{num(r.diterima)}</td>
+                  <td className="wms-num">
+                    {num(r.dipesan)}
+                    <Nominal value={r.nilai} parsial={r.nilaiParsial} />
+                  </td>
+                  <td className="wms-num strong">
+                    {num(r.diterima)}
+                    <Nominal value={r.nilaiDiterima} parsial={r.nilaiParsial} />
+                  </td>
                   <td><FulfillBar ordered={r.dipesan} received={r.diterima} /></td>
                   <td>
                     <span className={`wms-chip ${STATUS[r.status]?.chip ?? "aman"}`}>

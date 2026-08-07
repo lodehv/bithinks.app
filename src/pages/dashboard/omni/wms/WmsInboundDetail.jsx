@@ -82,7 +82,13 @@ export default function WmsInboundDetail({ inboundId, locked, onBack, onError })
           <div style={{ minWidth: 190 }}>
             <FulfillBar ordered={po.dipesan} received={po.diterima} />
             <div className="wms-panel-sub" style={{ marginTop: 4 }}>
-              {num(po.diterima)} dari {num(po.dipesan)} unit tiba · nilai {rupiah(po.nilai)}
+              {num(po.diterima)} dari {num(po.dipesan)} unit tiba ·{" "}
+              {rupiah(po.nilaiDiterima)} dari {rupiah(po.nilai)}
+              {po.nilaiParsial && (
+                <span title="Sebagian produk belum punya HPP — nilai sebenarnya lebih besar.">
+                  {" "}(sebagian produk belum ber-HPP)
+                </span>
+              )}
             </div>
           </div>
         </div>
