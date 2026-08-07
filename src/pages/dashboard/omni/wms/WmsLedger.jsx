@@ -78,7 +78,7 @@ export default function WmsLedger() {
   }
 
   return (
-    <div>
+    <div style={{ "--wms-table-offset": "22rem" }}>
       <div className="omni-toolbar">
         <div>
           <div className="omni-toolbar-title">Buku Besar Stok</div>

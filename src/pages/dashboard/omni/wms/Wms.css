@@ -43,6 +43,10 @@
   --wms-muted:    #6B7280;
   --wms-faint:    #9CA3AF;
 
+  /* Jarak dari atas layar ke tabel — berbeda tiap layar (Produk & Stok punya
+     kartu status di atasnya, Buku Besar tidak), jadi disetel per layar. */
+  --wms-table-offset: 28rem;
+
   --wms-rule:     #EBEBEB;
   --wms-rule-2:   #E5E7EB;
   --wms-surface:  #FFFFFF;
@@ -223,20 +227,25 @@
 .wms-bar.keluar { background: var(--wms-indigo); }
 .wms-bar-label { font-size: 10.5px; color: var(--wms-faint); white-space: nowrap; }
 
-/* ── Header tabel menempel saat menggulir ─────────────────────────────────────
-   Tanpa ini, menggulir daftar panjang menyisakan deretan angka tanpa keterangan
-   kolom — operator harus menggulir balik ke atas hanya untuk memastikan yang
-   dilihatnya "Tersedia" atau "Dialokasikan".
+/* ── Tabel bergulir di dalam kotaknya sendiri ─────────────────────────────────
+   Judul, kartu status, dan penyaring tetap diam; hanya barisnya yang bergulir.
+   Pola tabel data yang lazim di aplikasi enterprise, dan alasannya praktis:
+   penyaring tetap terjangkau tanpa menggulir balik ke atas, dan header kolom
+   selalu terlihat sehingga deretan angka tak pernah kehilangan keterangannya.
 
-   `.omni-table-wrap` aslinya `overflow: hidden`, dan itu menjadikannya wadah
-   gulir tersendiri sehingga header menempel pada kotak tabel (yang ikut hanyut
-   ke atas) alih-alih pada layar. `overflow: clip` tetap memotong sudut membulat
-   tapi TIDAK membuat wadah gulir, jadi header menempel pada .dashboard-content —
-   elemen yang benar-benar menggulir. Baris `hidden` dibiarkan sebagai cadangan
-   untuk peramban lama: header tak menempel, tapi tampilan tidak rusak. */
+   Tingginya dibatasi relatif terhadap layar, bukan angka tetap, agar ikut
+   menyesuaikan di layar pendek maupun tinggi. `min-height` menjaga tabel tetap
+   berguna di layar laptop kecil — tanpa itu, di layar pendek tabelnya bisa
+   menyusut jadi tinggal satu-dua baris. */
 .wms .omni-table-wrap {
-  overflow: hidden;
-  overflow: clip;
+  overflow: auto;
+  max-height: calc(100vh - var(--wms-table-offset));
+  min-height: 16rem;
+  /* Guliran menyentak per baris terasa kasar; ini membuatnya berhenti rapi. */
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  .wms .omni-table-wrap { scroll-behavior: auto; }
 }
 .wms .omni-table thead th {
   position: sticky;
