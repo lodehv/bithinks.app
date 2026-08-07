@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Package, Pencil, Check, X } from "lucide-react";
+import { Package, Pencil, Check, X, Plus, Minus, ClipboardCheck } from "lucide-react";
 import { omniApi, isPaymentRequired } from "../../../../utils/omniApi";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -19,10 +19,31 @@ const num = (n) => (n ?? 0).toLocaleString("id-ID");
 const STATUS_LABEL = { aman: "Aman", menipis: "Menipis", habis: "Habis" };
 
 const FIELDS = {
-  fisik:    { label: "Stok Fisik", note: "Stok Tersedia ikut bergeser sama besar supaya Stok Dialokasikan tidak berubah. Bila Tersedia sedang minus, barang yang masuk menutup pesanan tertunggak lebih dulu." },
+  fisik:    { label: "Stok Fisik" },
   cadangan: { label: "Cadangan", note: "Ambang peringatan menipis. Tidak mengurangi angka mana pun." },
   datang:   { label: "Stok Akan Datang", note: "Barang yang dipesan tapi belum tiba. Belum menambah Stok Fisik." },
 };
+
+/**
+ * Tiga cara mengubah Stok Fisik, mengikuti §06 dokumen sistem stok. Dipisah
+ * begini karena "barang datang 50" dan "sekarang totalnya 50" adalah dua hal
+ * yang sangat berbeda — menyatukannya dalam satu kolom memaksa operator
+ * menghitung di kepala, dan di situlah salah input paling sering terjadi.
+ */
+const FISIK_MODES = [
+  {
+    id: "tambah", label: "Barang Datang", icon: Plus, verb: "Jumlah yang datang",
+    note: "Stok Fisik & Stok Tersedia sama-sama bertambah. Bila ada pesanan tertunggak (Tersedia minus), barang yang datang menutupnya lebih dulu, baru sisanya naik ke rak.",
+  },
+  {
+    id: "kurangi", label: "Rusak / Susut", icon: Minus, verb: "Jumlah yang berkurang",
+    note: "Stok Fisik & Stok Tersedia sama-sama berkurang, supaya Stok Dialokasikan tidak ikut tergeser. Stok Fisik tidak bisa turun di bawah 0.",
+  },
+  {
+    id: "opname", label: "Hasil Hitung", icon: ClipboardCheck, verb: "Total hasil hitung fisik",
+    note: "Isi TOTAL hasil hitungan di rak, bukan selisihnya. Sistem menghitung sendiri bedanya dengan angka sekarang.",
+  },
+];
 
 /** Sel angka + pensil yang muncul saat baris disentuh mouse. */
 function EditableCell({ value, onEdit, editable, className = "", render }) {
@@ -46,7 +67,8 @@ function EditableCell({ value, onEdit, editable, className = "", render }) {
 }
 
 export default function WmsStockRow({ row, onOpen, locked, onRequirePayment, onSaved }) {
-  const [mode, setMode] = useState(null);   // fisik | tersedia | cadangan | datang
+  const [mode, setMode] = useState(null);        // fisik | cadangan | datang
+  const [fisikMode, setFisikMode] = useState("tambah");
   const [qty, setQty] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -62,7 +84,10 @@ export default function WmsStockRow({ row, onOpen, locked, onRequirePayment, onS
   const open = (which) => {
     setMode(which);
     setError("");
-    setQty(String(current[which] ?? 0));
+    setFisikMode("tambah");
+    // Menambah barang selalu mulai dari kosong — mengisinya dengan stok sekarang
+    // justru mengundang salah kirim "150" sebagai "tambah 150".
+    setQty(which === "fisik" ? "" : String(current[which] ?? 0));
   };
 
   const close = () => { setMode(null); setError(""); };
@@ -75,7 +100,12 @@ export default function WmsStockRow({ row, onOpen, locked, onRequirePayment, onS
     setError("");
     try {
       if (mode === "fisik") {
-        await omniApi.wmsAdjust({ productId: row.productId, countedQty: n, type: "koreksi" });
+        if (fisikMode === "opname") {
+          await omniApi.wmsAdjust({ productId: row.productId, countedQty: n, type: "opname" });
+        } else {
+          const signed = fisikMode === "kurangi" ? -n : n;
+          await omniApi.wmsAdjust({ productId: row.productId, delta: signed, type: "koreksi" });
+        }
       } else if (mode === "cadangan") {
         await omniApi.wmsPatchStock(row.productId, { safetyStock: n });
       } else {
@@ -134,9 +164,28 @@ export default function WmsStockRow({ row, onOpen, locked, onRequirePayment, onS
       {mode && (
         <tr className="wms-edit-row" onClick={(e) => e.stopPropagation()}>
           <td colSpan={7}>
+            {mode === "fisik" && (
+              <div className="wms-sub level3" style={{ marginBottom: 12 }}>
+                {FISIK_MODES.map((m) => (
+                  <button
+                    key={m.id}
+                    type="button"
+                    className={fisikMode === m.id ? "active" : ""}
+                    onClick={() => { setFisikMode(m.id); setQty(""); setError(""); }}
+                  >
+                    <m.icon size={13} /> {m.label}
+                  </button>
+                ))}
+              </div>
+            )}
+
             <div className="wms-edit-bar">
-              <div className="omni-field" style={{ maxWidth: 170 }}>
-                <label>{FIELDS[mode].label}</label>
+              <div className="omni-field" style={{ maxWidth: 190 }}>
+                <label>
+                  {mode === "fisik"
+                    ? FISIK_MODES.find((m) => m.id === fisikMode)?.verb
+                    : FIELDS[mode].label}
+                </label>
                 <input
                   className="omni-input"
                   value={qty}
@@ -152,7 +201,16 @@ export default function WmsStockRow({ row, onOpen, locked, onRequirePayment, onS
                 <X size={13} /> Batal
               </button>
               <div className="wms-edit-note">
-                Sekarang {num(current[mode])}. {FIELDS[mode].note}
+                {mode === "fisik" ? (
+                  <>
+                    Sekarang Fisik <strong>{num(row.onHand)}</strong> · Tersedia{" "}
+                    <strong>{num(row.availableToSell)}</strong> · Dialokasikan{" "}
+                    <strong>{num(row.allocated)}</strong>.{" "}
+                    {FISIK_MODES.find((m) => m.id === fisikMode)?.note}
+                  </>
+                ) : (
+                  <>Sekarang {num(current[mode])}. {FIELDS[mode].note}</>
+                )}
               </div>
             </div>
 
