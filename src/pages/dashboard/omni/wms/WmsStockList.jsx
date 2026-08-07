@@ -14,11 +14,13 @@ import WmsStockRow from "./WmsStockRow";
 // langsung diatur di WmsStockRow.
 // ─────────────────────────────────────────────────────────────────────────────
 
-const FILTERS = [
-  { id: "all", label: "Semua" },
-  { id: "habis", label: "Habis" },
-  { id: "menipis", label: "Menipis" },
-  { id: "aman", label: "Aman" },
+// Urutan sengaja dari yang paling gawat: yang butuh tindakan ada di kiri, tempat
+// mata jatuh lebih dulu. Warnanya mengikuti tangga perhatian yang sama dengan
+// chip status di tabel — hitam pekat paling mendesak, putih paling tenang.
+const STATUS_CARDS = [
+  { id: "habis",   label: "Stok Habis",   hint: "Tersedia sudah ≤ 0" },
+  { id: "menipis", label: "Stok Menipis", hint: "Tersedia menyentuh Cadangan" },
+  { id: "aman",    label: "Stok Aman",    hint: "Tidak perlu tindakan" },
 ];
 
 export default function WmsStockList({ locked, onRequirePayment, initialFilter }) {
@@ -43,6 +45,12 @@ export default function WmsStockList({ locked, onRequirePayment, initialFilter }
     setAppliedFilter(initialFilter);
     if (initialFilter === "habis" || initialFilter === "menipis") setStatus(initialFilter);
   }
+
+  const counts = useMemo(() => {
+    const c = { habis: 0, menipis: 0, aman: 0 };
+    for (const r of rows ?? []) if (c[r.status] !== undefined) c[r.status] += 1;
+    return c;
+  }, [rows]);
 
   const categories = useMemo(
     () => Array.from(new Set((rows ?? []).map((r) => r.category).filter(Boolean))).sort(),
@@ -83,6 +91,31 @@ export default function WmsStockList({ locked, onRequirePayment, initialFilter }
         </div>
       </div>
 
+      <div className="wms-status-cards">
+        {STATUS_CARDS.map((c) => (
+          <button
+            key={c.id}
+            type="button"
+            className={`wms-status-card ${c.id} ${status === c.id ? "active" : ""}`}
+            aria-pressed={status === c.id}
+            // Menekan kartu yang sedang aktif mengembalikan daftar ke semua produk,
+            // supaya tidak ada jalan buntu tanpa tombol "reset" tersendiri.
+            onClick={() => setStatus(status === c.id ? "all" : c.id)}
+          >
+            <span className="wms-status-card-label">{c.label}</span>
+            <span className="wms-status-card-count">{counts[c.id]}</span>
+            <span className="wms-status-card-hint">{c.hint}</span>
+          </button>
+        ))}
+      </div>
+
+      {status !== "all" && (
+        <div className="wms-status-active">
+          Menampilkan {STATUS_CARDS.find((c) => c.id === status)?.label.toLowerCase()} saja.
+          <button type="button" onClick={() => setStatus("all")}>Tampilkan semua produk</button>
+        </div>
+      )}
+
       <div className="wms-filters">
         <div className="omni-field" style={{ minWidth: 210 }}>
           <label><Search size={11} style={{ verticalAlign: "-1px" }} /> Cari produk</label>
@@ -92,12 +125,6 @@ export default function WmsStockList({ locked, onRequirePayment, initialFilter }
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-        </div>
-        <div className="omni-field" style={{ maxWidth: 170 }}>
-          <label>Status stok</label>
-          <select className="omni-select" value={status} onChange={(e) => setStatus(e.target.value)}>
-            {FILTERS.map((f) => <option key={f.id} value={f.id}>{f.label}</option>)}
-          </select>
         </div>
         <div className="omni-field" style={{ maxWidth: 190 }}>
           <label>Kategori</label>

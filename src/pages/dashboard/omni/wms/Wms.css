@@ -316,6 +316,63 @@
 .wms-msg.ok  { color: var(--wms-indigo); background: var(--wms-indigo-wash); border: 1px solid var(--wms-indigo-soft); }
 .wms-msg.err { color: var(--wms-ink); background: #fff; border: 1px solid var(--wms-ink); }
 
+/* ── Kartu status stok (penyaring daftar) ─────────────────────────────────── */
+.wms-status-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.wms-status-card {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+  font-family: inherit; text-align: left; cursor: pointer;
+  padding: 15px 17px; border-radius: 12px;
+  border: 1px solid var(--wms-rule); background: #fff;
+  transition: border-color .12s, background .12s, box-shadow .12s;
+}
+.wms-status-card:hover { border-color: var(--wms-indigo-soft); }
+.wms-status-card:focus-visible { outline: 2px solid var(--wms-indigo); outline-offset: 2px; }
+
+.wms-status-card-label {
+  font-size: 11.5px; font-weight: 600; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--wms-faint);
+}
+.wms-status-card-count {
+  font-size: 26px; font-weight: 700; letter-spacing: -.03em;
+  color: var(--wms-ink); font-variant-numeric: tabular-nums; margin-top: 4px;
+}
+.wms-status-card-hint { font-size: 11.5px; color: var(--wms-faint); line-height: 1.45; }
+
+/* Tangga perhatian yang sama dengan chip status di tabel: hitam pekat paling
+   mendesak, indigo perlu dilirik, putih tenang. Kartu terpilih dipertegas isian
+   penuh supaya jelas daftar sedang tersaring — bukan cuma garis tepi menebal. */
+.wms-status-card.habis.active {
+  background: var(--wms-ink); border-color: var(--wms-ink);
+}
+.wms-status-card.habis.active .wms-status-card-count { color: #fff; }
+.wms-status-card.habis.active .wms-status-card-label,
+.wms-status-card.habis.active .wms-status-card-hint { color: rgba(255, 255, 255, .72); }
+
+.wms-status-card.menipis.active {
+  background: var(--wms-indigo-wash); border-color: var(--wms-indigo);
+}
+.wms-status-card.menipis.active .wms-status-card-count,
+.wms-status-card.menipis.active .wms-status-card-label { color: var(--wms-indigo); }
+
+.wms-status-card.aman.active {
+  background: var(--wms-surface-2); border-color: var(--wms-muted);
+}
+
+.wms-status-active {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  font-size: 12.5px; color: var(--wms-muted); margin-bottom: 14px;
+}
+.wms-status-active button {
+  font-family: inherit; font-size: 12.5px; font-weight: 600;
+  color: var(--wms-indigo); background: none; border: none;
+  padding: 0; cursor: pointer; text-decoration: underline;
+}
+
 /* ── Outbound: pemindaian ─────────────────────────────────────────────────── */
 .wms-scan-bar { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 16px; }
 /* Kolom pemindaian dibuat besar & jelas — dipakai sambil berdiri di gudang,
