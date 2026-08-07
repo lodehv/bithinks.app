@@ -436,6 +436,28 @@
   @page { margin: 14mm; }
 }
 
+/* ── Buku Besar: kolom penyebab & rincian ─────────────────────────────────── */
+.wms-cause { display: inline-flex; align-items: flex-start; gap: 8px; font-size: 12.5px; color: var(--wms-ink-2); }
+.wms-cause .ico { flex-shrink: 0; margin-top: 2px; color: var(--wms-muted); }
+.wms-cause strong { color: var(--wms-ink); font-weight: 650; }
+.wms-cause-sub { display: block; font-size: 11.5px; color: var(--wms-faint); margin-top: 1px; }
+
+.wms-chevron { color: var(--wms-faint); transition: transform .15s ease; }
+.wms-chevron.open { transform: rotate(180deg); color: var(--wms-indigo); }
+
+.wms-ledger-detail { display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
+/* Flex, bukan grid: lebar tiap fakta berbeda-beda (nomor resi panjang, nama
+   orang pendek). Grid dengan lebar seragam menyisakan lubang besar di kanan. */
+.wms-ledger-detail-grid { display: flex; flex-wrap: wrap; gap: 14px 32px; }
+.wms-ledger-detail-label {
+  font-size: 10.5px; font-weight: 600; letter-spacing: .05em;
+  text-transform: uppercase; color: var(--wms-faint);
+}
+.wms-ledger-detail-value { font-size: 13px; color: var(--wms-ink); margin-top: 3px; line-height: 1.5; }
+.wms-ledger-detail-value.mono { font-variant-numeric: tabular-nums; letter-spacing: .01em; }
+
+@media (prefers-reduced-motion: reduce) { .wms-chevron { transition: none; } }
+
 /* ── Buku Besar ───────────────────────────────────────────────────────────── */
 .wms-filters { display: flex; gap: 11px; flex-wrap: wrap; margin-bottom: 16px; align-items: flex-end; }
 .wms-delta { font-variant-numeric: tabular-nums; font-size: 13.5px; }

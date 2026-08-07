@@ -3,6 +3,7 @@ import { Download, Lock } from "lucide-react";
 import { omniApi } from "../../../../utils/omniApi";
 import api from "../../../../utils/api";
 import WmsLedgerTable from "./WmsLedgerTable";
+import WmsPickingList from "./WmsPickingList";
 import { TYPE_LABEL } from "./ledgerTypes";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -18,6 +19,17 @@ export default function WmsLedger() {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [downloading, setDownloading] = useState(false);
+  // Lembar picking list dibuka dari baris Buku Besar — supaya "kenapa stok
+  // berkurang" bisa ditelusuri sampai ke kertas yang dipegang operator.
+  const [sheet, setSheet] = useState(null);
+
+  const openSession = async (sessionId) => {
+    try {
+      setSheet(await omniApi.wmsOutboundDetail(sessionId));
+    } catch {
+      setSheet(false);
+    }
+  };
 
   const params = () => ({
     ...(type !== "all" ? { type } : {}),
@@ -61,6 +73,10 @@ export default function WmsLedger() {
     }
   };
 
+  if (sheet) {
+    return <WmsPickingList session={sheet} onBack={() => setSheet(null)} />;
+  }
+
   return (
     <div>
       <div className="omni-toolbar">
@@ -98,7 +114,7 @@ export default function WmsLedger() {
 
       {rows === null
         ? <div className="omni-loading">Memuat buku besar…</div>
-        : <WmsLedgerTable rows={rows} />}
+        : <WmsLedgerTable rows={rows} onOpenSession={openSession} />}
     </div>
   );
 }
