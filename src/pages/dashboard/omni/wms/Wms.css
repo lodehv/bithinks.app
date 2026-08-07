@@ -289,6 +289,19 @@
 .wms-edit-btn:focus-visible { opacity: 1; outline: 2px solid var(--wms-indigo); outline-offset: 1px; }
 .wms-edit-btn:hover { color: var(--wms-indigo); border-color: var(--wms-indigo-soft); background: var(--wms-indigo-wash); }
 
+/* Tombol dokumen PO. Berbeda dengan pensil di atas, ini SELALU terlihat:
+   hanya ada satu per baris jadi tidak meramaikan tabel, dan mencetak PO
+   adalah tujuan tersendiri — bukan tindakan susulan setelah membuka baris. */
+.wms-doc-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; padding: 0;
+  border: 1px solid var(--wms-rule-2); border-radius: 7px;
+  background: #fff; color: var(--wms-muted); cursor: pointer;
+  transition: color .12s, border-color .12s, background .12s;
+}
+.wms-doc-btn:hover { color: var(--wms-indigo); border-color: var(--wms-indigo-soft); background: var(--wms-indigo-wash); }
+.wms-doc-btn:focus-visible { outline: 2px solid var(--wms-indigo); outline-offset: 1px; }
+
 .wms-edit-row > td { background: var(--wms-surface-2); cursor: default; }
 .wms-edit-bar { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
 .wms-edit-note { font-size: 12px; color: var(--wms-muted); margin-top: 9px; line-height: 1.5; }

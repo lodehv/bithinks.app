@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { Plus, PackagePlus, Building2 } from "lucide-react";
+import { Plus, PackagePlus, Building2, FileText } from "lucide-react";
 import { omniApi, isPaymentRequired } from "../../../../utils/omniApi";
 import WmsInboundForm from "./WmsInboundForm";
 import WmsInboundDetail from "./WmsInboundDetail";
 import WmsCompanyForm from "./WmsCompanyForm";
+import WmsInboundDoc from "./WmsInboundDoc";
 import FulfillBar from "./WmsFulfillBar";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -30,6 +31,8 @@ const tgl = (d) => (d ? new Date(d).toLocaleDateString("id-ID", {
 export default function WmsInbound({ locked, onRequirePayment }) {
   const [rows, setRows] = useState(null);
   const [view, setView] = useState(null);   // 'form' | 'company' | { id }
+  const [doc, setDoc] = useState(null);     // 'memuat' | objek PO lengkap
+  const [msg, setMsg] = useState(null);
 
   const load = useCallback(
     () => omniApi.wmsInbound().then(setRows).catch(() => setRows(false)),
@@ -38,6 +41,27 @@ export default function WmsInbound({ locked, onRequirePayment }) {
   useEffect(() => { load(); }, [load]);
 
   const guard = (err) => { if (isPaymentRequired(err)) { onRequirePayment?.(); return true; } return false; };
+
+  /**
+   * Buka dokumen PO langsung dari daftar. Baris daftar hanya membawa angka
+   * ringkas, sedangkan surat butuh rincian item dan kop perusahaan — jadi
+   * detailnya diambil dulu, baru lembarnya ditampilkan. Kalau gagal, daftar
+   * tetap di tempat dengan pesan, bukan pindah ke layar buntu.
+   */
+  const openDoc = async (e, id) => {
+    e.stopPropagation();               // jangan ikut membuka halaman detail
+    setDoc("memuat"); setMsg(null);
+    try {
+      setDoc(await omniApi.wmsInboundDetail(id));
+    } catch (err) {
+      setDoc(null);
+      if (guard(err)) return;
+      setMsg("Gagal menyiapkan dokumen PO. Coba lagi sebentar.");
+    }
+  };
+
+  if (doc === "memuat") return <div className="omni-loading">Menyiapkan dokumen PO…</div>;
+  if (doc) return <WmsInboundDoc po={doc} onBack={() => setDoc(null)} />;
 
   if (view === "form") {
     return (
@@ -84,6 +108,8 @@ export default function WmsInbound({ locked, onRequirePayment }) {
         </div>
       </div>
 
+      {msg && <div className="wms-msg err">{msg}</div>}
+
       {rows.length === 0 ? (
         <div className="omni-empty">
           <div className="omni-empty-icon"><PackagePlus size={22} /></div>
@@ -102,6 +128,7 @@ export default function WmsInbound({ locked, onRequirePayment }) {
                 <th style={{ textAlign: "right" }}>Tiba</th>
                 <th style={{ minWidth: 150 }}>Pemenuhan</th>
                 <th>Status</th>
+                <th style={{ width: 70, textAlign: "center" }}>Dokumen</th>
               </tr>
             </thead>
             <tbody>
@@ -120,6 +147,17 @@ export default function WmsInbound({ locked, onRequirePayment }) {
                     <span className={`wms-chip ${STATUS[r.status]?.chip ?? "aman"}`}>
                       {STATUS[r.status]?.label ?? r.status}
                     </span>
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    <button
+                      type="button"
+                      className="wms-doc-btn"
+                      title={`Lihat & simpan PDF ${r.code}`}
+                      aria-label={`Lihat dokumen ${r.code}`}
+                      onClick={(e) => openDoc(e, r.id)}
+                    >
+                      <FileText size={14} />
+                    </button>
                   </td>
                 </tr>
               ))}
