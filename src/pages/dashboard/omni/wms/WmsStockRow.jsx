@@ -3,17 +3,15 @@ import { Package, Pencil, Check, X } from "lucide-react";
 import { omniApi, isPaymentRequired } from "../../../../utils/omniApi";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Satu baris tabel Produk & Stok, dengan ubah-cepat di tempat pada keempat
-// kolom angka. Yang terjadi di belakang layar berbeda-beda, karena sifat tiap
-// angka memang berbeda:
+// Satu baris tabel Produk & Stok. Acuan: dokumen "Cara Kerja Sistem Stok Gudang".
 //
-//   Stok Fisik  → barang nyata bertambah/berkurang. Dicatat sebagai mutasi
-//                 "Koreksi Manual" di Buku Besar; angka lama tidak ditimpa.
-//   Tersedia    → angka yang boleh dijual. Saldo TERSIMPAN yang disetel manual,
-//                 berdiri sendiri dari Stok Fisik maupun Cadangan.
-//   Cadangan    → ambang peringatan menipis. Tidak mengurangi angka mana pun.
-//   Akan Datang → barang yang dipesan tapi belum tiba, jadi juga bukan
-//                 pergerakan. Tidak menambah Stok Fisik sampai barang diterima.
+//   Stok Fisik        BISA diubah. Setiap perubahannya menggeser Stok Tersedia
+//                     sama besar, supaya Stok Dialokasikan tidak ikut tergeser.
+//   Stok Tersedia     TIDAK BISA diubah langsung — sengaja tanpa tombol pensil.
+//                     Hanya scan resi & perubahan Stok Fisik yang menggerakkannya.
+//   Stok Dialokasikan TURUNAN (Fisik − Tersedia), jadi juga tanpa tombol.
+//   Cadangan          ambang peringatan menipis saja.
+//   Akan Datang       barang dipesan tapi belum tiba.
 // ─────────────────────────────────────────────────────────────────────────────
 
 const num = (n) => (n ?? 0).toLocaleString("id-ID");
@@ -21,9 +19,8 @@ const num = (n) => (n ?? 0).toLocaleString("id-ID");
 const STATUS_LABEL = { aman: "Aman", menipis: "Menipis", habis: "Habis" };
 
 const FIELDS = {
-  fisik:    { label: "Stok Fisik", note: "Jumlah barang nyata di gudang — tercatat sebagai Koreksi Manual di Buku Besar. Tersedia tidak ikut berubah." },
-  tersedia: { label: "Tersedia", note: "Angka yang boleh dijual. Berdiri sendiri — tidak menggeser Stok Fisik, dan tidak ikut bergeser saat Stok Fisik atau Cadangan diubah." },
-  cadangan: { label: "Cadangan", note: "Ambang peringatan menipis. Tidak mengurangi Tersedia maupun Stok Fisik." },
+  fisik:    { label: "Stok Fisik", note: "Stok Tersedia ikut bergeser sama besar supaya Stok Dialokasikan tidak berubah. Bila Tersedia sedang minus, barang yang masuk menutup pesanan tertunggak lebih dulu." },
+  cadangan: { label: "Cadangan", note: "Ambang peringatan menipis. Tidak mengurangi angka mana pun." },
   datang:   { label: "Stok Akan Datang", note: "Barang yang dipesan tapi belum tiba. Belum menambah Stok Fisik." },
 };
 
@@ -58,7 +55,6 @@ export default function WmsStockRow({ row, onOpen, locked, onRequirePayment, onS
 
   const current = {
     fisik: row.onHand,
-    tersedia: row.availableToSell,
     cadangan: row.safetyStock,
     datang: row.incoming,
   };
@@ -73,16 +69,13 @@ export default function WmsStockRow({ row, onOpen, locked, onRequirePayment, onS
 
   const save = async () => {
     const n = Number(qty);
-    if (!Number.isInteger(n)) { setError("Isi angka bulat."); return; }
-    if (mode !== "tersedia" && n < 0) { setError("Angka tidak boleh minus."); return; }
+    if (!Number.isInteger(n) || n < 0) { setError("Isi angka bulat, minimal 0."); return; }
 
     setSaving(true);
     setError("");
     try {
       if (mode === "fisik") {
         await omniApi.wmsAdjust({ productId: row.productId, countedQty: n, type: "koreksi" });
-      } else if (mode === "tersedia") {
-        await omniApi.wmsPatchStock(row.productId, { available: n });
       } else if (mode === "cadangan") {
         await omniApi.wmsPatchStock(row.productId, { safetyStock: n });
       } else {
@@ -117,12 +110,12 @@ export default function WmsStockRow({ row, onOpen, locked, onRequirePayment, onS
 
         <EditableCell value={row.onHand} editable={editable} onEdit={() => open("fisik")} />
 
-        <EditableCell
-          value={row.availableToSell}
-          editable={editable}
-          onEdit={() => open("tersedia")}
-          className={`strong ${row.availableToSell < 0 ? "neg" : ""}`}
-        />
+        {/* Tersedia & Dialokasikan sengaja TANPA tombol ubah — keduanya hanya
+            boleh bergerak lewat scan resi atau perubahan Stok Fisik. */}
+        <td className={`wms-num strong ${row.availableToSell < 0 ? "neg" : ""}`}>
+          {num(row.availableToSell)}
+        </td>
+        <td className="wms-num">{num(row.allocated)}</td>
 
         <EditableCell value={row.safetyStock} editable={editable} onEdit={() => open("cadangan")} />
 
@@ -140,7 +133,7 @@ export default function WmsStockRow({ row, onOpen, locked, onRequirePayment, onS
 
       {mode && (
         <tr className="wms-edit-row" onClick={(e) => e.stopPropagation()}>
-          <td colSpan={6}>
+          <td colSpan={7}>
             <div className="wms-edit-bar">
               <div className="omni-field" style={{ maxWidth: 170 }}>
                 <label>{FIELDS[mode].label}</label>

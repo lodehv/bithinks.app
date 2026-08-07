@@ -77,8 +77,8 @@ export default function WmsStockList({ locked, onRequirePayment, initialFilter }
         <div>
           <div className="omni-toolbar-title">Produk & Stok</div>
           <div className="omni-toolbar-sub">
-            Tiap angka berdiri sendiri — mengubah satu tidak menggeser yang lain. Klik ikon
-            pensil untuk mengubah, atau klik baris untuk rincian lengkap.
+            Stok Fisik = Stok Tersedia + Stok Dialokasikan. Yang bisa diubah hanya Stok Fisik,
+            Cadangan, dan Stok Akan Datang — Tersedia bergerak sendiri lewat scan resi.
           </div>
         </div>
       </div>
@@ -125,7 +125,8 @@ export default function WmsStockList({ locked, onRequirePayment, initialFilter }
               <tr>
                 <th>Produk</th>
                 <th style={{ textAlign: "right" }}>Stok Fisik</th>
-                <th style={{ textAlign: "right" }}>Tersedia</th>
+                <th style={{ textAlign: "right" }}>Stok Tersedia</th>
+                <th style={{ textAlign: "right" }}>Dialokasikan</th>
                 <th style={{ textAlign: "right" }}>Cadangan</th>
                 <th style={{ textAlign: "right" }}>Stok Akan Datang</th>
                 <th>Status</th>
