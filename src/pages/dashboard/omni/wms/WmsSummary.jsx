@@ -127,7 +127,7 @@ export default function WmsSummary({ locked, onRequirePayment, onOpenList }) {
             : kpi.nilaiStokParsial ? "Sebagian produk belum punya HPP" : null}
         />
         <Kpi label="Stok Fisik" value={num(kpi.stokFisik)} />
-        <Kpi label="Terkunci Pesanan" value={num(kpi.terkunci)} />
+        <Kpi label="Stok Dialokasikan" value={num(kpi.terkunci)} />
         <Kpi label="Tersedia" value={num(kpi.siapJual)} negative={kpi.siapJual < 0} />
         <Kpi
           label="Stok Akan Datang"

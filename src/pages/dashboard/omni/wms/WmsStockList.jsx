@@ -9,9 +9,8 @@ import WmsStockRow from "./WmsStockRow";
 // Urutan datang dari server: Habis di atas, lalu Menipis. Yang butuh tindakan
 // tidak boleh tenggelam di bawah.
 //
-// Kolom Terkunci Pesanan dan Channel tidak ditampilkan di tabel ini agar ringkas;
-// keduanya tetap ada di halaman detail produk. Baris & kolom yang bisa diubah
-// langsung diatur di WmsStockRow.
+// Kolom Channel tidak ditampilkan di tabel ini agar ringkas — ia tetap ada di
+// halaman detail produk. Baris & kolom yang bisa diubah diatur di WmsStockRow.
 // ─────────────────────────────────────────────────────────────────────────────
 
 // Urutan sengaja dari yang paling gawat: yang butuh tindakan ada di kiri, tempat
