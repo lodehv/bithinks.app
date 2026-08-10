@@ -1,0 +1,82 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# Pemeriksaan otomatis frontend.
+#
+# Yang paling penting di sini adalah langkah "Build". Vercel menerbitkan
+# otomatis setiap kali main berubah — kalau build rusak, yang rusak adalah
+# bithinks.com yang dilihat pelanggan. Build dijalankan lebih dulu di sini,
+# di PR, supaya kerusakan tertahan sebelum sampai ke main.
+# ═══════════════════════════════════════════════════════════════════════════
+name: CI Frontend
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  periksa:
+    name: Lint · Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Pasang dependensi
+        run: npm ci
+
+      # Lint SENGAJA belum memblokir. Saat CI ini dipasang (Agustus 2026) sudah
+      # ada 20 error + 4 warning warisan lama di modul HRM, AdminPanel, dan
+      # MarketingDashboard. Kalau langsung dijadikan gerbang, CI merah sejak
+      # hari pertama — dan gerbang yang selalu merah akan diabaikan orang.
+      #
+      # Jadi hasilnya tetap ditampilkan supaya angkanya bisa ditagih turun.
+      # Begitu menyentuh nol, hapus baris continue-on-error di bawah ini.
+      - name: Lint (belum memblokir — utang 20 error)
+        run: npm run lint
+        continue-on-error: true
+
+      # Build MEMBLOKIR. Vercel menerbitkan otomatis dari main, jadi build yang
+      # rusak berarti bithinks.com rusak di depan pelanggan.
+      - name: Build
+        run: npm run build
+
+  rahasia:
+    name: Pemeriksaan rahasia
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Catatan: .env.production SENGAJA dilacak git (Vercel membacanya saat
+      # build) dan isinya memang publik, karena semua variabel VITE_ ikut
+      # terbundel ke browser. Yang dilarang adalah .env lokal ikut ter-commit.
+      - name: Pastikan .env lokal tidak ikut
+        run: |
+          bocor=$(git ls-files | grep -E '(^|/)\.env$|\.env\.local' || true)
+          if [ -n "$bocor" ]; then
+            echo "::error::File .env lokal ikut ter-commit:"; echo "$bocor"
+            exit 1
+          fi
+          echo "Aman."
+
+      - name: Pastikan tidak ada rahasia di variabel VITE_
+        run: |
+          # Variabel VITE_ terbaca semua pengunjung lewat DevTools. Nama yang
+          # mengandung SECRET/TOKEN/PASSWORD/KEY hampir pasti salah tempat —
+          # yang begitu harus hidup di backend.
+          temuan=$(git grep -nIE '^VITE_[A-Z_]*(SECRET|TOKEN|PASSWORD|PRIVATE|API_KEY)' -- '*.env*' || true)
+          if [ -n "$temuan" ]; then
+            echo "::error::Rahasia tidak boleh ditaruh di variabel VITE_ — isinya terbaca publik:"
+            echo "$temuan"
+            exit 1
+          fi
+          echo "Aman."
