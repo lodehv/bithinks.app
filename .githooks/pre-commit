@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────────────────────
+# Pagar terakhir sebelum sesuatu masuk riwayat git.
+#
+# Kenapa penting: menghapus rahasia dari riwayat git JAUH lebih sulit daripada
+# mencegahnya masuk. Sekali ter-commit dan ter-push, kita harus menganggapnya
+# sudah bocor dan wajib mengganti kuncinya. Jadi lebih baik ditahan di sini.
+#
+# Pemeriksaan ini sengaja cepat (di bawah 1 detik) supaya tidak mengganggu.
+# ─────────────────────────────────────────────────────────────────────────────
+set -uo pipefail
+
+staged=$(git diff --cached --name-only --diff-filter=ACM)
+[ -z "$staged" ] && exit 0
+
+gagal=0
+
+# ── 1. File .env tidak boleh ikut ───────────────────────────────────────────
+env_bocor=$(echo "$staged" | grep -E '(^|/)\.env($|\.)' | grep -v '\.env\.example' || true)
+if [ -n "$env_bocor" ]; then
+  echo "❌ File .env ikut ter-commit:"
+  echo "$env_bocor" | sed 's/^/     /'
+  echo "   Keluarkan dengan:  git rm --cached <file>"
+  gagal=1
+fi
+
+# ── 2. Kredensial yang tertulis langsung di kode ────────────────────────────
+pola='EAA[A-Za-z0-9]{40,}|sk_live_[A-Za-z0-9]{16,}|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{30,}|-----BEGIN [A-Z ]*PRIVATE KEY'
+for f in $staged; do
+  case "$f" in
+    *.example|*.md|.githooks/*|.github/workflows/*) continue ;;
+    *.png|*.jpg|*.jpeg|*.pdf|*.ico|*.woff|*.woff2|*.ttf) continue ;;
+  esac
+  [ -f "$f" ] || continue
+  if temuan=$(grep -nIE "$pola" "$f" 2>/dev/null | head -2); then
+    [ -n "$temuan" ] || continue
+    echo "❌ Ada yang mirip kunci rahasia di $f:"
+    echo "$temuan" | cut -c1-100 | sed 's/^/     /'
+    echo "   Pindahkan ke .env lalu baca lewat process.env."
+    gagal=1
+  fi
+done
+
+# ── 3. Folder sesi WhatsApp = kredensial login ──────────────────────────────
+if echo "$staged" | grep -q '\.wa-session'; then
+  echo "❌ Folder .wa-session berisi kredensial login WhatsApp — jangan di-commit."
+  gagal=1
+fi
+
+if [ "$gagal" -ne 0 ]; then
+  echo
+  echo "Commit dibatalkan. Kalau Anda YAKIN ini keliru, lewati dengan:"
+  echo "   git commit --no-verify"
+  echo "…tapi tolong tanya dulu ke pemilik proyek sebelum melakukannya."
+  exit 1
+fi
+
+exit 0

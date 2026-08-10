@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────────────────────
+# Build dijalankan sebelum push karena Vercel menerbitkan otomatis dari main:
+# build yang rusak = bithinks.com rusak di depan pelanggan. Lebih baik ketahuan
+# di sini, 20 detik, daripada setelah tayang.
+#
+# Lewati kalau perlu:  git push --no-verify
+# ─────────────────────────────────────────────────────────────────────────────
+set -uo pipefail
+cd "$(git rev-parse --show-toplevel)" || exit 1
+
+[ -d node_modules ] || { echo "⚠️  node_modules belum ada — lewati. Jalankan 'npm install' dulu."; exit 0; }
+
+echo "🔍 Membangun sebelum push (lewati dengan --no-verify)…"
+if ! npm run build --silent >/dev/null 2>&1; then
+  echo "❌ Build gagal. Jalankan 'npm run build' untuk melihat rinciannya."
+  echo "   Jangan push — Vercel akan menerbitkan ini ke bithinks.com."
+  exit 1
+fi
+echo "✅ Build berhasil."
+exit 0
