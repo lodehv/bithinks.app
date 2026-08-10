@@ -31,8 +31,16 @@ jobs:
           node-version: '20'
           cache: npm
 
+      # Sengaja `npm install`, bukan `npm ci`.
+      #
+      # package-lock.json dibuat di macOS, jadi tidak memuat paket yang hanya
+      # ada di Linux (@emnapi/*). `npm ci` menolak jalan begitu lockfile tidak
+      # persis sama dengan yang dibutuhkan mesin — dan Ubuntu di sini butuh
+      # paket itu. Vercel sendiri memakai `npm install`; kalau tidak, deploy
+      # kita sudah gagal sejak lama. Menyamakan CI dengan Vercel membuat hasil
+      # di sini benar-benar mencerminkan hasil produksi.
       - name: Pasang dependensi
-        run: npm ci
+        run: npm install --no-audit --no-fund
 
       # Lint SENGAJA belum memblokir. Saat CI ini dipasang (Agustus 2026) sudah
       # ada 20 error + 4 warning warisan lama di modul HRM, AdminPanel, dan
