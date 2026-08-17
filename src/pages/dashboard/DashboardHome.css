@@ -274,3 +274,46 @@
 
 .stock-pill.kritis  { background: #FEF2F2; color: #DC2626; }
 .stock-pill.menipis { background: #FFFBEB; color: #D97706; }
+
+/* ─── Rincian antrean di kartu "Perlu Dikerjakan" ──────────────────────────
+   Tiap baris adalah pintasan ke tumpukannya sendiri di halaman Pesanan.
+   Dibuat <button> supaya bisa dijangkau keyboard, bukan <div> yang diberi
+   onClick — pemilik gudang sering bekerja tanpa melepas tangan dari keyboard. */
+.antrian-rincian {
+  margin-top: 12px;
+  border-top: 1px solid #F0F0F3;
+  padding-top: 6px;
+}
+
+.antrian-baris {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 5px 6px;
+  margin: 1px 0;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: background 0.12s ease;
+}
+
+.antrian-baris:hover  { background: #F5F5FA; }
+.antrian-baris:focus-visible { outline: 2px solid #4F46E5; outline-offset: -2px; }
+
+.antrian-baris-label { font-size: 12px; color: #555; }
+.antrian-baris-nilai { font-size: 12.5px; font-weight: 700; color: #1F2937; font-variant-numeric: tabular-nums; }
+
+/* Menunggu pembayaran: bukan pekerjaan penjual, jadi sengaja tidak menarik
+   perhatian. Tetap ditampilkan supaya tidak hilang — begitu pembeli membayar,
+   pesanannya pindah sendiri ke antrean di atasnya. */
+.antrian-baris.redup .antrian-baris-label,
+.antrian-baris.redup .antrian-baris-nilai { color: #9A9AA5; font-weight: 600; }
+
+/* Status marketplace yang tidak dikenali. Muncul hanya kalau memang ada. */
+.antrian-baris.peringatan .antrian-baris-label,
+.antrian-baris.peringatan .antrian-baris-nilai { color: #B45309; }
+.antrian-baris.peringatan:hover { background: #FEF3C7; }

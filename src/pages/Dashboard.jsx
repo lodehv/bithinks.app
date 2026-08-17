@@ -73,6 +73,21 @@ export default function Dashboard() {
   const [payPlan, setPayPlan] = useState(null); // paket terpilih di halaman pricing
   const [connectNotice, setConnectNotice] = useState(null); // 'ok' | 'failed'
 
+  // Tab Pesanan yang dituju saat datang lewat pintasan dari dashboard.
+  // null = buka apa adanya (tab bawaan "Semua Pesanan").
+  //
+  // Kenapa ada: kartu di halaman depan berfungsi sebagai pintasan kerja —
+  // menekan "Siap dicetak 1.096" harus mendarat tepat di tumpukan itu, bukan
+  // di daftar semua pesanan yang lalu harus disaring ulang manual. Angka yang
+  // ditekan dan halaman yang terbuka harus bercerita hal yang sama.
+  const [pesananTab, setPesananTab] = useState(null);
+
+  const bukaPesanan = (tab) => { setPesananTab(tab); setActiveMenu("pesanan"); };
+
+  // Klik menu di sidebar membuka Pesanan apa adanya — pintasan sebelumnya
+  // tidak boleh menempel dan diam-diam menyaring layar berikutnya.
+  const pilihMenu = (id) => { if (id === "pesanan") setPesananTab(null); setActiveMenu(id); };
+
   const refreshSub = useCallback(() => {
     subscriptionApi.status().then(setSub).catch(() => setSub(null));
   }, []);
@@ -99,7 +114,7 @@ export default function Dashboard() {
   const locked = !!sub?.locked;
 
   return (
-    <DashboardLayout activeMenu={activeMenu} onMenuClick={setActiveMenu} pageTitle={title}>
+    <DashboardLayout activeMenu={activeMenu} onMenuClick={pilihMenu} pageTitle={title}>
       {activeMenu === "payment" ? (
         payPlan ? (
           <PaymentPage
@@ -131,10 +146,10 @@ export default function Dashboard() {
 
           {(activeMenu !== "dashboard" || locked) && <BillingBanner sub={sub} onPay={goToPayment} />}
 
-          {activeMenu === "dashboard"      && <DashboardHome onMenuClick={setActiveMenu} />}
+          {activeMenu === "dashboard"      && <DashboardHome onMenuClick={pilihMenu} onBukaPesanan={bukaPesanan} />}
           {activeMenu === "wms"            && <WmsTab      locked={locked} onRequirePayment={goToPayment} />}
           {activeMenu === "integrasi-toko" && <div className="omni"><StoresTab   locked={locked} onRequirePayment={goToPayment} /></div>}
-          {activeMenu === "pesanan"        && <div className="omni"><OrdersTab   locked={locked} onRequirePayment={goToPayment} /></div>}
+          {activeMenu === "pesanan"        && <div className="omni"><OrdersTab   locked={locked} onRequirePayment={goToPayment} tabAwal={pesananTab} /></div>}
           {activeMenu === "kelola-produk"  && <div className="omni"><ProductsTab locked={locked} onRequirePayment={goToPayment} /></div>}
           {activeMenu === "marketing"      && <MarketingDashboard />}
           {activeMenu === "settings"       && <ModulePlaceholder name="Pengaturan" icon={Settings} />}

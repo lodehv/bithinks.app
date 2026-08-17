@@ -25,6 +25,22 @@ function StatCard({ label, value, sub, subClass, icon: Icon, iconClass, color, o
   );
 }
 
+// ─── Satu baris rincian antrean, sekaligus pintasan ke tumpukannya ──────────
+// Menekan angkanya membuka halaman Pesanan tepat di tab itu. Tanpa ini, kartu
+// cuma memberi tahu ada pekerjaan tanpa memberi jalan mengerjakannya.
+function BarisAntrian({ label, nilai, onClick, redup, peringatan }) {
+  return (
+    <button
+      type="button"
+      className={`antrian-baris ${redup ? "redup" : ""} ${peringatan ? "peringatan" : ""}`}
+      onClick={(e) => { e.stopPropagation(); onClick?.(); }}
+    >
+      <span className="antrian-baris-label">{label}</span>
+      <span className="antrian-baris-nilai">{Number(nilai || 0).toLocaleString("id-ID")}</span>
+    </button>
+  );
+}
+
 // ─── Trial banner (hanya saat status trial) ──────────────────────────────────
 function TrialBanner({ tenant }) {
   if (!tenant || tenant.status !== "trial") return null;
@@ -43,7 +59,7 @@ function TrialBanner({ tenant }) {
   );
 }
 
-export default function DashboardHome({ onMenuClick }) {
+export default function DashboardHome({ onMenuClick, onBukaPesanan }) {
   const { user, tenant } = useAppContext();
   const [data, setData] = useState(null); // { stores, products, ringkasan }
 
@@ -58,7 +74,14 @@ export default function DashboardHome({ onMenuClick }) {
   // Sekarang yang menjumlahkan adalah basis data, karena hanya ia yang melihat
   // semuanya. Sekalian lebih ringan: dua kueri agregat menggantikan pengiriman
   // 200 pesanan lengkap beserta itemnya ke browser hanya untuk dijumlahkan.
-  const RINGKASAN_KOSONG = { total: 0, omset: 0, perluProses: 0, perStatus: {}, perChannel: [] };
+  const RINGKASAN_KOSONG = {
+    tanggal: null,
+    hariIni: { pesanan: 0, omset: 0, perChannel: [] },
+    antrian: {
+      perluDikerjakan: 0, perluAtur: 0, siapCetak: 0,
+      menungguPembayaran: 0, perluDiperiksa: 0, tertuaWib: null,
+    },
+  };
 
   useEffect(() => {
     Promise.all([
@@ -80,22 +103,30 @@ export default function DashboardHome({ onMenuClick }) {
   const stores   = data?.stores   ?? [];
   const products = data?.products ?? [];
   const ringkasan = data?.ringkasan ?? RINGKASAN_KOSONG;
+  const hariIni   = ringkasan.hariIni ?? RINGKASAN_KOSONG.hariIni;
+  const antrian   = ringkasan.antrian ?? RINGKASAN_KOSONG.antrian;
 
   const connected    = stores.filter((s) => s.status === "connected");
-  const perluProses  = ringkasan.perluProses;
-  const omset        = ringkasan.omset;
-  const totalPesanan = ringkasan.total;
-  const perStatus    = ringkasan.perStatus ?? {};
   const perluSinkron = products.filter((p) => !p.fullySynced).length;
   const totalStok   = products.reduce((a, p) => a + Number(p.masterStock || 0), 0);
   const lowStock    = products
     .filter((p) => Number(p.masterStock) <= 8)
     .map((p) => ({ ...p, level: Number(p.masterStock) <= 3 ? "kritis" : "menipis" }));
 
-  // Penjualan per channel (teaser Dashboard Marketing) — sudah dikelompokkan
-  // dan diurutkan server, atas seluruh pesanan.
-  const perChannel = ringkasan.perChannel ?? [];
+  // Penjualan per channel HARI INI — dikelompokkan dan diurutkan server.
+  const perChannel = hariIni.perChannel ?? [];
   const maxChannel = Math.max(1, ...perChannel.map((c) => c.total));
+
+  const angka = (n) => Number(n || 0).toLocaleString("id-ID");
+
+  // "2026-08-14" → "14 Agu". Dipakai menandai umur pesanan tertua di antrean.
+  const tanggalPendek = (iso) => {
+    if (!iso) return null;
+    const [y, m, d] = iso.split("-").map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString("id-ID", { day: "numeric", month: "short" });
+  };
+  const tertua = tanggalPendek(antrian.tertuaWib);
+  const menggantung = antrian.tertuaWib && antrian.tertuaWib < (ringkasan.tanggal ?? "");
 
   return (
     <div>
@@ -129,17 +160,58 @@ export default function DashboardHome({ onMenuClick }) {
               )}
             </StatCard>
 
+            {/* ANTREAN KERJA — sengaja TIDAK dibatasi hari ini.
+                Pekerjaan yang belum selesai tidak kedaluwarsa jam 12 malam.
+                Diukur di produksi 17 Agu 2026: dari 1.103 pesanan yang masih
+                menunggu, hanya 321 masuk hari itu. Kalau kartu ini ikut
+                dipotong ke hari ini, 782 pesanan lenyap dari pandangan —
+                termasuk empat yang sudah menggantung tiga hari. */}
             <StatCard
-              label="Pesanan Perlu Diproses" value={`${perluProses} pesanan`}
-              sub={`${perStatus.baru ?? 0} baru · ${perStatus.dikemas ?? 0} dikemas`}
-              subClass={perluProses ? "warn" : ""}
+              label="Perlu Dikerjakan" value={`${angka(antrian.perluDikerjakan)} pesanan`}
+              sub={
+                antrian.perluDikerjakan === 0
+                  ? "Tumpukan bersih 👍"
+                  : menggantung
+                    ? `paling lama menunggu sejak ${tertua}`
+                    : "semuanya masuk hari ini"
+              }
+              subClass={menggantung ? "warn" : antrian.perluDikerjakan === 0 ? "ok" : ""}
               icon={ClipboardList} iconClass="blue" color="blue"
-              onClick={() => onMenuClick?.("pesanan")}
-            />
+              onClick={() => onBukaPesanan?.("dikemas")}
+            >
+              {/* Tiap baris pintasan langsung ke tumpukannya sendiri.
+                  Angkanya datang dari penghitung yang SAMA dengan badge tab di
+                  halaman Pesanan, jadi yang ditekan dan yang terbuka tidak bisa
+                  bercerita beda. */}
+              <div className="antrian-rincian">
+                <BarisAntrian
+                  label="Perlu atur pengiriman" nilai={antrian.perluAtur}
+                  onClick={() => onBukaPesanan?.("baru")}
+                />
+                <BarisAntrian
+                  label="Siap dicetak" nilai={antrian.siapCetak}
+                  onClick={() => onBukaPesanan?.("dikemas")}
+                />
+                <BarisAntrian
+                  label="Menunggu pembayaran" nilai={antrian.menungguPembayaran}
+                  redup
+                  onClick={() => onBukaPesanan?.("unpaid")}
+                />
+                {/* Hanya muncul kalau memang ada. Status marketplace yang tidak
+                    dikenali tidak dibuang diam-diam — ia ditandai supaya
+                    dilihat manusia sebelum jadi pesanan yang terlewat. */}
+                {antrian.perluDiperiksa > 0 && (
+                  <BarisAntrian
+                    label="⚠ Perlu diperiksa" nilai={antrian.perluDiperiksa} peringatan
+                    onClick={() => onBukaPesanan?.("all")}
+                  />
+                )}
+              </div>
+            </StatCard>
 
             <StatCard
-              label="Omset Pesanan" value={rupiah(omset)}
-              sub={`dari ${totalPesanan.toLocaleString("id-ID")} pesanan semua channel`}
+              label="Omset Hari Ini" value={rupiah(hariIni.omset)}
+              sub={`${angka(hariIni.pesanan)} pesanan masuk hari ini`}
               icon={TrendingUp} iconClass="green" color="green"
               onClick={() => onMenuClick?.("marketing")}
             />
@@ -171,7 +243,7 @@ export default function DashboardHome({ onMenuClick }) {
           {/* ─── Penjualan per channel (teaser Marketing) ─── */}
           {perChannel.length > 0 && (
             <>
-              <div className="dash-section-label">Penjualan per Channel</div>
+              <div className="dash-section-label">Penjualan per Channel · Hari Ini</div>
               <div className="stock-alert-box" style={{ marginBottom: 28, padding: "16px 18px" }}>
                 {perChannel.map((c) => {
                   const m = channelMeta(c.channel);

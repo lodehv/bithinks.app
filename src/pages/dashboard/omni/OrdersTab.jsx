@@ -81,8 +81,11 @@ async function pesanGalatUnduh(err) {
   }
 }
 
-export default function OrdersTab({ locked, onRequirePayment }) {
-  const [tab, setTab]       = useState("all");
+export default function OrdersTab({ locked, onRequirePayment, tabAwal }) {
+  // `tabAwal` datang dari pintasan di halaman depan: menekan kartu
+  // "Siap dicetak" harus mendarat tepat di tumpukan itu, bukan di daftar semua
+  // pesanan yang lalu harus disaring ulang manual.
+  const [tab, setTab]       = useState(tabAwal ?? "all");
   const [search, setSearch] = useState("");
   const [sort, setSort]     = useState("newest");
   const [sortOpen, setSortOpen] = useState(false);
@@ -106,6 +109,10 @@ export default function OrdersTab({ locked, onRequirePayment }) {
   // Balik ke halaman 1 setiap kali penyaringnya berubah. Tanpa ini, seseorang
   // yang sedang di halaman 9 lalu mempersempit filter akan mendarat di halaman
   // kosong dan mengira pesanannya hilang.
+  // Pintasan yang ditekan berkali-kali harus tetap berpindah tab, bukan cuma
+  // yang pertama — komponennya tidak dibongkar-pasang di antara klik.
+  useEffect(() => { if (tabAwal) setTab(tabAwal); }, [tabAwal]);
+
   useEffect(() => { setPage(1); }, [tab, search, from, to, sort, perPage, subTab, channels]);
   useEffect(() => { const st = SUBTABS[tab]; if (st) setSubTab(st.tabs[0].id); }, [tab]);
 
