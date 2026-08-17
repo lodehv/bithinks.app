@@ -71,7 +71,34 @@ export const omniApi = {
   companyProfile:    ()            => api.get('/api/omni/settings/company').then(unwrap),
   saveCompanyProfile:(payload)     => api.patch('/api/omni/settings/company', payload).then(unwrap),
 
-  listOrders:        (status)      => api.get('/api/omni/orders', { params: status ? { status } : {} }).then(unwrap),
+  // ── Pesanan ──
+  // Sejak 17 Agu 2026 seluruh penyaringan, penghitungan, dan pemenggalan halaman
+  // dikerjakan server. Sebelumnya server mengirim 200 pesanan terbaru tanpa
+  // penyaring dan browser yang mengolahnya — akibatnya setiap angka di layar
+  // salah, dan selalu lebih kecil dari yang sebenarnya.
+  //
+  // params: { tab, page, perPage, sort, search, from, to, channel:'shopee,tiktok' }
+  // hasil : { orders, counts, meta:{ page, limit, total, totalPages } }
+  //   counts = jumlah SEBENARNYA tiap tab, bukan hasil menyaring daftar di atas.
+  listOrders: (params = {}) => api.get('/api/omni/orders', { params }).then((r) => ({
+    orders: r.data?.data?.orders ?? [],
+    counts: r.data?.data?.counts ?? {},
+    meta:   r.data?.meta ?? { page: 1, limit: 0, total: 0, totalPages: 1 },
+  })),
+
+  // Angka ringkas halaman depan, dihitung server atas SELURUH pesanan.
+  // hasil: { total, omset, perluProses, perStatus, perChannel }
+  ordersSummary:     ()            => api.get('/api/omni/orders/summary').then(unwrap),
+
+  // Unduhan CSV memakai penyaring yang sama dengan yang sedang dilihat.
+  // Harus lewat axios (bukan tautan biasa) karena autentikasinya di header
+  // Authorization — tautan <a> tidak membawanya.
+  downloadOrdersCsv: (params = {}) =>
+    api.get('/api/omni/orders', {
+      params: { ...params, format: 'csv' },
+      responseType: 'blob',
+    }).then((r) => r.data),
+
   updateOrderStatus: (id, status)  => api.patch(`/api/omni/orders/${id}`, { status }).then(unwrap),
   syncOrders:        ()            => api.post('/api/omni/orders/sync').then(unwrap),
 
