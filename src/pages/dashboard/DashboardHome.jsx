@@ -45,14 +45,28 @@ function TrialBanner({ tenant }) {
 
 export default function DashboardHome({ onMenuClick }) {
   const { user, tenant } = useAppContext();
-  const [data, setData] = useState(null); // { stores, products, orders }
+  const [data, setData] = useState(null); // { stores, products, ringkasan }
+
+  // Angka pesanan diambil sebagai RINGKASAN, bukan sebagai daftar.
+  //
+  // Sampai 17 Agustus 2026 baris ini memanggil listOrders() lalu menjumlahkan
+  // sendiri di bawah. Masalahnya, server hanya mengirim 200 pesanan terbaru —
+  // jadi "Omset Pesanan" yang terpampang di halaman pertama tiap pagi
+  // sebenarnya jumlah 200 pesanan terakhir dari 18.758 yang ada. Bukan kurang
+  // lengkap: salah, dan selalu jauh lebih kecil.
+  //
+  // Sekarang yang menjumlahkan adalah basis data, karena hanya ia yang melihat
+  // semuanya. Sekalian lebih ringan: dua kueri agregat menggantikan pengiriman
+  // 200 pesanan lengkap beserta itemnya ke browser hanya untuk dijumlahkan.
+  const RINGKASAN_KOSONG = { total: 0, omset: 0, perluProses: 0, perStatus: {}, perChannel: [] };
 
   useEffect(() => {
     Promise.all([
       omniApi.listStores().catch(() => []),
       omniApi.listProducts().catch(() => []),
-      omniApi.listOrders().catch(() => []),
-    ]).then(([stores, products, orders]) => setData({ stores, products, orders }));
+      omniApi.ordersSummary().catch(() => RINGKASAN_KOSONG),
+    ]).then(([stores, products, ringkasan]) => setData({ stores, products, ringkasan }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const firstName = user?.name?.split(" ")[0] ?? "–";
@@ -65,27 +79,22 @@ export default function DashboardHome({ onMenuClick }) {
   // ─── Derivasi metrik dari data nyata ───
   const stores   = data?.stores   ?? [];
   const products = data?.products ?? [];
-  const orders   = data?.orders   ?? [];
+  const ringkasan = data?.ringkasan ?? RINGKASAN_KOSONG;
 
-  const connected   = stores.filter((s) => s.status === "connected");
-  const perluProses = orders.filter((o) => o.status === "baru" || o.status === "dikemas");
-  const omset       = orders.reduce((a, o) => a + Number(o.total || 0), 0);
+  const connected    = stores.filter((s) => s.status === "connected");
+  const perluProses  = ringkasan.perluProses;
+  const omset        = ringkasan.omset;
+  const totalPesanan = ringkasan.total;
+  const perStatus    = ringkasan.perStatus ?? {};
   const perluSinkron = products.filter((p) => !p.fullySynced).length;
   const totalStok   = products.reduce((a, p) => a + Number(p.masterStock || 0), 0);
   const lowStock    = products
     .filter((p) => Number(p.masterStock) <= 8)
     .map((p) => ({ ...p, level: Number(p.masterStock) <= 3 ? "kritis" : "menipis" }));
 
-  // Penjualan per channel (untuk teaser Dashboard Marketing)
-  const perChannel = Object.values(
-    orders.reduce((acc, o) => {
-      const key = o.channel ?? "lain";
-      acc[key] = acc[key] || { channel: key, total: 0, count: 0 };
-      acc[key].total += Number(o.total || 0);
-      acc[key].count += 1;
-      return acc;
-    }, {}),
-  ).sort((a, b) => b.total - a.total);
+  // Penjualan per channel (teaser Dashboard Marketing) — sudah dikelompokkan
+  // dan diurutkan server, atas seluruh pesanan.
+  const perChannel = ringkasan.perChannel ?? [];
   const maxChannel = Math.max(1, ...perChannel.map((c) => c.total));
 
   return (
@@ -121,16 +130,16 @@ export default function DashboardHome({ onMenuClick }) {
             </StatCard>
 
             <StatCard
-              label="Pesanan Perlu Diproses" value={`${perluProses.length} pesanan`}
-              sub={`${orders.filter((o) => o.status === "baru").length} baru · ${orders.filter((o) => o.status === "dikemas").length} dikemas`}
-              subClass={perluProses.length ? "warn" : ""}
+              label="Pesanan Perlu Diproses" value={`${perluProses} pesanan`}
+              sub={`${perStatus.baru ?? 0} baru · ${perStatus.dikemas ?? 0} dikemas`}
+              subClass={perluProses ? "warn" : ""}
               icon={ClipboardList} iconClass="blue" color="blue"
               onClick={() => onMenuClick?.("pesanan")}
             />
 
             <StatCard
               label="Omset Pesanan" value={rupiah(omset)}
-              sub={`dari ${orders.length} pesanan semua channel`}
+              sub={`dari ${totalPesanan.toLocaleString("id-ID")} pesanan semua channel`}
               icon={TrendingUp} iconClass="green" color="green"
               onClick={() => onMenuClick?.("marketing")}
             />
