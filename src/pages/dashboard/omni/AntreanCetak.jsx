@@ -38,7 +38,12 @@ const PLATFORM = [
 ];
 
 const TAHAP = {
-  siap_cetak:      { teks: "Siap dicetak",         warna: "#166534", latar: "#F0FDF4" },
+  siap_cetak:      { teks: "Siap dicetak",          warna: "#166534", latar: "#F0FDF4" },
+  // Statusnya sudah siap kirim, tapi resinya belum tersimpan di sistem kita —
+  // jadi label BELUM bisa dibuat. Dipisah dari "siap dicetak" sejak 18 Agustus
+  // 2026: sebelumnya keduanya dihitung jadi satu, dan badge menjanjikan 33
+  // label sementara PDF-nya keluar 20.
+  menunggu_resi:   { teks: "Menunggu resi",         warna: "#3730A3", latar: "#EEF2FF" },
   perlu_atur:      { teks: "Perlu atur pengiriman", warna: "#92400E", latar: "#FFFBEB" },
   perlu_diperiksa: { teks: "Perlu diperiksa",       warna: "#991B1B", latar: "#FEF2F2" },
 };
@@ -199,13 +204,19 @@ export default function AntreanCetak() {
               <div style={{ fontSize: 26, fontWeight: 700, color: "#111827", lineHeight: 1.1 }}>
                 {angka(data.totalLabel)}
               </div>
-              <div style={{ fontSize: 12, color: "#6B7280" }}>label akan tercetak</div>
+              <div style={{ fontSize: 12, color: "#6B7280" }}>pesanan di antrean</div>
             </div>
             <div style={{ borderLeft: "1px solid #E5E7EB", paddingLeft: 24, display: "flex", gap: 20 }}>
               <div>
                 <div style={{ fontSize: 18, fontWeight: 600, color: "#166534" }}>{angka(data.totalSiapCetak)}</div>
                 <div style={{ fontSize: 12, color: "#6B7280" }}>siap dicetak</div>
               </div>
+              {data.totalMenungguResi > 0 && (
+                <div>
+                  <div style={{ fontSize: 18, fontWeight: 600, color: "#3730A3" }}>{angka(data.totalMenungguResi)}</div>
+                  <div style={{ fontSize: 12, color: "#6B7280" }}>menunggu resi</div>
+                </div>
+              )}
               {data.totalPerluAtur > 0 && (
                 <div>
                   <div style={{ fontSize: 18, fontWeight: 600, color: "#92400E" }}>{angka(data.totalPerluAtur)}</div>
@@ -235,6 +246,15 @@ export default function AntreanCetak() {
               {angka(data.pesananLintasKelompok)} pesanan berisi lebih dari satu SKU, jadi muncul
               di beberapa kelompok. Labelnya tetap <strong>satu</strong> per pesanan — karena itu
               jumlah tiap kelompok kalau dijumlahkan lebih besar dari {angka(data.totalLabel)}.
+            </Catatan>
+          )}
+
+          {data.totalMenungguResi > 0 && (
+            <Catatan ikon={<Info size={16} />} warna="#3730A3" latar="#EEF2FF">
+              {angka(data.totalMenungguResi)} pesanan sudah diatur pengirimannya tapi nomor resinya
+              belum tersimpan di sistem kami, jadi labelnya <strong>belum bisa dibuat</strong>.
+              Nomornya terisi sendiri saat sinkronisasi berikutnya — tombol cetak sengaja tidak
+              menghitungnya supaya angka di layar sama dengan isi PDF.
             </Catatan>
           )}
 
