@@ -86,6 +86,13 @@ export const omniApi = {
     meta:   r.data?.meta ?? { page: 1, limit: 0, total: 0, totalPages: 1 },
   })),
 
+  // Antrean cetak resi satu platform, sudah dikelompokkan per SKU oleh server.
+  // TAHAP BACA SAJA — endpoint ini tidak mengubah apa pun, di basis data maupun
+  // di marketplace. Tombol cetak menyusul di tahap berikutnya.
+  // hasil: { channel, kelompok[], totalLabel, totalSiapCetak, totalPerluAtur,
+  //          totalPerluDiperiksa, pesananLintasKelompok, pesananPaketPecah }
+  antreanCetak:      (channel)     => api.get('/api/omni/orders/antrean-cetak', { params: { channel } }).then(unwrap),
+
   // Angka ringkas halaman depan, dihitung server atas SELURUH pesanan.
   // hasil: { total, omset, perluProses, perStatus, perChannel }
   ordersSummary:     ()            => api.get('/api/omni/orders/summary').then(unwrap),
