@@ -58,6 +58,35 @@ function unduhPdf(url, namaBerkas) {
   a.remove();
 }
 
+/** Tulis kalimat penjelas ke tab yang sudah terbuka. */
+function tulisDiTab(tab, kalimat) {
+  if (!tab) return;
+  try {
+    tab.document.body.innerHTML =
+      `<div style="font:15px/1.6 sans-serif;padding:32px;max-width:640px;color:#111827">` +
+      `<p style="margin:0 0 12px;font-weight:600">Tidak ada resi yang tercetak.</p>` +
+      `<p style="margin:0;color:#4B5563">${kalimat}</p></div>`;
+  } catch {
+    // Tab sudah ditutup orangnya — tidak apa-apa.
+  }
+}
+
+/** Ringkasan satu kalimat kenapa tidak ada yang tercetak. */
+function ringkasGagal(d) {
+  const alasan = [
+    ...(d.gagal ?? []).map((g) => g.pesan || g.kode),
+    ...(d.dilewati ?? []).map((x) => x.alasan),
+  ].filter(Boolean);
+
+  if (alasan.length === 0 && d.tertunda > 0) {
+    return 'Marketplace masih menyiapkan dokumennya. Coba lagi sebentar lagi — pesanannya tetap di antrean.';
+  }
+  const teratas = [...new Set(alasan)].slice(0, 3);
+  return teratas.length
+    ? teratas.map((a) => `• ${a}`).join('<br>')
+    : 'Kembali ke tab sebelumnya untuk melihat rinciannya.';
+}
+
 function namaBerkas(channel, sku) {
   const tgl = new Date().toISOString().slice(0, 10);
   const bagian = sku ? sku.replace(/[^\w.-]+/g, "-").slice(0, 40) : "semua";
@@ -175,9 +204,11 @@ export default function TombolCetak({ channel, sku, jumlah, utama = false, onSel
         // Dilepas belakangan: mencabutnya seketika membuat tab yang baru
         // dibuka menampilkan halaman kosong.
         setTimeout(() => URL.revokeObjectURL(url), 5 * 60_000);
-      } else if (tab) {
-        // Tidak ada yang tercetak — jangan tinggalkan tab kosong menganga.
-        tab.close();
+      } else {
+        // Tidak ada yang tercetak. Tabnya TIDAK ditutup diam-diam: tab yang
+        // muncul lalu lenyap tanpa penjelasan membuat orang mengira sistemnya
+        // rusak, padahal marketplace-nya yang menolak dan alasannya ada.
+        tulisDiTab(tab, ringkasGagal(d));
       }
 
       setHasil(d);
@@ -185,7 +216,7 @@ export default function TombolCetak({ channel, sku, jumlah, utama = false, onSel
       // "tumpukan habis → nol" benar-benar terlihat.
       onSelesai?.();
     } catch (err) {
-      tab?.close();
+      tulisDiTab(tab, 'Cetak resi gagal. Kembali ke tab sebelumnya untuk melihat alasannya.');
       setGalat(
         err?.response?.status === 402
           ? "Langganan sedang tidak aktif, jadi cetak resi dimatikan."
