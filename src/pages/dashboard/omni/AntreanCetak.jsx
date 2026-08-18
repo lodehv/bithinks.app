@@ -86,9 +86,24 @@ function Kelompok({ k, channel, onSelesai }) {
             <div style={{ fontWeight: 600, fontSize: 14, color: "#111827" }}>{k.nama}</div>
             <div style={{ fontSize: 12, color: "#6B7280", fontFamily: "monospace" }}>{k.sku}</div>
           </div>
-          <div style={{ textAlign: "right", flexShrink: 0 }}>
-            <div style={{ fontWeight: 700, fontSize: 18, color: "#111827" }}>{angka(k.jumlahPesanan)}</div>
-            <div style={{ fontSize: 12, color: "#6B7280" }}>label</div>
+          {/* Angka besar = yang BENAR-BENAR akan tercetak, sama persis dengan
+              angka di tombol dan dengan jumlah halaman PDF.
+
+              Sebelumnya di sini tampil `jumlahPesanan` — seluruh isi kelompok,
+              termasuk yang resinya belum ada. Akibatnya baris bertuliskan
+              "3 label" tapi tombolnya "Cetak 2 resi", dan pemilik toko membaca
+              angka besarnya lalu mengira ada yang hilang. Sisanya tetap
+              disebutkan, tapi sebagai keterangan — bukan sebagai janji. */}
+          <div style={{ textAlign: "right", flexShrink: 0, minWidth: 92 }}>
+            <div style={{ fontWeight: 700, fontSize: 18, color: k.siapCetak > 0 ? "#111827" : "#9CA3AF" }}>
+              {angka(k.siapCetak)}
+            </div>
+            <div style={{ fontSize: 12, color: "#6B7280" }}>siap dicetak</div>
+            {k.jumlahPesanan > k.siapCetak && (
+              <div style={{ fontSize: 11, color: "#6B7280", marginTop: 2 }}>
+                {angka(k.jumlahPesanan - k.siapCetak)} belum bisa
+              </div>
+            )}
           </div>
           <div style={{ textAlign: "right", flexShrink: 0, minWidth: 96 }}>
             <div style={{ fontWeight: 600, fontSize: 14, color: "#374151" }}>{angka(k.totalQty)}</div>
