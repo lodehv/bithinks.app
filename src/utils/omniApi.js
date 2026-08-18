@@ -94,7 +94,15 @@ export const omniApi = {
   antreanCetak:      (channel)     => api.get('/api/omni/orders/antrean-cetak', { params: { channel } }).then(unwrap),
   // Aksi TULIS: membuat dokumen resi di marketplace dan mencatat ke label_cetak_log.
   // Yang dikirim cuma channel + sku; daftar pesanannya disusun server dari antrean.
-  cetakLabel:        (payload)      => api.post('/api/omni/orders/cetak-label', payload).then(unwrap),
+  //
+  // TIMEOUT SENGAJA JAUH LEBIH PANJANG dari bawaan 15 detik. Mencetak 51 resi
+  // Shopee berarti membuat dokumen, menunggu sampai READY, lalu mengunduhnya —
+  // puluhan detik, wajar. Dengan batas 15 detik, browser menyerah sementara
+  // SERVER JALAN TERUS: resinya benar-benar dibuat di marketplace, tercatat,
+  // dan pesanannya keluar dari antrean — sementara PDF-nya tidak pernah sampai
+  // ke siapa pun. Itu kehilangan yang tidak bisa diperbaiki, karena berkasnya
+  // memang tidak disimpan.
+  cetakLabel:        (payload)      => api.post('/api/omni/orders/cetak-label', payload, { timeout: 180000 }).then(unwrap),
 
   // Angka ringkas halaman depan, dihitung server atas SELURUH pesanan.
   // hasil: { total, omset, perluProses, perStatus, perChannel }

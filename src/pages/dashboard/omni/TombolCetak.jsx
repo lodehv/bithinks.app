@@ -17,6 +17,16 @@ import { omniApi } from "../../../utils/omniApi";
 // Dialog konfirmasi yang tidak melindungi apa pun cuma melatih orang menekan
 // "ya" tanpa membaca.
 //
+// FILOSOFI — PDF DIBUKA DI TAB BARU, HALAMAN INI TETAP TERBUKA
+// Sama seperti Seller Center: resinya muncul di tab sendiri, siap ditekan
+// Ctrl+P, sementara antrean tetap ada di tab semula. Versi pertama mengunduh
+// berkas — dan itu memaksa orang membuka folder Download dulu, tiap kali.
+//
+// Tabnya dibuka SAAT KLIK, bukan setelah jawabannya datang. Peramban memblokir
+// `window.open` yang dipanggil setelah `await`, karena tidak lagi terhitung
+// sebagai akibat langsung dari klik orang. Kalau tetap terblokir, berkasnya
+// diunduh sebagai jalan mundur — bukan hilang.
+//
 // FILOSOFI — YANG GAGAL DITUNJUKKAN, BUKAN DISEMBUNYIKAN
 // Panel hasil selalu muncul, juga saat semuanya berhasil. Kegagalan yang cuma
 // tampil sebagai toast merah sekejap adalah persis keluhan yang fitur ini
@@ -30,24 +40,22 @@ import { omniApi } from "../../../utils/omniApi";
 
 const angka = (n) => Number(n ?? 0).toLocaleString("id-ID");
 
-/** Ubah PDF base64 jadi berkas yang langsung terunduh. */
-function unduhPdf(base64, namaBerkas) {
+/** PDF base64 → alamat blob yang bisa dibuka peramban. */
+function keAlamatPdf(base64) {
   const biner = atob(base64);
   const byte = new Uint8Array(biner.length);
   for (let i = 0; i < biner.length; i++) byte[i] = biner.charCodeAt(i);
+  return URL.createObjectURL(new Blob([byte], { type: "application/pdf" }));
+}
 
-  const url = URL.createObjectURL(new Blob([byte], { type: "application/pdf" }));
+/** Jalan mundur kalau tab baru diblokir peramban: unduh sebagai berkas. */
+function unduhPdf(url, namaBerkas) {
   const a = document.createElement("a");
   a.href = url;
   a.download = namaBerkas;
   document.body.appendChild(a);
   a.click();
   a.remove();
-
-  // Dilepas belakangan: mencabutnya seketika membatalkan unduhan di sebagian
-  // peramban sebelum berkasnya sempat terbaca.
-  setTimeout(() => URL.revokeObjectURL(url), 60_000);
-  return url;
 }
 
 function namaBerkas(channel, sku) {
@@ -99,7 +107,7 @@ function Hasil({ h, channel, onUlang }) {
         <Baris
           ikon={<CheckCircle2 size={16} />} warna="#166534" latar="#F0FDF4"
           judul={`${angka(h.jumlahTercetak)} resi tercetak`}
-          isi="berkasnya sudah terunduh"
+          isi="terbuka di tab baru — tekan Ctrl+P di sana"
         />
       ) : (
         <Baris
@@ -152,18 +160,38 @@ export default function TombolCetak({ channel, sku, jumlah, utama = false, onSel
     e?.stopPropagation();
     setSibuk(true);
     setGalat(null);
+
+    // Dibuka sekarang, diisi belakangan — lihat catatan di kepala berkas.
+    const tab = window.open("", "_blank");
+    if (tab) tab.document.write("<p style='font:14px sans-serif;padding:24px'>Menyiapkan resi…</p>");
+
     try {
       const d = await omniApi.cetakLabel({ channel, sku: sku ?? undefined });
-      if (d.pdfBase64) unduhPdf(d.pdfBase64, namaBerkas(channel, sku));
+
+      if (d.pdfBase64) {
+        const url = keAlamatPdf(d.pdfBase64);
+        if (tab) tab.location.href = url;
+        else unduhPdf(url, namaBerkas(channel, sku));
+        // Dilepas belakangan: mencabutnya seketika membuat tab yang baru
+        // dibuka menampilkan halaman kosong.
+        setTimeout(() => URL.revokeObjectURL(url), 5 * 60_000);
+      } else if (tab) {
+        // Tidak ada yang tercetak — jangan tinggalkan tab kosong menganga.
+        tab.close();
+      }
+
       setHasil(d);
       // Antreannya dimuat ulang supaya angkanya turun. Inilah yang membuat
       // "tumpukan habis → nol" benar-benar terlihat.
       onSelesai?.();
     } catch (err) {
+      tab?.close();
       setGalat(
         err?.response?.status === 402
           ? "Langganan sedang tidak aktif, jadi cetak resi dimatikan."
-          : "Gagal menghubungi marketplace. Coba lagi sebentar lagi.",
+          : err?.code === "ECONNABORTED"
+            ? "Terlalu lama menunggu marketplace. Sebagian resi mungkin sudah terbuat — muat ulang halaman dan periksa antreannya sebelum mencoba lagi."
+            : "Gagal menghubungi marketplace. Coba lagi sebentar lagi.",
       );
     } finally {
       setSibuk(false);
