@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Search, ChevronDown, SlidersHorizontal, Download, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import { omniApi, isPaymentRequired } from "../../../utils/omniApi";
 import { useDaftarPesanan } from "./useDaftarPesanan";
+import AntreanCetak from "./AntreanCetak";
 import OrderCard from "./OrderCard";
 import shopeeLogo from "../../../assets/logo_pilihan_fitur/shopee.png";
 import tiktokLogo from "../../../assets/logo_pilihan_fitur/logo_tiktok.jpg";
@@ -97,6 +98,10 @@ export default function OrdersTab({ locked, onRequirePayment, tabAwal }) {
   const [channels, setChannels] = useState(() => new Set());
   const [filterOpen, setFilterOpen] = useState(false);
   const [busy, setBusy]     = useState(null);
+  // Cara melihat tab "Siap Dikirim": daftar pesanan seperti biasa, atau antrean
+  // cetak yang dikelompokkan per SKU. Bawaannya tetap daftar — tampilan lama
+  // tidak berubah bagi yang sudah terbiasa.
+  const [tampilan, setTampilan] = useState("daftar");
   const [mengunduh, setMengunduh] = useState(false);
   const [galatUnduh, setGalatUnduh] = useState(null);
 
@@ -115,6 +120,7 @@ export default function OrdersTab({ locked, onRequirePayment, tabAwal }) {
 
   useEffect(() => { setPage(1); }, [tab, search, from, to, sort, perPage, subTab, channels]);
   useEffect(() => { const st = SUBTABS[tab]; if (st) setSubTab(st.tabs[0].id); }, [tab]);
+  useEffect(() => { setTampilan("daftar"); }, [tab]);
 
   const changeStatus = async (id, status) => {
     if (locked) return onRequirePayment?.();
@@ -221,6 +227,26 @@ export default function OrdersTab({ locked, onRequirePayment, tabAwal }) {
         </div>
       </div>
 
+      {/* Pemilih tampilan — hanya di tab "Siap Dikirim", karena hanya di situ
+          ada antrean cetak. Ditaruh sebelum sub-bar supaya pagination tidak
+          muncul saat antrean cetak yang sedang dilihat (ia tidak berhalaman:
+          daftar kerja harus terlihat utuh). */}
+      {tab === "dikemas" && (
+        <div style={{ display: "flex", gap: 6, margin: "12px 0 4px" }}>
+          {[["daftar", "Daftar Pesanan"], ["antrean", "Antrean Cetak per SKU"]].map(([id, label]) => (
+            <button key={id} onClick={() => setTampilan(id)} style={{
+              padding: "6px 12px", borderRadius: 7, cursor: "pointer", fontSize: 13,
+              fontWeight: tampilan === id ? 600 : 500,
+              border: `1px solid ${tampilan === id ? "#4F46E5" : "#E5E7EB"}`,
+              background: tampilan === id ? "#EEF2FF" : "#fff",
+              color: tampilan === id ? "#4F46E5" : "#6B7280",
+            }}>{label}</button>
+          ))}
+        </div>
+      )}
+
+      {tab === "dikemas" && tampilan === "antrean" ? <AntreanCetak /> : <>
+
       {/* Sub-bar: pilih semua + pagination.
           Nomor halaman ditulis "3 / 21", bukan "3" saja. Angka tunggal tidak
           memberi tahu masih ada berapa lagi di belakang — dan pesanan yang
@@ -267,6 +293,8 @@ export default function OrdersTab({ locked, onRequirePayment, tabAwal }) {
           {daftar.map((o) => <OrderCard key={o.id} order={o} onChangeStatus={changeStatus} busy={busy === o.id} />)}
         </div>
       )}
+
+      </>}
     </div>
   );
 }
