@@ -92,6 +92,9 @@ export const omniApi = {
   // hasil: { channel, kelompok[], totalLabel, totalSiapCetak, totalPerluAtur,
   //          totalPerluDiperiksa, pesananLintasKelompok, pesananPaketPecah }
   antreanCetak:      (channel)     => api.get('/api/omni/orders/antrean-cetak', { params: { channel } }).then(unwrap),
+  // Aksi TULIS: membuat dokumen resi di marketplace dan mencatat ke label_cetak_log.
+  // Yang dikirim cuma channel + sku; daftar pesanannya disusun server dari antrean.
+  cetakLabel:        (payload)      => api.post('/api/omni/orders/cetak-label', payload).then(unwrap),
 
   // Angka ringkas halaman depan, dihitung server atas SELURUH pesanan.
   // hasil: { total, omset, perluProses, perStatus, perChannel }

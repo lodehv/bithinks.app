@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronRight, AlertTriangle, Info } from "lucide-react";
 import { omniApi } from "../../../utils/omniApi";
+import TombolCetak from "./TombolCetak";
 import shopeeLogo from "../../../assets/logo_pilihan_fitur/shopee.png";
 import tiktokLogo from "../../../assets/logo_pilihan_fitur/logo_tiktok.jpg";
 
@@ -14,19 +15,21 @@ import tiktokLogo from "../../../assets/logo_pilihan_fitur/logo_tiktok.jpg";
 // supaya orang gudang bisa mengambil barang sejenis sekali jalan lalu menempel
 // labelnya berurutan — bukan bolak-balik rak mengikuti urutan pesanan.
 //
-// FILOSOFI — TIDAK ADA TOMBOL YANG MENGUBAH APA PUN
-// Ini disengaja dan merupakan inti Tahap 1. Pemilik toko memakai layar ini
-// beberapa hari dan mencocokkan angkanya dengan Seller Center SEBELUM ada satu
-// pun tombol yang bisa mengubah keadaan di marketplace. Kalau angkanya sudah
-// terbukti benar, baru tombol Cetak dipasang di atasnya.
+// TAHAP 2e — TOMBOL CETAK SUDAH TERPASANG (18 Agustus 2026)
+// Tahap 1 sengaja tanpa tombol sama sekali: pemilik toko memakai layar ini
+// lebih dulu dan mencocokkan angkanya dengan Seller Center SEBELUM ada yang
+// bisa mengubah keadaan di marketplace. Urutan itu yang membuat kesalahan
+// angka ketahuan saat belum ada satu pun label tercetak keliru.
 //
-// Tombol Cetak sengaja BELUM ada sama sekali — bukan ada tapi dimatikan.
-// Tombol mati mengundang orang menekannya lalu bingung kenapa tidak terjadi
-// apa-apa.
+// Sekarang tombolnya ada, satu per kelompok SKU plus satu untuk seluruh
+// tumpukan. Menekannya MENGUBAH KEADAAN di marketplace — ia membuat dokumen
+// resi di sana — jadi ia bukan lagi layar baca saja.
 //
-// DAMPAK
-// Kalau angka di layar ini meleset dari Seller Center, ketahuannya sekarang —
-// saat belum ada satu pun label tercetak keliru.
+// FILOSOFI — ANGKANYA TURUN SENDIRI
+// Setelah mencetak, antrean dimuat ulang. Keanggotaan antrean diturunkan dari
+// catatan cetak, bukan disimpan di kolom tersendiri, jadi yang sudah tercetak
+// keluar dengan sendirinya. Inilah yang membuat "tumpukan habis → nol" benar-
+// benar terlihat, dan yang membuat klik ganda tidak mencetak dua kali.
 // ─────────────────────────────────────────────────────────────────────────────
 
 const PLATFORM = [
@@ -58,31 +61,40 @@ function Catatan({ ikon, warna, latar, children }) {
   );
 }
 
-function Kelompok({ k }) {
+function Kelompok({ k, channel, onSelesai }) {
   const [buka, setBuka] = useState(false);
   return (
     <div style={{ border: "1px solid #E5E7EB", borderRadius: 10, marginBottom: 8, background: "#fff" }}>
-      <button
-        onClick={() => setBuka((b) => !b)}
-        style={{
-          width: "100%", display: "flex", alignItems: "center", gap: 12, padding: "14px 16px",
-          background: "none", border: "none", cursor: "pointer", textAlign: "left",
-        }}
-      >
-        {buka ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontWeight: 600, fontSize: 14, color: "#111827" }}>{k.nama}</div>
-          <div style={{ fontSize: 12, color: "#6B7280", fontFamily: "monospace" }}>{k.sku}</div>
+      {/* Tombol cetak berada DI SEBELAH tombol buka-tutup, bukan di dalamnya.
+          <button> bersarang bukan HTML yang sah, dan akibatnya nyata: sebagian
+          peramban tidak meneruskan klik ke tombol bagian dalam sama sekali. */}
+      <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "14px 16px" }}>
+        <button
+          onClick={() => setBuka((b) => !b)}
+          style={{
+            flex: 1, display: "flex", alignItems: "center", gap: 12, minWidth: 0,
+            background: "none", border: "none", cursor: "pointer", textAlign: "left", padding: 0,
+          }}
+        >
+          {buka ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontWeight: 600, fontSize: 14, color: "#111827" }}>{k.nama}</div>
+            <div style={{ fontSize: 12, color: "#6B7280", fontFamily: "monospace" }}>{k.sku}</div>
+          </div>
+          <div style={{ textAlign: "right", flexShrink: 0 }}>
+            <div style={{ fontWeight: 700, fontSize: 18, color: "#111827" }}>{angka(k.jumlahPesanan)}</div>
+            <div style={{ fontSize: 12, color: "#6B7280" }}>label</div>
+          </div>
+          <div style={{ textAlign: "right", flexShrink: 0, minWidth: 96 }}>
+            <div style={{ fontWeight: 600, fontSize: 14, color: "#374151" }}>{angka(k.totalQty)}</div>
+            <div style={{ fontSize: 12, color: "#6B7280" }}>barang diambil</div>
+          </div>
+        </button>
+
+        <div style={{ flexShrink: 0 }}>
+          <TombolCetak channel={channel} sku={k.sku} jumlah={k.siapCetak} onSelesai={onSelesai} />
         </div>
-        <div style={{ textAlign: "right", flexShrink: 0 }}>
-          <div style={{ fontWeight: 700, fontSize: 18, color: "#111827" }}>{angka(k.jumlahPesanan)}</div>
-          <div style={{ fontSize: 12, color: "#6B7280" }}>label</div>
-        </div>
-        <div style={{ textAlign: "right", flexShrink: 0, minWidth: 96 }}>
-          <div style={{ fontWeight: 600, fontSize: 14, color: "#374151" }}>{angka(k.totalQty)}</div>
-          <div style={{ fontSize: 12, color: "#6B7280" }}>barang diambil</div>
-        </div>
-      </button>
+      </div>
 
       {buka && (
         <div style={{ borderTop: "1px solid #F3F4F6", padding: "4px 16px 12px 46px" }}>
@@ -207,6 +219,12 @@ export default function AntreanCetak() {
                 </div>
               )}
             </div>
+            {/* Satu klik untuk seluruh tumpukan platform ini — cara yang sudah
+                dipakai admin di Seller Center. Yang dihitung cuma yang siap
+                dicetak; yang belum diatur pengirimannya tidak ikut. */}
+            <div style={{ marginLeft: "auto", alignSelf: "center" }}>
+              <TombolCetak channel={channel} jumlah={data.totalSiapCetak} utama onSelesai={ambil} />
+            </div>
           </div>
 
           {/* Selisih antara total label dan penjumlahan kelompok DIJELASKAN,
@@ -234,11 +252,13 @@ export default function AntreanCetak() {
             </Catatan>
           )}
 
-          {data.kelompok.map((k) => <Kelompok key={k.sku} k={k} />)}
+          {data.kelompok.map((k) => (
+            <Kelompok key={k.sku} k={k} channel={channel} onSelesai={ambil} />
+          ))}
 
           <div style={{ fontSize: 12, color: "#9CA3AF", padding: "10px 2px", textAlign: "center" }}>
-            Tahap 1 — tampilan saja. Tombol cetak menyusul setelah angka di sini terbukti
-            cocok dengan Seller Center.
+            Resi tercetak keluar dari antrean dengan sendirinya. Yang gagal tetap di sini
+            supaya tidak ada yang terlewat.
           </div>
         </>
       )}
