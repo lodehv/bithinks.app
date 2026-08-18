@@ -136,7 +136,15 @@ function Hasil({ h, channel, onUlang }) {
         <Baris
           ikon={<CheckCircle2 size={16} />} warna="#166534" latar="#F0FDF4"
           judul={`${angka(h.jumlahTercetak)} resi tercetak`}
-          isi="terbuka di tab baru — tekan Ctrl+P di sana"
+          isi={
+            // Jumlah halaman disebut apa adanya, dihitung dari berkasnya
+            // sendiri. Tiga salah paham berturut-turut lahir dari menghitung
+            // halaman PDF secara manual lalu membandingkannya dengan angka
+            // tombol dari klik yang berbeda.
+            typeof h.halamanPdf === "number"
+              ? `${angka(h.halamanPdf)} halaman · terbuka di tab baru, tekan Ctrl+P di sana`
+              : "terbuka di tab baru — tekan Ctrl+P di sana"
+          }
         />
       ) : (
         <Baris
