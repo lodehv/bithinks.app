@@ -281,19 +281,35 @@ export default function AntreanCetak() {
             display: "flex", gap: 24, padding: "14px 16px", marginBottom: 12,
             background: "#F9FAFB", borderRadius: 10, border: "1px solid #F3F4F6",
           }}>
+            {/* TOTAL SEBAGAI JANGKAR.
+                Aturan pemilik toko, 19 Agustus 2026: "total resi 40, belum
+                cetak 30, sudah cetak 10. Angka 40 ini tidak pernah berubah — ia
+                penanda: apakah benar di sistem kita ada 40 resi."
+
+                Karena itu ketiganya tampil sekaligus dan tidak berubah saat
+                berpindah sisi. Menyuruh orang menjumlahkan sendiri dua angka
+                untuk tahu totalnya menghapus gunanya sebagai penanda. */}
             <div>
               <div style={{ fontSize: 26, fontWeight: 700, color: "#111827", lineHeight: 1.1 }}>
-                {angka(data.totalLabel)}
+                {angka(data.totalAntrean ?? data.totalLabel)}
               </div>
-              <div style={{ fontSize: 12, color: "#6B7280" }}>
-                {sisi === "sudah" ? "resi sudah tercetak" : "pesanan belum dicetak"}
-              </div>
+              <div style={{ fontSize: 12, color: "#6B7280" }}>total resi hari ini</div>
             </div>
             <div style={{ borderLeft: "1px solid #E5E7EB", paddingLeft: 24, display: "flex", gap: 20 }}>
               <div>
-                <div style={{ fontSize: 18, fontWeight: 600, color: "#166534" }}>{angka(data.totalSiapCetak)}</div>
-                <div style={{ fontSize: 12, color: "#6B7280" }}>siap dicetak</div>
+                <div style={{ fontSize: 18, fontWeight: 600, color: "#B45309" }}>{angka(data.totalBelum ?? 0)}</div>
+                <div style={{ fontSize: 12, color: "#6B7280" }}>belum cetak</div>
               </div>
+              <div>
+                <div style={{ fontSize: 18, fontWeight: 600, color: "#166534" }}>{angka(data.totalSudah ?? 0)}</div>
+                <div style={{ fontSize: 12, color: "#6B7280" }}>sudah cetak</div>
+              </div>
+              {sisi === "belum" && data.totalSiapCetak !== data.totalBelum && (
+                <div>
+                  <div style={{ fontSize: 18, fontWeight: 600, color: "#166534" }}>{angka(data.totalSiapCetak)}</div>
+                  <div style={{ fontSize: 12, color: "#6B7280" }}>siap dicetak</div>
+                </div>
+              )}
               {data.totalPerluAtur > 0 && (
                 <div>
                   <div style={{ fontSize: 18, fontWeight: 600, color: "#92400E" }}>{angka(data.totalPerluAtur)}</div>
@@ -323,6 +339,14 @@ export default function AntreanCetak() {
           {/* Selisih antara total label dan penjumlahan kelompok DIJELASKAN,
               bukan disembunyikan. Angka yang tidak bisa dijelaskan membuat
               orang berhenti memercayai seluruh layar. */}
+          {data.selisihSisi ? (
+            <Catatan ikon={<Info size={16} />} warna="#991B1B" latar="#FEF2F2">
+              Ada <strong>{angka(Math.abs(data.selisihSisi))} pesanan</strong> yang tidak terhitung di
+              sisi mana pun. Ini kekeliruan di sisi kami — tolong beri tahu, jangan dipakai sebagai
+              acuan dulu.
+            </Catatan>
+          ) : null}
+
           <CerminSellerCenter channel={channel} />
 
           {data.pesananLintasKelompok > 0 && (
