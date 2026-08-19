@@ -258,7 +258,7 @@ function Hasil({ h, channel, onUlang }) {
  * cuma channel dan sku — daftar pesanannya disusun ulang di sana, memakai
  * penyaring yang sama dengan yang menghasilkan angka di layar ini.
  */
-export default function TombolCetak({ channel, sku, jumlah, utama = false, onSelesai }) {
+export default function TombolCetak({ channel, sku, jumlah, utama = false, onSelesai, ulangi = false, dari, sampai }) {
   const [sibuk, setSibuk] = useState(false);
   const [hasil, setHasil] = useState(null);
   const [galat, setGalat] = useState(null);
@@ -273,7 +273,16 @@ export default function TombolCetak({ channel, sku, jumlah, utama = false, onSel
     if (tab) tab.document.write("<p style='font:14px sans-serif;padding:24px'>Menyiapkan resi…</p>");
 
     try {
-      const d = await omniApi.cetakLabel({ channel, sku: sku ?? undefined });
+      const d = await omniApi.cetakLabel({
+        channel,
+        sku: sku ?? undefined,
+        // Cetak ULANG dari riwayat. Dikirim tegas, tidak pernah jadi bawaan:
+        // satu klik yang tidak sengaja mencetak ulang ratusan label adalah
+        // kerugian kertas yang nyata.
+        ...(ulangi ? { ulangi: true } : {}),
+        ...(dari ? { dari } : {}),
+        ...(sampai ? { sampai } : {}),
+      });
 
       const judul = `Resi ${channel === "tiktok" ? "TikTok" : "Shopee"}${sku ? ` — ${sku}` : ""}`;
 
@@ -316,21 +325,32 @@ export default function TombolCetak({ channel, sku, jumlah, utama = false, onSel
       <button
         onClick={cetak}
         disabled={sibuk || jumlah === 0}
-        title={jumlah === 0 ? "Tidak ada yang perlu dicetak" : undefined}
+        title={
+          jumlah === 0
+            ? "Tidak ada yang perlu dicetak"
+            : ulangi
+              ? "Membuat ulang resi yang sudah pernah dicetak"
+              : undefined
+        }
         style={{
           display: "inline-flex", alignItems: "center", gap: 7,
           padding: utama ? "10px 18px" : "7px 12px",
           borderRadius: 8, border: "none",
           fontSize: utama ? 14 : 13, fontWeight: 600,
           cursor: sibuk || jumlah === 0 ? "not-allowed" : "pointer",
-          background: jumlah === 0 ? "#F3F4F6" : "#4F46E5",
-          color: jumlah === 0 ? "#9CA3AF" : "#fff",
+          // Cetak ulang sengaja TIDAK berwarna sama dengan cetak biasa. Ia
+          // membuat label kedua untuk pesanan yang labelnya sudah pernah
+          // keluar — itu keputusan yang berbeda, dan tombolnya harus terlihat
+          // berbeda supaya tidak ditekan karena refleks.
+          background: jumlah === 0 ? "#F3F4F6" : ulangi ? "#fff" : "#4F46E5",
+          color: jumlah === 0 ? "#9CA3AF" : ulangi ? "#4F46E5" : "#fff",
+          boxShadow: ulangi && jumlah > 0 ? "inset 0 0 0 1px #C7D2FE" : undefined,
           opacity: sibuk ? 0.7 : 1,
           flexShrink: 0,
         }}
       >
         {sibuk ? <Loader2 size={15} className="animate-spin" /> : <Printer size={15} />}
-        {sibuk ? "Menyiapkan…" : `Cetak ${angka(jumlah)} resi`}
+        {sibuk ? "Menyiapkan…" : `${ulangi ? "Cetak ulang" : "Cetak"} ${angka(jumlah)} resi`}
       </button>
 
       {galat && (

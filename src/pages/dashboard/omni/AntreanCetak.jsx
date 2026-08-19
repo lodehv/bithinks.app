@@ -62,7 +62,7 @@ function Catatan({ ikon, warna, latar, children }) {
   );
 }
 
-function Kelompok({ k, channel, onSelesai }) {
+function Kelompok({ k, channel, sisi, dari, sampai, onSelesai }) {
   const [buka, setBuka] = useState(false);
   return (
     <div style={{ border: "1px solid #E5E7EB", borderRadius: 10, marginBottom: 8, background: "#fff" }}>
@@ -89,10 +89,12 @@ function Kelompok({ k, channel, onSelesai }) {
               yang belum tersimpan di sistem kami bukan urusan yang memakai —
               ia diambil sendiri saat tombol ditekan. */}
           <div style={{ textAlign: "right", flexShrink: 0, minWidth: 92 }}>
-            <div style={{ fontWeight: 700, fontSize: 18, color: k.siapCetak > 0 ? "#111827" : "#9CA3AF" }}>
-              {angka(k.siapCetak)}
+            <div style={{ fontWeight: 700, fontSize: 18, color: "#111827" }}>
+              {angka(sisi === "sudah" ? k.jumlahPesanan : k.siapCetak)}
             </div>
-            <div style={{ fontSize: 12, color: "#6B7280" }}>siap dicetak</div>
+            <div style={{ fontSize: 12, color: "#6B7280" }}>
+              {sisi === "sudah" ? "sudah tercetak" : "siap dicetak"}
+            </div>
           </div>
           <div style={{ textAlign: "right", flexShrink: 0, minWidth: 96 }}>
             <div style={{ fontWeight: 600, fontSize: 14, color: "#374151" }}>{angka(k.totalQty)}</div>
@@ -101,7 +103,12 @@ function Kelompok({ k, channel, onSelesai }) {
         </button>
 
         <div style={{ flexShrink: 0 }}>
-          <TombolCetak channel={channel} sku={k.sku} jumlah={k.siapCetak} onSelesai={onSelesai} />
+          <TombolCetak
+            channel={channel} sku={k.sku}
+            jumlah={sisi === "sudah" ? k.jumlahPesanan : k.siapCetak}
+            ulangi={sisi === "sudah"} dari={dari} sampai={sampai}
+            onSelesai={onSelesai}
+          />
         </div>
       </div>
 
@@ -149,6 +156,24 @@ export default function AntreanCetak() {
   const [memuat, setMemuat] = useState(true);
   const [galat, setGalat] = useState(null);
 
+  // DUA SISI DARI SATU TUMPUKAN — aturan pemilik toko, 19 Agustus 2026:
+  // "total resi 30, belum cetak 30 · sudah cetak 0. Begitu 15 dicetak, jadi
+  // belum cetak 15 · sudah cetak 15."
+  //
+  // Sisi "sudah" bukan sekadar arsip: di situlah resi yang hilang sebelum
+  // sempat ditempel bisa dicetak ulang. Berkas PDF-nya sengaja tidak disimpan,
+  // jadi satu-satunya jalan adalah membuatnya lagi dari riwayat.
+  const [sisi, setSisi] = useState("belum");
+
+  // Saringan tanggal memakai tanggal PESANAN, bukan tanggal cetak. Kalau
+  // memakai tanggal cetak, sisi "belum" tidak punya tanggal untuk disaring dan
+  // totalnya berubah-ubah sendiri — padahal justru totalnya yang harus tetap.
+  //
+  // Kosong berarti SELURUH tumpukan. Sisi "belum" tidak boleh menyembunyikan
+  // pekerjaan yang belum selesai hanya karena tanggalnya tidak dipilih.
+  const [dari, setDari] = useState("");
+  const [sampai, setSampai] = useState("");
+
   // Nomor urut permintaan: berpindah tab cepat bisa membuat jawaban lama datang
   // belakangan dan menimpa yang baru — layar lalu menampilkan antrean Shopee
   // padahal tab TikTok yang aktif.
@@ -159,14 +184,18 @@ export default function AntreanCetak() {
     setMemuat(true);
     setGalat(null);
     try {
-      const d = await omniApi.antreanCetak(channel);
+      const d = await omniApi.antreanCetak(channel, {
+        sisi,
+        ...(dari ? { dari } : {}),
+        ...(sampai ? { sampai } : {}),
+      });
       if (nomor === nomorTerakhir.current) setData(d);
     } catch {
       if (nomor === nomorTerakhir.current) setGalat("Gagal memuat antrean cetak.");
     } finally {
       if (nomor === nomorTerakhir.current) setMemuat(false);
     }
-  }, [channel]);
+  }, [channel, sisi, dari, sampai]);
 
   useEffect(() => { ambil(); }, [ambil]);
 
@@ -190,13 +219,46 @@ export default function AntreanCetak() {
         ))}
       </div>
 
+      {/* DUA SISI DARI SATU TUMPUKAN. Angkanya ditampilkan di TOMBOLNYA sendiri
+          supaya "belum 15 · sudah 15" terbaca sekaligus tanpa berpindah dulu. */}
+      <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", marginBottom: 12 }}>
+        {[["belum", "Belum cetak", data?.totalBelum], ["sudah", "Sudah cetak", data?.totalSudah]].map(([id, label, n]) => (
+          <button key={id} onClick={() => setSisi(id)} style={{
+            padding: "7px 14px", borderRadius: 8, cursor: "pointer", fontSize: 13,
+            fontWeight: sisi === id ? 600 : 500,
+            border: `1px solid ${sisi === id ? "#4F46E5" : "#E5E7EB"}`,
+            background: sisi === id ? "#EEF2FF" : "#fff",
+            color: sisi === id ? "#4F46E5" : "#6B7280",
+          }}>
+            {label}{typeof n === "number" ? ` (${angka(n)})` : ""}
+          </button>
+        ))}
+
+        <div style={{ display: "flex", alignItems: "center", gap: 6, marginLeft: "auto", fontSize: 13, color: "#6B7280" }}>
+          <span>Tanggal pesanan</span>
+          <input type="date" value={dari} onChange={(e) => setDari(e.target.value)}
+            style={{ padding: "5px 8px", borderRadius: 7, border: "1px solid #E5E7EB", fontSize: 13 }} />
+          <span>–</span>
+          <input type="date" value={sampai} onChange={(e) => setSampai(e.target.value)}
+            style={{ padding: "5px 8px", borderRadius: 7, border: "1px solid #E5E7EB", fontSize: 13 }} />
+          {(dari || sampai) && (
+            <button onClick={() => { setDari(""); setSampai(""); }} style={{
+              padding: "5px 10px", borderRadius: 7, border: "1px solid #E5E7EB",
+              background: "#fff", color: "#6B7280", fontSize: 13, cursor: "pointer",
+            }}>Semua</button>
+          )}
+        </div>
+      </div>
+
       {memuat ? (
         <div style={{ color: "#9CA3AF", fontSize: 13, padding: "20px 2px" }}>Memuat antrean…</div>
       ) : galat ? (
         <div style={{ color: "#991B1B", fontSize: 13, padding: "20px 2px" }}>{galat}</div>
       ) : !data || data.totalLabel === 0 ? (
         <div style={{ color: "#6B7280", fontSize: 14, padding: "28px 2px", textAlign: "center" }}>
-          Tidak ada pesanan yang menunggu dicetak. 👍
+          {sisi === "sudah"
+            ? "Belum ada resi yang tercetak untuk saringan ini."
+            : "Tidak ada pesanan yang menunggu dicetak. 👍"}
         </div>
       ) : (
         <>
@@ -208,7 +270,9 @@ export default function AntreanCetak() {
               <div style={{ fontSize: 26, fontWeight: 700, color: "#111827", lineHeight: 1.1 }}>
                 {angka(data.totalLabel)}
               </div>
-              <div style={{ fontSize: 12, color: "#6B7280" }}>pesanan di antrean</div>
+              <div style={{ fontSize: 12, color: "#6B7280" }}>
+                {sisi === "sudah" ? "resi sudah tercetak" : "pesanan belum dicetak"}
+              </div>
             </div>
             <div style={{ borderLeft: "1px solid #E5E7EB", paddingLeft: 24, display: "flex", gap: 20 }}>
               <div>
@@ -232,7 +296,12 @@ export default function AntreanCetak() {
                 dipakai admin di Seller Center. Yang dihitung cuma yang siap
                 dicetak; yang belum diatur pengirimannya tidak ikut. */}
             <div style={{ marginLeft: "auto", alignSelf: "center" }}>
-              <TombolCetak channel={channel} jumlah={data.totalSiapCetak} utama onSelesai={ambil} />
+              <TombolCetak
+                channel={channel}
+                jumlah={sisi === "sudah" ? data.totalSudah : data.totalSiapCetak}
+                ulangi={sisi === "sudah"} dari={dari} sampai={sampai}
+                utama onSelesai={ambil}
+              />
             </div>
           </div>
 
@@ -264,7 +333,7 @@ export default function AntreanCetak() {
           )}
 
           {data.kelompok.map((k) => (
-            <Kelompok key={k.sku} k={k} channel={channel} onSelesai={ambil} />
+            <Kelompok key={k.sku} k={k} channel={channel} sisi={sisi} dari={dari} sampai={sampai} onSelesai={ambil} />
           ))}
 
           <div style={{ fontSize: 12, color: "#9CA3AF", padding: "10px 2px", textAlign: "center" }}>
