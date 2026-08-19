@@ -347,9 +347,22 @@ export default function AntreanCetak() {
             <Catatan ikon={<Info size={16} />} warna="#9A3412" latar="#FFF7ED">
               {angka(data.totalDimintaBatal)} pesanan sedang <strong>diminta batal pembeli</strong> dan
               ikut terhitung di sini — itulah yang membuat angkanya sama dengan Seller Center.
-              Resinya <strong>tetap ikut tercetak</strong>: selama pembatalannya belum Anda setujui,
-              pesanannya masih harus dikirim. Kalau tidak dijawab dalam 24 jam, Shopee membatalkannya
-              sendiri dan pesanannya keluar dari antrean.
+              Resinya <strong>tidak ikut</strong> tombol di atas — supaya angka di tombol selalu
+              sama dengan yang tercetak. Periksa dulu di Seller Center; kalau pembatalannya tidak
+              Anda setujui, pesanannya masih harus dikirim dan resinya bisa dicetak dari sini.
+              Kalau tidak dijawab dalam 24 jam, Shopee membatalkannya sendiri dan pesanannya keluar
+              dari antrean.
+              <div style={{ marginTop: 10 }}>
+                <TombolCetak
+                  channel={channel}
+                  jumlah={data.totalDimintaBatal}
+                  dimintaBatal="hanya"
+                  teks={`Cetak ${angka(data.totalDimintaBatal)} resi yang diminta batal`}
+                  dari={dari || undefined}
+                  sampai={sampai || undefined}
+                  onSelesai={ambil}
+                />
+              </div>
             </Catatan>
           )}
 
