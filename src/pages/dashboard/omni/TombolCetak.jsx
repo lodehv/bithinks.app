@@ -89,6 +89,25 @@ function kelompokAlasan(d) {
     const k = x.alasan || "Dilewati";
     peta.set(k, (peta.get(k) ?? 0) + 1);
   }
+
+  // YANG TERTUNDA WAJIB IKUT DIHITUNG.
+  //
+  // Kejadian nyata 19 Agustus 2026: tombol menyebut 5, PDF berisi 4, dan
+  // header menulis "Semua pesanan yang diminta tercetak". Sistem TAHU ada satu
+  // yang tertunda — ia mengembalikannya sebagai `tertunda: 1` — tapi laporan di
+  // sini hanya membaca `gagal` dan `dilewati`.
+  //
+  // Akibatnya laporan itu berbohong dengan yakin, dan pemilik toko menghabiskan
+  // waktu mencari pesanan yang sebenarnya sudah dilaporkan. Kegagalan yang
+  // tidak terlihat adalah persis keluhan yang fitur ini dibangun untuk
+  // menghilangkan — dan di sini penyebabnya laporannya sendiri.
+  if (d.tertunda > 0) {
+    peta.set(
+      "Marketplace masih menyiapkan dokumennya. Pesanannya tetap di antrean — coba cetak lagi sebentar lagi.",
+      d.tertunda,
+    );
+  }
+
   return [...peta.entries()].sort((a, b) => b[1] - a[1]);
 }
 
