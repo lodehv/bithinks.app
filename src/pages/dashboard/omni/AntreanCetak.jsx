@@ -40,6 +40,10 @@ const PLATFORM = [
 
 const TAHAP = {
   siap_cetak:      { teks: "Siap dicetak",          warna: "#166534", latar: "#F0FDF4" },
+  // Pembeli minta batal, penjual belum menjawab. TETAP dicetak — kalau
+  // pembatalannya tidak disetujui, pesanannya tetap dikirim. Shopee
+  // membatalkannya sendiri kalau tidak dijawab dalam 24 jam.
+  diminta_batal:   { teks: "Diminta batal pembeli",  warna: "#9A3412", latar: "#FFF7ED" },
   perlu_atur:      { teks: "Perlu atur pengiriman", warna: "#92400E", latar: "#FFFBEB" },
   perlu_diperiksa: { teks: "Perlu diperiksa",       warna: "#991B1B", latar: "#FEF2F2" },
 };
@@ -304,10 +308,10 @@ export default function AntreanCetak() {
                 <div style={{ fontSize: 18, fontWeight: 600, color: "#166534" }}>{angka(data.totalSudah ?? 0)}</div>
                 <div style={{ fontSize: 12, color: "#6B7280" }}>sudah cetak</div>
               </div>
-              {sisi === "belum" && data.totalSiapCetak !== data.totalBelum && (
+              {data.totalDimintaBatal > 0 && (
                 <div>
-                  <div style={{ fontSize: 18, fontWeight: 600, color: "#166534" }}>{angka(data.totalSiapCetak)}</div>
-                  <div style={{ fontSize: 12, color: "#6B7280" }}>siap dicetak</div>
+                  <div style={{ fontSize: 18, fontWeight: 600, color: "#9A3412" }}>{angka(data.totalDimintaBatal)}</div>
+                  <div style={{ fontSize: 12, color: "#6B7280" }}>diminta batal</div>
                 </div>
               )}
               {data.totalPerluAtur > 0 && (
@@ -339,6 +343,16 @@ export default function AntreanCetak() {
           {/* Selisih antara total label dan penjumlahan kelompok DIJELASKAN,
               bukan disembunyikan. Angka yang tidak bisa dijelaskan membuat
               orang berhenti memercayai seluruh layar. */}
+          {data.totalDimintaBatal > 0 && (
+            <Catatan ikon={<Info size={16} />} warna="#9A3412" latar="#FFF7ED">
+              {angka(data.totalDimintaBatal)} pesanan sedang <strong>diminta batal pembeli</strong> dan
+              ikut terhitung di sini — itulah yang membuat angkanya sama dengan Seller Center.
+              Resinya <strong>tetap ikut tercetak</strong>: selama pembatalannya belum Anda setujui,
+              pesanannya masih harus dikirim. Kalau tidak dijawab dalam 24 jam, Shopee membatalkannya
+              sendiri dan pesanannya keluar dari antrean.
+            </Catatan>
+          )}
+
           {data.selisihSisi ? (
             <Catatan ikon={<Info size={16} />} warna="#991B1B" latar="#FEF2F2">
               Ada <strong>{angka(Math.abs(data.selisihSisi))} pesanan</strong> yang tidak terhitung di
