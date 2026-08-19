@@ -232,14 +232,18 @@ export default function OrdersTab({ locked, onRequirePayment, tabAwal }) {
           muncul saat antrean cetak yang sedang dilihat (ia tidak berhalaman:
           daftar kerja harus terlihat utuh). */}
       {tab === "dikemas" && (
-        <div style={{ display: "flex", gap: 6, margin: "12px 0 4px" }}>
+        /* Tab bergaris bawah, bukan pil berkotak. Ini perpindahan TAMPILAN
+           halaman — tingkat paling atas — jadi ia harus digambar berbeda dari
+           tombol beruas dan chip saringan di bawahnya. Kalau semuanya digambar
+           sebagai kotak sudut bulat, tidak ada yang menuntun mata. */
+        <div style={{ display: "flex", gap: 20, margin: "12px 0 0", borderBottom: "1px solid #E5E7EB" }}>
           {[["daftar", "Daftar Pesanan"], ["antrean", "Antrean Cetak per SKU"]].map(([id, label]) => (
             <button key={id} onClick={() => setTampilan(id)} style={{
-              padding: "6px 12px", borderRadius: 7, cursor: "pointer", fontSize: 13,
+              padding: "0 0 10px", border: "none", background: "none", cursor: "pointer",
+              fontSize: 14, fontFamily: "inherit",
               fontWeight: tampilan === id ? 600 : 500,
-              border: `1px solid ${tampilan === id ? "#4F46E5" : "#E5E7EB"}`,
-              background: tampilan === id ? "#EEF2FF" : "#fff",
-              color: tampilan === id ? "#4F46E5" : "#6B7280",
+              color: tampilan === id ? "#111827" : "#6B7280",
+              boxShadow: tampilan === id ? "inset 0 -2px 0 #4F46E5" : "none",
             }}>{label}</button>
           ))}
         </div>

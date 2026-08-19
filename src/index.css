@@ -1,4 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+/* DM Sans dipakai body dan seluruh heading, tapi selama ini TIDAK PERNAH
+   ikut dimuat di sini — jadi tulisannya diam-diam jatuh ke huruf bawaan
+   sistem, dan tampilannya berbeda di tiap komputer. Sekarang benar-benar
+   dimuat. Montserrat dan Open Sans tetap ada karena halaman depan memakainya
+   (lihat font_memory.md). */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
 :root {
   --color-primary: #FF6B00; /* Vibrant Solid Orange */
@@ -36,6 +41,16 @@ body.dark {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* Tombol, kotak isian, dan menu pilih TIDAK mewarisi huruf halaman — peramban
+   memaksakan huruf bawaan sistem. Akibatnya label tombol tampil beda sendiri
+   dari tulisan di sebelahnya. Satu baris ini menyamakan semuanya. */
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
 }
 
 body {
