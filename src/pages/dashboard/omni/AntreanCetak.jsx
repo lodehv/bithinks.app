@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronRight, AlertTriangle, Info } from "lucide-react";
 import { omniApi } from "../../../utils/omniApi";
 import TombolCetak from "./TombolCetak";
+import CerminSellerCenter from "./CerminSellerCenter";
 import shopeeLogo from "../../../assets/logo_pilihan_fitur/shopee.png";
 import tiktokLogo from "../../../assets/logo_pilihan_fitur/logo_tiktok.jpg";
 
@@ -238,6 +239,8 @@ export default function AntreanCetak() {
           {/* Selisih antara total label dan penjumlahan kelompok DIJELASKAN,
               bukan disembunyikan. Angka yang tidak bisa dijelaskan membuat
               orang berhenti memercayai seluruh layar. */}
+          <CerminSellerCenter channel={channel} />
+
           {data.pesananLintasKelompok > 0 && (
             <Catatan ikon={<Info size={16} />} warna="#1E40AF" latar="#EFF6FF">
               {angka(data.pesananLintasKelompok)} pesanan berisi lebih dari satu SKU, jadi muncul
