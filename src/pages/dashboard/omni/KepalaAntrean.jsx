@@ -99,10 +99,10 @@ export default function KepalaAntrean({
   const jumlahTombol = sisi === "sudah" ? data?.totalSudah : data?.totalSiapCetak;
 
   return (
-    <div style={{ marginTop: 12 }}>
+    <div style={{ marginTop: 24 }}>
       {/* ZONA 1 — kepala halaman. Angka jangkar dibaca lebih dulu dari apa pun,
           dan tombol utama duduk sejajar dengannya di kanan. */}
-      <div style={{ display: "flex", alignItems: "flex-end", gap: 16, flexWrap: "wrap", marginBottom: 18 }}>
+      <div style={{ display: "flex", alignItems: "flex-end", gap: 16, flexWrap: "wrap", marginBottom: 20 }}>
         <div>
           <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
             <span style={{
@@ -132,7 +132,7 @@ export default function KepalaAntrean({
       {/* ZONA 2 — bilah alat. Satu baris, semuanya setinggi sama. */}
       <div style={{
         display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap",
-        paddingBottom: 16, borderBottom: "1px solid #F3F4F6", marginBottom: 14,
+        paddingBottom: 20, borderBottom: "1px solid #F3F4F6", marginBottom: 24,
       }}>
         <Ruas
           nilai={channel}

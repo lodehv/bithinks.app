@@ -236,10 +236,13 @@ export default function OrdersTab({ locked, onRequirePayment, tabAwal }) {
            halaman — tingkat paling atas — jadi ia harus digambar berbeda dari
            tombol beruas dan chip saringan di bawahnya. Kalau semuanya digambar
            sebagai kotak sudut bulat, tidak ada yang menuntun mata. */
-        <div style={{ display: "flex", gap: 20, margin: "12px 0 0", borderBottom: "1px solid #E5E7EB" }}>
+        <div style={{
+          display: "flex", gap: 20, margin: "16px 0 0", padding: "0 24px",
+          borderBottom: "1px solid #E5E7EB",
+        }}>
           {[["daftar", "Daftar Pesanan"], ["antrean", "Antrean Cetak per SKU"]].map(([id, label]) => (
             <button key={id} onClick={() => setTampilan(id)} style={{
-              padding: "0 0 10px", border: "none", background: "none", cursor: "pointer",
+              padding: "0 0 12px", border: "none", background: "none", cursor: "pointer",
               fontSize: 14, fontFamily: "inherit",
               fontWeight: tampilan === id ? 600 : 500,
               color: tampilan === id ? "#111827" : "#6B7280",
@@ -249,7 +252,9 @@ export default function OrdersTab({ locked, onRequirePayment, tabAwal }) {
         </div>
       )}
 
-      {tab === "dikemas" && tampilan === "antrean" ? <AntreanCetak /> : <>
+      {tab === "dikemas" && tampilan === "antrean" ? (
+        <div style={{ padding: "0 24px 24px" }}><AntreanCetak /></div>
+      ) : <>
 
       {/* Sub-bar: pilih semua + pagination.
           Nomor halaman ditulis "3 / 21", bukan "3" saja. Angka tunggal tidak
