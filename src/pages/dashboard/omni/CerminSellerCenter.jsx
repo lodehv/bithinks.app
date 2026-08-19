@@ -28,7 +28,7 @@ import { omniApi } from "../../../utils/omniApi";
 
 const angka = (n) => new Intl.NumberFormat("id-ID").format(n ?? 0);
 
-export default function CerminSellerCenter({ channel }) {
+export default function CerminSellerCenter({ channel, dari, sampai }) {
   const [sibuk, setSibuk] = useState(false);
   const [hasil, setHasil] = useState(null);
   const [galat, setGalat] = useState(null);
@@ -39,7 +39,13 @@ export default function CerminSellerCenter({ channel }) {
     setSibuk(true);
     setGalat(null);
     try {
-      setHasil(await omniApi.cerminAntrean(channel));
+      // Jendela waktunya MENGIKUTI saringan tanggal di halaman. Kalau berbeda,
+      // panel ini memajang angka yang tidak bisa dibandingkan dengan angka di
+      // atasnya — dan itu justru membuat orang ragu pada keduanya.
+      setHasil(await omniApi.cerminAntrean(channel, {
+        ...(dari ? { dari } : {}),
+        ...(sampai ? { sampai } : {}),
+      }));
     } catch (err) {
       setGalat(
         err?.code === "ECONNABORTED"
@@ -96,13 +102,20 @@ function Hasil({ hasil, namaPasar }) {
       <div style={{ marginTop: 6 }}>
         {namaPasar} <strong>{angka(hasil.diMarketplace)}</strong> · antrean kita{" "}
         <strong>{angka(hasil.diKita)}</strong>
-        <span style={{ color: "#6B7280" }}> · diperiksa {hasil.hariDiperiksa} hari terakhir</span>
+        <span style={{ color: "#6B7280" }}>
+          {" · "}
+          {hasil.hariDiperiksa
+            ? `diperiksa ${hasil.hariDiperiksa} hari terakhir`
+            : "sesuai tanggal yang dipilih"}
+        </span>
       </div>
 
       {hasil.jumlahHilang > 0 && (
         <div style={{ marginTop: 6 }}>
           <strong>{angka(hasil.jumlahHilang)} pesanan ada di sana tapi belum masuk ke kita.</strong>{" "}
-          Akan tertarik sendiri saat sinkronisasi berikutnya.
+          Akan tertarik sendiri saat sinkronisasi berikutnya. Kalau angkanya besar, biasanya karena
+          ada toko yang belum ditautkan di Integrasi Toko — pemeriksaan ini hanya mencakup toko yang
+          tertaut.
           <Nomor daftar={hasil.hilang} jumlah={hasil.jumlahHilang} />
         </div>
       )}

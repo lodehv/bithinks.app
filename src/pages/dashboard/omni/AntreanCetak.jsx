@@ -374,7 +374,7 @@ export default function AntreanCetak() {
             </Catatan>
           ) : null}
 
-          <CerminSellerCenter channel={channel} />
+          <CerminSellerCenter channel={channel} dari={dari} sampai={sampai} />
 
           {data.pesananLintasKelompok > 0 && (
             <Catatan ikon={<Info size={16} />} warna="#1E40AF" latar="#EFF6FF">
