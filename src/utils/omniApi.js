@@ -102,6 +102,11 @@ export const omniApi = {
   // dan pesanannya keluar dari antrean — sementara PDF-nya tidak pernah sampai
   // ke siapa pun. Itu kehilangan yang tidak bisa diperbaiki, karena berkasnya
   // memang tidak disimpan.
+  // Pemeriksaan cermin: bertanya langsung ke marketplace berapa pesanan yang
+  // menunggu dikirim, lalu membandingkannya dengan antrean kita. Timeout
+  // dilonggarkan karena ia memanggil API marketplace sungguhan, satu kali per
+  // toko per status.
+  cerminAntrean:     (channel)       => api.get('/api/omni/orders/cermin', { params: { channel }, timeout: 120000 }).then(unwrap),
   cetakLabel:        (payload)      => api.post('/api/omni/orders/cetak-label', payload, { timeout: 180000 }).then(unwrap),
 
   // Angka ringkas halaman depan, dihitung server atas SELURUH pesanan.
