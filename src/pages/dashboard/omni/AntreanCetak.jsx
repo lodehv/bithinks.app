@@ -213,7 +213,22 @@ export default function AntreanCetak() {
             background: channel === p.id ? "#EEF2FF" : "#fff",
             color: channel === p.id ? "#4F46E5" : "#6B7280",
           }}>
-            <img src={p.logo} alt="" style={{ width: 18, height: 18, borderRadius: 4 }} />
+            {/* LOGO DIJAGA PROPORSINYA.
+                Kedua berkasnya jauh dari persegi — shopee.png 1920×2731 (tegak),
+                logo_tiktok.jpg 850×530 (melebar). Memaksanya ke kotak 18×18
+                menggencet yang satu melebar dan yang lain meninggi.
+                `contain` di dalam kotak yang sedikit lebih lebar membuat
+                keduanya utuh: yang tersisa cuma ruang kosong di sisinya, bukan
+                bentuk yang berubah. */}
+            <span style={{
+              width: 22, height: 18, flexShrink: 0,
+              display: "inline-flex", alignItems: "center", justifyContent: "center",
+            }}>
+              <img src={p.logo} alt="" style={{
+                maxWidth: "100%", maxHeight: "100%",
+                objectFit: "contain", display: "block", borderRadius: 3,
+              }} />
+            </span>
             {p.label}
           </button>
         ))}
