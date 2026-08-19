@@ -277,7 +277,7 @@ function Hasil({ h, channel, onUlang }) {
  * cuma channel dan sku — daftar pesanannya disusun ulang di sana, memakai
  * penyaring yang sama dengan yang menghasilkan angka di layar ini.
  */
-export default function TombolCetak({ channel, sku, jumlah, utama = false, onSelesai, ulangi = false, dari, sampai }) {
+export default function TombolCetak({ channel, sku, jumlah, utama = false, onSelesai, ulangi = false, dimintaBatal, teks, dari, sampai }) {
   const [sibuk, setSibuk] = useState(false);
   const [hasil, setHasil] = useState(null);
   const [galat, setGalat] = useState(null);
@@ -299,6 +299,10 @@ export default function TombolCetak({ channel, sku, jumlah, utama = false, onSel
         // satu klik yang tidak sengaja mencetak ulang ratusan label adalah
         // kerugian kertas yang nyata.
         ...(ulangi ? { ulangi: true } : {}),
+        // Pesanan yang diminta batal pembeli hanya ikut kalau tombolnya memang
+        // tombol itu. Tombol utama menyebut satu angka, dan yang tercetak harus
+        // angka itu juga — bukan angka itu ditambah beberapa yang menyelinap.
+        ...(dimintaBatal ? { dimintaBatal } : {}),
         ...(dari ? { dari } : {}),
         ...(sampai ? { sampai } : {}),
       });
@@ -369,7 +373,7 @@ export default function TombolCetak({ channel, sku, jumlah, utama = false, onSel
         }}
       >
         {sibuk ? <Loader2 size={15} className="animate-spin" /> : <Printer size={15} />}
-        {sibuk ? "Menyiapkan…" : `${ulangi ? "Cetak ulang" : "Cetak"} ${angka(jumlah)} resi`}
+        {sibuk ? "Menyiapkan…" : (teks ?? `${ulangi ? "Cetak ulang" : "Cetak"} ${angka(jumlah)} resi`)}
       </button>
 
       {galat && (
