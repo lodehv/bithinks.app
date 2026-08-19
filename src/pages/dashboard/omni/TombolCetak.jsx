@@ -58,33 +58,103 @@ function unduhPdf(url, namaBerkas) {
   a.remove();
 }
 
-/** Tulis kalimat penjelas ke tab yang sudah terbuka. */
-function tulisDiTab(tab, kalimat) {
+/** Ganti isi tab dengan HTML. Tab yang sudah ditutup orangnya diabaikan. */
+function tulisHtml(tab, html) {
   if (!tab) return;
   try {
-    tab.document.body.innerHTML =
-      `<div style="font:15px/1.6 sans-serif;padding:32px;max-width:640px;color:#111827">` +
-      `<p style="margin:0 0 12px;font-weight:600">Tidak ada resi yang tercetak.</p>` +
-      `<p style="margin:0;color:#4B5563">${kalimat}</p></div>`;
+    tab.document.open();
+    tab.document.write(html);
+    tab.document.close();
   } catch {
-    // Tab sudah ditutup orangnya — tidak apa-apa.
+    // Tab sudah ditutup — tidak apa-apa.
   }
 }
 
-/** Ringkasan satu kalimat kenapa tidak ada yang tercetak. */
-function ringkasGagal(d) {
-  const alasan = [
-    ...(d.gagal ?? []).map((g) => g.pesan || g.kode),
-    ...(d.dilewati ?? []).map((x) => x.alasan),
-  ].filter(Boolean);
+const lolos = (t) =>
+  String(t ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
-  if (alasan.length === 0 && d.tertunda > 0) {
-    return 'Marketplace masih menyiapkan dokumennya. Coba lagi sebentar lagi — pesanannya tetap di antrean.';
+/**
+ * Alasan kegagalan, dikelompokkan menurut kalimatnya.
+ *
+ * Dua puluh baris identik tidak memberi tahu apa pun selain bahwa daftarnya
+ * panjang. Yang berguna: kalimatnya, dan berapa pesanan yang mengalaminya.
+ */
+function kelompokAlasan(d) {
+  const peta = new Map();
+  for (const g of d.gagal ?? []) {
+    const k = g.pesan || g.kode || "Tidak diketahui";
+    peta.set(k, (peta.get(k) ?? 0) + 1);
   }
-  const teratas = [...new Set(alasan)].slice(0, 3);
-  return teratas.length
-    ? teratas.map((a) => `• ${a}`).join('<br>')
-    : 'Kembali ke tab sebelumnya untuk melihat rinciannya.';
+  for (const x of d.dilewati ?? []) {
+    const k = x.alasan || "Dilewati";
+    peta.set(k, (peta.get(k) ?? 0) + 1);
+  }
+  return [...peta.entries()].sort((a, b) => b[1] - a[1]);
+}
+
+/**
+ * Halaman pembungkus di tab resi.
+ *
+ * KENAPA PDF-NYA TIDAK LANGSUNG DIBUKA
+ * Karena laporan kegagalannya jadi tidak terlihat. Kejadian nyata 19 Agustus
+ * 2026: tombol menyebut 16, PDF berisi 12 halaman, dan empat sisanya memang
+ * ditolak Shopee dengan alasan yang sudah tercatat rapi — di panel hasil, di
+ * TAB SEBELAH, yang tidak dilihat siapa pun karena orangnya sedang menatap
+ * PDF. Sistem sudah melaporkan; laporannya yang salah tempat.
+ *
+ * Sekarang ringkasannya menempel di atas PDF-nya sendiri: berapa yang tercetak,
+ * berapa halaman, dan kalau ada yang gagal — berapa dan kenapa.
+ */
+function halamanResi(d, urlPdf, judul) {
+  const alasan = kelompokAlasan(d);
+  const adaMasalah = alasan.length > 0;
+  const tercetak = d.jumlahTercetak ?? 0;
+  const halaman = typeof d.halamanPdf === "number" ? d.halamanPdf : null;
+  const diminta = tercetak + alasan.reduce((n, [, jml]) => n + jml, 0);
+
+  const baris = adaMasalah
+    ? `<div class="masalah">
+         <strong>${diminta - tercetak} dari ${diminta} pesanan tidak tercetak.</strong>
+         Pesanannya TETAP di antrean — tidak hilang, dan bisa dicoba lagi.
+         <ul>${alasan.map(([k, n]) => `<li><b>${n}×</b> ${lolos(k)}</li>`).join("")}</ul>
+       </div>`
+    : `<div class="aman">Semua pesanan yang diminta tercetak.</div>`;
+
+  return `<!doctype html><html lang="id"><head><meta charset="utf-8">
+<title>${lolos(judul)}</title>
+<style>
+  *{box-sizing:border-box} body{margin:0;font:14px/1.6 system-ui,sans-serif;color:#111827;height:100vh;display:flex;flex-direction:column}
+  header{padding:12px 18px;border-bottom:1px solid #E5E7EB;background:#fff;flex:0 0 auto}
+  .judul{font-weight:600;font-size:15px}
+  .angka{color:#4B5563;margin-top:2px}
+  .masalah{margin-top:8px;padding:10px 12px;border-radius:8px;background:#FFFBEB;border:1px solid #FDE68A;color:#78350F}
+  .masalah ul{margin:6px 0 0;padding-left:18px}
+  .aman{margin-top:8px;color:#166534}
+  iframe{flex:1 1 auto;width:100%;border:0}
+</style></head><body>
+<header>
+  <div class="judul">${lolos(judul)}</div>
+  <div class="angka"><b>${tercetak}</b> resi tercetak${halaman === null ? "" : ` · <b>${halaman}</b> halaman`}</div>
+  ${baris}
+</header>
+<iframe src="${urlPdf}" title="Resi"></iframe>
+</body></html>`;
+}
+
+/** Halaman untuk keadaan "tidak ada satu pun yang tercetak". */
+function halamanKosong(d, judul) {
+  const alasan = kelompokAlasan(d);
+  const isi = alasan.length
+    ? `<ul>${alasan.map(([k, n]) => `<li><b>${n}×</b> ${lolos(k)}</li>`).join("")}</ul>`
+    : `<p>Marketplace masih menyiapkan dokumennya. Coba lagi sebentar lagi — pesanannya tetap di antrean.</p>`;
+
+  return `<!doctype html><html lang="id"><head><meta charset="utf-8"><title>${lolos(judul)}</title>
+<style>body{margin:0;font:15px/1.7 system-ui,sans-serif;color:#111827;padding:32px;max-width:720px}
+h1{font-size:17px;margin:0 0 4px} p,ul{color:#4B5563} ul{padding-left:20px}</style></head><body>
+<h1>Tidak ada resi yang tercetak</h1>
+<p>Pesanannya <b>tetap di antrean</b> — tidak ada yang hilang.</p>
+${isi}
+</body></html>`;
 }
 
 function namaBerkas(channel, sku) {
@@ -205,9 +275,11 @@ export default function TombolCetak({ channel, sku, jumlah, utama = false, onSel
     try {
       const d = await omniApi.cetakLabel({ channel, sku: sku ?? undefined });
 
+      const judul = `Resi ${channel === "tiktok" ? "TikTok" : "Shopee"}${sku ? ` — ${sku}` : ""}`;
+
       if (d.pdfBase64) {
         const url = keAlamatPdf(d.pdfBase64);
-        if (tab) tab.location.href = url;
+        if (tab) tulisHtml(tab, halamanResi(d, url, judul));
         else unduhPdf(url, namaBerkas(channel, sku));
         // Dilepas belakangan: mencabutnya seketika membuat tab yang baru
         // dibuka menampilkan halaman kosong.
@@ -216,7 +288,7 @@ export default function TombolCetak({ channel, sku, jumlah, utama = false, onSel
         // Tidak ada yang tercetak. Tabnya TIDAK ditutup diam-diam: tab yang
         // muncul lalu lenyap tanpa penjelasan membuat orang mengira sistemnya
         // rusak, padahal marketplace-nya yang menolak dan alasannya ada.
-        tulisDiTab(tab, ringkasGagal(d));
+        tulisHtml(tab, halamanKosong(d, judul));
       }
 
       setHasil(d);
@@ -224,7 +296,7 @@ export default function TombolCetak({ channel, sku, jumlah, utama = false, onSel
       // "tumpukan habis → nol" benar-benar terlihat.
       onSelesai?.();
     } catch (err) {
-      tulisDiTab(tab, 'Cetak resi gagal. Kembali ke tab sebelumnya untuk melihat alasannya.');
+      tulisHtml(tab, halamanKosong({ gagal: [], dilewati: [] }, 'Cetak resi gagal'));
       setGalat(
         err?.response?.status === 402
           ? "Langganan sedang tidak aktif, jadi cetak resi dimatikan."
