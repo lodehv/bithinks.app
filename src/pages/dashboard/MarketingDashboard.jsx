@@ -21,7 +21,11 @@ export default function MarketingDashboard() {
   // ─── API Data States ──────────────────────────────────────────────────────
   const [stores, setStores] = useState([]);
   const [isLoadingStores, setIsLoadingStores] = useState(false);
-  const [marketingData, setMarketingData] = useState([]); // Kept empty to avoid dummy data, ready for backend injection
+  // Rincian per toko. Sampai 20 Agustus 2026 nilai ini dibiarkan array kosong
+  // dan `setMarketingData` TIDAK PERNAH dipanggil sekali pun — tabelnya
+  // mustahil terisi sejak hari pertama. Sekarang datang dari server, memakai
+  // partisi omset yang sama dengan totalnya.
+  const marketingData = Array.isArray(stats?.per_toko) ? stats.per_toko : [];
   const [stats, setStats] = useState(null);               // { totals, buckets, meta } dari backend
   const [isSubmittingFilters, setIsSubmittingFilters] = useState(false);
   const [showFeeModal, setShowFeeModal] = useState(false);
@@ -115,21 +119,36 @@ export default function MarketingDashboard() {
   const totalDibatalkan     = t.dibatalkan     ?? 0;
 
   // Beban platform (PRD: biaya_api) + rincian per platform (cost_breakdown[]).
-  // COGS/HPP menyusul (Master Produk) → cogs_total 0.
+  // COGS dulu dipaku nol dengan catatan "menyusul" — catatan itu tertinggal.
+  // Perhitungannya (resep SKU x HPP master) sudah lama ada dan dipakai halaman
+  // Master Produk; sejak 20 Agustus 2026 laporan ini memakainya juga.
   const totalCogs = stats?.cogs_total ?? 0;
   const totalFees = stats?.biaya_api ?? 0;
   const costBreakdown = Array.isArray(stats?.cost_breakdown) ? stats.cost_breakdown : [];
-  const totalProfit = totalOmsetPerkiraan - totalCogs - totalFees;
+  // Laba dan margin datang JADI dari server, tidak dihitung ulang di sini.
+  // Versi lama menghitungnya sendiri sebagai omset − COGS − beban, TANPA biaya
+  // iklan — sementara server mengurangkan iklan juga. Dua rumus untuk angka
+  // yang sama, dan yang tampil di layar adalah yang melupakan iklan.
+  const totalProfit = stats?.profit ?? (totalOmsetPerkiraan - totalCogs - totalFees - adSpend);
+  const marginPercent = stats?.profit_margin
+    ?? (totalOmsetPerkiraan > 0 ? (totalProfit / totalOmsetPerkiraan) * 100 : 0);
 
-  // Calculate margin percent (safety check to prevent division by zero)
-  const marginPercent = totalOmsetPerkiraan > 0 ? (totalProfit / totalOmsetPerkiraan) * 100 : 0;
-
-  // Donut calculations
-  const hasData = totalOmsetKotor > 0;
-  const profitPct = hasData ? Math.max(0, (totalProfit / totalOmsetKotor) * 100) : 0;
-  const feesPct = hasData ? Math.max(0, (totalFees / totalOmsetKotor) * 100) : 0;
-  const cogsPct = hasData ? Math.max(0, (totalCogs / totalOmsetKotor) * 100) : 0;
-  const returPct = hasData ? Math.max(0, (totalRetur / totalOmsetKotor) * 100) : 0;
+  // ── Donat: SATU dasar untuk semua persentase ──
+  //
+  // Sebelumnya labanya dihitung dari omset PERKIRAAN tapi persentasenya dibagi
+  // omset KOTOR. Dua dasar yang berbeda dicampur, jadi potongannya tidak pernah
+  // genap 100% — terlihat di layar sebagai 78,7% + 18,7% = 97,4%, dengan 2,6%
+  // yang tidak bisa dijelaskan siapa pun.
+  //
+  // Keputusan pemilik toko 20 Agustus 2026: semuanya memakai omset PERKIRAAN.
+  // Omset kotor tetap ditampilkan sebagai angka tersendiri di kartu atas.
+  const dasarOmset = totalOmsetPerkiraan;
+  const hasData = dasarOmset > 0;
+  const pct = (v) => (hasData ? Math.max(0, (v / dasarOmset) * 100) : 0);
+  const profitPct = pct(totalProfit);
+  const feesPct = pct(totalFees);
+  const cogsPct = pct(totalCogs);
+  const returPct = pct(totalRetur);
 
   const radius = 40;
   const strokeWidth = 10;
@@ -143,7 +162,7 @@ export default function MarketingDashboard() {
   const profitOffset = 0;
   const feesOffset = -profitDash;
   const returOffset = -(profitDash + feesDash);
-  const adSpendPct = hasData ? Math.max(0, (adSpend / totalOmsetKotor) * 100) : 0;
+  const adSpendPct = pct(adSpend);
   const adSpendDash = (adSpendPct / 100) * circumference;
   const adSpendOffset = -(profitDash + feesDash + returDash);
   const cogsOffset = -(profitDash + feesDash + returDash + adSpendDash);
@@ -587,6 +606,7 @@ export default function MarketingDashboard() {
                   <th className="text-right">COGS (HPP)</th>
                   <th className="text-right">Beban Platform</th>
                   <th className="text-right">Retur</th>
+                  <th className="text-right">Biaya Iklan</th>
                   <th className="text-right">Net Profit</th>
                   <th className="text-right">Margin (%)</th>
                 </tr>
@@ -594,7 +614,7 @@ export default function MarketingDashboard() {
               <tbody>
                 {marketingData.length === 0 ? (
                   <tr>
-                    <td colSpan="8" className="table-empty-row">
+                    <td colSpan="9" className="table-empty-row">
                       <div className="empty-state-container">
                         <BarChart3 size={32} className="empty-icon text-gray" />
                         <h4>Tidak Ada Data Transaksi</h4>
@@ -605,22 +625,27 @@ export default function MarketingDashboard() {
                     </td>
                   </tr>
                 ) : (
-                  marketingData.map((row, idx) => {
-                    const profit = (row.omset || 0) - (row.cogs || 0) - (row.fees || 0) - (row.retur || 0);
-                    const margin = row.omset > 0 ? (profit / row.omset) * 100 : 0;
-                    return (
-                      <tr key={idx}>
-                        <td className="font-semibold text-black text-capitalize">{row.platform}</td>
-                        <td>{row.storeName}</td>
-                        <td className="text-right">{formatRupiah(row.omset)}</td>
-                        <td className="text-right">{formatRupiah(row.cogs)}</td>
-                        <td className="text-right">{formatRupiah(row.fees)}</td>
-                        <td className="text-right text-purple font-semibold">{formatRupiah(row.retur || 0)}</td>
-                        <td className="text-right font-semibold text-black">{formatRupiah(profit)}</td>
-                        <td className="text-right font-semibold text-purple">{margin.toFixed(1)}%</td>
-                      </tr>
-                    );
-                  })
+                  /* Laba dan margin datang JADI dari server, tidak dihitung
+                     ulang di sini. Dua perhitungan untuk hal yang sama pasti
+                     berbeda suatu hari, dan yang di server itulah yang juga
+                     dipakai baris total di bawah. */
+                  marketingData.map((row, idx) => (
+                    <tr key={idx}>
+                      <td className="font-semibold text-black text-capitalize">{row.channel}</td>
+                      <td>{row.storeName}</td>
+                      <td className="text-right">{formatRupiah(row.omset)}</td>
+                      <td className="text-right">{formatRupiah(row.cogs)}</td>
+                      <td className="text-right">{formatRupiah(row.fees)}</td>
+                      <td className="text-right text-purple font-semibold">{formatRupiah(row.retur || 0)}</td>
+                      {/* Biaya iklan per toko belum diisi — keputusan pemilik
+                          toko 20 Agu 2026: kolomnya disiapkan, angkanya menyusul
+                          per toko. TIDAK dibagi rata dari satu angka global,
+                          karena hasil bagi rata bukan biaya iklan toko itu. */}
+                      <td className="text-right text-gray" title="Belum diisi per toko">—</td>
+                      <td className="text-right font-semibold text-black">{formatRupiah(row.netProfit)}</td>
+                      <td className="text-right font-semibold text-purple">{(row.margin ?? 0).toFixed(1)}%</td>
+                    </tr>
+                  ))
                 )}
               </tbody>
               
@@ -629,10 +654,16 @@ export default function MarketingDashboard() {
                 <tfoot>
                   <tr className="summary-total-row">
                     <td colSpan="2" className="font-bold text-black text-left">TOTAL RINGKASAN</td>
-                    <td className="text-right font-bold text-black">{formatRupiah(totalOmsetKotor)}</td>
+                    {/* Omset PERKIRAAN, bukan kotor — supaya jumlah baris di
+                        atas benar-benar sama dengan angka ini. Sebelumnya baris
+                        memakai satu dasar dan totalnya memakai dasar lain, jadi
+                        siapa pun yang menjumlahkan sendiri akan menemukan
+                        selisih yang tidak bisa dijelaskan. */}
+                    <td className="text-right font-bold text-black">{formatRupiah(totalOmsetPerkiraan)}</td>
                     <td className="text-right font-bold text-black">{formatRupiah(totalCogs)}</td>
                     <td className="text-right font-bold text-black">{formatRupiah(totalFees)}</td>
                     <td className="text-right font-bold text-black">{formatRupiah(totalRetur)}</td>
+                    <td className="text-right font-bold text-gray">{formatRupiah(adSpend)}</td>
                     <td className="text-right font-bold text-purple">{formatRupiah(totalProfit)}</td>
                     <td className="text-right font-bold text-purple">{marginPercent.toFixed(1)}%</td>
                   </tr>
