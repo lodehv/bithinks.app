@@ -35,6 +35,20 @@ export default function ProductsTab({ locked, onRequirePayment }) {
   const [selectedUnit, setSelectedUnit]         = useState("all");
   const [selectedStatus, setSelectedStatus]     = useState("active");
 
+  // ── Periode ──
+  // Sampai 20 Agustus 2026 "Periode" cuma teks mati di layar: 01 Jun - 07 Jul.
+  // Semua angka di halaman ini sebenarnya sepanjang masa, dan tidak ada yang
+  // tahu itu. Sekarang ia kendali sungguhan, dan bawaannya 30 hari terakhir —
+  // rentang yang berarti untuk operasi harian, bukan total seumur toko.
+  const hariWib = (geser = 0) =>
+    new Date(Date.now() + 7 * 3600 * 1000 + geser * 86400000).toISOString().slice(0, 10);
+  const [dari, setDari]     = useState(() => hariWib(-29));
+  const [sampai, setSampai] = useState(() => hariWib(0));
+
+  // Daftar toko SUNGGUHAN, diambil dari toko yang terhubung. Sebelumnya isinya
+  // dikarang ("Toko BitOmni") padahal ada 15 toko nyata.
+  const [stores, setStores] = useState([]);
+
   const [form, setForm]         = useState({ name: "", costPrice: "", masterStock: "", category: "", unit: "" });
   const [stats, setStats]       = useState(null);   // dashboard-stats (movement, COGS, kategori, buckets)
   const [chartGran, setChartGran] = useState("day");
@@ -43,19 +57,44 @@ export default function ProductsTab({ locked, onRequirePayment }) {
   const [note, setNote]         = useState("");
   const [error, setError]       = useState("");
 
+  // Seluruh angka halaman ini — kartu, grafik, donat kategori, Top 5, dan kolom
+  // Total Keluar/COGS di tabel — datang dari SATU panggilan ini. Jadi penyaring
+  // cukup dikirim sekali, dan tidak ada bagian layar yang tertinggal
+  // menampilkan periode lain.
   const loadStats = (g) =>
-    omniApi.productDashboardStats({ granularity: g }).then(setStats).catch(() => {});
+    omniApi.productDashboardStats({
+      granularity: g,
+      startDate: dari,
+      endDate: sampai,
+      channel: selectedPlatform,
+      storeId: selectedStore,
+    }).then(setStats).catch(() => {});
 
   const load = () => {
     setProducts(null);
     omniApi.listProducts()
       .then((data) => setProducts(Array.isArray(data) ? data : []))
       .catch(() => setProducts([]));
+    omniApi.listStores().then((d) => setStores(Array.isArray(d) ? d : [])).catch(() => {});
     loadStats(chartGran);
   };
 
   useEffect(load, []);
-  useEffect(() => { loadStats(chartGran); }, [chartGran]);
+  // Angka dimuat ulang setiap penyaringnya berubah — itu inti perbaikan ini.
+  useEffect(() => { loadStats(chartGran); },
+    [chartGran, dari, sampai, selectedPlatform, selectedStore]);
+
+  // Toko yang ditawarkan mengikuti platform yang dipilih. Kalau toko yang
+  // sedang aktif tidak ada di platform baru, pilihannya dikembalikan ke "semua"
+  // — kalau tidak, layar menampilkan nol dan orang mengira datanya hilang.
+  const storesTampil = stores.filter(
+    (t) => selectedPlatform === "all" || t.channel === selectedPlatform);
+  useEffect(() => {
+    if (selectedStore !== "all" && !storesTampil.some((t) => t.id === selectedStore)) {
+      setSelectedStore("all");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedPlatform, stores]);
   const guard = (err) => { if (isPaymentRequired(err)) { onRequirePayment?.(); return true; } return false; };
 
   // Data REAL: produk master + statistik movement/COGS per master (dari resep SKU).
@@ -334,10 +373,18 @@ export default function ProductsTab({ locked, onRequirePayment }) {
           <div className="filter-input-select-box">
             <label>Toko</label>
             <div className="premium-select-wrapper">
+              {/* Toko SUNGGUHAN dari yang terhubung. Isinya dulu dikarang
+                  ("Toko BitOmni") padahal ada 15 toko nyata — dan nilainya
+                  tidak pernah dibaca ke mana pun. */}
               <select value={selectedStore} onChange={(e) => setSelectedStore(e.target.value)}>
-                <option value="all">Toko BitOmni</option>
-                <option value="shopee-1">Shopee - Toko BitOmni</option>
-                <option value="tiktok-1">TikTok Shop - Toko BitOmni</option>
+                <option value="all">
+                  Semua Toko{storesTampil.length ? ` (${storesTampil.length})` : ""}
+                </option>
+                {storesTampil.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.channel === "shopee" ? "Shopee" : t.channel === "tiktok" ? "TikTok" : t.channel} — {t.name}
+                  </option>
+                ))}
               </select>
               <ChevronDown size={12} className="select-chevron-icon" />
             </div>
@@ -355,12 +402,42 @@ export default function ProductsTab({ locked, onRequirePayment }) {
             </div>
           </div>
 
-          {/* Periode Info picker */}
+          {/* Periode — kendali SUNGGUHAN.
+              Sebelumnya cuma <span> berisi teks mati "01 Jun - 07 Jul 2026",
+              sementara angka di kartu sebenarnya sepanjang masa. Tidak ada yang
+              bisa tahu itu dari layar. */}
           <div className="filter-input-select-box date-range-picker-input">
             <label>Periode</label>
             <div className="date-input-icon-row">
               <Calendar size={13} className="text-gray" />
-              <span>01 Jun 2026 - 07 Jul 2026</span>
+              <input type="date" value={dari} max={sampai}
+                     onChange={(e) => setDari(e.target.value)} aria-label="Dari tanggal"
+                     style={{ border: "none", background: "none", font: "inherit", color: "inherit", padding: 0 }} />
+              <span style={{ opacity: 0.5 }}>–</span>
+              <input type="date" value={sampai} min={dari} max={hariWib(0)}
+                     onChange={(e) => setSampai(e.target.value)} aria-label="Sampai tanggal"
+                     style={{ border: "none", background: "none", font: "inherit", color: "inherit", padding: 0 }} />
+            </div>
+          </div>
+
+          {/* Pintasan periode. "Hari ini" yang paling sering dipakai: pemilik
+              toko ingin tahu barang apa yang keluar HARI INI, di toko mana. */}
+          <div className="filter-input-select-box">
+            <label>Pintasan</label>
+            <div style={{ display: "flex", gap: 4 }}>
+              {[["Hari ini", 0], ["7 hari", 6], ["30 hari", 29]].map(([teks, mundur]) => {
+                const d = hariWib(-mundur), s2 = hariWib(0);
+                const aktif = dari === d && sampai === s2;
+                return (
+                  <button key={teks} onClick={() => { setDari(d); setSampai(s2); }} style={{
+                    padding: "5px 9px", borderRadius: 6, cursor: "pointer", fontSize: 12,
+                    fontWeight: aktif ? 600 : 500,
+                    border: `1px solid ${aktif ? "#4F46E5" : "#E5E7EB"}`,
+                    background: aktif ? "#EEF2FF" : "#fff",
+                    color: aktif ? "#4F46E5" : "#6B7280",
+                  }}>{teks}</button>
+                );
+              })}
             </div>
           </div>
         </div>
