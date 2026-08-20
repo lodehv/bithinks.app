@@ -5,6 +5,7 @@ import {
   Calendar, Layers, TrendingUp, DollarSign, Package, Edit3, ShoppingBag, Trash2
 } from "lucide-react";
 import { omniApi, isPaymentRequired } from "../../../utils/omniApi";
+import GrafikBatang from "./GrafikBatang";
 import shopeeLogo from "../../../assets/logo_pilihan_fitur/shopee.png";
 import tiktokLogo from "../../../assets/logo_pilihan_fitur/logo_tiktok.jpg";
 import MarketplaceProductsTab from "./MarketplaceProductsTab";
@@ -279,30 +280,13 @@ export default function ProductsTab({ locked, onRequirePayment }) {
     if (chartGran === "month") { const [y, m] = b.split("-"); return `${BLN[Number(m) - 1]} ${y.slice(2)}`; }
     const parts = b.split("-"); return `${parts[2]}/${parts[1]}`;
   };
-  const niceMax = (v) => {
-    if (v <= 0) return 1;
-    const p = Math.pow(10, Math.floor(Math.log10(v)));
-    const n = v / p;
-    return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10) * p;
-  };
-  const maxMove = niceMax(Math.max(1, ...chartBuckets.map((b) => b.movementQty)));
-  const maxCogs = niceMax(Math.max(1, ...chartBuckets.map((b) => b.cogs)));
   const fmtAxisQty = (v) => (v >= 1000 ? `${(v / 1000).toFixed(v % 1000 === 0 ? 0 : 1)}k` : `${Math.round(v)}`);
   const fmtAxisRp = (v) => (v >= 1e9 ? `${(v / 1e9).toFixed(1)}M` : v >= 1e6 ? `${(v / 1e6).toFixed(v % 1e6 === 0 ? 0 : 1)} jt` : v >= 1e3 ? `${Math.round(v / 1e3)}rb` : `${Math.round(v)}`);
 
-  const getCoordinates = (vals, maxVal) => {
-    const width = 450, height = 150, paddingX = 40, paddingY = 20;
-    const n = vals.length;
-    return vals.map((val, idx) => ({
-      x: paddingX + (n <= 1 ? (width - 2 * paddingX) / 2 : (idx / (n - 1)) * (width - 2 * paddingX)),
-      y: height - paddingY - ((val || 0) / (maxVal || 1)) * (height - 2 * paddingY),
-      value: val,
-    }));
-  };
-  const getPathD = (coords) => (coords.length < 2 ? "" : coords.map((c, i) => `${i === 0 ? "M" : "L"} ${c.x} ${c.y}`).join(" "));
-  const coordsMovement = getCoordinates(chartBuckets.map((b) => b.movementQty), maxMove);
-  const coordsCogs = getCoordinates(chartBuckets.map((b) => b.cogs), maxCogs);
-  const xLabelEvery = Math.max(1, Math.ceil(chartBuckets.length / 6));
+  // Label tanggal ditipiskan supaya tidak bertumpuk saat harinya banyak.
+  const labelSetiap = Math.max(1, Math.ceil(chartBuckets.length / 8));
+  const dataKeluar = chartBuckets.map((b) => ({ label: fmtBucketLabel(b.bucket), nilai: b.movementQty }));
+  const dataCogs   = chartBuckets.map((b) => ({ label: fmtBucketLabel(b.bucket), nilai: b.cogs }));
 
   // Donut kategori real
   const donutColors = ["#4F46E5", "#818CF8", "#60A5FA", "#A78BFA", "#C7C9F9"];
@@ -540,52 +524,28 @@ export default function ProductsTab({ locked, onRequirePayment }) {
             </div>
           </div>
           <div className="card-item-body">
-            <div className="pm-trend-svg-chart-wrapper">
-              <svg width="100%" height="150" viewBox="0 0 450 150" preserveAspectRatio="none" className="pm-trend-svg">
-                {[0, 0.33, 0.66, 1].map((ratio, idx) => {
-                  const y = 20 + ratio * 110;
-                  return (
-                    <line key={idx} x1="40" y1={y} x2="410" y2={y} stroke="#F3F4F6" strokeDasharray="3 3" strokeWidth="1" />
-                  );
-                })}
+            {/* DUA PANEL, BUKAN DUA SUMBU DI SATU BIDANG.
+                Grafik sebelumnya menaruh pcs di sumbu kiri dan Rupiah di sumbu
+                kanan. Keduanya lalu terlihat nyaris berimpit — bukan karena
+                berkaitan erat, tapi karena masing-masing dipaskan ke skalanya
+                sendiri. Perbandingan yang muncul dari penskalaan, bukan dari
+                datanya, adalah kesalahan grafik yang paling sering terjadi.
 
-                {chartBuckets.map((b, idx) => (
-                  (idx % xLabelEvery === 0 || idx === chartBuckets.length - 1) && (
-                    <g key={b.bucket}>
-                      <line x1={coordsMovement[idx]?.x} y1="20" x2={coordsMovement[idx]?.x} y2="130" stroke="#F3F4F6" strokeDasharray="3 3" strokeWidth="1" />
-                      <text x={coordsMovement[idx]?.x} y="145" textAnchor="middle" fontSize="8" fill="#9CA3AF" fontWeight="700">{fmtBucketLabel(b.bucket)}</text>
-                    </g>
-                  )
-                ))}
-
-                {[0, 0.33, 0.66, 1].map((ratio, idx) => (
-                  <text key={`l${idx}`} x="35" y={23 + ratio * 110} textAnchor="end" fontSize="8" fill="#9CA3AF" fontWeight="700">{fmtAxisQty(maxMove * (1 - ratio))}</text>
-                ))}
-                {[0, 0.33, 0.66, 1].map((ratio, idx) => (
-                  <text key={`r${idx}`} x="415" y={23 + ratio * 110} textAnchor="start" fontSize="8" fill="#9CA3AF" fontWeight="700">{fmtAxisRp(maxCogs * (1 - ratio))}</text>
-                ))}
-
-                <path d={getPathD(coordsMovement)} fill="none" stroke="#4F46E5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                {coordsMovement.map((c, i) => (
-                  <circle key={i} cx={c.x} cy={c.y} r="2.5" fill="#ffffff" stroke="#4F46E5" strokeWidth="1.5" />
-                ))}
-
-                <path d={getPathD(coordsCogs)} fill="none" stroke="#A78BFA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                {coordsCogs.map((c, i) => (
-                  <circle key={i} cx={c.x} cy={c.y} r="2.5" fill="#ffffff" stroke="#A78BFA" strokeWidth="1.5" />
-                ))}
-              </svg>
-            </div>
-            
-            <div className="chart-legend-labels-row">
-              <div className="legend-label-chip">
-                <span className="dot bg-purple"></span>
-                <span>Total Keluar (pcs)</span>
-              </div>
-              <div className="legend-label-chip">
-                <span className="dot bg-light-purple"></span>
-                <span>COGS (Rp)</span>
-              </div>
+                Sekarang tiap ukuran punya panelnya sendiri dan berbagi sumbu
+                tanggal. Hari ketika Rupiah tinggi sementara pcs pendek — barang
+                mahal yang laku — jadi terlihat, bukan tenggelam. */}
+            <div style={{ padding: "4px 2px 0" }}>
+              <GrafikBatang
+                data={dataKeluar} warna="#4F46E5"
+                judul="Total Keluar" satuan="pcs" format={fmtAxisQty}
+                labelSetiap={labelSetiap} tinggi={120}
+              />
+              <div style={{ height: 18 }} />
+              <GrafikBatang
+                data={dataCogs} warna="#A78BFA"
+                judul="COGS" satuan="Rp" format={fmtAxisRp}
+                labelSetiap={labelSetiap} tinggi={120}
+              />
             </div>
           </div>
         </div>
