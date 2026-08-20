@@ -21,12 +21,18 @@ export default function MarketingDashboard() {
   // ─── API Data States ──────────────────────────────────────────────────────
   const [stores, setStores] = useState([]);
   const [isLoadingStores, setIsLoadingStores] = useState(false);
+  const [stats, setStats] = useState(null);               // { totals, buckets, meta } dari backend
+
   // Rincian per toko. Sampai 20 Agustus 2026 nilai ini dibiarkan array kosong
   // dan `setMarketingData` TIDAK PERNAH dipanggil sekali pun — tabelnya
   // mustahil terisi sejak hari pertama. Sekarang datang dari server, memakai
   // partisi omset yang sama dengan totalnya.
+  //
+  // HARUS di bawah `stats`. Sempat ditaruh di atasnya, dan itu menjatuhkan
+  // SELURUH halaman jadi layar putih: `Cannot access '_' before
+  // initialization`. Build dan lint dua-duanya hijau — yang begini hanya
+  // ketahuan kalau halamannya benar-benar dibuka.
   const marketingData = Array.isArray(stats?.per_toko) ? stats.per_toko : [];
-  const [stats, setStats] = useState(null);               // { totals, buckets, meta } dari backend
   const [isSubmittingFilters, setIsSubmittingFilters] = useState(false);
   const [showFeeModal, setShowFeeModal] = useState(false);
   const [adSpend, setAdSpend] = useState(0);

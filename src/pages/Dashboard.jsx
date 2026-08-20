@@ -29,6 +29,18 @@ const PAGES = {
 };
 
 // ─── Banner billing global (status langganan live) ────────────────────────────
+// Gaya tombol tagihan. Ditaruh SEBELUM komponen yang memakainya — bukan soal
+// selera: nilai yang dipakai di atas baris deklarasinya adalah bentuk yang sama
+// dengan yang menjatuhkan halaman Laporan Penjualan jadi layar putih pada
+// 20 Agustus 2026. Yang ini sebenarnya aman (React menjalankan komponennya
+// belakangan), tapi membedakan yang aman dari yang tidak butuh penalaran —
+// dan penalaran itulah yang gagal waktu itu.
+const billBtn = {
+  marginLeft: "auto", fontSize: 12, fontWeight: 600, color: "#F97316",
+  background: "#fff", border: "1px solid #FED7AA", borderRadius: 6,
+  padding: "5px 12px", cursor: "pointer", whiteSpace: "nowrap",
+};
+
 function BillingBanner({ sub, onPay }) {
   if (!sub) return null;
 
@@ -58,12 +70,6 @@ function BillingBanner({ sub, onPay }) {
   }
   return null;
 }
-
-const billBtn = {
-  marginLeft: "auto", fontSize: 12, fontWeight: 600, color: "#F97316",
-  background: "#fff", border: "1px solid #FED7AA", borderRadius: 6,
-  padding: "5px 12px", cursor: "pointer", whiteSpace: "nowrap",
-};
 
 export default function Dashboard() {
   const { isAuthenticated, user } = useAppContext();
