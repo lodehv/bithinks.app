@@ -36,7 +36,7 @@ const Register = () => {
 
   // Step 3
   const [formData, setFormData] = useState({
-    nama: "", namaUsaha: "", bidang: "", solusi: "", jumlahKaryawan: "",
+    nama: "", namaUsaha: "", bidang: "", jumlahKaryawan: "",
   });
 
   const handleChange = (e) =>
@@ -103,9 +103,8 @@ const Register = () => {
         verifyToken,
         name:            formData.nama,
         companyName:     formData.namaUsaha,
-        industry:        formData.bidang       || undefined,
-        employeeCount:   formData.jumlahKaryawan || undefined,
-        preferredModule: formData.solusi        || undefined,
+        industry:      formData.bidang         || undefined,
+        employeeCount: formData.jumlahKaryawan   || undefined,
       });
       const { accessToken, refreshToken, user, tenant } = res.data.data;
       login({ accessToken, refreshToken, user, tenant });

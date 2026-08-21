@@ -81,6 +81,11 @@ export function StepOtp({ email, otp, onOtpChange, loading, error, onSubmit }) {
 }
 
 // ─── Step 3: Profil Bisnis ────────────────────────────────────────────────────
+//
+// Kolom "Pilihan Solusi" DIHAPUS 21 Agustus 2026 atas permintaan pemilik. Ia
+// menanyakan sesuatu kepada calon pelanggan lalu membuang jawabannya: nilainya
+// dikirim sebagai `preferredModule` dan tidak ada satu pun tempat di backend
+// yang pernah membacanya. Jangan dikembalikan tanpa ada yang memakainya.
 export function StepProfile({ formData, onChange, loading, error, onSubmit }) {
   return (
     <div className="step-container">
@@ -89,7 +94,7 @@ export function StepProfile({ formData, onChange, loading, error, onSubmit }) {
       <ErrorAlert message={error} />
       <form onSubmit={onSubmit}>
         <div className="form-group">
-          <label>Nama Anda *</label>
+          <label>Nama Lengkap *</label>
           <input type="text" name="nama" value={formData.nama} onChange={onChange}
             placeholder="Masukkan nama lengkap" required autoFocus disabled={loading} />
         </div>
@@ -102,16 +107,6 @@ export function StepProfile({ formData, onChange, loading, error, onSubmit }) {
           <label>Bergerak di bidang apa?</label>
           <input type="text" name="bidang" value={formData.bidang} onChange={onChange}
             placeholder="Contoh: F&B, Jasa, Manufaktur" disabled={loading} />
-        </div>
-        <div className="form-group">
-          <label>Pilihan Solusi</label>
-          <select name="solusi" value={formData.solusi} onChange={onChange} disabled={loading}>
-            <option value="">Pilih modul yang diminati</option>
-            <option value="ERP">Full ERP (All-in-One)</option>
-            <option value="Finance">Finance (Keuangan)</option>
-            <option value="POS">POS (Sistem Kasir)</option>
-            <option value="WMS">WMS (Warehouse Management)</option>
-          </select>
         </div>
         <div className="form-group">
           <label>Jumlah Karyawan</label>
