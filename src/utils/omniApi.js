@@ -152,6 +152,12 @@ export const subscriptionApi = {
 export const adminApi = {
   subscribers: () => api.get('/api/admin/subscribers').then(unwrap),
   leads:       () => api.get('/api/admin/leads').then(unwrap),
+  // Penampungan pelanggan: permintaan pendaftaran yang menunggu keputusan.
+  // Sejak pendaftaran swalayan ditutup, `tinjauPendaftaran` dengan aksi
+  // 'setujui' adalah SATU-SATUNYA cara pelanggan baru lahir.
+  pendaftaran: () => api.get('/api/admin/registrations').then(unwrap),
+  tinjauPendaftaran: (id, aksi, catatan) =>
+    api.post(`/api/admin/registrations/${id}/review`, { action: aksi, catatan }).then(unwrap),
 }
 
 /** True bila error berasal dari gate langganan (trial/langganan habis). */

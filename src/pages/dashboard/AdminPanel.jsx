@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Users, Search, MessageCircle, RefreshCw, ShieldCheck } from "lucide-react";
 import { adminApi } from "../../utils/omniApi";
 import AdminLeads from "./AdminLeads";
+import AdminPendaftaran from "./AdminPendaftaran";
 import "./AdminPanel.css";
 
 // wa.me link dari nomor Indonesia (0812… → 62812…).
@@ -25,7 +26,10 @@ const FILTERS = [
 ];
 
 export default function AdminPanel() {
-  const [tab, setTab]     = useState("subscribers"); // 'subscribers' | 'leads'
+  // Dibuka di "Permintaan": sejak pendaftaran swalayan ditutup, itulah satu-
+  // satunya kolom yang menuntut tindakan pemilik — pelanggan baru tidak lahir
+  // sampai seseorang menekan Setujui di sana.
+  const [tab, setTab]     = useState("pendaftaran"); // 'pendaftaran' | 'subscribers' | 'leads'
   const [data, setData]   = useState(null);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
@@ -62,7 +66,7 @@ export default function AdminPanel() {
       <div className="adm-head">
         <div>
           <h1><ShieldCheck size={20} /> Panel Admin</h1>
-          <p>Kontrol pelanggan berlangganan dan lead registrasi yang perlu ditindaklanjuti.</p>
+          <p>Setujui calon pelanggan, lalu kontrol yang sudah berlangganan.</p>
         </div>
         {tab === "subscribers" && (
           <button className="adm-refresh" onClick={load} disabled={busy}>
@@ -72,10 +76,12 @@ export default function AdminPanel() {
       </div>
 
       <div className="adm-tabs">
+        <button className={tab === "pendaftaran" ? "active" : ""} onClick={() => setTab("pendaftaran")}>Permintaan Masuk</button>
         <button className={tab === "subscribers" ? "active" : ""} onClick={() => setTab("subscribers")}>Pelanggan</button>
         <button className={tab === "leads" ? "active" : ""} onClick={() => setTab("leads")}>Registrasi (Lead)</button>
       </div>
 
+      {tab === "pendaftaran" && <AdminPendaftaran />}
       {tab === "leads" && <AdminLeads />}
 
       {tab === "subscribers" && <>

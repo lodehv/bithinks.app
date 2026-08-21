@@ -6,7 +6,7 @@ import { ArrowLeft, RefreshCw, BarChart3, ClipboardList, ShieldCheck } from "luc
 import { useAppContext } from "../context/AppContext";
 import api, { getApiErrorMessage } from "../utils/api";
 import { WaHelperButton } from "./register/RegisterShared";
-import { StepCredentials, StepOtp, StepProfile } from "./register/RegisterSteps";
+import { StepCredentials, StepOtp, StepProfile, StepTerkirim } from "./register/RegisterSteps";
 
 // Validasi password sesuai aturan backend — dicek di langkah 1 agar error muncul
 // tepat di kolom password, bukan baru ketahuan di langkah profil terakhir.
@@ -19,7 +19,9 @@ const validatePassword = (pw) => {
 };
 
 const Register = () => {
-  const { t, login } = useAppContext();
+  // `login` sengaja TIDAK diambil lagi: halaman ini tidak lagi melahirkan sesi.
+  // Yang lahir dari sini cuma permintaan; akunnya dibuat pemilik lewat panel.
+  const { t } = useAppContext();
 
   const [step, setStep]       = useState(1);
   const [loading, setLoading] = useState(false);
@@ -36,7 +38,7 @@ const Register = () => {
 
   // Step 3
   const [formData, setFormData] = useState({
-    nama: "", namaUsaha: "", bidang: "", solusi: "", jumlahKaryawan: "",
+    nama: "", namaUsaha: "", bidang: "", jumlahKaryawan: "",
   });
 
   const handleChange = (e) =>
@@ -86,7 +88,12 @@ const Register = () => {
     }
   };
 
-  // ─── Step 3: Submit Registrasi ──────────────────────────────────────────────
+  // ─── Step 3: Kirim permintaan ───────────────────────────────────────────────
+  //
+  // BERUBAH 21 Agustus 2026. Dulu balasan endpoint ini berisi token dan tenant,
+  // lalu halaman ini langsung membuka dashboard. Sekarang yang kembali cuma
+  // status `menunggu` — tidak ada sesi, tidak ada tenant — jadi yang ditampilkan
+  // layar "sedang ditinjau", bukan dashboard yang belum ada.
   const handleFinalSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -96,22 +103,19 @@ const Register = () => {
     }
     setLoading(true);
     try {
-      const res = await api.post("/api/auth/register", {
+      await api.post("/api/auth/register", {
         phone,
         email,
         password,
         verifyToken,
-        name:            formData.nama,
-        companyName:     formData.namaUsaha,
-        industry:        formData.bidang       || undefined,
-        employeeCount:   formData.jumlahKaryawan || undefined,
-        preferredModule: formData.solusi        || undefined,
+        name:          formData.nama,
+        companyName:   formData.namaUsaha,
+        industry:      formData.bidang         || undefined,
+        employeeCount: formData.jumlahKaryawan || undefined,
       });
-      const { accessToken, refreshToken, user, tenant } = res.data.data;
-      login({ accessToken, refreshToken, user, tenant });
-      window.location.href = "/dashboard";
+      setStep(4);
     } catch (err) {
-      setError(getApiErrorMessage(err, "Pendaftaran gagal. Coba lagi."));
+      setError(getApiErrorMessage(err, "Permintaan gagal dikirim. Coba lagi."));
     } finally {
       setLoading(false);
     }
@@ -180,7 +184,7 @@ const Register = () => {
             <a href="/" className="back-home">
               <ArrowLeft size={16} /> Kembali ke Beranda
             </a>
-          ) : (
+          ) : step === 4 ? null : (
             <button
               className="back-home"
               onClick={goBack}
@@ -218,7 +222,9 @@ const Register = () => {
             />
           )}
 
-          {step !== 3 && (
+          {step === 4 && <StepTerkirim email={email} />}
+
+          {step !== 3 && step !== 4 && (
             <WaHelperButton helpText={t.register.helpText} waHelp={t.register.waHelp} />
           )}
 

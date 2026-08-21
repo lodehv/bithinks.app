@@ -146,8 +146,8 @@ export const translations = {
       madeWith: "Dibuat pake 💛 buat pebisnis keren."
     },
     register: {
-      title: "Buat Akun Bithinks",
-      subtitle: "Lengkapi data awal untuk memverifikasi akun Anda.",
+      title: "Ajukan Akses Bithinks",
+      subtitle: "Isi data awal Anda. Permintaan ini ditinjau dulu sebelum akun dibuat.",
       phoneLabel: "Nomor WhatsApp / HP *",
       emailLabel: "Alamat Email *",
       passLabel: "Password *",
@@ -161,9 +161,8 @@ export const translations = {
       nameLabel: "Nama Anda *",
       businessLabel: "Nama Usaha *",
       fieldLabel: "Bergerak di bidang apa? *",
-      solutionLabel: "Pilihan Solusi (ERP) *",
       employeeLabel: "Jumlah Karyawan *",
-      finishBtn: "Selesaikan Pendaftaran",
+      finishBtn: "Ajukan Akses",
       helpText: "Butuh Bantuan?",
       waHelp: "Bantuan WhatsApp",
       backHome: "Kembali ke Beranda"
@@ -334,8 +333,8 @@ export const translations = {
       madeWith: "Made with 💛 for awesome business owners."
     },
     register: {
-      title: "Create Bithinks Account",
-      subtitle: "Complete initial data to verify your account.",
+      title: "Request Bithinks Access",
+      subtitle: "Fill in your details. Your request is reviewed before an account is created.",
       phoneLabel: "Phone / WhatsApp Number *",
       emailLabel: "Email Address *",
       passLabel: "Password *",
@@ -349,9 +348,8 @@ export const translations = {
       nameLabel: "Your Name *",
       businessLabel: "Business Name *",
       fieldLabel: "Business Industry? *",
-      solutionLabel: "Solution Preference (ERP) *",
       employeeLabel: "Number of Employees *",
-      finishBtn: "Complete Registration",
+      finishBtn: "Request Access",
       helpText: "Need Help?",
       waHelp: "WhatsApp Support",
       backHome: "Back to Home"

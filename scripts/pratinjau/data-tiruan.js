@@ -45,3 +45,33 @@ export const statsTiruan = {
 }
 
 export const tokoTiruan = per_toko.map((t) => ({ id: t.storeId, name: t.storeName, channel: t.channel }))
+
+// ─── Penampungan pelanggan ───────────────────────────────────────────────────
+// Sengaja berisi isi terburuk yang wajar: nama usaha panjang, catatan penolakan
+// panjang, email panjang, dan satu baris yang emailnya BELUM terbukti lewat OTP
+// — semuanya hal yang bisa mendorong tabel keluar layar kalau tata letaknya
+// salah. TIDAK ada data pelanggan sungguhan di sini.
+const permintaan = [
+  ['menunggu', 'Sugeng Riyadi Tampubolon', 'Bithinks Grosir Nusantara Sejahtera Abadi',
+   'sugeng.riyadi.tampubolon@bithinksdigital.co.id', '6281234567890', 'Perdagangan Besar', '11-50', true],
+  ['menunggu', 'Ayu Lestari', 'Toko Ayu Kosmetik', 'ayu@example.com', '6281200001111', 'F&B', '1-10', true],
+  ['menunggu', 'Bagas Prakoso', 'Prakoso Elektronik', 'bagas@example.com', '6281200002222', null, null, false],
+  ['disetujui', 'Dewi Anggraini', 'Dewi Fashion Store', 'dewi@example.com', '6281200003333', 'Fashion', '1-10', true],
+  ['ditolak', 'Rudi Hartono', 'PT Coba Coba Saja', 'rudi@example.com', '6281200004444', 'Jasa', '51-200', true],
+]
+
+export const pendaftaranTiruan = {
+  summary: { total: 5, menunggu: 3, disetujui: 1, ditolak: 1 },
+  rows: permintaan.map(([status, name, companyName, email, phone, industry, employeeCount, terverifikasi], i) => ({
+    id: `p${i}`, status, name, companyName, email, phone, industry, employeeCount,
+    emailTerverifikasi: terverifikasi,
+    catatan: status === 'ditolak'
+      ? 'Nama usahanya tidak bisa ditemukan di mana pun dan nomornya tidak aktif saat dihubungi.'
+      : null,
+    reviewedAt: status === 'menunggu' ? null : '2026-08-20T04:00:00.000Z',
+    reviewedByName: status === 'menunggu' ? null : 'Demo Bithinks',
+    tenantId: status === 'disetujui' ? 't-demo' : null,
+    ipAddress: '103.146.22.10',
+    createdAt: `2026-08-2${i}T02:15:00.000Z`,
+  })),
+}

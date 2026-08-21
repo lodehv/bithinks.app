@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, MailCheck } from "lucide-react";
 import { ErrorAlert, SubmitButton } from "./RegisterShared";
 
 // ─── Step 1: Kredensial + kirim OTP ke email ─────────────────────────────────
@@ -81,11 +81,22 @@ export function StepOtp({ email, otp, onOtpChange, loading, error, onSubmit }) {
 }
 
 // ─── Step 3: Profil Bisnis ────────────────────────────────────────────────────
+//
+// Kolom "Pilihan Solusi" DIHAPUS 21 Agustus 2026 atas keputusan pemilik. Ia
+// menanyakan sesuatu kepada calon pelanggan lalu membuang jawabannya: nilainya
+// dikirim sebagai `preferredModule` dan tidak ada satu pun tempat di backend
+// yang pernah membacanya. Jangan dikembalikan tanpa ada yang memakainya.
+//
+// Empat kolom yang tersisa justru sebaliknya — merekalah yang dibaca pemilik
+// saat memutuskan menyetujui permintaan atau tidak.
 export function StepProfile({ formData, onChange, loading, error, onSubmit }) {
   return (
     <div className="step-container">
       <h2>Lengkapi Profil Usaha</h2>
-      <p className="subtitle">Beritahu kami sedikit tentang bisnis Anda.</p>
+      <p className="subtitle">
+        Beritahu kami sedikit tentang bisnis Anda. Inilah yang dibaca tim kami saat
+        meninjau permintaan Anda.
+      </p>
       <ErrorAlert message={error} />
       <form onSubmit={onSubmit}>
         <div className="form-group">
@@ -104,16 +115,6 @@ export function StepProfile({ formData, onChange, loading, error, onSubmit }) {
             placeholder="Contoh: F&B, Jasa, Manufaktur" disabled={loading} />
         </div>
         <div className="form-group">
-          <label>Pilihan Solusi</label>
-          <select name="solusi" value={formData.solusi} onChange={onChange} disabled={loading}>
-            <option value="">Pilih modul yang diminati</option>
-            <option value="ERP">Full ERP (All-in-One)</option>
-            <option value="Finance">Finance (Keuangan)</option>
-            <option value="POS">POS (Sistem Kasir)</option>
-            <option value="WMS">WMS (Warehouse Management)</option>
-          </select>
-        </div>
-        <div className="form-group">
           <label>Jumlah Karyawan</label>
           <select name="jumlahKaryawan" value={formData.jumlahKaryawan} onChange={onChange} disabled={loading}>
             <option value="">Estimasi jumlah karyawan</option>
@@ -124,9 +125,50 @@ export function StepProfile({ formData, onChange, loading, error, onSubmit }) {
           </select>
         </div>
         <div className="form-actions">
-          <SubmitButton loading={loading} label="Selesaikan Pendaftaran" loadingLabel="Membuat akun..." />
+          <SubmitButton loading={loading} label="Ajukan Akses" loadingLabel="Mengirim permintaan..." />
         </div>
       </form>
+    </div>
+  );
+}
+
+// ─── Step 4: Permintaan terkirim ──────────────────────────────────────────────
+//
+// Layar ini yang menggantikan "langsung masuk dashboard". Sengaja TIDAK ada
+// tombol menuju dashboard: dashboardnya belum ada, dan mengarahkan orang ke
+// sana cuma memindahkan kekecewaannya satu klik lebih jauh.
+//
+// Yang ditulis di sini apa adanya: permintaannya diterima, keputusannya di
+// tangan orang, dan kabarnya lewat email yang barusan ia buktikan miliknya.
+export function StepTerkirim({ email }) {
+  return (
+    <div className="step-container">
+      <div style={{
+        width: 56, height: 56, borderRadius: "50%", background: "#EEF2FF",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        color: "#4F46E5", marginBottom: 20,
+      }}>
+        <MailCheck size={28} />
+      </div>
+
+      <h2>Permintaan Anda sudah masuk</h2>
+      <p className="subtitle">
+        Kami menerima pengajuan untuk <strong>{email}</strong> dan sedang meninjaunya.
+      </p>
+
+      <div style={{
+        background: "#F8FAFC", border: "1px solid #E2E8F0", borderRadius: 10,
+        padding: "16px 18px", fontSize: "0.875rem", color: "#475569", lineHeight: 1.6,
+      }}>
+        Akun Anda dibuat setelah permintaan ini disetujui — belum sekarang. Begitu ada
+        keputusan, kabarnya kami kirim ke alamat email di atas.
+      </div>
+
+      <div className="form-actions" style={{ marginTop: 24 }}>
+        <a href="/" className="back-home" style={{ marginTop: 0 }}>
+          Kembali ke Beranda
+        </a>
+      </div>
     </div>
   );
 }

@@ -20,7 +20,8 @@ const akar = resolve(here, '..')
 const keluar = resolve(akar, 'pratinjau-keluaran')
 mkdirSync(keluar, { recursive: true })
 
-const LEBAR = Number(process.env.LEBAR ?? 1440)  // satu lebar per pemanggilan
+const LEBAR = Number(process.env.LEBAR ?? 1440)      // satu lebar per pemanggilan
+const HALAMAN = process.env.HALAMAN ?? 'laporan'     // satu halaman per pemanggilan
 const CHROME = (() => {
   if (process.env.CHROME) return process.env.CHROME
   const calon = [
@@ -42,8 +43,8 @@ const vite = await createServer({
 })
 await vite.listen()
 
-const url = `http://localhost:5199/scripts/pratinjau/index.html`
-const berkas = resolve(keluar, `laporan-${LEBAR}.png`)
+const url = `http://localhost:5199/scripts/pratinjau/index.html?halaman=${HALAMAN}`
+const berkas = resolve(keluar, `${HALAMAN}-${LEBAR}.png`)
 
 const dom = await new Promise((selesai, gagal) => {
   const p = spawn(CHROME, [
@@ -67,9 +68,9 @@ const luber = Number(cocok[1])
 console.log(berkas)
 // Ambang 1px, bukan 0: pembulatan sub-piksel kadang menyisakan selisih sepele.
 if (luber > 1) {
-  console.error(`GAGAL: halaman melebar ${luber}px melewati layar ${LEBAR}px.`)
+  console.error(`GAGAL: ${HALAMAN} melebar ${luber}px melewati layar ${LEBAR}px.`)
   const biang = dom.match(/BIANG=(\[.*?\])/)
   if (biang) for (const b of JSON.parse(biang[1].replace(/&quot;/g, '"'))) console.error('   ', b)
   process.exit(1)
 }
-console.log(`OK: tidak melebar di lebar ${LEBAR}px.`)
+console.log(`OK: ${HALAMAN} tidak melebar di lebar ${LEBAR}px.`)

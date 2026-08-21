@@ -13,16 +13,24 @@ import { dirname, resolve } from 'node:path'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const LEBAR = [1440, 1280, 1024]
+// Halaman yang dipotret. Tambahkan begitu ada layar baru yang perlu DILIHAT,
+// bukan sekadar di-build — build hijau tidak pernah membuktikan apa pun soal
+// tampilan.
+const HALAMAN = ['laporan', 'pendaftaran', 'register', 'register-profil', 'register-terkirim']
 let gagal = 0
+let total = 0
 
-for (const w of LEBAR) {
-  const kode = await new Promise((s) => {
-    const p = spawn(process.execPath, [resolve(here, 'potret.mjs')],
-      { stdio: 'inherit', env: { ...process.env, LEBAR: String(w) } })
-    p.on('exit', s)
-  })
-  if (kode !== 0) gagal++
+for (const halaman of HALAMAN) {
+  for (const w of LEBAR) {
+    total++
+    const kode = await new Promise((s) => {
+      const p = spawn(process.execPath, [resolve(here, 'potret.mjs')],
+        { stdio: 'inherit', env: { ...process.env, LEBAR: String(w), HALAMAN: halaman } })
+      p.on('exit', s)
+    })
+    if (kode !== 0) gagal++
+  }
 }
 
-if (gagal) { console.error(`\n${gagal} dari ${LEBAR.length} lebar bermasalah.`); process.exit(1) }
-console.log(`\n${LEBAR.length} lebar bersih.`)
+if (gagal) { console.error(`\n${gagal} dari ${total} potret bermasalah.`); process.exit(1) }
+console.log(`\n${total} potret bersih.`)
