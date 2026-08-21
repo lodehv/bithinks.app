@@ -36,3 +36,4 @@ dist-ssr
 # localhost — artinya situs produksi tidak bisa menghubungi API sama sekali.
 # Isinya aman: semua variabel berawalan VITE_ ikut masuk ke bundle browser,
 # jadi memang terbaca publik. JANGAN PERNAH menaruh rahasia di sana.
+pratinjau-keluaran/

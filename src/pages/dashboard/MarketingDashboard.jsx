@@ -181,6 +181,27 @@ export default function MarketingDashboard() {
     }).format(val);
   };
 
+  // Versi ringkas untuk lubang donat, yang lebarnya cuma ~79px. "Rp
+  // 1.414.149.566" butuh dua kali itu, jadi selama ini ia dipotong jadi
+  // "Rp 1.567.173...." — kehilangan justru digit yang menentukan besarannya.
+  // Angka utuhnya tetap ada di kartu KPI di atas dan di baris TOTAL RINGKASAN,
+  // dan ikut sebagai `title` saat kursor berhenti di atasnya.
+  const formatRupiahRingkas = (val) => {
+    const n = Number(val) || 0;
+    const tanda = n < 0 ? "-" : "";
+    const a = Math.abs(n);
+    const [bagi, satuan] =
+      a >= 1e12 ? [1e12, " T"] :
+      a >= 1e9  ? [1e9,  " M"] :
+      a >= 1e6  ? [1e6,  " jt"] :
+      a >= 1e3  ? [1e3,  " rb"] : [1, ""];
+    const angka = a / bagi;
+    const desimal = satuan === "" ? 0 : angka < 10 ? 2 : angka < 100 ? 1 : 0;
+    return `${tanda}Rp ${angka.toLocaleString("id-ID", {
+      minimumFractionDigits: desimal, maximumFractionDigits: desimal,
+    })}${satuan}`;
+  };
+
   const formatShortRupiah = (val) => {
     if (val >= 1000000000) return `Rp ${(val / 1000000000).toFixed(1)}M`;
     if (val >= 1000000) return `Rp ${(val / 1000000).toFixed(1)}Jt`;
@@ -847,8 +868,17 @@ export default function MarketingDashboard() {
               
               {/* Centered text */}
               <div className="donut-center-label">
-                <span className="donut-label-title">TOTAL OMSET</span>
-                <span className="donut-label-value">{formatRupiah(totalOmsetKotor)}</span>
+                {/* Dasarnya HARUS `dasarOmset`, bukan omset kotor. Seluruh
+                    irisan cincin di sekeliling angka ini dibagi terhadap omset
+                    perkiraan; kalau tengahnya menyebut omset kotor, cincinnya
+                    mengaku membagi 1,57 M padahal ia membagi 1,41 M — dan
+                    persentase di sebelahnya tidak akan pernah cocok kalau ada
+                    yang menghitung ulang. Keputusan pemilik toko 20 Agu 2026:
+                    satu dasar saja, omset perkiraan. */}
+                <span className="donut-label-title">OMSET PERKIRAAN</span>
+                <span className="donut-label-value" title={formatRupiah(dasarOmset)}>
+                  {formatRupiahRingkas(dasarOmset)}
+                </span>
               </div>
             </div>
 

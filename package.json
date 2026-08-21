@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "periksa:render": "node scripts/render-halaman.mjs",
+    "periksa:tampilan": "node scripts/periksa-tampilan.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

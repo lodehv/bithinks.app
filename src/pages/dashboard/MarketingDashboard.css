@@ -416,7 +416,7 @@
 }
 
 .marketing-table th {
-  padding: 14px 16px;
+  padding: 14px 12px;
   font-size: 11px;
   font-weight: 800;
   color: #6B7280;
@@ -426,7 +426,7 @@
 }
 
 .marketing-table td {
-  padding: 16px;
+  padding: 14px 12px;
   font-size: 13px;
   color: #4B5563;
   border-bottom: 1px solid #F3F4F6;
@@ -772,7 +772,24 @@
 /* Table & Chart Row Grid */
 .marketing-bottom-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  /* `minmax(0, …)`, BUKAN `2fr 1fr` — bedanya menentukan halaman ini rusak
+     atau tidak. Item grid bawaannya `min-width: auto`, artinya ia menolak
+     menyusut lebih sempit dari isinya. Tabel di sebelah kiri punya 9 kolom
+     ber-`white-space: nowrap`, jadi lebar minimumnya ratusan piksel lebih
+     besar dari jatahnya — dan yang mengalah bukan tabelnya, melainkan
+     GRID-nya: ia melebar melewati layar dan mendorong kartu donat keluar.
+     `minmax(0, …)` mencabut lantai itu, sehingga kelebaran tabel ditangani
+     oleh `.table-responsive { overflow-x: auto }` di dalam kartunya sendiri.
+
+     Cacat ini sudah ada sejak lama tapi tidak pernah terlihat, karena
+     tabelnya SELALU kosong — `setMarketingData` tidak pernah dipanggil.
+     Begitu 20 Agustus 2026 tabelnya benar-benar terisi, ia langsung muncul. */
+  /* SATU kolom, bukan dua. Diukur di lebar 1440: jatah `2fr` cuma menyisakan
+     ~780px untuk tabel yang butuh ~1260px, jadi enam dari sembilan kolom —
+     termasuk Net Profit dan Margin, dua yang paling dicari — bersembunyi di
+     balik scroll mendatar. Berdampingan memang tidak muat; ditumpuk, semuanya
+     terlihat sekaligus tanpa menggeser apa pun. */
+  grid-template-columns: minmax(0, 1fr);
   gap: 24px;
   align-items: start;
 }
@@ -816,6 +833,24 @@
   gap: 24px;
 }
 
+/* Kartu donat sekarang selebar halaman. Ditumpuk ke bawah ia jadi kolom kurus
+   di tengah lautan kosong, jadi isinya dibaringkan: donat di kiri, keterangan
+   memenuhi sisanya. */
+@media (min-width: 768px) {
+  .marketing-bottom-grid .chart-card-body {
+    flex-direction: row;
+    align-items: center;
+    gap: 32px;
+  }
+  .marketing-bottom-grid .donut-chart-container { flex-shrink: 0; }
+  .marketing-bottom-grid .donut-legend-list {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+  }
+}
+
 /* Donut Chart Layout */
 .donut-chart-container {
   position: relative;
@@ -838,12 +873,15 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  pointer-events: none;
-  width: 100px;
+  /* Lubang donat: jari-jari 40 − tebal 10/2 = 35 satuan viewBox, dirender
+     160px ⇒ jari-jari 56px. Kotak terlebar yang muat di dalamnya selebar
+     2×56/√2 ≈ 79px — bukan 100px seperti sebelumnya, yang membuat tulisannya
+     menabrak cincin sebelum sempat terbaca. */
+  width: 78px;
 }
 
 .donut-label-title {
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 800;
   color: #9CA3AF;
   letter-spacing: 0.5px;
@@ -851,13 +889,11 @@
 }
 
 .donut-label-value {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 800;
   color: #111827;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100px;
+  max-width: 78px;
 }
 
 /* Legend items */
@@ -904,7 +940,11 @@
 /* Responsive updates for grid */
 @media (max-width: 1024px) {
   .marketing-bottom-grid {
-    grid-template-columns: 1fr;
+    /* `minmax(0, 1fr)`, bukan `1fr` — jebakan yang sama persis dengan aturan
+       utamanya di atas. `1fr` polos masih menyisakan lantai `min-width: auto`,
+       jadi tabel sembilan kolom tetap sanggup melebarkan seluruh halaman.
+       Diukur: di layar 1024px ia meluber 87px, di 390px meluber 595px. */
+    grid-template-columns: minmax(0, 1fr);
     gap: 20px;
   }
 }
