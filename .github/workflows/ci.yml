@@ -58,6 +58,26 @@ jobs:
       - name: Build
         run: npm run build
 
+      # ── Dua langkah di bawah ini ada karena build TIDAK CUKUP. ──
+      #
+      # Build cuma membuktikan kodenya bisa DITERJEMAHKAN. Ia tidak pernah
+      # membuka halamannya. Dua kali berturut-turut pada 20 Agustus 2026
+      # sesuatu lolos dengan build hijau dan baru ketahuan dari mata pemilik
+      # toko: halaman Laporan Penjualan mati jadi layar putih, lalu tata
+      # letaknya melebar keluar layar.
+
+      # Benar-benar menjalankan komponen halaman di Node. Menangkap kesalahan
+      # yang baru lahir saat dieksekusi — zona mati temporal, null yang tidak
+      # dijaga, impor yang meledak. Tanpa jaringan, tanpa kredensial.
+      - name: Render halaman
+        run: npm run periksa:render
+
+      # Membuka halaman di Chrome dengan data tiruan dan mengukur apakah ia
+      # melebar melewati layar, di 1440/1280/1024. Kalau meluber, ia menyebut
+      # elemen mana yang lewat.
+      - name: Periksa tampilan
+        run: npm run periksa:tampilan
+
   rahasia:
     name: Pemeriksaan rahasia
     runs-on: ubuntu-latest
