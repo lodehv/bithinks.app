@@ -612,94 +612,11 @@ export default function MarketingDashboard() {
 
       {/* ─── Platform Breakdown & Profit Chart Section ─── */}
       <div className="marketing-bottom-grid">
-        <div className="marketing-table-card">
-          <div className="table-card-header">
-            <div className="header-title-group">
-              <BarChart3 size={16} className="text-purple" />
-              <h3>Rincian Kinerja Penjualan Platform</h3>
-            </div>
-            <div className="header-actions">
-              <HelpCircle size={14} className="text-gray" title="Metrik rincian dihitung otomatis dari log transaksi sinkronisasi toko." />
-            </div>
-          </div>
-
-          <div className="table-responsive">
-            <table className="marketing-table">
-              <thead>
-                <tr>
-                  <th>Platform</th>
-                  <th>Nama Toko</th>
-                  <th className="text-right">Omset</th>
-                  <th className="text-right">COGS (HPP)</th>
-                  <th className="text-right">Beban Platform</th>
-                  <th className="text-right">Retur</th>
-                  <th className="text-right">Biaya Iklan</th>
-                  <th className="text-right">Net Profit</th>
-                  <th className="text-right">Margin (%)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {marketingData.length === 0 ? (
-                  <tr>
-                    <td colSpan="9" className="table-empty-row">
-                      <div className="empty-state-container">
-                        <BarChart3 size={32} className="empty-icon text-gray" />
-                        <h4>Tidak Ada Data Transaksi</h4>
-                        <p>
-                          Filter aktif tidak menghasilkan data. Silakan tentukan rentang tanggal yang sesuai, centang platform/toko, atau hubungkan akun API toko Anda untuk menarik data transaksi riil.
-                        </p>
-                      </div>
-                    </td>
-                  </tr>
-                ) : (
-                  /* Laba dan margin datang JADI dari server, tidak dihitung
-                     ulang di sini. Dua perhitungan untuk hal yang sama pasti
-                     berbeda suatu hari, dan yang di server itulah yang juga
-                     dipakai baris total di bawah. */
-                  marketingData.map((row, idx) => (
-                    <tr key={idx}>
-                      <td className="font-semibold text-black text-capitalize">{row.channel}</td>
-                      <td>{row.storeName}</td>
-                      <td className="text-right">{formatRupiah(row.omset)}</td>
-                      <td className="text-right">{formatRupiah(row.cogs)}</td>
-                      <td className="text-right">{formatRupiah(row.fees)}</td>
-                      <td className="text-right text-purple font-semibold">{formatRupiah(row.retur || 0)}</td>
-                      {/* Biaya iklan per toko belum diisi — keputusan pemilik
-                          toko 20 Agu 2026: kolomnya disiapkan, angkanya menyusul
-                          per toko. TIDAK dibagi rata dari satu angka global,
-                          karena hasil bagi rata bukan biaya iklan toko itu. */}
-                      <td className="text-right text-gray" title="Belum diisi per toko">—</td>
-                      <td className="text-right font-semibold text-black">{formatRupiah(row.netProfit)}</td>
-                      <td className="text-right font-semibold text-purple">{(row.margin ?? 0).toFixed(1)}%</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-              
-              {/* Show summary totals row only when data exists */}
-              {marketingData.length > 0 && (
-                <tfoot>
-                  <tr className="summary-total-row">
-                    <td colSpan="2" className="font-bold text-black text-left">TOTAL RINGKASAN</td>
-                    {/* Omset PERKIRAAN, bukan kotor — supaya jumlah baris di
-                        atas benar-benar sama dengan angka ini. Sebelumnya baris
-                        memakai satu dasar dan totalnya memakai dasar lain, jadi
-                        siapa pun yang menjumlahkan sendiri akan menemukan
-                        selisih yang tidak bisa dijelaskan. */}
-                    <td className="text-right font-bold text-black">{formatRupiah(totalOmsetPerkiraan)}</td>
-                    <td className="text-right font-bold text-black">{formatRupiah(totalCogs)}</td>
-                    <td className="text-right font-bold text-black">{formatRupiah(totalFees)}</td>
-                    <td className="text-right font-bold text-black">{formatRupiah(totalRetur)}</td>
-                    <td className="text-right font-bold text-gray">{formatRupiah(adSpend)}</td>
-                    <td className="text-right font-bold text-purple">{formatRupiah(totalProfit)}</td>
-                    <td className="text-right font-bold text-purple">{marginPercent.toFixed(1)}%</td>
-                  </tr>
-                </tfoot>
-              )}
-            </table>
-          </div>
-        </div>
-
+        {/* Donat DULU, tabel menyusul — permintaan pemilik toko 21 Agu 2026.
+            Ringkasan di atas, rinciannya di bawah: pertanyaan pertama selalu
+            "sehat atau tidak", baru sesudahnya "toko mana". Urutan di sini
+            adalah urutan DOM, jadi pembaca layar dan pengguna keyboard ikut
+            mendapat urutan yang sama. */}
         {/* ─── Donut Chart Card ─── */}
         <div className="marketing-chart-card">
           <div className="chart-card-header">
@@ -934,6 +851,94 @@ export default function MarketingDashboard() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        <div className="marketing-table-card">
+          <div className="table-card-header">
+            <div className="header-title-group">
+              <BarChart3 size={16} className="text-purple" />
+              <h3>Rincian Kinerja Penjualan Platform</h3>
+            </div>
+            <div className="header-actions">
+              <HelpCircle size={14} className="text-gray" title="Metrik rincian dihitung otomatis dari log transaksi sinkronisasi toko." />
+            </div>
+          </div>
+
+          <div className="table-responsive">
+            <table className="marketing-table">
+              <thead>
+                <tr>
+                  <th>Platform</th>
+                  <th>Nama Toko</th>
+                  <th className="text-right">Omset</th>
+                  <th className="text-right">COGS (HPP)</th>
+                  <th className="text-right">Beban Platform</th>
+                  <th className="text-right">Retur</th>
+                  <th className="text-right">Biaya Iklan</th>
+                  <th className="text-right">Net Profit</th>
+                  <th className="text-right">Margin (%)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {marketingData.length === 0 ? (
+                  <tr>
+                    <td colSpan="9" className="table-empty-row">
+                      <div className="empty-state-container">
+                        <BarChart3 size={32} className="empty-icon text-gray" />
+                        <h4>Tidak Ada Data Transaksi</h4>
+                        <p>
+                          Filter aktif tidak menghasilkan data. Silakan tentukan rentang tanggal yang sesuai, centang platform/toko, atau hubungkan akun API toko Anda untuk menarik data transaksi riil.
+                        </p>
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  /* Laba dan margin datang JADI dari server, tidak dihitung
+                     ulang di sini. Dua perhitungan untuk hal yang sama pasti
+                     berbeda suatu hari, dan yang di server itulah yang juga
+                     dipakai baris total di bawah. */
+                  marketingData.map((row, idx) => (
+                    <tr key={idx}>
+                      <td className="font-semibold text-black text-capitalize">{row.channel}</td>
+                      <td>{row.storeName}</td>
+                      <td className="text-right">{formatRupiah(row.omset)}</td>
+                      <td className="text-right">{formatRupiah(row.cogs)}</td>
+                      <td className="text-right">{formatRupiah(row.fees)}</td>
+                      <td className="text-right text-purple font-semibold">{formatRupiah(row.retur || 0)}</td>
+                      {/* Biaya iklan per toko belum diisi — keputusan pemilik
+                          toko 20 Agu 2026: kolomnya disiapkan, angkanya menyusul
+                          per toko. TIDAK dibagi rata dari satu angka global,
+                          karena hasil bagi rata bukan biaya iklan toko itu. */}
+                      <td className="text-right text-gray" title="Belum diisi per toko">—</td>
+                      <td className="text-right font-semibold text-black">{formatRupiah(row.netProfit)}</td>
+                      <td className="text-right font-semibold text-purple">{(row.margin ?? 0).toFixed(1)}%</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+              
+              {/* Show summary totals row only when data exists */}
+              {marketingData.length > 0 && (
+                <tfoot>
+                  <tr className="summary-total-row">
+                    <td colSpan="2" className="font-bold text-black text-left">TOTAL RINGKASAN</td>
+                    {/* Omset PERKIRAAN, bukan kotor — supaya jumlah baris di
+                        atas benar-benar sama dengan angka ini. Sebelumnya baris
+                        memakai satu dasar dan totalnya memakai dasar lain, jadi
+                        siapa pun yang menjumlahkan sendiri akan menemukan
+                        selisih yang tidak bisa dijelaskan. */}
+                    <td className="text-right font-bold text-black">{formatRupiah(totalOmsetPerkiraan)}</td>
+                    <td className="text-right font-bold text-black">{formatRupiah(totalCogs)}</td>
+                    <td className="text-right font-bold text-black">{formatRupiah(totalFees)}</td>
+                    <td className="text-right font-bold text-black">{formatRupiah(totalRetur)}</td>
+                    <td className="text-right font-bold text-gray">{formatRupiah(adSpend)}</td>
+                    <td className="text-right font-bold text-purple">{formatRupiah(totalProfit)}</td>
+                    <td className="text-right font-bold text-purple">{marginPercent.toFixed(1)}%</td>
+                  </tr>
+                </tfoot>
+              )}
+            </table>
           </div>
         </div>
       </div>
