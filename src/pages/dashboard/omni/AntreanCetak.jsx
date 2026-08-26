@@ -90,7 +90,16 @@ export default function AntreanCetak() {
         data={data} onSelesai={ambil}
       />
 
-      {memuat ? (
+      {/* SAAT MEMUAT ULANG, ISINYA TIDAK DIKOSONGKAN.
+          Dulu tiap muat ulang mengganti seluruh isi dengan "Memuat antrean…".
+          Akibatnya nyata dan sempat lolos ke produksi: setelah menekan "Atur
+          Pengiriman", antrean dimuat ulang, panel hasilnya IKUT TERBONGKAR,
+          dan laporan "kenapa gagal" hilang sebelum sempat dibaca — pemilik
+          toko melihat tombol yang seolah tidak melakukan apa-apa.
+
+          Layar kosong hanya untuk muatan PERTAMA, saat memang belum ada apa
+          pun untuk ditampilkan. */}
+      {memuat && !data ? (
         <div style={{ color: "#9CA3AF", fontSize: 13, padding: "20px 2px" }}>Memuat antrean…</div>
       ) : galat ? (
         <div style={{ color: "#991B1B", fontSize: 13, padding: "20px 2px" }}>{galat}</div>

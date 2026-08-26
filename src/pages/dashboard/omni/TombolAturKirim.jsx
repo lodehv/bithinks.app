@@ -49,6 +49,15 @@ export default function TombolAturKirim({ jumlah, dari, sampai, onSelesai }) {
     }
   }
 
+  // Dikelompokkan menurut alasannya, urutan kemunculan dipertahankan.
+  const kelompokAlasan = [];
+  for (const r of hasil?.rincian ?? []) {
+    const teks = r.alasan || "Tidak ada keterangan dari Shopee.";
+    const ada = kelompokAlasan.find((k) => k.alasan === teks);
+    if (ada) ada.nomor.push(r.nomorPesanan);
+    else kelompokAlasan.push({ alasan: teks, nomor: [r.nomorPesanan], jadi: r.jadi });
+  }
+
   return (
     <div style={{
       display: "flex", flexDirection: "column", gap: 10,
@@ -95,23 +104,29 @@ export default function TombolAturKirim({ jumlah, dari, sampai, onSelesai }) {
             {hasil.gagal > 0 && ` ${angka(hasil.gagal)} gagal.`}
           </div>
 
-          {/* Pergantian metode DISEBUT, tidak dihaluskan. Barang yang menunggu
-              dijemput padahal harus diantar ke gerai adalah kerugian nyata,
-              dan pemilik toko baru tahu setelah kurirnya tidak datang. */}
-          {hasil.rincian?.length > 0 && (
-            <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 3 }}>
-              {hasil.rincian.map((r) => (
-                <li key={r.nomorPesanan} style={{ color: r.jadi ? "#9A3412" : "#991B1B" }}>
-                  <span style={{ letterSpacing: ".02em" }}>{r.nomorPesanan}</span>
-                  {r.alasan ? ` \u2014 ${r.alasan}` : ""}
-                </li>
-              ))}
-            </ul>
-          )}
+          {/* ALASAN YANG SAMA DITULIS SEKALI.
+              Tiga pesanan yang gagal karena sebab yang sama tidak perlu tiga
+              baris berisi kalimat identik — yang berbeda cuma nomornya.
 
-          <div style={{ color: "#6B7280" }}>
-            Resinya terbit beberapa saat lagi. Muat ulang antrean, lalu cetak.
-          </div>
+              Pergantian metode tetap DISEBUT, tidak dihaluskan: barang yang
+              menunggu dijemput padahal harus diantar ke gerai adalah kerugian
+              nyata, dan pemilik toko baru tahu setelah kurirnya tidak datang. */}
+          {kelompokAlasan.map(({ alasan, nomor, jadi }) => (
+            <div key={alasan} style={{ color: jadi ? "#9A3412" : "#991B1B" }}>
+              <div>{alasan}</div>
+              <div style={{ color: "#6B7280", fontSize: 12.5, letterSpacing: ".02em", marginTop: 2 }}>
+                {nomor.join(" \u00b7 ")}
+              </div>
+            </div>
+          ))}
+
+          {/* Hanya kalau memang ada yang berhasil. Menyuruh orang memuat ulang
+              untuk mencetak sesuatu yang tidak jadi dibuat itu menyesatkan. */}
+          {hasil.diatur > 0 && (
+            <div style={{ color: "#6B7280" }}>
+              Resinya terbit beberapa saat lagi. Muat ulang antrean, lalu cetak.
+            </div>
+          )}
         </div>
       )}
     </div>
