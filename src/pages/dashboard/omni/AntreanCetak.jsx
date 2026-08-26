@@ -136,17 +136,12 @@ export default function AntreanCetak() {
               masalah pesanannya, dan menyuruh pemilik toko pergi ke Seller
               Center mengerjakan hal yang sistem ini seharusnya kerjakan. */}
           {channel === "shopee" && data.totalPerluAtur > 0 && (
-            <Catatan ikon={<Info size={16} />} warna="#92400E" latar="#FFFBEB">
-              {angka(data.totalPerluAtur)} pesanan <strong>belum diatur pengirimannya</strong>, jadi
-              resinya belum terbit. Pilih caranya sekali di bawah ini — berlaku untuk semua pesanan,
-              tidak perlu satu per satu.
-              <TombolAturKirim
-                jumlah={data.totalPerluAtur}
-                dari={dari || undefined}
-                sampai={sampai || undefined}
-                onSelesai={ambil}
-              />
-            </Catatan>
+            <TombolAturKirim
+              jumlah={data.totalPerluAtur}
+              dari={dari || undefined}
+              sampai={sampai || undefined}
+              onSelesai={ambil}
+            />
           )}
 
           {data.selisihSisi ? (
