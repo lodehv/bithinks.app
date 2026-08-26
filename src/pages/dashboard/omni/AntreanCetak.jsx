@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AlertTriangle, Info } from "lucide-react";
 import { omniApi } from "../../../utils/omniApi";
-import TombolCetak from "./TombolCetak";
 import CerminSellerCenter from "./CerminSellerCenter";
 import KepalaAntrean from "./KepalaAntrean";
 import Kelompok, { Catatan } from "./KelompokSku";
@@ -111,47 +110,15 @@ export default function AntreanCetak() {
         </div>
       ) : (
         <>
-          {/* Selisih antara total label dan penjumlahan kelompok DIJELASKAN,
-              bukan disembunyikan. Angka yang tidak bisa dijelaskan membuat
-              orang berhenti memercayai seluruh layar. */}
-          {data.totalDimintaBatal > 0 && (
-            <Catatan ikon={<Info size={16} />} warna="#9A3412" latar="#FFF7ED">
-              {angka(data.totalDimintaBatal)} pesanan sedang <strong>diminta batal pembeli</strong> dan
-              ikut terhitung di sini — itulah yang membuat angkanya sama dengan Seller Center.
-              Resinya <strong>tidak ikut</strong> tombol di atas — supaya angka di tombol selalu
-              sama dengan yang tercetak. Periksa dulu di Seller Center; kalau pembatalannya tidak
-              Anda setujui, pesanannya masih harus dikirim dan resinya bisa dicetak dari sini.
-              Kalau tidak dijawab dalam 24 jam, Shopee membatalkannya sendiri dan pesanannya keluar
-              dari antrean.
-              <div style={{ marginTop: 10 }}>
-                <TombolCetak
-                  channel={channel}
-                  jumlah={data.totalDimintaBatal}
-                  dimintaBatal="hanya"
-                  teks={`Cetak ${angka(data.totalDimintaBatal)} resi yang diminta batal`}
-                  dari={dari || undefined}
-                  sampai={sampai || undefined}
-                  onSelesai={ambil}
-                />
-              </div>
-            </Catatan>
-          )}
+          {/* CATATAN PANJANG SOAL PERMINTAAN BATAL DIHAPUS — 26 Agustus 2026.
+              Dulu di sini ada satu paragraf penjelasan plus tombol keduanya
+              sendiri. Pemilik toko: "ini mending dihapus saja, karena
+              menimbulkan doble informasi dan kebingungan."
 
-          {/* PENGIRIMAN YANG BELUM DIATUR — jangan cuma diberi tahu, beri
-              jalan keluarnya di tempat yang sama.
-
-              Sampai 26 Agustus 2026 layar ini berhenti di kalimat "perlu atur
-              pengiriman". Itu menampilkan kekurangan kita sebagai kalau-kalau
-              masalah pesanannya, dan menyuruh pemilik toko pergi ke Seller
-              Center mengerjakan hal yang sistem ini seharusnya kerjakan. */}
-          {channel === "shopee" && data.totalPerluAtur > 0 && (
-            <TombolAturKirim
-              jumlah={data.totalPerluAtur}
-              dari={dari || undefined}
-              sampai={sampai || undefined}
-              onSelesai={ambil}
-            />
-          )}
+              Dia benar: lencana "Diminta batal pembeli" di baris pesanannya
+              sudah mengatakan hal yang sama, di tempat yang lebih tepat —
+              menempel pada pesanan yang dimaksud. Sekarang resinya ikut
+              tercetak oleh tombol utama kalau memang tersedia. */}
 
           {data.selisihSisi ? (
             <Catatan ikon={<Info size={16} />} warna="#991B1B" latar="#FEF2F2">
