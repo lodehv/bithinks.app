@@ -277,7 +277,7 @@ function Hasil({ h, channel, onUlang }) {
  * cuma channel dan sku — daftar pesanannya disusun ulang di sana, memakai
  * penyaring yang sama dengan yang menghasilkan angka di layar ini.
  */
-export default function TombolCetak({ channel, sku, jumlah, utama = false, onSelesai, ulangi = false, dimintaBatal, teks, dari, sampai }) {
+export default function TombolCetak({ channel, sku, jumlah, utama = false, onSelesai, ulangi = false, teks, dari, sampai }) {
   const [sibuk, setSibuk] = useState(false);
   const [hasil, setHasil] = useState(null);
   const [galat, setGalat] = useState(null);
@@ -302,7 +302,6 @@ export default function TombolCetak({ channel, sku, jumlah, utama = false, onSel
         // Pesanan yang diminta batal pembeli hanya ikut kalau tombolnya memang
         // tombol itu. Tombol utama menyebut satu angka, dan yang tercetak harus
         // angka itu juga — bukan angka itu ditambah beberapa yang menyelinap.
-        ...(dimintaBatal ? { dimintaBatal } : {}),
         ...(dari ? { dari } : {}),
         ...(sampai ? { sampai } : {}),
       });
