@@ -103,10 +103,20 @@ export default function Kelompok({ k, channel, sisi, dari, sampai, onSelesai }) 
                 </span>
                 <span style={{ color: "#6B7280", flexShrink: 0 }}>{p.qty}×</span>
                 <span style={{ color: "#9CA3AF", flexShrink: 0, minWidth: 52 }}>{tanggal(p.orderedAt)}</span>
-                <span style={{
-                  fontSize: 11, padding: "2px 8px", borderRadius: 99,
-                  background: t.latar, color: t.warna, flexShrink: 0,
-                }}>{t.teks}</span>
+                {/* KATA-KATA ASLI SHOPEE ADA DI BALIK LABELNYA.
+                    Aturan pemilik toko 26 Agustus 2026: alasan sebuah pesanan
+                    belum punya resi harus benar-benar dari marketplace, bukan
+                    karangan kita. Tulisan pada label ini terjemahan kami; yang
+                    muncul saat kursor diarahkan adalah apa yang Shopee
+                    benar-benar katakan. */}
+                <span
+                  title={[p.statusMarketplace, p.statusPaket].filter(Boolean).join(" · ") || undefined}
+                  style={{
+                    fontSize: 11, padding: "2px 8px", borderRadius: 99,
+                    background: t.latar, color: t.warna, flexShrink: 0,
+                    cursor: p.statusMarketplace ? "help" : undefined,
+                  }}
+                >{t.teks}</span>
                 {p.adaDiKelompokLain && (
                   <span title="Pesanan ini juga berisi SKU lain — labelnya tetap satu"
                         style={{ fontSize: 11, color: "#6B7280", flexShrink: 0 }}>+SKU lain</span>
