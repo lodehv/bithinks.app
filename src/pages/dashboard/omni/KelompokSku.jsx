@@ -15,6 +15,11 @@ const TAHAP = {
   // membatalkannya sendiri kalau tidak dijawab dalam 24 jam.
   diminta_batal:   { teks: "Diminta batal pembeli",  warna: "#9A3412", latar: "#FFF7ED" },
   perlu_atur:      { teks: "Perlu atur pengiriman", warna: "#92400E", latar: "#FFFBEB" },
+  // Shopee sendiri yang menahannya. Di Seller Center pesanan ini muncul
+  // sebagai "Tertunda" dengan tombol aksi MATI — pemilik toko pun tidak bisa
+  // mengaturnya. Karena itu namanya harus menyebut siapa yang sedang menahan,
+  // bukan menyuruh orang mengerjakan sesuatu yang mustahil.
+  ditinjau_shopee: { teks: "Ditinjau Tim Shopee",     warna: "#3730A3", latar: "#EEF2FF" },
   perlu_diperiksa: { teks: "Perlu diperiksa",       warna: "#991B1B", latar: "#FEF2F2" },
 };
 

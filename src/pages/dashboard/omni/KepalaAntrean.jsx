@@ -159,6 +159,11 @@ export default function KepalaAntrean({
             {angka(data.totalDimintaBatal)} di antaranya diminta batal
           </Cip>
         )}
+        {data?.totalDitinjauShopee > 0 && (
+          <Cip warna="#3730A3" latar="#EEF2FF" garis="#C7D2FE">
+            {angka(data.totalDitinjauShopee)} ditinjau Tim Shopee
+          </Cip>
+        )}
         {data?.totalPerluAtur > 0 && (
           <Cip warna="#92400E" latar="#FFFBEB" garis="#FDE68A">
             {angka(data.totalPerluAtur)} perlu atur pengiriman
