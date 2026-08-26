@@ -65,6 +65,16 @@ export default function Kelompok({ k, channel, sisi, dari, sampai, onSelesai }) 
           <div style={{ textAlign: "right", flexShrink: 0, minWidth: 92 }}>
             <div style={{ fontWeight: 700, fontSize: 18, color: "#111827", fontVariantNumeric: "tabular-nums" }}>
               {angka(sisi === "sudah" ? k.jumlahPesanan : k.siapCetak)}
+              {/* "7 dari 8" hanya saat keduanya BERBEDA.
+                  Aturan pemilik toko: kalau dari 8 pesanan 1 tidak bisa
+                  dicetak, sebutkan bahwa yang bisa cuma 7 — jangan biarkan
+                  orang menghitung sendiri baris yang ada. Saat semuanya bisa,
+                  angka kedua cuma derau. */}
+              {sisi !== "sudah" && k.siapCetak < k.jumlahPesanan && (
+                <span style={{ fontSize: 13, fontWeight: 500, color: "#9CA3AF" }}>
+                  {" "}dari {angka(k.jumlahPesanan)}
+                </span>
+              )}
             </div>
             <div style={{ fontSize: 12, color: "#6B7280" }}>
               {sisi === "sudah" ? "sudah tercetak" : "siap dicetak"}
