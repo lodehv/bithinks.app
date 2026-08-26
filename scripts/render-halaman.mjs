@@ -20,6 +20,12 @@ import { createElement } from 'react'
 
 const HALAMAN = [
   '/src/pages/dashboard/MarketingDashboard.jsx',
+  // Antrean cetak: layar yang paling sering diubah, dan yang paling mahal
+  // kalau mati — di sinilah pemilik toko mencetak resi tiap hari.
+  '/src/pages/dashboard/omni/AntreanCetak.jsx',
+  // Dirender tanpa prop apa pun. Itu memang maksudnya: yang diuji apakah
+  // komponennya sanggup dieksekusi sekali dengan keadaan kosong.
+  '/src/pages/dashboard/omni/TombolAturKirim.jsx',
 ]
 
 const vite = await createServer({ server: { middlewareMode: true }, appType: 'custom', logLevel: 'error' })

@@ -5,6 +5,7 @@ import TombolCetak from "./TombolCetak";
 import CerminSellerCenter from "./CerminSellerCenter";
 import KepalaAntrean from "./KepalaAntrean";
 import Kelompok, { Catatan } from "./KelompokSku";
+import TombolAturKirim from "./TombolAturKirim";
 import { angka } from "./format-antrean";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -124,6 +125,27 @@ export default function AntreanCetak() {
                   onSelesai={ambil}
                 />
               </div>
+            </Catatan>
+          )}
+
+          {/* PENGIRIMAN YANG BELUM DIATUR — jangan cuma diberi tahu, beri
+              jalan keluarnya di tempat yang sama.
+
+              Sampai 26 Agustus 2026 layar ini berhenti di kalimat "perlu atur
+              pengiriman". Itu menampilkan kekurangan kita sebagai kalau-kalau
+              masalah pesanannya, dan menyuruh pemilik toko pergi ke Seller
+              Center mengerjakan hal yang sistem ini seharusnya kerjakan. */}
+          {channel === "shopee" && data.totalPerluAtur > 0 && (
+            <Catatan ikon={<Info size={16} />} warna="#92400E" latar="#FFFBEB">
+              {angka(data.totalPerluAtur)} pesanan <strong>belum diatur pengirimannya</strong>, jadi
+              resinya belum terbit. Pilih caranya sekali di bawah ini — berlaku untuk semua pesanan,
+              tidak perlu satu per satu.
+              <TombolAturKirim
+                jumlah={data.totalPerluAtur}
+                dari={dari || undefined}
+                sampai={sampai || undefined}
+                onSelesai={ambil}
+              />
             </Catatan>
           )}
 

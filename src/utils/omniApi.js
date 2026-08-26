@@ -109,6 +109,14 @@ export const omniApi = {
   cerminAntrean:     (channel, p = {}) => api.get('/api/omni/orders/cermin', { params: { channel, ...p }, timeout: 120000 }).then(unwrap),
   cetakLabel:        (payload)      => api.post('/api/omni/orders/cetak-label', payload, { timeout: 180000 }).then(unwrap),
 
+  // ATUR PENGIRIMAN — satu klik untuk seluruh tumpukan.
+  //
+  // Batas waktunya panjang seperti cetak, dan alasannya sama: tiap pesanan
+  // butuh dua perjalanan ke Shopee (tanya caranya, lalu atur), dikerjakan
+  // berurutan di dalam satu toko. Menyerah di tengah membuat sebagian pesanan
+  // sudah diatur di Shopee tanpa layar ini tahu yang mana.
+  aturKirim:         (payload)      => api.post('/api/omni/orders/atur-kirim', payload, { timeout: 180000 }).then(unwrap),
+
   // Angka ringkas halaman depan, dihitung server atas SELURUH pesanan.
   // hasil: { total, omset, perluProses, perStatus, perChannel }
   ordersSummary:     ()            => api.get('/api/omni/orders/summary').then(unwrap),
