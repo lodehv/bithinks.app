@@ -131,6 +131,24 @@ function halamanResi(d, urlPdf, judul) {
   const halaman = typeof d.halamanPdf === "number" ? d.halamanPdf : null;
   const diminta = tercetak + alasan.reduce((n, [, jml]) => n + jml, 0);
 
+  // PAGAR YANG TERSENTUH HARUS DISEBUT.
+  //
+  // Sekali tekan dibatasi 500 pesanan. Sebelum audit 26 Agustus 2026
+  // pemotongannya tidak pernah muncul di mana pun: tombol bisa menjanjikan
+  // 800 resi, 500 yang tercetak, dan tidak ada satu kata pun soal 300 sisanya.
+  const potong = d.terpotong
+    ? `<div class="masalah"><strong>Sekali cetak dibatasi ${d.batasSekaliCetak ?? 500} pesanan.</strong>
+         Sisanya masih di antrean — tekan tombol cetak sekali lagi untuk melanjutkan.</div>`
+    : "";
+
+  // Berkasnya jadi, tapi riwayatnya gagal tersimpan. Pesanannya akan muncul
+  // lagi di antrean — lebih baik disebut sekarang daripada membuat orang
+  // mengira sistemnya mencetak dua kali tanpa sebab.
+  const riwayat = d.riwayatTersimpan === false
+    ? `<div class="masalah"><strong>Resinya tercetak, tapi catatannya gagal disimpan.</strong>
+         Pesanan ini mungkin muncul lagi di antrean. Simpan atau cetak berkas ini sekarang.</div>`
+    : "";
+
   const baris = adaMasalah
     ? `<div class="masalah">
          <strong>${diminta - tercetak} dari ${diminta} pesanan tidak tercetak.</strong>
@@ -154,7 +172,7 @@ function halamanResi(d, urlPdf, judul) {
 <header>
   <div class="judul">${lolos(judul)}</div>
   <div class="angka"><b>${tercetak}</b> resi tercetak${halaman === null ? "" : ` · <b>${halaman}</b> halaman`}</div>
-  ${baris}
+  ${baris}${potong}${riwayat}
 </header>
 <iframe src="${urlPdf}" title="Resi"></iframe>
 </body></html>`;
