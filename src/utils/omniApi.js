@@ -117,6 +117,13 @@ export const omniApi = {
   // sudah diatur di Shopee tanpa layar ini tahu yang mana.
   aturKirim:         (payload)      => api.post('/api/omni/orders/atur-kirim', payload, { timeout: 180000 }).then(unwrap),
 
+  // RIWAYAT CETAK — catatan tiap kali tombol ditekan, dan isinya.
+  //
+  // Berbeda sifatnya dari antrean: antrean diturunkan dari keadaan SEKARANG
+  // dan memang berubah; riwayat adalah catatan masa lalu dan TIDAK BOLEH
+  // berubah. Karena itu ia punya jalur sendiri, bukan menumpang angka antrean.
+  riwayatCetak:      (channel, p = {}) => api.get('/api/omni/orders/riwayat-cetak', { params: { channel, ...p } }).then(unwrap),
+
   // Angka ringkas halaman depan, dihitung server atas SELURUH pesanan.
   // hasil: { total, omset, perluProses, perStatus, perChannel }
   ordersSummary:     ()            => api.get('/api/omni/orders/summary').then(unwrap),
