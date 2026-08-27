@@ -5,7 +5,7 @@ import CerminSellerCenter from "./CerminSellerCenter";
 import KepalaAntrean from "./KepalaAntrean";
 import Kelompok, { Catatan } from "./KelompokSku";
 import TombolAturKirim from "./TombolAturKirim";
-import { angka } from "./format-antrean";
+import { angka, hariIni, mundur } from "./format-antrean";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ANTREAN CETAK RESI
@@ -50,8 +50,22 @@ export default function AntreanCetak() {
   //
   // Kosong berarti SELURUH tumpukan. Sisi "belum" tidak boleh menyembunyikan
   // pekerjaan yang belum selesai hanya karena tanggalnya tidak dipilih.
-  const [dari, setDari] = useState("");
-  const [sampai, setSampai] = useState("");
+  // BAWAAN DUA HARI, BUKAN "SEMUA TANGGAL" — aturan pemilik toko 27 Agu 2026.
+  //
+  // SLA marketplace mewajibkan pengiriman diproses cepat, jadi tumpukan yang
+  // menunggu dicetak TIDAK PERNAH tua. Diukur dari data sendiri, 10 hari
+  // terakhir: rata-rata pesanan dicetak 7,6 jam (TikTok) dan 9,7 jam (Shopee)
+  // setelah masuk. Yang sedang menunggu saat itu: 128 pesanan, semuanya di
+  // bawah satu hari.
+  //
+  // Menarik mundur berminggu-minggu cuma menampilkan kedalaman yang tidak ada
+  // gunanya, dan tulisan "Semua tanggal" tidak memberi tahu apa pun.
+  //
+  // Dua hari BUKAN nol risiko: Shopee pernah dua kali mencetak 3,9 hari setelah
+  // pesanan masuk — 2 dari 2.777. Karena itu yang jatuh di luar rentang selalu
+  // dihitung dan disebut, tidak pernah hilang diam-diam.
+  const [dari, setDari] = useState(() => mundur(1));
+  const [sampai, setSampai] = useState(() => hariIni());
 
   // Nomor urut permintaan: berpindah tab cepat bisa membuat jawaban lama datang
   // belakangan dan menimpa yang baru — layar lalu menampilkan antrean Shopee
@@ -127,6 +141,24 @@ export default function AntreanCetak() {
               acuan dulu.
             </Catatan>
           ) : null}
+
+          {/* YANG DI LUAR RENTANG SELALU DISEBUT.
+              Inilah yang membuat batas dua hari berhenti jadi tempat sembunyi
+              dan berubah jadi ringkasan yang jujur. */}
+          {sisi === "belum" && data.diLuarRentang > 0 && (
+            <Catatan ikon={<AlertTriangle size={16} />} warna="#92400E" latar="#FFFBEB">
+              <strong>{angka(data.diLuarRentang)} resi lain menunggu</strong>, di luar rentang
+              tanggal yang sedang dilihat.
+              <button
+                onClick={() => ubahTanggal("", "")}
+                style={{
+                  marginLeft: 8, padding: "3px 10px", borderRadius: 999, cursor: "pointer",
+                  border: "1px solid #FDE68A", background: "#fff", color: "#92400E",
+                  fontSize: 12.5, fontWeight: 600, fontFamily: "inherit",
+                }}
+              >Tampilkan</button>
+            </Catatan>
+          )}
 
           <CerminSellerCenter channel={channel} dari={dari} sampai={sampai} />
 

@@ -13,10 +13,17 @@ import { labelRentang, hariIni, mundur } from "./format-antrean";
 // gampang salah di zona waktu, dan tanggal yang meleset satu hari di layar
 // cetak resi berarti tumpukan kerja yang salah.
 
+// "SEMUA TANGGAL" SENGAJA TIDAK ADA DI SINI — dibuang 27 Agustus 2026.
+//
+// Ia menjawab pertanyaan yang salah. Yang dibutuhkan bukan "tampilkan
+// semuanya", tapi "apakah ada yang di luar pandangan saya?" — dan itu sekarang
+// dijawab sendiri oleh baris peringatan di layar antrean, lengkap dengan
+// tombol untuk membukanya. Menyisakannya di sini cuma menambah satu pilihan
+// yang artinya tidak jelas bagi pemakainya.
 const PINTASAN = [
-  { id: "hari-ini", teks: "Hari ini",       nilai: () => [hariIni(), hariIni()] },
+  { id: "hari-ini", teks: "Hari ini",        nilai: () => [hariIni(), hariIni()] },
+  { id: "2-hari",   teks: "2 hari terakhir", nilai: () => [mundur(1), hariIni()] },
   { id: "7-hari",   teks: "7 hari terakhir", nilai: () => [mundur(6), hariIni()] },
-  { id: "semua",    teks: "Semua tanggal",   nilai: () => ["", ""] },
 ];
 
 const kotak = {

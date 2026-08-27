@@ -1,6 +1,6 @@
 import TombolCetak from "./TombolCetak";
 import PilihTanggal from "./PilihTanggal";
-import { angka, labelRentang } from "./format-antrean";
+import { angka, jamSingkat, labelRentang } from "./format-antrean";
 import shopeeLogo from "../../../assets/logo_pilihan_fitur/shopee.png";
 import tiktokLogo from "../../../assets/logo_pilihan_fitur/logo_tiktok.jpg";
 
@@ -111,8 +111,13 @@ export default function KepalaAntrean({
             }}>{total}</span>
             <span style={{ fontSize: 16, fontWeight: 600, color: "#111827" }}>total resi</span>
           </div>
+          {/* LAYAR MENYEBUT ISINYA, BUKAN NAMANYA.
+              "Semua tanggal" tidak memberi tahu apa pun; "2 hari terakhir ·
+              cetak terakhir 27 Agu 09:10" langsung menjawab tumpukan ini sejak
+              kapan, tanpa pemakainya menghitung sendiri. */}
           <div style={{ fontSize: 12, color: "#6B7280", marginTop: 3 }}>
             {platform?.label} · {labelRentang(dari, sampai)}
+            {data?.cetakTerakhir ? ` · cetak terakhir ${jamSingkat(data.cetakTerakhir)}` : ""}
           </div>
         </div>
 
