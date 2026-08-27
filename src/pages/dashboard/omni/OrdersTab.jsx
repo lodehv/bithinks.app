@@ -3,6 +3,7 @@ import { Search, ChevronDown, SlidersHorizontal, Download, Calendar, ChevronLeft
 import { omniApi, isPaymentRequired } from "../../../utils/omniApi";
 import { useDaftarPesanan } from "./useDaftarPesanan";
 import AntreanCetak from "./AntreanCetak";
+import RiwayatCetak from "./RiwayatCetak";
 import OrderCard from "./OrderCard";
 import shopeeLogo from "../../../assets/logo_pilihan_fitur/shopee.png";
 import tiktokLogo from "../../../assets/logo_pilihan_fitur/logo_tiktok.jpg";
@@ -240,7 +241,14 @@ export default function OrdersTab({ locked, onRequirePayment, tabAwal }) {
           display: "flex", gap: 20, margin: "16px 0 0", padding: "0 24px",
           borderBottom: "1px solid #E5E7EB",
         }}>
-          {[["daftar", "Daftar Pesanan"], ["antrean", "Antrean Cetak per SKU"]].map(([id, label]) => (
+          {[
+            ["daftar", "Daftar Pesanan"],
+            ["antrean", "Antrean Cetak per SKU"],
+            // RIWAYAT BERDIRI SENDIRI, bukan menumpang angka antrean.
+            // Antrean diturunkan dari keadaan SEKARANG dan memang berubah;
+            // riwayat adalah catatan masa lalu dan tidak boleh berubah.
+            ["riwayat", "Riwayat Cetak"],
+          ].map(([id, label]) => (
             <button key={id} onClick={() => setTampilan(id)} style={{
               padding: "0 0 12px", border: "none", background: "none", cursor: "pointer",
               fontSize: 14, fontFamily: "inherit",
@@ -254,6 +262,8 @@ export default function OrdersTab({ locked, onRequirePayment, tabAwal }) {
 
       {tab === "dikemas" && tampilan === "antrean" ? (
         <div style={{ padding: "0 24px 24px" }}><AntreanCetak /></div>
+      ) : tab === "dikemas" && tampilan === "riwayat" ? (
+        <div style={{ padding: "0 24px 24px" }}><RiwayatCetak /></div>
       ) : <>
 
       {/* Sub-bar: pilih semua + pagination.

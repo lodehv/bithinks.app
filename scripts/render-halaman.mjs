@@ -26,6 +26,9 @@ const HALAMAN = [
   // Dirender tanpa prop apa pun. Itu memang maksudnya: yang diuji apakah
   // komponennya sanggup dieksekusi sekali dengan keadaan kosong.
   '/src/pages/dashboard/omni/TombolAturKirim.jsx',
+  // Riwayat cetak: layar baru, dan layar baru yang tidak diuji adalah layar
+  // yang mati diam-diam.
+  '/src/pages/dashboard/omni/RiwayatCetak.jsx',
 ]
 
 const vite = await createServer({ server: { middlewareMode: true }, appType: 'custom', logLevel: 'error' })
