@@ -5,7 +5,7 @@ import CerminSellerCenter from "./CerminSellerCenter";
 import KepalaAntrean from "./KepalaAntrean";
 import Kelompok, { Catatan } from "./KelompokSku";
 import TombolAturKirim from "./TombolAturKirim";
-import { angka, hariIni, mundur } from "./format-antrean";
+import { angka, hariIni, mundur, tanggal } from "./format-antrean";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ANTREAN CETAK RESI
@@ -145,15 +145,36 @@ export default function AntreanCetak() {
           {/* YANG DI LUAR RENTANG SELALU DISEBUT.
               Inilah yang membuat batas dua hari berhenti jadi tempat sembunyi
               dan berubah jadi ringkasan yang jujur. */}
-          {sisi === "belum" && data.diLuarRentang > 0 && (
-            <Catatan ikon={<AlertTriangle size={16} />} warna="#92400E" latar="#FFFBEB">
-              <strong>{angka(data.diLuarRentang)} resi lain menunggu</strong>, di luar rentang
-              tanggal yang sedang dilihat.
+          {sisi === "belum" && data.diLuarRentang?.jumlah > 0 && (
+            <Catatan
+              ikon={<AlertTriangle size={16} />}
+              warna={data.diLuarRentang.siapCetak > 0 ? "#92400E" : "#6B7280"}
+              latar={data.diLuarRentang.siapCetak > 0 ? "#FFFBEB" : "#F9FAFB"}
+            >
+              {/* KALIMATNYA MEMBEDAKAN DUA KEADAAN YANG SANGAT BERBEDA.
+                  Versi pertama menulis "5 resi lain menunggu" untuk apa saja
+                  yang jatuh di luar rentang — dan ternyata isinya pesanan
+                  TO_RETURN dari tiga minggu lalu. Kalimatnya menjanjikan
+                  pekerjaan yang tidak ada. */}
+              {data.diLuarRentang.siapCetak > 0 ? (
+                <>
+                  <strong>{angka(data.diLuarRentang.siapCetak)} resi siap dicetak</strong> tertinggal
+                  di luar rentang tanggal ini
+                  {data.diLuarRentang.tertua ? `, yang tertua dipesan ${tanggal(data.diLuarRentang.tertua)}` : ""}.
+                </>
+              ) : (
+                <>
+                  <strong>{angka(data.diLuarRentang.jumlah)} pesanan lama</strong> ada di luar rentang
+                  tanggal ini
+                  {data.diLuarRentang.tertua ? `, yang tertua dari ${tanggal(data.diLuarRentang.tertua)}` : ""} —
+                  tidak ada yang siap dicetak, jadi tidak ada pekerjaan yang tertinggal.
+                </>
+              )}
               <button
                 onClick={() => ubahTanggal("", "")}
                 style={{
                   marginLeft: 8, padding: "3px 10px", borderRadius: 999, cursor: "pointer",
-                  border: "1px solid #FDE68A", background: "#fff", color: "#92400E",
+                  border: "1px solid #E5E7EB", background: "#fff", color: "#374151",
                   fontSize: 12.5, fontWeight: 600, fontFamily: "inherit",
                 }}
               >Tampilkan</button>
