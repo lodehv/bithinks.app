@@ -468,7 +468,7 @@ export default function MarketingDashboard() {
         <div className="summary-card">
           <div className="summary-card-header">
             <h4>Omset Harian</h4>
-            <span className="summary-card-subtitle">Basis order_date • tidak berubah retroaktif</span>
+            <span className="summary-card-subtitle">Dikelompokkan menurut tanggal pesanan dibuat</span>
           </div>
 
           <div className="summary-blocks-grid">
@@ -479,7 +479,7 @@ export default function MarketingDashboard() {
                 <DollarSign size={13} className="text-purple" />
               </div>
               <div className="block-value">{formatRupiah(totalOmsetKotor)}</div>
-              <div className="block-subtext">Akumulasi seluruh order</div>
+              <div className="block-subtext">Termasuk retur &amp; batal</div>
             </div>
 
             {/* Block 2: Retur */}
@@ -499,7 +499,7 @@ export default function MarketingDashboard() {
                 <TrendingUp size={13} className="text-purple" />
               </div>
               <div className="block-value text-purple">{formatRupiah(totalOmsetPerkiraan)}</div>
-              <div className="block-subtext">Kotor − retur − batal (estimasi total)</div>
+              <div className="block-subtext">Kotor − retur − batal</div>
             </div>
 
             {/* Block 4: Platform Fees */}
@@ -518,7 +518,7 @@ export default function MarketingDashboard() {
         <div className="summary-card">
           <div className="summary-card-header">
             <h4>Breakdown status</h4>
-            <span className="summary-card-subtitle">Omset Penjualan • Basis harga etalase • by order_date</span>
+            <span className="summary-card-subtitle">Omset perkiraan, dipecah menurut posisi pesanannya</span>
           </div>
 
           <div className="summary-blocks-grid">
@@ -529,7 +529,7 @@ export default function MarketingDashboard() {
                 <DollarSign size={13} className="text-purple" />
               </div>
               <div className="block-value text-purple">{formatRupiah(totalOmsetPerkiraan)}</div>
-              <div className="block-subtext">Mengakumulasi keseluruhan order</div>
+              <div className="block-subtext">Terkonfirmasi + Pipeline + Berisiko</div>
             </div>
 
             {/* Block 2: Terkonfirmasi */}
@@ -539,7 +539,7 @@ export default function MarketingDashboard() {
                 <Check size={13} className="text-purple" />
               </div>
               <div className="block-value">{formatRupiah(totalTerkonfirmasi)}</div>
-              <div className="block-subtext">Status delivered / selesai</div>
+              <div className="block-subtext">Sudah sampai ke pembeli</div>
             </div>
 
             {/* Block 3: Pipeline */}
@@ -549,7 +549,7 @@ export default function MarketingDashboard() {
                 <TrendingUp size={13} className="text-purple" />
               </div>
               <div className="block-value">{formatRupiah(totalPipeline)}</div>
-              <div className="block-subtext">Status shipped / processed</div>
+              <div className="block-subtext">Masih di jalan — baru, dikemas, dikirim</div>
             </div>
 
             {/* Block 4: Berisiko */}
@@ -559,7 +559,7 @@ export default function MarketingDashboard() {
                 <HelpCircle size={13} className="text-purple" />
               </div>
               <div className="block-value">{formatRupiah(totalBerisiko)}</div>
-              <div className="block-subtext">Status pending / ready</div>
+              <div className="block-subtext">Ada permintaan batal, belum final</div>
             </div>
           </div>
         </div>
