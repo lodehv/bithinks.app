@@ -7,10 +7,34 @@ import {
 } from "lucide-react";
 import "./MarketingDashboard.css";
 
+// ─────────────────────────────────────────────────────────────────────────────
+// RENTANG BAWAAN SAAT HALAMAN DIBUKA — 30 hari terakhir, dan DITULIS di kolom
+// tanggalnya.
+//
+// Sebelumnya kedua kolom dibiarkan kosong. Kosong di sini tidak berarti "belum
+// dipilih" — di server ia berarti "seluruh pesanan sejak toko tersambung".
+// Jadi kolomnya menampilkan "dd/mm/yyyy" sambil diam-diam menarik seluruh
+// riwayat, dan orang menunggu tanpa tahu sedang menunggu apa.
+//
+// Yang diperbaiki bukan cuma lamanya, tapi kejujuran kontrolnya: sekarang
+// kolom tanggal menyebut persis rentang yang sedang ditampilkan. Mau seluruh
+// riwayat? Kosongkan tanggalnya — perilaku lama masih ada, cuma tidak lagi
+// jadi keadaan bawaan yang tak terucapkan.
+// ─────────────────────────────────────────────────────────────────────────────
+const HARI_BAWAAN = 30;
+
+// Tanggal hari ini menurut WIB, bukan menurut jam mesin pemakainya.
+// Backend membatasi harinya di WIB (lib/waktu/wib.ts); kalau sisi ini memakai
+// zona laptop, batas rentangnya bisa meleset satu hari untuk pemakai di luar WIB.
+function tanggalWib(mundurHari = 0) {
+  const wib = new Date(Date.now() + 7 * 3600_000 - mundurHari * 86_400_000);
+  return wib.toISOString().slice(0, 10);
+}
+
 export default function MarketingDashboard() {
   // ─── Filter States ────────────────────────────────────────────────────────
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState(() => tanggalWib(HARI_BAWAAN - 1));
+  const [endDate, setEndDate] = useState(() => tanggalWib(0));
   const [selectedPlatforms, setSelectedPlatforms] = useState([]);
   const [selectedStores, setSelectedStores] = useState([]);
   
@@ -76,9 +100,12 @@ export default function MarketingDashboard() {
     );
   };
 
+  // "Atur Ulang" mengembalikan ke keadaan bawaan — termasuk rentang 30 harinya.
+  // Dikosongkan sama sekali justru bukan "bersih", melainkan diam-diam menarik
+  // seluruh riwayat: kebalikan dari yang diharapkan orang saat menekan tombol ini.
   const clearAllFilters = () => {
-    setStartDate("");
-    setEndDate("");
+    setStartDate(tanggalWib(HARI_BAWAAN - 1));
+    setEndDate(tanggalWib(0));
     setSelectedPlatforms([]);
     setSelectedStores([]);
     setAdSpend(0);
@@ -102,11 +129,20 @@ export default function MarketingDashboard() {
       .finally(() => setIsSubmittingFilters(false));
   };
 
-  // Muat awal (tanpa filter → seluruh data, basis order_date).
+  // Muat awal memakai rentang bawaan 30 hari (lihat HARI_BAWAAN di atas), bukan
+  // lagi seluruh riwayat.
   useEffect(() => {
     fetchStats();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // ─── Keadaan memuat ────────────────────────────────────────────────────────
+  // `stats === null` berarti jawaban pertama belum pernah datang. Bedanya
+  // dengan `isSubmittingFilters` penting: yang satu "belum ada apa-apa", yang
+  // satu "sedang diperbarui". Keduanya diberi tanda yang sama di layar, tapi
+  // hanya yang pertama yang boleh menahan angka supaya tidak terbaca.
+  const belumAdaJawaban = stats === null;
+  const sedangMemuat = isSubmittingFilters || belumAdaJawaban;
 
   const handleApplyFilters = () => {
     fetchStats();
@@ -202,13 +238,6 @@ export default function MarketingDashboard() {
     })}${satuan}`;
   };
 
-  const formatShortRupiah = (val) => {
-    if (val >= 1000000000) return `Rp ${(val / 1000000000).toFixed(1)}M`;
-    if (val >= 1000000) return `Rp ${(val / 1000000).toFixed(1)}Jt`;
-    if (val < 0) return `-Rp ${formatShortRupiah(Math.abs(val))}`;
-    return `Rp ${val}`;
-  };
-
   // ─── Tren Penjualan Harian (data riil dari buckets backend) ─────────────────
   // 2 seri: Omset (perkiraan) vs Diterima (terkonfirmasi/sudah sampai).
   const trendData = (Array.isArray(stats?.buckets) ? stats.buckets : []).map((b) => ({
@@ -250,7 +279,7 @@ export default function MarketingDashboard() {
   const fmtDate = (s) => { const [, m, d] = String(s).split("-"); return d ? `${d}/${m}` : s; };
 
   return (
-    <div className="marketing-dashboard-container">
+    <div className={`marketing-dashboard-container${sedangMemuat ? " sedang-memuat" : ""}`}>
       {/* ─── Filter Panel ─── */}
       <div className="marketing-filter-card">
         <div className="filter-header">
@@ -542,7 +571,19 @@ export default function MarketingDashboard() {
         </div>
 
         <div className="trend-plot">
-          {!hasTrend ? (
+          {/* Urutannya sengaja: MEMUAT diperiksa lebih dulu daripada KOSONG.
+              Dibalik, halaman yang sedang menunggu akan menuduh filternya
+              tidak menghasilkan apa-apa — padahal server belum menjawab. */}
+          {sedangMemuat ? (
+            <div className="memuat-panel">
+              <div className="memuat-keterangan">
+                <RefreshCw size={13} className="spin-icon" />
+                <span>Menghitung tren penjualan…</span>
+              </div>
+              <div className="memuat-baris tinggi" />
+              <div className="memuat-baris w-50" />
+            </div>
+          ) : !hasTrend ? (
             <div className="trend-empty">
               <TrendingUp size={26} className="text-gray" />
               <p>Belum ada data penjualan pada filter ini</p>
@@ -712,74 +753,27 @@ export default function MarketingDashboard() {
                     />
                   </>
                 ) : (
-                  /* Balanced Demo Rings when empty to show layout (COGS 40%, Profit 25%, Fees 15%, Ad Spend 12%, Retur 8%) */
-                  <>
-                    {/* COGS demo segment (40%) */}
-                    <circle 
-                      cx="50" 
-                      cy="50" 
-                      r={radius} 
-                      fill="transparent" 
-                      stroke="#111827"
-                      strokeWidth={strokeWidth} 
-                      strokeDasharray={`${circumference * 0.40} ${circumference * 0.60}`}
-                      strokeDashoffset={-(circumference * 0.60)}
-                      strokeLinecap="round"
-                      transform="rotate(-90 50 50)"
-                    />
-                    {/* Ad Spend demo segment (12%) */}
-                    <circle 
-                      cx="50" 
-                      cy="50" 
-                      r={radius} 
-                      fill="transparent" 
-                      stroke="#C7C9F9"
-                      strokeWidth={strokeWidth} 
-                      strokeDasharray={`${circumference * 0.12} ${circumference * 0.88}`}
-                      strokeDashoffset={-(circumference * 0.48)}
-                      strokeLinecap="round"
-                      transform="rotate(-90 50 50)"
-                    />
-                    {/* Retur demo segment (8%) */}
-                    <circle 
-                      cx="50" 
-                      cy="50" 
-                      r={radius} 
-                      fill="transparent" 
-                      stroke="#9CA3AF"
-                      strokeWidth={strokeWidth} 
-                      strokeDasharray={`${circumference * 0.08} ${circumference * 0.92}`}
-                      strokeDashoffset={-(circumference * 0.40)}
-                      strokeLinecap="round"
-                      transform="rotate(-90 50 50)"
-                    />
-                    {/* Platform Fees demo segment (15%) */}
-                    <circle 
-                      cx="50" 
-                      cy="50" 
-                      r={radius} 
-                      fill="transparent" 
-                      stroke="#818CF8"
-                      strokeWidth={strokeWidth} 
-                      strokeDasharray={`${circumference * 0.15} ${circumference * 0.85}`}
-                      strokeDashoffset={-(circumference * 0.25)}
-                      strokeLinecap="round"
-                      transform="rotate(-90 50 50)"
-                    />
-                    {/* Net Profit demo segment (25%) */}
-                    <circle 
-                      cx="50" 
-                      cy="50" 
-                      r={radius} 
-                      fill="transparent" 
-                      stroke="#4F46E5"
-                      strokeWidth={strokeWidth} 
-                      strokeDasharray={`${circumference * 0.25} ${circumference * 0.75}`}
-                      strokeDashoffset={0}
-                      strokeLinecap="round"
-                      transform="rotate(-90 50 50)"
-                    />
-                  </>
+                  /* BELUM ADA DATA — cincin datar, tanpa segmen.
+
+                     Sampai 28 Agustus 2026 cabang ini menggambar CINCIN PALSU:
+                     lima segmen bernilai tetap (COGS 40%, laba 25%, beban 15%,
+                     iklan 12%, retur 8%) yang komentarnya sendiri menyebut
+                     dirinya "demo". Artinya setiap kali halaman dibuka — dan
+                     selama jawaban server belum datang, itu SELALU — pemilik
+                     toko melihat proporsi sebuah bisnis yang tidak pernah ada,
+                     lengkap dengan warna dan persentasenya.
+
+                     Grafik tidak boleh menggambar bentuk yang tidak diukurnya.
+                     Yang tampil sekarang cuma lingkaran kosong: jujur bahwa
+                     belum ada yang bisa digambar. */
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r={radius}
+                    fill="transparent"
+                    stroke="#E5E7EB"
+                    strokeWidth={strokeWidth}
+                  />
                 )}
               </svg>
               
@@ -806,7 +800,7 @@ export default function MarketingDashboard() {
                 <div className="legend-text-group">
                   <span className="legend-label">Net Profit</span>
                   <span className="legend-value font-bold text-black">
-                    {formatRupiah(totalProfit)} ({hasData ? profitPct.toFixed(1) : "25.0"}%)
+                    {formatRupiah(totalProfit)} ({hasData ? profitPct.toFixed(1) + "%" : "—"})
                   </span>
                 </div>
               </div>
@@ -816,7 +810,7 @@ export default function MarketingDashboard() {
                 <div className="legend-text-group">
                   <span className="legend-label">Beban Platform</span>
                   <span className="legend-value font-bold text-black">
-                    {formatRupiah(totalFees)} ({hasData ? feesPct.toFixed(1) : "15.0"}%)
+                    {formatRupiah(totalFees)} ({hasData ? feesPct.toFixed(1) + "%" : "—"})
                   </span>
                 </div>
               </div>
@@ -826,7 +820,7 @@ export default function MarketingDashboard() {
                 <div className="legend-text-group">
                   <span className="legend-label">Biaya Iklan</span>
                   <span className="legend-value font-bold text-black">
-                    {formatRupiah(adSpend)} ({hasData ? adSpendPct.toFixed(1) : "12.0"}%)
+                    {formatRupiah(adSpend)} ({hasData ? adSpendPct.toFixed(1) + "%" : "—"})
                   </span>
                 </div>
               </div>
@@ -836,7 +830,7 @@ export default function MarketingDashboard() {
                 <div className="legend-text-group">
                   <span className="legend-label">Beban Retur</span>
                   <span className="legend-value font-bold text-black">
-                    {formatRupiah(totalRetur)} ({hasData ? returPct.toFixed(1) : "8.0"}%)
+                    {formatRupiah(totalRetur)} ({hasData ? returPct.toFixed(1) + "%" : "—"})
                   </span>
                 </div>
               </div>
@@ -846,7 +840,7 @@ export default function MarketingDashboard() {
                 <div className="legend-text-group">
                   <span className="legend-label">COGS (HPP)</span>
                   <span className="legend-value font-bold text-black">
-                    {formatRupiah(totalCogs)} ({hasData ? cogsPct.toFixed(1) : "40.0"}%)
+                    {formatRupiah(totalCogs)} ({hasData ? cogsPct.toFixed(1) + "%" : "—"})
                   </span>
                 </div>
               </div>
@@ -881,7 +875,24 @@ export default function MarketingDashboard() {
                 </tr>
               </thead>
               <tbody>
-                {marketingData.length === 0 ? (
+                {sedangMemuat ? (
+                  /* Sama seperti grafik: memuat diperiksa lebih dulu. Kalimat
+                     "Tidak Ada Data Transaksi" hanya benar SETELAH server
+                     menjawab — sebelum itu ia tuduhan tanpa dasar. */
+                  <tr>
+                    <td colSpan="9" className="table-empty-row">
+                      <div className="memuat-panel">
+                        <div className="memuat-keterangan">
+                          <RefreshCw size={13} className="spin-icon" />
+                          <span>Menyusun rincian per toko…</span>
+                        </div>
+                        <div className="memuat-baris w-90" />
+                        <div className="memuat-baris w-70" />
+                        <div className="memuat-baris w-50" />
+                      </div>
+                    </td>
+                  </tr>
+                ) : marketingData.length === 0 ? (
                   <tr>
                     <td colSpan="9" className="table-empty-row">
                       <div className="empty-state-container">
