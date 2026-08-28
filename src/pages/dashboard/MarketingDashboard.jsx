@@ -8,7 +8,7 @@ import {
 import "./MarketingDashboard.css";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// RENTANG BAWAAN SAAT HALAMAN DIBUKA — 30 hari terakhir, dan DITULIS di kolom
+// RENTANG BAWAAN SAAT HALAMAN DIBUKA — HARI INI SAJA, dan DITULIS di kolom
 // tanggalnya.
 //
 // Sebelumnya kedua kolom dibiarkan kosong. Kosong di sini tidak berarti "belum
@@ -16,12 +16,21 @@ import "./MarketingDashboard.css";
 // Jadi kolomnya menampilkan "dd/mm/yyyy" sambil diam-diam menarik seluruh
 // riwayat, dan orang menunggu tanpa tahu sedang menunggu apa.
 //
-// Yang diperbaiki bukan cuma lamanya, tapi kejujuran kontrolnya: sekarang
-// kolom tanggal menyebut persis rentang yang sedang ditampilkan. Mau seluruh
-// riwayat? Kosongkan tanggalnya — perilaku lama masih ada, cuma tidak lagi
-// jadi keadaan bawaan yang tak terucapkan.
+// Yang diperbaiki bukan cuma lamanya, tapi kejujuran kontrolnya: kolom tanggal
+// menyebut persis rentang yang sedang ditampilkan. Mau rentang lain — sebulan,
+// setahun, atau seluruh riwayat dengan mengosongkannya — semuanya masih ada,
+// cuma tidak lagi jadi keadaan bawaan yang tak terucapkan.
+//
+// Keputusan pemilik toko 28 Agustus 2026: yang pertama dilihat saat membuka
+// halaman adalah HARI INI. Sempat 30 hari sepanjang hari itu juga; diganti
+// karena pertanyaan pertama tiap pagi bukan "sebulan ini berapa", melainkan
+// "hari ini jalan atau tidak".
+//
+// Satu hari berarti grafik trennya cuma punya SATU titik. Itu sudah aman:
+// `px()` menaruh titik tunggal di tengah alih-alih membagi dengan nol
+// (trendData.length - 1). Diperiksa sebelum angka ini diubah.
 // ─────────────────────────────────────────────────────────────────────────────
-const HARI_BAWAAN = 30;
+const HARI_BAWAAN = 1;
 
 // Tanggal hari ini menurut WIB, bukan menurut jam mesin pemakainya.
 // Backend membatasi harinya di WIB (lib/waktu/wib.ts); kalau sisi ini memakai
@@ -100,7 +109,7 @@ export default function MarketingDashboard() {
     );
   };
 
-  // "Atur Ulang" mengembalikan ke keadaan bawaan — termasuk rentang 30 harinya.
+  // "Atur Ulang" mengembalikan ke keadaan bawaan — termasuk rentang hari ini.
   // Dikosongkan sama sekali justru bukan "bersih", melainkan diam-diam menarik
   // seluruh riwayat: kebalikan dari yang diharapkan orang saat menekan tombol ini.
   const clearAllFilters = () => {
@@ -129,7 +138,7 @@ export default function MarketingDashboard() {
       .finally(() => setIsSubmittingFilters(false));
   };
 
-  // Muat awal memakai rentang bawaan 30 hari (lihat HARI_BAWAAN di atas), bukan
+  // Muat awal memakai rentang bawaan HARI INI (lihat HARI_BAWAAN di atas), bukan
   // lagi seluruh riwayat.
   useEffect(() => {
     fetchStats();
