@@ -1303,3 +1303,119 @@
 .trend-tooltip .tt-row { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: #52514e; padding: 2px 0; }
 .trend-tooltip .tt-row .tt-name { flex: 1; }
 .trend-tooltip .tt-row b { color: #0b0b0b; font-variant-numeric: tabular-nums; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   KEADAAN MEMUAT
+   ───────────────────────────────────────────────────────────────────────────
+   MASALAH YANG DIPERBAIKI
+   Sebelum ini, halaman yang sedang menunggu jawaban server tampil sebagai
+   halaman yang SUDAH SELESAI dan isinya nol: semua kartu "Rp 0", grafik
+   menulis "Belum ada data penjualan pada filter ini", dan tabel menulis
+   "Tidak Ada Data Transaksi". Satu-satunya penanda bahwa ada yang sedang
+   berjalan adalah tombol "Memproses..." — di pojok kanan atas, jauh dari
+   tempat angkanya akan muncul.
+
+   Akibatnya orang membaca layar itu sebagai "aplikasinya macet", bukan
+   "datanya sedang diambil". Lalu angkanya melompat masuk sekaligus, dan
+   lompatan itu justru menegaskan kesan tadi.
+
+   FILOSOFI
+   Layar tidak boleh menyatakan sesuatu yang belum ia ketahui. Selama jawaban
+   belum datang, angkanya ditahan — bukan diganti nol, karena nol adalah
+   pernyataan, dan pernyataan itu kebetulan salah.
+
+   Ini prinsip yang sama dengan antrean cetak di
+   docs/literasi-proses-dokumen-pesanan.md: yang belum diketahui disebut apa
+   adanya, tidak disamarkan jadi angka yang terlihat final.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes bitomni-kilau {
+  0%   { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+/* Satu definisi bar berkilau, dipakai ulang semua penampung angka di bawah. */
+.sedang-memuat .block-value,
+.sedang-memuat .donut-label-value,
+.sedang-memuat .legend-value,
+.sedang-memuat .kartu-memuat-bar {
+  color: transparent !important;
+  border-radius: 6px;
+  background-image: linear-gradient(90deg, #eceef3 25%, #f7f8fb 37%, #eceef3 63%);
+  background-size: 400% 100%;
+  animation: bitomni-kilau 1.3s ease-in-out infinite;
+  /* Lebar minimum supaya bar terbaca sebagai "tempat angka", bukan sebagai
+     coretan sempit — "Rp 0" hanya selebar empat huruf. */
+  min-width: 6.5ch;
+  display: inline-block;
+}
+
+.sedang-memuat .block-value { min-width: 8.5ch; }
+.sedang-memuat .donut-label-value { min-width: 5ch; }
+
+/* Ikon dan garis bawah ikut diredam supaya kartunya terbaca sebagai satu
+   kesatuan yang belum siap, bukan kartu siap yang angkanya hilang. */
+.sedang-memuat .block-meta-row svg,
+.sedang-memuat .donut-svg,
+.sedang-memuat .trend-svg-v2 {
+  opacity: 0.45;
+  transition: opacity 160ms ease;
+}
+
+/* Kartu beban platform membuka rincian. Selama memuat, rinciannya belum ada —
+   membiarkannya bisa diklik berarti menawarkan jendela kosong. */
+.sedang-memuat .clickable-block {
+  pointer-events: none;
+}
+
+.sedang-memuat .hover-underline { text-decoration: none; }
+
+/* ── Penampung sementara untuk grafik & tabel ────────────────────────────────
+   Keduanya punya "keadaan kosong" yang berbunyi tegas ("Tidak Ada Data
+   Transaksi"). Kalimat itu benar HANYA setelah jawaban datang. Selama
+   menunggu, yang tampil penampung ini. */
+
+.memuat-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 0;
+}
+
+.memuat-baris {
+  height: 14px;
+  border-radius: 6px;
+  background-image: linear-gradient(90deg, #eceef3 25%, #f7f8fb 37%, #eceef3 63%);
+  background-size: 400% 100%;
+  animation: bitomni-kilau 1.3s ease-in-out infinite;
+}
+
+.memuat-baris.tinggi { height: 120px; }
+.memuat-baris.w-90 { width: 90%; }
+.memuat-baris.w-70 { width: 70%; }
+.memuat-baris.w-50 { width: 50%; }
+
+/* Kalimat kecil yang menyebut apa yang sedang terjadi. Tanpa ini, kilau saja
+   masih bisa dibaca sebagai halaman rusak. */
+.memuat-keterangan {
+  font-size: 12px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+/* Pemakai yang menyetel sistemnya untuk mengurangi gerakan tidak diberi
+   animasi — kilau yang berdenyut terus adalah persis yang mereka matikan. */
+@media (prefers-reduced-motion: reduce) {
+  .sedang-memuat .block-value,
+  .sedang-memuat .donut-label-value,
+  .sedang-memuat .legend-value,
+  .sedang-memuat .kartu-memuat-bar,
+  .memuat-baris {
+    animation: none;
+    background-image: none;
+    background-color: #eceef3;
+  }
+}
