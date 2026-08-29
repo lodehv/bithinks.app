@@ -164,7 +164,6 @@ export default function MarketingDashboard() {
   const totalOmsetKotor     = t.omsetKotor     ?? 0;
   const totalOmsetPerkiraan = t.omsetPerkiraan ?? 0; // pipeline + terkonfirmasi + berisiko
   const totalPipeline       = t.pipeline       ?? 0;
-  const totalTerkonfirmasi  = t.terkonfirmasi  ?? 0;
   const totalBerisiko       = t.berisiko       ?? 0;
   const totalRetur          = t.retur          ?? 0;
   const totalDibatalkan     = t.dibatalkan     ?? 0;
@@ -179,6 +178,27 @@ export default function MarketingDashboard() {
   // Ketiganya BERDIRI SENDIRI dan tidak boleh dijumlahkan: pesanan yang sama
   // muncul di ketiganya pada tanggal yang berbeda-beda.
   const pov = stats?.pov ?? null;
+
+  // ─── POSISI UANG (saldo) ───────────────────────────────────────────────────
+  // Sengaja TIDAK mengikuti saringan tanggal — ia menjawab "uang saya SEKARANG
+  // di mana", bukan "hari ini terjadi apa". Kalau ikut disaring, pesanan yang
+  // dikirim minggu lalu dan masih di jalan hari ini akan hilang dari posisi,
+  // padahal justru itu uang yang belum di tangan.
+  //
+  // Layar WAJIB menyebutkan itu. Kontrol yang diam-diam diabaikan adalah
+  // kontrol yang berbohong — pelajaran yang sama dengan kolom tanggal kosong.
+  const posisi = stats?.posisi ?? null;
+
+  // "Breakdown status" hanya berarti untuk rentang PANJANG. Di rentang satu
+  // hari, Pipeline selalu sama persis dengan Omset Perkiraan (pesanan hari ini
+  // belum mungkin sampai), jadi ia cuma mengulang angka yang sudah ada di
+  // sebelahnya — dan angka yang sama muncul empat kali di satu layar.
+  const hariRentang = (() => {
+    if (!startDate || !endDate) return 999;
+    const a = Date.parse(startDate), b = Date.parse(endDate);
+    return Number.isFinite(a) && Number.isFinite(b) ? Math.round((b - a) / 86_400_000) + 1 : 999;
+  })();
+  const rentangPanjang = hariRentang >= 7;
   const povOmset = pov?.omset?.nilai ?? 0;
   const povTuntas = pov?.tuntas?.nilai ?? 0;
   const povTerima = pov?.penerimaan?.nilai ?? 0;
@@ -491,13 +511,58 @@ export default function MarketingDashboard() {
         </div>
       </div>
 
-      {/* ─── TIGA SUDUT PANDANG ─── */}
+      {/* ═══ ZONA 1 — POSISI UANG (SALDO, tanpa tanggal) ═══
+          Dipisah tegas dari arus karena pertanyaannya berbeda:
+            saldo : "uang saya SEKARANG di mana?"   → tanpa rentang
+            arus  : "periode ini terjadi apa?"      → dengan rentang
+          Digambar sebagai tahapan, mengikuti perjalanan uang yang sebenarnya. */}
+      {posisi && (
+        <div className="summary-card">
+          <div className="summary-card-header">
+            <h4>Posisi Uang — sekarang</h4>
+            <span className="summary-card-subtitle">
+              Saldo, bukan periode · <b>tidak mengikuti saringan tanggal</b> · mengikuti pilihan platform &amp; toko
+            </span>
+          </div>
+
+          <div className="tahap-uang">
+            <div className="tahap">
+              <span className="tahap-label">BELUM DIKIRIM</span>
+              <div className="block-value">{formatRupiah(posisi.belumDikirim?.nilai ?? 0)}</div>
+              <div className="tahap-note">
+                {posisi.belumDikirim?.pesanan ?? 0} pesanan · masih bisa batal
+                <span className="tanda-dasar">KOTOR</span>
+              </div>
+            </div>
+            <div className="tahap-panah">→</div>
+            <div className="tahap">
+              <span className="tahap-label">DI JALAN</span>
+              <div className="block-value">{formatRupiah(posisi.diJalan?.nilai ?? 0)}</div>
+              <div className="tahap-note">
+                {posisi.diJalan?.pesanan ?? 0} pesanan · sudah keluar gudang
+                <span className="tanda-dasar">KOTOR</span>
+              </div>
+            </div>
+            <div className="tahap-panah">→</div>
+            <div className="tahap tahap-utama">
+              <span className="tahap-label">MENUNGGU CAIR</span>
+              <div className="block-value text-purple">{formatRupiah(posisi.menungguCair?.nilai ?? 0)}</div>
+              <div className="tahap-note">
+                {posisi.menungguCair?.pesanan ?? 0} pesanan · hampir pasti jadi uang
+                <span className="tanda-dasar tanda-neto">NETO</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ ZONA 2 — ARUS PERIODE INI (mengikuti saringan tanggal) ═══ */}
       {pov && (
         <div className="summary-card pov-card">
           <div className="summary-card-header">
-            <h4>Tiga sudut pandang</h4>
+            <h4>Arus periode ini</h4>
             <span className="summary-card-subtitle">
-              Pertanyaan yang berbeda, tanggal yang berbeda — jangan dijumlahkan
+              Tiga peristiwa berbeda atas <b>kumpulan pesanan yang berbeda</b> — bukan satu angka yang menyusut
             </span>
           </div>
 
@@ -508,8 +573,9 @@ export default function MarketingDashboard() {
                 <DollarSign size={13} className="text-purple" />
               </div>
               <div className="block-value text-purple">{formatRupiah(povOmset)}</div>
-              <div className="block-subtext">Perkiraan penjualan hari ini</div>
-              <div className="pov-note">Dihitung dari tanggal pesanan dibuat</div>
+              <div className="block-subtext">Perkiraan penjualan periode ini</div>
+              <div className="pov-kohort">pesanan yang DIBUAT di periode ini</div>
+              <div className="pov-note">Sumbu: tanggal pesanan · <span className="tanda-dasar">KOTOR</span></div>
             </div>
 
             <div className="summary-block">
@@ -518,9 +584,10 @@ export default function MarketingDashboard() {
                 <Check size={13} className="text-purple" />
               </div>
               <div className="block-value">{formatRupiah(povTuntas)}</div>
-              <div className="block-subtext">Sampai ke pembeli hari ini</div>
+              <div className="block-subtext">Sampai ke pembeli di periode ini</div>
+              <div className="pov-kohort">pesanan dari ±8–9 hari sebelumnya</div>
               <div className="pov-note">
-                Dari pesanan hari-hari sebelumnya — rata-rata 8–9 hari lalu
+                Sumbu: tanggal sampai · <span className="tanda-dasar">KOTOR</span>
                 {persenCakupan(cakupanTuntas) !== null && (
                   <> · tanggal diketahui untuk {persenCakupan(cakupanTuntas)}% pesanan</>
                 )}
@@ -533,7 +600,8 @@ export default function MarketingDashboard() {
                 <TrendingUp size={13} className="text-purple" />
               </div>
               <div className="block-value">{formatRupiah(povTerima)}</div>
-              <div className="block-subtext">Uang cair hari ini, sudah dipotong beban</div>
+              <div className="block-subtext">Uang cair di periode ini</div>
+              <div className="pov-kohort">pencairan atas pesanan ±2 minggu sebelumnya</div>
               {/* Angka separuh yang tidak menyebut separuhnya lebih berbahaya
                   daripada tidak ada angka sama sekali. */}
               {platformTanpaTanggal.length > 0 ? (
@@ -543,7 +611,7 @@ export default function MarketingDashboard() {
                 </div>
               ) : (
                 <div className="pov-note">
-                  Bukan omset: beban platform sudah dipotong sebelum uang masuk
+                  Sumbu: tanggal cair · <span className="tanda-dasar tanda-neto">NETO</span> — beban platform sudah dipotong
                   {persenCakupan(cakupanTerima) !== null && (
                     <> · tercakup {persenCakupan(cakupanTerima)}%</>
                   )}
@@ -555,16 +623,18 @@ export default function MarketingDashboard() {
       )}
 
       {/* ─── Summary Cards Section (Omset Harian & Status Breakdown) ─── */}
-      <div className="marketing-summary-wrapper">
+      <div className={`marketing-summary-wrapper${rentangPanjang ? "" : " satu-kartu"}`}>
         
         {/* Card 1: Ringkasan Omset Harian */}
         <div className="summary-card">
           <div className="summary-card-header">
-            <h4>Omset Harian</h4>
-            <span className="summary-card-subtitle">Dikelompokkan menurut tanggal pesanan dibuat</span>
+            <h4>Asal-usul angka OMSET</h4>
+            <span className="summary-card-subtitle">
+              Kotor − retur &amp; batal = <b>OMSET</b> di atas · sumbu: tanggal pesanan dibuat
+            </span>
           </div>
 
-          <div className="summary-blocks-grid">
+          <div className="summary-blocks-grid tiga-blok">
             {/* Block 1: Omset Kotor */}
             <div className="summary-block">
               <div className="block-meta-row">
@@ -585,16 +655,6 @@ export default function MarketingDashboard() {
               <div className="block-subtext">Pembatalan & retur pesanan</div>
             </div>
 
-            {/* Block 3: Omset Perkiraan */}
-            <div className="summary-block block-highlighted">
-              <div className="block-meta-row">
-                <span className="block-category">OMSET PERKIRAAN</span>
-                <TrendingUp size={13} className="text-purple" />
-              </div>
-              <div className="block-value text-purple">{formatRupiah(totalOmsetPerkiraan)}</div>
-              <div className="block-subtext">Kotor − retur − batal</div>
-            </div>
-
             {/* Block 4: Platform Fees */}
             <div className="summary-block clickable-block" onClick={() => setShowFeeModal(true)}>
               <div className="block-meta-row">
@@ -607,34 +667,17 @@ export default function MarketingDashboard() {
           </div>
         </div>
 
-        {/* Card 2: Status Breakdown */}
+        {/* Card 2: Status Breakdown — HANYA untuk rentang panjang.
+            Di rentang pendek ia mengulang: Pipeline == Omset Perkiraan, dan
+            angka yang sama jadi muncul empat kali di satu layar. */}
+        {rentangPanjang && (
         <div className="summary-card">
           <div className="summary-card-header">
             <h4>Breakdown status</h4>
-            <span className="summary-card-subtitle">Omset perkiraan, dipecah menurut posisi pesanannya</span>
+            <span className="summary-card-subtitle">Sumbu: tanggal pesanan dibuat · pecahan dari Omset Perkiraan</span>
           </div>
 
           <div className="summary-blocks-grid">
-            {/* Block 1: Omset Perkiraan */}
-            <div className="summary-block block-highlighted">
-              <div className="block-meta-row">
-                <span className="block-category">OMSET PERKIRAAN</span>
-                <DollarSign size={13} className="text-purple" />
-              </div>
-              <div className="block-value text-purple">{formatRupiah(totalOmsetPerkiraan)}</div>
-              <div className="block-subtext">Terkonfirmasi + Pipeline + Berisiko</div>
-            </div>
-
-            {/* Block 2: Terkonfirmasi */}
-            <div className="summary-block">
-              <div className="block-meta-row">
-                <span className="block-category">TERKONFIRMASI</span>
-                <Check size={13} className="text-purple" />
-              </div>
-              <div className="block-value">{formatRupiah(totalTerkonfirmasi)}</div>
-              <div className="block-subtext">Sudah sampai ke pembeli</div>
-            </div>
-
             {/* Block 3: Pipeline */}
             <div className="summary-block">
               <div className="block-meta-row">
@@ -656,6 +699,7 @@ export default function MarketingDashboard() {
             </div>
           </div>
         </div>
+        )}
 
       </div>
 

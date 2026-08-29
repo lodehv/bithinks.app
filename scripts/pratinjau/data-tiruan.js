@@ -60,6 +60,16 @@ export const statsTiruan = {
       },
     },
   },
+  // Posisi uang (saldo). Angkanya sengaja jauh lebih besar daripada arus
+  // harian — memang begitu bentuknya: uang yang sedang di jalan menumpuk dari
+  // banyak hari, sementara arus harian cuma sehari. Kalau dibuat sebanding,
+  // potretnya tidak memperlihatkan alasan zona ini dipisah.
+  posisi: {
+    belumDikirim: { nilai: 41250000, pesanan: 312, dasar: 'kotor' },
+    diJalan: { nilai: 268400000, pesanan: 2140, dasar: 'kotor' },
+    menungguCair: { nilai: 196730000, pesanan: 1783, dasar: 'neto' },
+    ikutSaringanTanggal: false,
+  },
   biaya_api: j('fees'),
   cost_breakdown: [],
   biaya_iklan: 0,

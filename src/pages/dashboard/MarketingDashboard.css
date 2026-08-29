@@ -1474,3 +1474,115 @@
 @media (max-width: 1024px) {
   .pov-grid { grid-template-columns: 1fr; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   POSISI UANG — tahapan, bukan deret angka sejajar
+   ───────────────────────────────────────────────────────────────────────────
+   Digambar dengan PANAH di antaranya karena itulah yang membunuh salah-baca.
+   Tiga kartu sejajar tanpa panah dibaca mata sebagai satu angka yang menyusut;
+   dengan panah, ia terbaca sebagai satu rupiah yang BERPINDAH tahap — dan itu
+   memang yang terjadi: belum dikirim → di jalan → menunggu cair → cair.
+
+   Zona ini SALDO, bukan periode. Ia sengaja tidak mengikuti saringan tanggal,
+   dan sub-judulnya mengatakan itu — kontrol yang diam-diam diabaikan adalah
+   kontrol yang berbohong.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.tahap-uang {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.tahap {
+  border: 1px solid #eef0f4;
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: #fff;
+}
+
+/* Tahap terakhir yang paling berguna: hampir pasti jadi uang, tinggal menunggu. */
+.tahap-utama {
+  background: #f5f3ff;
+  border-color: #ddd6fe;
+}
+
+.tahap-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #6b7280;
+}
+
+.tahap-note {
+  margin-top: 6px;
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: #6b7280;
+}
+
+.tahap-panah {
+  display: flex;
+  align-items: center;
+  color: #c7c9f9;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* ── KOTOR vs NETO ──────────────────────────────────────────────────────────
+   Membandingkan angka kotor dengan angka bersih tanpa penanda SELALU salah:
+   beban platform sekitar seperempat omset. Penandanya kecil tapi wajib ada di
+   setiap angka uang, supaya tidak ada yang perlu menebak dasarnya. */
+.tanda-dasar {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 8.5px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  background: #f3f4f6;
+  color: #6b7280;
+  vertical-align: middle;
+}
+
+.tanda-neto {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+/* Asal-usul kohort. Inilah yang benar-benar membunuh salah-baca "13jt → 767rb
+   → 0 berarti uang menyusut": begitu tiap angka menyebut pesanan MANA yang
+   dihitungnya, jelas ketiganya kumpulan yang berbeda. Tulisan "jangan
+   dijumlahkan" saja tidak cukup menahan mata. */
+.pov-kohort {
+  margin-top: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #4f46e5;
+  background: #eef2ff;
+  border-radius: 5px;
+  padding: 3px 7px;
+  display: inline-block;
+}
+
+@media (max-width: 1024px) {
+  .tahap-uang { grid-template-columns: 1fr; }
+  .tahap-panah { justify-content: center; transform: rotate(90deg); }
+}
+
+/* Saat "Breakdown status" disembunyikan (rentang pendek), kartu yang tersisa
+   sendirian di grid dua kolom dan menyisakan separuh layar kosong. */
+.marketing-summary-wrapper.satu-kartu {
+  grid-template-columns: 1fr;
+}
+
+/* Kartu "Asal-usul angka OMSET" berisi TIGA blok. Di grid dua kolom bawaannya
+   ia menyisakan satu sel kosong yang terbaca seperti ada yang hilang. */
+.summary-blocks-grid.tiga-blok {
+  grid-template-columns: repeat(3, 1fr);
+}
+@media (max-width: 1024px) {
+  .summary-blocks-grid.tiga-blok { grid-template-columns: 1fr; }
+}
