@@ -189,6 +189,23 @@ export default function MarketingDashboard() {
   // kontrol yang berbohong — pelajaran yang sama dengan kolom tanggal kosong.
   const posisi = stats?.posisi ?? null;
 
+  // ─── CAKUPAN BEBAN ─────────────────────────────────────────────────────────
+  // Omset diakui saat pesanan dibuat; beban platform baru datang setelah
+  // sinkron keuangan (Shopee escrow 02:30, TikTok settled ~H+3). Untuk pesanan
+  // hari ini: omset penuh, beban baru sebagian.
+  //
+  // Terukur di produksi 29 Agu 2026 — beban terhadap omset per tanggal pesanan:
+  //   19–27 Agu  cakupan 100%  →  21–24%   ← tarif sebenarnya
+  //   hari ini   cakupan ~20%  →   4,9%
+  //
+  // Yang berbahaya bukan angka bebannya, melainkan LABA yang ikut salah:
+  // 64,5% padahal sekitar 44%. Angka itu dibaca sebagai uang yang boleh diambil.
+  const cakupanBeban = stats?.cakupan_beban ?? null;
+  const bebanBelumLengkap = cakupanBeban ? cakupanBeban.lengkap === false : false;
+  const persenBerbeban = cakupanBeban && cakupanBeban.pesananTotal > 0
+    ? Math.round((cakupanBeban.pesananBerbeban / cakupanBeban.pesananTotal) * 100)
+    : null;
+
   // "Breakdown status" hanya berarti untuk rentang PANJANG. Di rentang satu
   // hari, Pipeline selalu sama persis dengan Omset Perkiraan (pesanan hari ini
   // belum mungkin sampai), jadi ia cuma mengulang angka yang sudah ada di
@@ -827,7 +844,22 @@ export default function MarketingDashboard() {
               <h3>Proporsi & Margin Omset</h3>
             </div>
           </div>
-          
+
+          {/* Menempel LANGSUNG di kartu labanya, bukan di pojok halaman.
+              Peringatan yang jauh dari angka yang diperingatkannya tidak
+              terbaca oleh orang yang sedang melihat angka itu. */}
+          {bebanBelumLengkap && (
+            <div className="laba-belum-lengkap">
+              <b>⚠ Laba di bawah ini masih terlalu besar.</b> Beban platform baru
+              tercatat untuk <b>{persenBerbeban}%</b> pesanan
+              ({cakupanBeban.pesananBerbeban} dari {cakupanBeban.pesananTotal}) —
+              {' '}<b>{formatRupiah(cakupanBeban.omsetTanpaBeban)}</b> omset belum ada
+              bebannya. Beban Shopee masuk 02:30, TikTok sekitar 3 hari setelah
+              pesanan sampai. Angkanya akan turun sendiri; jangan diambil
+              keputusan sebelum cakupannya 100%.
+            </div>
+          )}
+
           <div className="chart-card-body">
             <div className="donut-chart-container">
               <svg width="160" height="160" viewBox="0 0 100 100" className="donut-svg">
