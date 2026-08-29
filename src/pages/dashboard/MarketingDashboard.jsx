@@ -553,6 +553,21 @@ export default function MarketingDashboard() {
               </div>
             </div>
           </div>
+
+          {/* DI LUAR ketiga tahap, dan sengaja begitu: pembeli belum membayar,
+              jadi ini belum uang sama sekali. Tidak dibuang diam-diam —
+              yang tidak dihitung harus disebut. Diukur 29 Agu 2026: 5 pesanan
+              UNPAID sempat terhitung sebagai "uang yang akan masuk". */}
+          {(posisi.belumDibayar?.pesanan ?? 0) > 0 && (
+            <div className="posisi-diluar">
+              <span className="posisi-diluar-label">DI LUAR HITUNGAN</span>
+              <span>
+                <b>{formatRupiah(posisi.belumDibayar.nilai)}</b> dari{' '}
+                {posisi.belumDibayar.pesanan} pesanan <b>belum dibayar</b> pembeli —
+                belum jadi uang, jadi tidak masuk ketiga tahap di atas
+              </span>
+            </div>
+          )}
         </div>
       )}
 

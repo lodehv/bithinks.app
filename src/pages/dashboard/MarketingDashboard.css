@@ -1586,3 +1586,28 @@
 @media (max-width: 1024px) {
   .summary-blocks-grid.tiga-blok { grid-template-columns: 1fr; }
 }
+
+/* Pesanan yang BELUM DIBAYAR — sengaja di luar ketiga tahap posisi uang.
+   Pembeli belum membayar, jadi ia belum uang sama sekali. Tapi tidak boleh
+   hilang diam-diam: yang tidak dihitung harus disebut, supaya orang yang
+   menjumlahkan sendiri tidak menemukan selisih tanpa penjelasan. */
+.posisi-diluar {
+  margin-top: 12px;
+  padding: 8px 11px;
+  border: 1px dashed #e5e7eb;
+  border-radius: 8px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #6b7280;
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+}
+
+.posisi-diluar-label {
+  flex: none;
+  font-size: 8.5px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #9ca3af;
+}
