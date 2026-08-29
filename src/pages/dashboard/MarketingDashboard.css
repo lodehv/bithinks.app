@@ -1419,3 +1419,58 @@
     background-color: #eceef3;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TIGA SUDUT PANDANG
+   ───────────────────────────────────────────────────────────────────────────
+   Satu himpunan pesanan, tiga pertanyaan berbeda:
+     OMSET      "hari ini saya jualan berapa?"   → tanggal pesanan
+     TUNTAS     "hari ini berapa yang sampai?"   → tanggal sampai
+     PENERIMAAN "hari ini masuk uang berapa?"    → tanggal cair, nilai NETO
+
+   Diukur di produksi: pesanan sampai rata-rata 8–9 hari setelah dibuat, dan
+   uangnya cair beberapa hari setelah itu lagi. Karena itu ketiganya BERDIRI
+   SENDIRI dan tidak boleh dijumlahkan — pesanan yang sama muncul di ketiganya
+   pada tanggal yang berbeda-beda. Itu sebabnya barisnya dipisah dari kartu
+   lain: menaruhnya bersebelahan dengan angka yang bisa dijumlahkan akan
+   mengundang orang menjumlahkannya juga.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.pov-card {
+  width: 100%;
+}
+
+.pov-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+/* Keterangan tambahan di bawah subteks: menjelaskan DARI MANA angkanya, dan
+   apa yang BELUM dikandungnya. Sengaja kecil dan redup — ia keterangan, bukan
+   angka; tapi tidak boleh hilang, karena di sinilah kejujurannya tinggal. */
+.pov-note {
+  margin-top: 6px;
+  font-size: 10.5px;
+  line-height: 1.45;
+  color: #6b7280;
+}
+
+/* Peringatan cakupan. Diukur 29 Agu 2026: Shopee 0 dari 1.473 baris beban
+   mendapat tanggal cair, sementara TikTok 3.114 dari 3.114. Artinya angka
+   Penerimaan saat ini HANYA memuat TikTok.
+
+   Angka separuh yang tidak menyebut separuhnya lebih berbahaya daripada tidak
+   ada angka sama sekali: pemilik toko akan membandingkannya dengan rekening
+   lalu menyimpulkan sistemnya salah hitung. */
+.pov-note-peringatan {
+  color: #b45309;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 6px;
+  padding: 5px 7px;
+}
+
+@media (max-width: 1024px) {
+  .pov-grid { grid-template-columns: 1fr; }
+}
