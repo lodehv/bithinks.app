@@ -68,6 +68,7 @@ export const statsTiruan = {
     belumDikirim: { nilai: 41250000, pesanan: 312, dasar: 'kotor' },
     diJalan: { nilai: 268400000, pesanan: 2140, dasar: 'kotor' },
     menungguCair: { nilai: 196730000, pesanan: 1783, dasar: 'neto' },
+    belumDibayar: { nilai: 190115, pesanan: 5, dasar: 'kotor' },
     ikutSaringanTanggal: false,
   },
   biaya_api: j('fees'),
