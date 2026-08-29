@@ -34,6 +34,32 @@ export const statsTiruan = {
              terkonfirmasi: Math.round(om * (i > 48 ? 0.15 : 0.92)) }
   }),
   per_toko,
+  // Tiga sudut pandang. Angkanya sengaja BERBEDA jauh satu sama lain dan
+  // mencerminkan bentuk aslinya di produksi: yang tuntas hari ini berasal dari
+  // pesanan 8–9 hari lalu, dan yang cair lebih kecil lagi karena beban platform
+  // sudah dipotong. Kalau ketiganya dibuat sama, potretnya tidak akan
+  // memperlihatkan apa pun yang perlu diperiksa mata.
+  //
+  // `perPlatform` memuat Shopee tanpa satu pun tanggal cair — itu keadaan
+  // produksi sungguhan per 29 Agu 2026 (0 dari 1.473), dan justru keadaan
+  // itulah yang paling perlu terlihat di potret.
+  pov: {
+    omset: { nilai: 1414149566, pesanan: 5231 },
+    tuntas: {
+      nilai: 38295057, pesanan: 575,
+      cakupan: { punyaTanggal: 18927, seharusnya: 18930 },
+    },
+    penerimaan: {
+      nilai: 21740118, pesanan: 312,
+      cakupan: {
+        punyaTanggal: 3114, seharusnya: 21641,
+        perPlatform: [
+          { channel: 'shopee', punyaTanggal: 0, seharusnya: 10116 },
+          { channel: 'tiktok', punyaTanggal: 3114, seharusnya: 11525 },
+        ],
+      },
+    },
+  },
   biaya_api: j('fees'),
   cost_breakdown: [],
   biaya_iklan: 0,
