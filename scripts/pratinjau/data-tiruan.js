@@ -71,6 +71,9 @@ export const statsTiruan = {
     belumDibayar: { nilai: 190115, pesanan: 5, dasar: 'kotor' },
     ikutSaringanTanggal: false,
   },
+  // Cakupan beban sengaja TIDAK lengkap di pratinjau — justru keadaan itulah
+  // yang perlu terlihat di potret. Angkanya meniru produksi 29 Agu 2026.
+  cakupan_beban: { pesananBerbeban: 108, pesananTotal: 542, omsetTanpaBeban: 11384210, lengkap: false },
   biaya_api: j('fees'),
   cost_breakdown: [],
   biaya_iklan: 0,
