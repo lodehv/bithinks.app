@@ -73,7 +73,12 @@ export const statsTiruan = {
   },
   // Cakupan beban sengaja TIDAK lengkap di pratinjau — justru keadaan itulah
   // yang perlu terlihat di potret. Angkanya meniru produksi 29 Agu 2026.
-  cakupan_beban: { pesananBerbeban: 108, pesananTotal: 542, omsetTanpaBeban: 11384210, lengkap: false },
+  cakupan_beban: {
+    pesananBerbeban: 108, pesananTotal: 542, omsetTanpaBeban: 11384210, lengkap: false,
+    // Dibuat beberapa jam lalu supaya potretnya memperlihatkan bentuk kalimatnya.
+    sinkronTerakhir: new Date(Date.now() - 5 * 3600_000).toISOString(),
+    jedaSinkronJam: 6,
+  },
   biaya_api: j('fees'),
   cost_breakdown: [],
   biaya_iklan: 0,
