@@ -67,3 +67,23 @@ export function labelRentang(dari, sampai) {
   return dari ? `Sejak ${hari(dari)}` : `Sampai ${hari(sampai)}`;
 }
 
+
+/**
+ * "3 jam" / "45 menit" — untuk menyebut sudah berapa lama, bukan jam berapa.
+ *
+ * Sengaja kasar: yang dibutuhkan pembacanya cuma "baru saja" atau "sudah lama",
+ * bukan ketepatan menit. Angka yang terlalu rinci justru menyita perhatian
+ * lebih dari yang pantas ia dapat.
+ */
+export function lamanya(menit) {
+  if (typeof menit !== "number" || menit < 0) return null;
+  if (menit < 60) return `${menit} menit`;
+  const jam = Math.floor(menit / 60);
+  if (jam < 24) return `${jam} jam`;
+  return `${Math.floor(jam / 24)} hari`;
+}
+
+/** Nama marketplace seperti yang dikenal pemilik toko. */
+export function namaChannel(channel) {
+  return channel === "tiktok" ? "TikTok Shop" : "Shopee";
+}
