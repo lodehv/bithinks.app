@@ -13,16 +13,31 @@ import { dirname, resolve } from 'node:path'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const LEBAR = [1440, 1280, 1024]
-let gagal = 0
 
-for (const w of LEBAR) {
-  const kode = await new Promise((s) => {
-    const p = spawn(process.execPath, [resolve(here, 'potret.mjs')],
-      { stdio: 'inherit', env: { ...process.env, LEBAR: String(w) } })
-    p.on('exit', s)
-  })
-  if (kode !== 0) gagal++
+// Tiap halaman yang punya tata letak sendiri harus ikut. Sampai 31 Agustus
+// 2026 hanya laporan yang dipotret, jadi antrean cetak — halaman yang paling
+// sering diubah — tidak pernah benar-benar dilihat siapa pun sebelum tayang.
+const HALAMAN = [
+  { berkas: 'index', nama: 'laporan' },
+  { berkas: 'antrean', nama: 'antrean-cetak' },
+]
+
+let gagal = 0
+let jumlah = 0
+
+for (const h of HALAMAN) {
+  for (const w of LEBAR) {
+    jumlah++
+    const kode = await new Promise((s) => {
+      const p = spawn(process.execPath, [resolve(here, 'potret.mjs')], {
+        stdio: 'inherit',
+        env: { ...process.env, LEBAR: String(w), HALAMAN: h.berkas, NAMA: h.nama },
+      })
+      p.on('exit', s)
+    })
+    if (kode !== 0) gagal++
+  }
 }
 
-if (gagal) { console.error(`\n${gagal} dari ${LEBAR.length} lebar bermasalah.`); process.exit(1) }
-console.log(`\n${LEBAR.length} lebar bersih.`)
+if (gagal) { console.error(`\n${gagal} dari ${jumlah} potret bermasalah.`); process.exit(1) }
+console.log(`\n${jumlah} potret bersih.`)
