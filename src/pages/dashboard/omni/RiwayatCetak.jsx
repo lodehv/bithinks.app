@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { ChevronDown, ChevronRight, Printer } from "lucide-react";
 import { omniApi } from "../../../utils/omniApi";
-import { angka, jamSingkat } from "./format-antrean";
+import { AlertTriangle } from "lucide-react";
+import { angka, jamSingkat, tanggal } from "./format-antrean";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // RIWAYAT CETAK — tiap baris satu kali tekan tombol.
@@ -117,6 +118,102 @@ function Sesi({ channel, s }) {
   );
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// PEMERIKSAAN: ADA YANG TERLEWAT TIDAK?
+//
+// Antrean cetak diturunkan dari keadaan SEKARANG — jadi pesanan yang sempat
+// siap cetak lalu berpindah jadi "dikirim" HILANG dari layar, termasuk yang
+// tidak pernah dicetak dari sini. Setelah itu tidak ada jejak apa pun.
+//
+// Itu membuat aturan "toleransi nol untuk resi yang hilang" mustahil
+// ditegakkan: bukan karena angkanya salah, tapi karena tidak ada tempat
+// bertanya. Bagian ini tempatnya.
+// ─────────────────────────────────────────────────────────────────────────────
+function Terlewat({ channel }) {
+  const [d, setD] = useState(null);
+  const [memuat, setMemuat] = useState(true);
+  const [buka, setBuka] = useState(false);
+
+  // Pemanggilannya dibungkus useCallback, bukan ditaruh langsung di dalam
+  // effect: memanggil setState di badan effect memicu render beruntun, dan
+  // aturan lint proyek ini menolaknya. Pola yang sama dipakai AntreanCetak.
+  const periksa = useCallback(async () => {
+    setMemuat(true);
+    try {
+      setD(await omniApi.lewatTanpaCetak(channel));
+    } catch {
+      setD(null);
+    } finally {
+      setMemuat(false);
+    }
+  }, [channel]);
+
+  useEffect(() => { periksa(); }, [periksa]);
+
+  if (memuat) {
+    return <div style={{ fontSize: 13, color: "#9CA3AF", marginBottom: 16 }}>Memeriksa yang terlewat…</div>;
+  }
+  if (!d) return null;
+
+  // NOL BUKAN KEKOSONGAN — ia jawaban, dan jawaban yang paling sering
+  // dibutuhkan. Menyembunyikannya membuat orang harus memeriksa sendiri.
+  if (d.jumlah === 0) {
+    return (
+      <div style={{
+        display: "flex", alignItems: "center", gap: 8, marginBottom: 20,
+        padding: "10px 14px", borderRadius: 10, background: "#F0FDF4",
+        border: "1px solid #BBF7D0", color: "#166534", fontSize: 13,
+      }}>
+        <strong>Tidak ada resi yang terlewat</strong>
+        <span style={{ color: "#15803D" }}>· {d.hari} hari terakhir</span>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{
+      marginBottom: 20, padding: "12px 14px", borderRadius: 10,
+      background: "#FFFBEB", border: "1px solid #FDE68A", color: "#78350F",
+    }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13.5 }}>
+        <AlertTriangle size={16} style={{ flexShrink: 0 }} />
+        <span>
+          <strong>{angka(d.jumlah)} pesanan</strong> sempat siap dicetak lalu terkirim tanpa
+          pernah dicetak dari sini, {d.hari} hari terakhir.
+          {d.jendelaTersempitMenit !== null && (
+            <> Yang tersingkat cuma <strong>{angka(d.jendelaTersempitMenit)} menit</strong>.</>
+          )}
+        </span>
+        <button
+          onClick={() => setBuka((b) => !b)}
+          style={{
+            marginLeft: "auto", padding: "3px 10px", borderRadius: 999, cursor: "pointer",
+            border: "1px solid #FDE68A", background: "#fff", color: "#78350F",
+            fontSize: 12.5, fontWeight: 600, fontFamily: "inherit", flexShrink: 0,
+          }}
+        >{buka ? "Sembunyikan" : "Lihat nomornya"}</button>
+      </div>
+
+      {buka && (
+        <div style={{ marginTop: 10, display: "grid", gap: 4 }}>
+          {d.daftar.map((b) => (
+            <div key={b.nomorPesanan} style={{ display: "flex", gap: 10, fontSize: 12.5, flexWrap: "wrap" }}>
+              <span style={{ letterSpacing: ".02em", minWidth: 140 }}>{b.nomorPesanan}</span>
+              <span style={{ letterSpacing: ".02em", color: "#92400E", minWidth: 150 }}>{b.resi ?? "—"}</span>
+              <span style={{ color: "#92400E" }}>{b.toko}</span>
+              {b.jendelaMenit !== null && (
+                <span style={{ color: "#A16207" }}>jendela {angka(b.jendelaMenit)} menit</span>
+              )}
+              {b.siapPada && <span style={{ color: "#A16207" }}>siap {tanggal(b.siapPada)}</span>}
+            </div>
+          ))}
+          {d.terpotong && <div style={{ marginTop: 6 }}>Daftarnya lebih panjang dari yang ditampilkan.</div>}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function RiwayatCetak() {
   const [channel, setChannel] = useState("shopee");
   const [data, setData] = useState(null);
@@ -165,6 +262,8 @@ export default function RiwayatCetak() {
           Tiap baris satu kali tekan tombol cetak. Angkanya tidak berubah.
         </span>
       </div>
+
+      <Terlewat channel={channel} />
 
       {memuat && !data ? (
         <div style={{ color: "#9CA3AF", fontSize: 13, padding: "20px 2px" }}>Memuat riwayat…</div>
