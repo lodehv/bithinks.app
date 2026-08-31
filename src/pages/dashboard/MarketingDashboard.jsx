@@ -206,6 +206,25 @@ export default function MarketingDashboard() {
     ? Math.round((cakupanBeban.pesananBerbeban / cakupanBeban.pesananTotal) * 100)
     : null;
 
+  // Berapa lama lagi sampai lengkap. Dihitung dari sinkronisasi terakhir yang
+  // PALING TERTINGGAL, bukan tenggat karangan.
+  //
+  // Versi pertama menulis "Shopee 02:30, TikTok ~3 hari setelah pesanan
+  // sampai" — seolah harus menunggu pencairan. Itu SALAH, dan pemilik toko
+  // yang menemukannya: beban sudah bisa dibaca sejak pesanan masuk. Diukur di
+  // produksi 29 Agu 2026, pesanan berumur >18 jam cakupannya 100% di SEMUA
+  // status, termasuk `dikemas` yang belum dikirim apalagi cair.
+  //
+  // Menyebut tenggat yang salah lebih buruk daripada tidak menyebut apa-apa:
+  // orang akan menunda keputusan tiga hari untuk sesuatu yang beres dalam enam
+  // jam.
+  const jamSejakSinkron = (() => {
+    const s = cakupanBeban?.sinkronTerakhir;
+    if (!s) return null;
+    const ms = Date.now() - Date.parse(s);
+    return Number.isFinite(ms) ? Math.max(0, Math.floor(ms / 3_600_000)) : null;
+  })();
+
   // "Breakdown status" hanya berarti untuk rentang PANJANG. Di rentang satu
   // hari, Pipeline selalu sama persis dengan Omset Perkiraan (pesanan hari ini
   // belum mungkin sampai), jadi ia cuma mengulang angka yang sudah ada di
@@ -854,9 +873,17 @@ export default function MarketingDashboard() {
               tercatat untuk <b>{persenBerbeban}%</b> pesanan
               ({cakupanBeban.pesananBerbeban} dari {cakupanBeban.pesananTotal}) —
               {' '}<b>{formatRupiah(cakupanBeban.omsetTanpaBeban)}</b> omset belum ada
-              bebannya. Beban Shopee masuk 02:30, TikTok sekitar 3 hari setelah
-              pesanan sampai. Angkanya akan turun sendiri; jangan diambil
-              keputusan sebelum cakupannya 100%.
+              bebannya.{' '}
+              {/* Sebabnya BUKAN menunggu pencairan — beban sudah terbaca sejak
+                  pesanan masuk. Yang tertinggal cuma putaran sinkronisasinya. */}
+              Beban ditarik bersamaan dengan sinkronisasi pesanan, tiap{' '}
+              {cakupanBeban.jedaSinkronJam ?? 6} jam
+              {jamSejakSinkron !== null && (
+                <> — terakhir <b>{jamSejakSinkron === 0 ? 'kurang dari 1 jam' : `${jamSejakSinkron} jam`} lalu</b></>
+              )}
+              . Pesanan yang masuk sesudah itu belum ditarik bebannya. Angkanya
+              turun sendiri pada putaran berikutnya; jangan ambil keputusan
+              sebelum cakupannya 100%.
             </div>
           )}
 
