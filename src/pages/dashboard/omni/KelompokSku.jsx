@@ -20,6 +20,12 @@ const TAHAP = {
   // mengaturnya. Karena itu namanya harus menyebut siapa yang sedang menahan,
   // bukan menyuruh orang mengerjakan sesuatu yang mustahil.
   ditinjau_shopee: { teks: "Ditinjau Tim Shopee",     warna: "#3730A3", latar: "#EEF2FF" },
+  // Keterangan pengiriman dari Shopee belum sampai ke kami. Ini utang KAMI,
+  // bukan pekerjaan pemilik toko — dan dulu memang keliru disebut "perlu atur
+  // pengiriman". Pengukuran 31 Agu 2026 membatalkannya: dari 129 pesanan, 123
+  // sudah diatur sendiri oleh Shopee, jadi tombol itu menyuruh mengerjakan
+  // sesuatu yang sudah selesai. Namanya sekarang menyebut keadaan sebenarnya.
+  belum_diketahui: { teks: "Menunggu keterangan Shopee", warna: "#3F3F46", latar: "#FAFAFA" },
   perlu_diperiksa: { teks: "Perlu diperiksa",       warna: "#991B1B", latar: "#FEF2F2" },
 };
 

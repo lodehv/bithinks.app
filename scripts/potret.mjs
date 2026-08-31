@@ -21,6 +21,18 @@ const keluar = resolve(akar, 'pratinjau-keluaran')
 mkdirSync(keluar, { recursive: true })
 
 const LEBAR = Number(process.env.LEBAR ?? 1440)  // satu lebar per pemanggilan
+
+// Halaman mana yang dipotret. Dulu cuma ada satu, dan itu jebakan: perubahan
+// pada antrean cetak lolos gerbang ini tanpa satu pun potret — padahal aturan
+// "lihat potretnya" justru lahir dari halaman yang rusak diam-diam.
+const HALAMAN = process.env.HALAMAN ?? 'index'
+const NAMA = process.env.NAMA ?? 'laporan'
+
+// CATATAN BUAT YANG MEMBACA POTRETNYA NANTI: pada halaman yang isinya lebih
+// pendek dari 2400px, Chrome headless kadang MELUKIS ULANG bagian atas di
+// bagian bawah potret. Itu artefak potret, bukan halaman yang terender dua
+// kali — diperiksa 31 Agustus 2026 dengan menghitung isi DOM-nya: masing-masing
+// tepat satu. Jangan buang waktu memburunya.
 const CHROME = (() => {
   if (process.env.CHROME) return process.env.CHROME
   const calon = [
@@ -42,8 +54,8 @@ const vite = await createServer({
 })
 await vite.listen()
 
-const url = `http://localhost:5199/scripts/pratinjau/index.html`
-const berkas = resolve(keluar, `laporan-${LEBAR}.png`)
+const url = `http://localhost:5199/scripts/pratinjau/${HALAMAN}.html`
+const berkas = resolve(keluar, `${NAMA}-${LEBAR}.png`)
 
 const dom = await new Promise((selesai, gagal) => {
   const p = spawn(CHROME, [

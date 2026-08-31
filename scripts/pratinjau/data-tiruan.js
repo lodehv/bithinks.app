@@ -90,3 +90,48 @@ export const statsTiruan = {
 }
 
 export const tokoTiruan = per_toko.map((t) => ({ id: t.storeId, name: t.storeName, channel: t.channel }))
+
+// ── Antrean cetak ───────────────────────────────────────────────────────────
+//
+// Sengaja memuat KEEMPAT sebab sekaligus, termasuk `belum_diketahui` yang
+// ditambahkan 31 Agustus 2026. Potretnya jadi bukti bahwa keempatnya punya
+// nama dan warnanya sendiri — bukan satu warna yang menampung apa saja.
+const pesanan = (n, tahap, extra = {}) => ({
+  id: `p-${n}`, nomorPesanan: `2608${31}RK${n}Q9N3J`, penerima: `Penerima ${n}`,
+  qty: 1 + (n % 3), orderedAt: '2026-08-31T02:00:00.000Z', tahap,
+  statusMarketplace: extra.sm ?? 'READY_TO_SHIP', statusPaket: extra.sp ?? null,
+  adaDiKelompokLain: false, packageCount: 1,
+});
+
+export const antreanTiruan = {
+  channel: 'shopee',
+  kelompok: [
+    {
+      sku: 'PUPUK-NPK-16', nama: 'Pupuk NPK 16-16-16 · 1 kg',
+      jumlahPesanan: 6, siapCetak: 4, totalQty: 9,
+      dimintaBatal: 0, perluAtur: 1, ditinjauShopee: 0, belumDiketahui: 1, perluDiperiksa: 0,
+      pesanan: [
+        pesanan(1, 'siap_cetak', { sm: 'PROCESSED', sp: 'LOGISTICS_REQUEST_CREATED' }),
+        pesanan(2, 'siap_cetak', { sm: 'PROCESSED', sp: 'LOGISTICS_REQUEST_CREATED' }),
+        pesanan(3, 'siap_cetak', { sm: 'PROCESSED', sp: 'LOGISTICS_PICKUP_DONE' }),
+        pesanan(4, 'siap_cetak', { sm: 'PROCESSED', sp: 'LOGISTICS_REQUEST_CREATED' }),
+        pesanan(5, 'perlu_atur', { sm: 'READY_TO_SHIP', sp: 'LOGISTICS_READY' }),
+        pesanan(6, 'belum_diketahui', { sm: 'READY_TO_SHIP', sp: null }),
+      ],
+    },
+    {
+      sku: 'BENIH-CABAI-01', nama: 'Benih Cabai Rawit · sachet 10 g',
+      jumlahPesanan: 4, siapCetak: 2, totalQty: 5,
+      dimintaBatal: 1, perluAtur: 0, ditinjauShopee: 1, belumDiketahui: 0, perluDiperiksa: 0,
+      pesanan: [
+        pesanan(7, 'siap_cetak', { sm: 'PROCESSED', sp: 'LOGISTICS_REQUEST_CREATED' }),
+        pesanan(8, 'siap_cetak', { sm: 'PROCESSED', sp: 'LOGISTICS_REQUEST_CREATED' }),
+        pesanan(9, 'diminta_batal', { sm: 'IN_CANCEL', sp: 'LOGISTICS_READY' }),
+        pesanan(10, 'ditinjau_shopee', { sm: 'READY_TO_SHIP', sp: 'LOGISTICS_NOT_START' }),
+      ],
+    },
+  ],
+  totalLabel: 10, totalSiapCetak: 6, totalDimintaBatal: 1,
+  totalPerluAtur: 1, totalDitinjauShopee: 1, totalBelumDiketahui: 1,
+  totalPerluDiperiksa: 0, pesananLintasKelompok: 0, pesananPaketPecah: 0,
+};
