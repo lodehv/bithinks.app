@@ -133,5 +133,8 @@ export const antreanTiruan = {
   ],
   totalLabel: 10, totalSiapCetak: 6, totalDimintaBatal: 1,
   totalPerluAtur: 1, totalDitinjauShopee: 1, totalBelumDiketahui: 1,
-  totalPerluDiperiksa: 0, pesananLintasKelompok: 0, pesananPaketPecah: 0,
+  totalPerluDiperiksa: 0, pesananLintasKelompok: 1, pesananPaketPecah: 0,
+  // Dua angka pencegahan, ikut dipotret supaya kalimatnya benar-benar terlihat.
+  menungguLama: 2, batasLamaJam: 24,
+  menitSejakKabarMarketplace: 190, batasSunyiMenit: 60,
 };

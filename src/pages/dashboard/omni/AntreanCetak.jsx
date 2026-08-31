@@ -5,7 +5,7 @@ import CerminSellerCenter from "./CerminSellerCenter";
 import KepalaAntrean from "./KepalaAntrean";
 import Kelompok, { Catatan } from "./KelompokSku";
 import TombolAturKirim from "./TombolAturKirim";
-import { angka, hariIni, mundur, tanggal } from "./format-antrean";
+import { angka, hariIni, lamanya, mundur, namaChannel, tanggal } from "./format-antrean";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ANTREAN CETAK RESI
@@ -167,6 +167,24 @@ export default function AntreanCetak() {
                   fontSize: 12.5, fontWeight: 600, fontFamily: "inherit",
                 }}
               >Tampilkan</button>
+            </Catatan>
+          )}
+
+          {/* SUNYI DARI MARKETPLACE.
+              Layar yang menampilkan "0 masalah" terlihat persis sama dengan
+              layar yang tidak bisa memeriksa apa pun. Diukur di produksi:
+              Shopee mengirim kabar 187-463 kali per jam, jadi sunyi satu jam
+              penuh bukan hal biasa. */}
+          {lamanya(data.menitSejakKabarMarketplace) === null ? (
+            <Catatan ikon={<AlertTriangle size={16} />} warna="#92400E" latar="#FFFBEB">
+              Belum ada kabar sama sekali dari {namaChannel(channel)}. Angka di
+              halaman ini mungkin belum yang terbaru.
+            </Catatan>
+          ) : data.menitSejakKabarMarketplace >= (data.batasSunyiMenit ?? 60) && (
+            <Catatan ikon={<AlertTriangle size={16} />} warna="#92400E" latar="#FFFBEB">
+              Kabar terakhir dari {namaChannel(channel)} sudah{" "}
+              {lamanya(data.menitSejakKabarMarketplace)} lalu. Angka di halaman
+              ini mungkin belum yang terbaru.
             </Catatan>
           )}
 

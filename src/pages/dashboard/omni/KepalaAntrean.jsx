@@ -184,6 +184,15 @@ export default function KepalaAntrean({
             {angka(data.totalPerluDiperiksa)} perlu diperiksa
           </Cip>
         )}
+        {/* SUDAH LAMA MENUNGGU — pencegahan, bukan laporan.
+            Antrean berisi 20 resi terlihat sama saja, entah semuanya masuk lima
+            menit lalu atau ada yang sudah menunggu tiga hari. Sebelum ini,
+            pesanan yang lewat tanpa dicetak baru ketahuan sesudah kejadian. */}
+        {data?.menungguLama > 0 && (
+          <Cip warna="#9A3412" latar="#FFF7ED" garis="#FED7AA">
+            {angka(data.menungguLama)} pesanan menunggu lebih dari {data.batasLamaJam ?? 24} jam
+          </Cip>
+        )}
 
         <div style={{ marginLeft: "auto" }}>
           <PilihTanggal dari={dari} sampai={sampai} onUbah={onTanggal} />
