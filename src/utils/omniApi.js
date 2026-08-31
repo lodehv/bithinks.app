@@ -124,6 +124,11 @@ export const omniApi = {
   // berubah. Karena itu ia punya jalur sendiri, bukan menumpang angka antrean.
   riwayatCetak:      (channel, p = {}) => api.get('/api/omni/orders/riwayat-cetak', { params: { channel, ...p } }).then(unwrap),
 
+  // "Ada resi yang terlewat tidak?" — pertanyaan yang selama ini tidak punya
+  // tempat, dan cuma bisa dijawab dengan membandingkan sendiri ke Seller
+  // Center satu per satu.
+  lewatTanpaCetak:   (channel, p = {}) => api.get('/api/omni/orders/lewat-tanpa-cetak', { params: { channel, ...p }, timeout: 60000 }).then(unwrap),
+
   // Angka ringkas halaman depan, dihitung server atas SELURUH pesanan.
   // hasil: { total, omset, perluProses, perStatus, perChannel }
   ordersSummary:     ()            => api.get('/api/omni/orders/summary').then(unwrap),
