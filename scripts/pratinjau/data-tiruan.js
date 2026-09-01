@@ -101,6 +101,7 @@ const pesanan = (n, tahap, extra = {}) => ({
   qty: 1 + (n % 3), orderedAt: '2026-08-31T02:00:00.000Z', tahap,
   statusMarketplace: extra.sm ?? 'READY_TO_SHIP', statusPaket: extra.sp ?? null,
   adaDiKelompokLain: false, packageCount: 1,
+  gagalBerulang: extra.gagal ?? 0, kodeGagal: extra.kode ?? null,
 });
 
 export const antreanTiruan = {
@@ -115,7 +116,7 @@ export const antreanTiruan = {
         pesanan(2, 'siap_cetak', { sm: 'PROCESSED', sp: 'LOGISTICS_REQUEST_CREATED' }),
         pesanan(3, 'siap_cetak', { sm: 'PROCESSED', sp: 'LOGISTICS_PICKUP_DONE' }),
         pesanan(4, 'siap_cetak', { sm: 'PROCESSED', sp: 'LOGISTICS_REQUEST_CREATED' }),
-        pesanan(5, 'perlu_atur', { sm: 'READY_TO_SHIP', sp: 'LOGISTICS_READY' }),
+        pesanan(5, 'perlu_atur', { sm: 'READY_TO_SHIP', sp: 'LOGISTICS_READY', gagal: 5, kode: '21042105' }),
         pesanan(6, 'belum_diketahui', { sm: 'READY_TO_SHIP', sp: null }),
       ],
     },
@@ -133,7 +134,7 @@ export const antreanTiruan = {
   ],
   totalLabel: 10, totalSiapCetak: 6, totalDimintaBatal: 1,
   totalPerluAtur: 1, totalDitinjauShopee: 1, totalBelumDiketahui: 1,
-  totalPerluDiperiksa: 0, pesananLintasKelompok: 1, pesananPaketPecah: 0,
+  totalPerluDiperiksa: 0, pesananLintasKelompok: 1, pesananPaketPecah: 0, totalPernahGagal: 1,
   // Dua angka pencegahan, ikut dipotret supaya kalimatnya benar-benar terlihat.
   menungguLama: 2, batasLamaJam: 24,
   menitSejakKabarMarketplace: 190, batasSunyiMenit: 60,
