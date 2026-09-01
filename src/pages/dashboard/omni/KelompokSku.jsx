@@ -26,6 +26,11 @@ const TAHAP = {
   // sudah diatur sendiri oleh Shopee, jadi tombol itu menyuruh mengerjakan
   // sesuatu yang sudah selesai. Namanya sekarang menyebut keadaan sebenarnya.
   belum_diketahui: { teks: "Menunggu keterangan Shopee", warna: "#3F3F46", latar: "#FAFAFA" },
+  // Statusnya DIKENALI, dan status itu memang bukan keadaan yang dicetak —
+  // diretur, dibatalkan, sudah jalan. Dulu semuanya disebut "Perlu diperiksa",
+  // dan pemilik toko benar mengeluh: tidak ada satu kata pun tentang apa yang
+  // perlu diperiksa. Sebutan aslinya dari marketplace ditampilkan di sebelahnya.
+  bukan_untuk_dicetak: { teks: "Tidak untuk dicetak", warna: "#3F3F46", latar: "#FAFAFA" },
   perlu_diperiksa: { teks: "Perlu diperiksa",       warna: "#991B1B", latar: "#FEF2F2" },
 };
 
@@ -42,8 +47,12 @@ export function Catatan({ ikon, warna, latar, children }) {
   );
 }
 
-export default function Kelompok({ k, channel, sisi, dari, sampai, onSelesai }) {
-  const [buka, setBuka] = useState(false);
+export default function Kelompok({ k, channel, sisi, dari, sampai, onSelesai, awalTerbuka = false }) {
+  // `awalTerbuka` hanya dipakai pratinjau potret. Baris pesanan tersembunyi di
+  // balik klik, jadi tanpa ini tidak ada potret yang pernah memperlihatkannya —
+  // dan aturan "lihat potretnya" tidak bisa dipenuhi untuk bagian layar yang
+  // paling sering salah.
+  const [buka, setBuka] = useState(awalTerbuka);
   return (
     <div style={{ border: "1px solid #E5E7EB", borderRadius: 10, marginBottom: 8, background: "#fff" }}>
       {/* Tombol cetak berada DI SEBELAH tombol buka-tutup, bukan di dalamnya.
@@ -133,6 +142,23 @@ export default function Kelompok({ k, channel, sisi, dari, sampai, onSelesai }) 
                     cursor: p.statusMarketplace ? "help" : undefined,
                   }}
                 >{t.teks}</span>
+                {/* KATA ASLI MARKETPLACE, TERBACA TANPA MENGARAHKAN KURSOR.
+                    Aturan pemilik toko: alasan sebuah pesanan tidak bisa
+                    dicetak harus datang dari marketplace, bukan karangan kami.
+                    Selama ini kata aslinya cuma muncul saat kursor diarahkan —
+                    dan di ponsel tidak pernah muncul sama sekali.
+
+                    Hanya untuk yang TIDAK bisa dicetak: pada baris yang siap
+                    dicetak, statusnya tidak menjelaskan apa pun yang belum
+                    terlihat. */}
+                {p.tahap !== "siap_cetak" && p.statusMarketplace && (
+                  <span
+                    style={{
+                      fontSize: 10.5, color: "#6B7280", flexShrink: 0,
+                      letterSpacing: ".02em", fontVariantNumeric: "tabular-nums",
+                    }}
+                  >{p.statusMarketplace}</span>
+                )}
                 {/* PERNAH DITOLAK MARKETPLACE.
                     Tanpa ini, pesanan yang sudah lima kali ditolak terlihat
                     persis sama dengan yang belum pernah dicoba. Itu yang
@@ -149,9 +175,17 @@ export default function Kelompok({ k, channel, sisi, dari, sampai, onSelesai }) 
                     }}
                   >gagal {p.gagalBerulang}×</span>
                 )}
-                {p.adaDiKelompokLain && (
-                  <span title="Pesanan ini juga berisi SKU lain — labelnya tetap satu"
-                        style={{ fontSize: 11, color: "#6B7280", flexShrink: 0 }}>+SKU lain</span>
+                {/* SEBUT SKU-NYA, JANGAN CUMA JUMLAHNYA.
+                    Pemilik toko dua kali bertanya kenapa kepala layar
+                    menghitung satu pesanan sementara di bawah ada dua baris
+                    bernomor sama. Penanda "+SKU lain" yang abu-abu di ujung
+                    kanan tidak pernah menjawabnya. Menyebut SKU-nya membuat
+                    pertanyaannya hilang: barisnya menunjuk ke kembarannya. */}
+                {p.skuLain?.length > 0 && (
+                  <span title="Satu pesanan, satu label — barisnya muncul di tiap SKU supaya tidak terlewat saat mengambil barang"
+                        style={{ fontSize: 11, color: "#6B7280", flexShrink: 0 }}>
+                    juga di {p.skuLain.join(", ")}
+                  </span>
                 )}
                 {p.packageCount > 1 && (
                   <span title="Pesanan ini pecah jadi beberapa paket — label belum lengkap"

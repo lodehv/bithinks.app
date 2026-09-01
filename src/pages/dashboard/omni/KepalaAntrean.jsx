@@ -179,9 +179,14 @@ export default function KepalaAntrean({
             {angka(data.totalPerluAtur)} perlu atur pengiriman
           </Cip>
         )}
+        {data?.totalBukanUntukDicetak > 0 && (
+          <Cip warna="#3F3F46" latar="#FAFAFA" garis="#E4E4E7">
+            {angka(data.totalBukanUntukDicetak)} pesanan tidak untuk dicetak
+          </Cip>
+        )}
         {data?.totalPerluDiperiksa > 0 && (
           <Cip warna="#991B1B" latar="#FEF2F2" garis="#FECACA">
-            {angka(data.totalPerluDiperiksa)} perlu diperiksa
+            {angka(data.totalPerluDiperiksa)} pesanan perlu diperiksa
           </Cip>
         )}
         {/* SUDAH LAMA MENUNGGU — pencegahan, bukan laporan.

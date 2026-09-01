@@ -192,7 +192,8 @@ export default function AntreanCetak() {
           )}
 
           {data.kelompok.map((k) => (
-            <Kelompok key={k.sku} k={k} channel={channel} sisi={sisi} dari={dari} sampai={sampai} onSelesai={ambil} />
+            <Kelompok key={k.sku} k={k} channel={channel} sisi={sisi} dari={dari} sampai={sampai}
+                      onSelesai={ambil} awalTerbuka={Boolean(data.pratinjauTerbuka)} />
           ))}
 
           <div style={{ fontSize: 12, color: "#9CA3AF", padding: "10px 2px", textAlign: "center" }}>
