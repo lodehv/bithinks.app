@@ -133,6 +133,22 @@ export default function Kelompok({ k, channel, sisi, dari, sampai, onSelesai }) 
                     cursor: p.statusMarketplace ? "help" : undefined,
                   }}
                 >{t.teks}</span>
+                {/* PERNAH DITOLAK MARKETPLACE.
+                    Tanpa ini, pesanan yang sudah lima kali ditolak terlihat
+                    persis sama dengan yang belum pernah dicoba. Itu yang
+                    terjadi pada 585769371864369119: gagal lima kali dengan
+                    kode yang sama, lalu berangkat 74 jam kemudian tanpa label
+                    dari kami. */}
+                {p.gagalBerulang > 0 && (
+                  <span
+                    title={p.kodeGagal ? `Kode terakhir dari marketplace: ${p.kodeGagal}` : undefined}
+                    style={{
+                      fontSize: 11, padding: "2px 8px", borderRadius: 99, flexShrink: 0,
+                      background: "#FEF2F2", color: "#991B1B",
+                      cursor: p.kodeGagal ? "help" : undefined,
+                    }}
+                  >gagal {p.gagalBerulang}×</span>
+                )}
                 {p.adaDiKelompokLain && (
                   <span title="Pesanan ini juga berisi SKU lain — labelnya tetap satu"
                         style={{ fontSize: 11, color: "#6B7280", flexShrink: 0 }}>+SKU lain</span>
