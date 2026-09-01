@@ -142,31 +142,28 @@ export default function AntreanCetak() {
             </Catatan>
           ) : null}
 
-          {/* YANG DI LUAR RENTANG SELALU DISEBUT.
-              Inilah yang membuat batas dua hari berhenti jadi tempat sembunyi
-              dan berubah jadi ringkasan yang jujur. */}
-          {/* HANYA KALAU ADA PEKERJAAN YANG BENAR-BENAR TERTINGGAL.
-              Versi pertama juga menampilkan baris abu-abu saat tidak ada yang
-              siap dicetak di luar rentang — "3 pesanan lama ada di luar
-              rentang, tidak ada pekerjaan yang tertinggal". Benar, tapi tidak
-              berguna: ia memberi tahu bahwa tidak ada yang perlu dilakukan,
-              lalu meminta tempat di layar untuk mengatakannya.
+          {/* Catatan "resi tertinggal di luar rentang" DIHAPUS 1 September 2026.
+              Saringan tanggal tidak lagi berlaku untuk pesanan yang belum
+              dicetak, jadi tidak ada lagi yang bisa tertinggal di luar rentang
+              dan catatannya tidak akan pernah muncul. Lihat route
+              antrean-cetak: dua pesanan TikTok hilang karena tersembunyi
+              sekitar 42 jam sementara resinya masih bisa diambil. */}
 
-              Pemilik toko: "tampilan ini hapus saja karena tidak penting."
-              Sekarang barisnya cuma muncul saat memang ada yang tertinggal. */}
-          {sisi === "belum" && data.diLuarRentang?.siapCetak > 0 && (
+          {/* SUNYI DARI MARKETPLACE.
+              Layar yang menampilkan "0 masalah" terlihat persis sama dengan
+              layar yang tidak bisa memeriksa apa pun. Diukur di produksi:
+              Shopee mengirim kabar 187-463 kali per jam, jadi sunyi satu jam
+              penuh bukan hal biasa. */}
+          {lamanya(data.menitSejakKabarMarketplace) === null ? (
             <Catatan ikon={<AlertTriangle size={16} />} warna="#92400E" latar="#FFFBEB">
-              <strong>{angka(data.diLuarRentang.siapCetak)} resi siap dicetak</strong> tertinggal
-              di luar rentang tanggal ini
-              {data.diLuarRentang.tertua ? `, yang tertua dipesan ${tanggal(data.diLuarRentang.tertua)}` : ""}.
-              <button
-                onClick={() => ubahTanggal("", "")}
-                style={{
-                  marginLeft: 8, padding: "3px 10px", borderRadius: 999, cursor: "pointer",
-                  border: "1px solid #FDE68A", background: "#fff", color: "#92400E",
-                  fontSize: 12.5, fontWeight: 600, fontFamily: "inherit",
-                }}
-              >Tampilkan</button>
+              Belum ada kabar sama sekali dari {namaChannel(channel)}. Angka di
+              halaman ini mungkin belum yang terbaru.
+            </Catatan>
+          ) : data.menitSejakKabarMarketplace >= (data.batasSunyiMenit ?? 60) && (
+            <Catatan ikon={<AlertTriangle size={16} />} warna="#92400E" latar="#FFFBEB">
+              Kabar terakhir dari {namaChannel(channel)} sudah{" "}
+              {lamanya(data.menitSejakKabarMarketplace)} lalu. Angka di halaman
+              ini mungkin belum yang terbaru.
             </Catatan>
           )}
 
