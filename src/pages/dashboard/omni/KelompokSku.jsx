@@ -175,9 +175,17 @@ export default function Kelompok({ k, channel, sisi, dari, sampai, onSelesai, aw
                     }}
                   >gagal {p.gagalBerulang}×</span>
                 )}
-                {p.adaDiKelompokLain && (
-                  <span title="Pesanan ini juga berisi SKU lain — labelnya tetap satu"
-                        style={{ fontSize: 11, color: "#6B7280", flexShrink: 0 }}>+SKU lain</span>
+                {/* SEBUT SKU-NYA, JANGAN CUMA JUMLAHNYA.
+                    Pemilik toko dua kali bertanya kenapa kepala layar
+                    menghitung satu pesanan sementara di bawah ada dua baris
+                    bernomor sama. Penanda "+SKU lain" yang abu-abu di ujung
+                    kanan tidak pernah menjawabnya. Menyebut SKU-nya membuat
+                    pertanyaannya hilang: barisnya menunjuk ke kembarannya. */}
+                {p.skuLain?.length > 0 && (
+                  <span title="Satu pesanan, satu label — barisnya muncul di tiap SKU supaya tidak terlewat saat mengambil barang"
+                        style={{ fontSize: 11, color: "#6B7280", flexShrink: 0 }}>
+                    juga di {p.skuLain.join(", ")}
+                  </span>
                 )}
                 {p.packageCount > 1 && (
                   <span title="Pesanan ini pecah jadi beberapa paket — label belum lengkap"

@@ -100,7 +100,7 @@ const pesanan = (n, tahap, extra = {}) => ({
   id: `p-${n}`, nomorPesanan: `2608${31}RK${n}Q9N3J`, penerima: `Penerima ${n}`,
   qty: 1 + (n % 3), orderedAt: '2026-08-31T02:00:00.000Z', tahap,
   statusMarketplace: extra.sm ?? 'READY_TO_SHIP', statusPaket: extra.sp ?? null,
-  adaDiKelompokLain: false, packageCount: 1,
+  adaDiKelompokLain: Boolean(extra.skuLain), skuLain: extra.skuLain ?? [], packageCount: 1,
   gagalBerulang: extra.gagal ?? 0, kodeGagal: extra.kode ?? null,
 });
 
@@ -130,7 +130,7 @@ export const antreanTiruan = {
         pesanan(8, 'siap_cetak', { sm: 'PROCESSED', sp: 'LOGISTICS_REQUEST_CREATED' }),
         pesanan(9, 'diminta_batal', { sm: 'IN_CANCEL', sp: 'LOGISTICS_READY' }),
         pesanan(10, 'ditinjau_shopee', { sm: 'READY_TO_SHIP', sp: 'LOGISTICS_NOT_START' }),
-        pesanan(11, 'bukan_untuk_dicetak', { sm: 'TO_RETURN', sp: null }),
+        pesanan(11, 'bukan_untuk_dicetak', { sm: 'TO_RETURN', sp: null, skuLain: ['PUPUK-NPK-16'] }),
       ],
     },
   ],
