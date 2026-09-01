@@ -122,19 +122,25 @@ export const antreanTiruan = {
     },
     {
       sku: 'BENIH-CABAI-01', nama: 'Benih Cabai Rawit · sachet 10 g',
-      jumlahPesanan: 4, siapCetak: 2, totalQty: 5,
-      dimintaBatal: 1, perluAtur: 0, ditinjauShopee: 1, belumDiketahui: 0, perluDiperiksa: 0,
+      jumlahPesanan: 5, siapCetak: 2, totalQty: 6,
+      dimintaBatal: 1, perluAtur: 0, ditinjauShopee: 1, belumDiketahui: 0,
+      bukanUntukDicetak: 1, perluDiperiksa: 0,
       pesanan: [
         pesanan(7, 'siap_cetak', { sm: 'PROCESSED', sp: 'LOGISTICS_REQUEST_CREATED' }),
         pesanan(8, 'siap_cetak', { sm: 'PROCESSED', sp: 'LOGISTICS_REQUEST_CREATED' }),
         pesanan(9, 'diminta_batal', { sm: 'IN_CANCEL', sp: 'LOGISTICS_READY' }),
         pesanan(10, 'ditinjau_shopee', { sm: 'READY_TO_SHIP', sp: 'LOGISTICS_NOT_START' }),
+        pesanan(11, 'bukan_untuk_dicetak', { sm: 'TO_RETURN', sp: null }),
       ],
     },
   ],
   totalLabel: 10, totalSiapCetak: 6, totalDimintaBatal: 1,
   totalPerluAtur: 1, totalDitinjauShopee: 1, totalBelumDiketahui: 1,
-  totalPerluDiperiksa: 0, pesananLintasKelompok: 1, pesananPaketPecah: 0, totalPernahGagal: 1,
+  // Hanya untuk potret: baris pesanan dibuka supaya lencananya benar-benar
+  // terlihat, bukan cuma ada di kode.
+  pratinjauTerbuka: true,
+  totalPerluDiperiksa: 0, totalBukanUntukDicetak: 1,
+  pesananLintasKelompok: 1, pesananPaketPecah: 0, totalPernahGagal: 1,
   // Dua angka pencegahan, ikut dipotret supaya kalimatnya benar-benar terlihat.
   menungguLama: 2, batasLamaJam: 24,
   menitSejakKabarMarketplace: 190, batasSunyiMenit: 60,
