@@ -623,24 +623,64 @@ export default function MarketingDashboard() {
       {pov && (
         <div className="summary-card pov-card">
           <div className="summary-card-header">
-            <h4>Arus periode ini</h4>
+            <h4>Arus per periode</h4>
             <span className="summary-card-subtitle">
-              Tiga peristiwa berbeda atas <b>kumpulan pesanan yang berbeda</b> — bukan satu angka yang menyusut
+              Baris atas dibaca berurutan: <b>omset − beban = laba</b> · dua kartu di bawahnya
+              peristiwa lain atas <b>kumpulan pesanan yang berbeda</b>
             </span>
           </div>
 
-          <div className="pov-grid">
+          {/* Baris laba-rugi: dibaca berurutan, dengan tanda − dan = di antaranya
+              supaya pembaca tahu ketiganya SATU hitungan, bukan tiga angka lepas.
+              Ketiganya berdiri di sumbu yang sama (tanggal pesanan) — itulah
+              yang membuat pengurangan ini sah. */}
+          <div className="laba-rugi-baris">
             <div className="summary-block block-highlighted">
               <div className="block-meta-row">
                 <span className="block-category">OMSET</span>
                 <DollarSign size={13} className="text-purple" />
               </div>
               <div className="block-value text-purple">{formatRupiah(povOmset)}</div>
-              <div className="block-subtext">Perkiraan penjualan periode ini</div>
-              <div className="pov-kohort">pesanan yang DIBUAT di periode ini</div>
-              <div className="pov-note">Sumbu: tanggal pesanan · <span className="tanda-dasar">KOTOR</span></div>
+              <div className="block-subtext">Penjualan periode ini</div>
+              <div className="pov-note">
+                Tanpa yang batal sebelum dikirim &amp; belum dibayar
+                {(pov.omset?.dikeluarkan?.pesanan ?? 0) > 0 && (
+                  <> — <b>{formatRupiah(pov.omset.dikeluarkan.nilai)}</b> dari{' '}
+                  {pov.omset.dikeluarkan.pesanan} pesanan dikeluarkan</>
+                )}
+                {' '}· <span className="tanda-dasar">KOTOR</span>
+              </div>
             </div>
 
+            <div className="laba-rugi-tanda">−</div>
+
+            <div className="summary-block">
+              <div className="block-meta-row">
+                <span className="block-category">BEBAN</span>
+                <Percent size={13} className="text-purple" />
+              </div>
+              <div className="block-value">{formatRupiah(pov.beban?.nilai ?? 0)}</div>
+              <div className="block-subtext">Platform + modal barang + iklan</div>
+              <div className="pov-note">
+                Platform {formatRupiah(pov.beban?.platform ?? 0)} · COGS{' '}
+                {formatRupiah(pov.beban?.cogs ?? 0)} · Iklan {formatRupiah(pov.beban?.iklan ?? 0)}
+              </div>
+            </div>
+
+            <div className="laba-rugi-tanda">=</div>
+
+            <div className="summary-block blok-laba">
+              <div className="block-meta-row">
+                <span className="block-category">LABA</span>
+                <TrendingUp size={13} className="text-purple" />
+              </div>
+              <div className="block-value">{formatRupiah(pov.laba?.nilai ?? 0)}</div>
+              <div className="block-subtext">Margin {pov.laba?.margin ?? 0}%</div>
+              <div className="pov-note">Omset dikurangi beban di sebelah kiri</div>
+            </div>
+          </div>
+
+          <div className="pov-grid pov-grid-dua">
             <div className="summary-block">
               <div className="block-meta-row">
                 <span className="block-category">TUNTAS</span>
