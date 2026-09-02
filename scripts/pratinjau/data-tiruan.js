@@ -44,7 +44,9 @@ export const statsTiruan = {
   // produksi sungguhan per 29 Agu 2026 (0 dari 1.473), dan justru keadaan
   // itulah yang paling perlu terlihat di potret.
   pov: {
-    omset: { nilai: 1414149566, pesanan: 5231 },
+    omset: { nilai: 1414149566, pesanan: 5231, dikeluarkan: { nilai: 936929, pesanan: 13 } },
+    beban: { nilai: 726366963, platform: 290044639, cogs: 436322324, iklan: 0 },
+    laba: { nilai: 687782603, margin: 48.6 },
     tuntas: {
       nilai: 38295057, pesanan: 575,
       cakupan: { punyaTanggal: 18927, seharusnya: 18930 },
