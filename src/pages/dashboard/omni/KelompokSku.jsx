@@ -47,7 +47,10 @@ export function Catatan({ ikon, warna, latar, children }) {
   );
 }
 
-export default function Kelompok({ k, channel, sisi, dari, sampai, onSelesai, awalTerbuka = false }) {
+export default function Kelompok({
+  k, channel, sisi, dari, sampai, onSelesai, awalTerbuka = false,
+  locked, onRequirePayment,
+}) {
   // `awalTerbuka` hanya dipakai pratinjau potret. Baris pesanan tersembunyi di
   // balik klik, jadi tanpa ini tidak ada potret yang pernah memperlihatkannya —
   // dan aturan "lihat potretnya" tidak bisa dipenuhi untuk bagian layar yang
@@ -107,6 +110,7 @@ export default function Kelompok({ k, channel, sisi, dari, sampai, onSelesai, aw
             jumlah={sisi === "sudah" ? k.jumlahPesanan : k.siapCetak}
             ulangi={sisi === "sudah"} dari={dari} sampai={sampai}
             onSelesai={onSelesai}
+            locked={locked} onRequirePayment={onRequirePayment}
           />
         </div>
       </div>

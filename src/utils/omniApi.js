@@ -1,4 +1,5 @@
 import api from './api'
+import { paymentRequiredFrom } from './paymentRequired'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Service layer BitOmni + Subscription.
@@ -175,4 +176,4 @@ export const adminApi = {
 }
 
 /** True bila error berasal dari gate langganan (trial/langganan habis). */
-export const isPaymentRequired = (err) => err?.response?.status === 402
+export const isPaymentRequired = (err) => paymentRequiredFrom(err) !== null

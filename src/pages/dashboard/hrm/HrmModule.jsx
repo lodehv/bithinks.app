@@ -8,7 +8,7 @@ const SUB_MENUS = [
   { id: "riwayat",  label: "Riwayat Kehadiran", icon: Clock          },
 ];
 
-export default function HrmModule() {
+export default function HrmModule({ locked = false, onRequirePayment }) {
   const [active, setActive] = useState("absensi");
 
   return (
@@ -41,7 +41,7 @@ export default function HrmModule() {
       </div>
 
       {/* Content */}
-      {active === "absensi" && <Absensi />}
+      {active === "absensi" && <Absensi locked={locked} onRequirePayment={onRequirePayment} />}
       {active === "riwayat" && <RiwayatKehadiran />}
     </div>
   );

@@ -13,7 +13,7 @@ import { omniApi } from "../../../../utils/omniApi";
 
 const MAX_BYTES = 180 * 1024;
 
-export default function WmsCompanyForm({ onBack, onError }) {
+export default function WmsCompanyForm({ locked = false, onBack, onError }) {
   const [form, setForm] = useState(null);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState(null);
@@ -67,12 +67,17 @@ export default function WmsCompanyForm({ onBack, onError }) {
     <div>
       <div className="omni-toolbar">
         <button className="omni-btn omni-btn-ghost" onClick={onBack}><ArrowLeft size={14} /> Kembali</button>
-        <button className="omni-btn omni-btn-primary" onClick={save} disabled={saving}>
+        <button className="omni-btn omni-btn-primary" onClick={save} disabled={locked || saving}>
           {saving ? "Menyimpan…" : "Simpan Kop Surat"}
         </button>
       </div>
 
       {msg && <div className={`wms-msg ${msg.type}`}>{msg.text}</div>}
+      {locked && (
+        <div className="wms-note" style={{ marginBottom: 12 }}>
+          Mode hanya-baca aktif. Kop surat tetap dapat dilihat, tetapi belum dapat diubah.
+        </div>
+      )}
 
       <div className="wms-panel">
         <div className="wms-panel-head">
@@ -88,24 +93,24 @@ export default function WmsCompanyForm({ onBack, onError }) {
         <div className="wms-company-grid">
           <div className="omni-field">
             <label>Nama perusahaan</label>
-            <input className="omni-input" value={form.name} onChange={(e) => patch("name", e.target.value)} />
+            <input className="omni-input" value={form.name} onChange={(e) => patch("name", e.target.value)} disabled={locked} />
           </div>
           <div className="omni-field">
             <label>NPWP</label>
-            <input className="omni-input" value={form.taxId} onChange={(e) => patch("taxId", e.target.value)} />
+            <input className="omni-input" value={form.taxId} onChange={(e) => patch("taxId", e.target.value)} disabled={locked} />
           </div>
           <div className="omni-field" style={{ gridColumn: "1 / -1" }}>
             <label>Alamat</label>
             <input className="omni-input" value={form.address} onChange={(e) => patch("address", e.target.value)}
-              placeholder="Jalan, kota, kode pos" />
+              placeholder="Jalan, kota, kode pos" disabled={locked} />
           </div>
           <div className="omni-field">
             <label>Telepon</label>
-            <input className="omni-input" value={form.phone} onChange={(e) => patch("phone", e.target.value)} />
+            <input className="omni-input" value={form.phone} onChange={(e) => patch("phone", e.target.value)} disabled={locked} />
           </div>
           <div className="omni-field">
             <label>Email</label>
-            <input className="omni-input" value={form.email} onChange={(e) => patch("email", e.target.value)} />
+            <input className="omni-input" value={form.email} onChange={(e) => patch("email", e.target.value)} disabled={locked} />
           </div>
         </div>
 
@@ -115,11 +120,11 @@ export default function WmsCompanyForm({ onBack, onError }) {
             {form.logo
               ? <img src={form.logo} alt="" className="wms-logo-preview" />
               : <div className="wms-logo-empty">Belum ada logo</div>}
-            <button className="omni-btn omni-btn-ghost" onClick={() => fileRef.current?.click()}>
+            <button className="omni-btn omni-btn-ghost" onClick={() => fileRef.current?.click()} disabled={locked}>
               <Upload size={13} /> {form.logo ? "Ganti Logo" : "Unggah Logo"}
             </button>
             {form.logo && (
-              <button className="omni-btn omni-btn-ghost" onClick={() => patch("logo", null)}>
+              <button className="omni-btn omni-btn-ghost" onClick={() => patch("logo", null)} disabled={locked}>
                 <Trash2 size={13} /> Hapus
               </button>
             )}

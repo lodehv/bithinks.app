@@ -92,7 +92,7 @@ export default function WmsInbound({ locked, onRequirePayment }) {
     );
   }
   if (view === "company") {
-    return <WmsCompanyForm onBack={() => setView(null)} onError={guard} />;
+    return <WmsCompanyForm locked={locked} onBack={() => setView(null)} onError={guard} />;
   }
   if (view?.id) {
     return (

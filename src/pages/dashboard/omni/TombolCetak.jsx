@@ -295,13 +295,20 @@ function Hasil({ h, channel, onUlang }) {
  * cuma channel dan sku — daftar pesanannya disusun ulang di sana, memakai
  * penyaring yang sama dengan yang menghasilkan angka di layar ini.
  */
-export default function TombolCetak({ channel, sku, jumlah, utama = false, onSelesai, ulangi = false, teks, dari, sampai }) {
+export default function TombolCetak({
+  channel, sku, jumlah, utama = false, onSelesai, ulangi = false,
+  teks, dari, sampai, locked = false, onRequirePayment,
+}) {
   const [sibuk, setSibuk] = useState(false);
   const [hasil, setHasil] = useState(null);
   const [galat, setGalat] = useState(null);
 
   async function cetak(e) {
     e?.stopPropagation();
+    if (locked) {
+      onRequirePayment?.();
+      return;
+    }
     setSibuk(true);
     setGalat(null);
 
@@ -364,9 +371,11 @@ export default function TombolCetak({ channel, sku, jumlah, utama = false, onSel
     <>
       <button
         onClick={cetak}
-        disabled={sibuk || jumlah === 0}
+        disabled={locked || sibuk || jumlah === 0}
         title={
-          jumlah === 0
+          locked
+            ? "Mode hanya-baca: aktifkan akses untuk mencetak"
+            : jumlah === 0
             ? "Tidak ada yang perlu dicetak"
             : ulangi
               ? "Membuat ulang resi yang sudah pernah dicetak"
@@ -377,13 +386,13 @@ export default function TombolCetak({ channel, sku, jumlah, utama = false, onSel
           padding: utama ? "10px 18px" : "7px 12px",
           borderRadius: 8, border: "none",
           fontSize: utama ? 14 : 13, fontWeight: 600,
-          cursor: sibuk || jumlah === 0 ? "not-allowed" : "pointer",
+          cursor: locked || sibuk || jumlah === 0 ? "not-allowed" : "pointer",
           // Cetak ulang sengaja TIDAK berwarna sama dengan cetak biasa. Ia
           // membuat label kedua untuk pesanan yang labelnya sudah pernah
           // keluar — itu keputusan yang berbeda, dan tombolnya harus terlihat
           // berbeda supaya tidak ditekan karena refleks.
-          background: jumlah === 0 ? "#F3F4F6" : ulangi ? "#fff" : "#4F46E5",
-          color: jumlah === 0 ? "#9CA3AF" : ulangi ? "#4F46E5" : "#fff",
+          background: locked || jumlah === 0 ? "#F3F4F6" : ulangi ? "#fff" : "#4F46E5",
+          color: locked || jumlah === 0 ? "#9CA3AF" : ulangi ? "#4F46E5" : "#fff",
           boxShadow: ulangi && jumlah > 0 ? "inset 0 0 0 1px #C7D2FE" : undefined,
           opacity: sibuk ? 0.7 : 1,
           flexShrink: 0,
