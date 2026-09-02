@@ -1,0 +1,21 @@
+---
+description: Require accessible, responsive, and visually consistent frontend UI
+globs: src/**/*.{jsx,css}
+alwaysApply: false
+---
+
+# Frontend UI Quality
+
+- Start with semantic HTML. Use real buttons and links for actions and navigation; preserve native keyboard behavior.
+- Give every form control a visible label, every meaningful image useful alternative text, and every icon-only control an accessible name.
+- Keep visible focus styles and logical tab order. Dialogs and overlays must manage focus and close with the keyboard where appropriate.
+- Maintain at least 4.5:1 contrast for normal text, and never use color as the only status or validation signal.
+- Make touch targets at least 44 × 44 CSS pixels and place validation feedback beside the affected control.
+- Reuse the repository's color, typography, spacing, radius, shadow, and z-index tokens. Add a named token before repeating a new visual value.
+- Use Lucide or an existing SVG icon set consistently. Use text or labeled icons instead of emoji as interface controls.
+- Preserve space for images and asynchronous content to avoid layout shifts. Animate `transform` and `opacity` for micro-interactions, normally within 150–300 ms.
+- Respect `prefers-reduced-motion`; the interface must remain understandable with motion disabled.
+- Verify layouts at 375, 768, 1024, and 1440 pixels. Prevent horizontal scrolling and content hidden behind fixed elements.
+- Keep localized product copy in its intended language while all technical names and comments follow the English naming rule.
+
+Example: a clickable card uses a link or button, has a visible focus state, a stable hover treatment, and an accessible name.

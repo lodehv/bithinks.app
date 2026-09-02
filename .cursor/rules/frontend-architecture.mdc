@@ -1,0 +1,21 @@
+---
+description: Preserve clear React boundaries and predictable frontend data flow
+globs: src/**/*.{js,jsx}
+alwaysApply: false
+---
+
+# Frontend Architecture
+
+- Trace every feature from `src/App.jsx` through its page entry before changing it; a component is complete only when the active render path reaches it.
+- Keep dependency direction clear: app entry → pages → feature or shared components → API and utility modules. Shared modules must not import pages.
+- Let pages coordinate routes and feature sections. Let components render one coherent UI responsibility. Extract a hook or utility when logic is reusable or obscures rendering.
+- Keep HTTP configuration, authentication headers, response normalization, and backend error translation outside components. Components call a focused API module or hook.
+- Keep authoritative pricing, permissions, payment state, and tenant decisions on the backend. Treat every `VITE_` value as public browser data.
+- Keep state at its nearest common owner. Derive values during render instead of mirroring props or other state.
+- Use Effects to synchronize with external systems such as browser events, timers, storage, or network lifecycles; always clean up subscriptions and timers.
+- Add context only for genuinely cross-cutting state. Prefer props or local composition for state used by a small subtree.
+- Lazy-load non-initial routes or demonstrably heavy UI behind an intentional fallback; keep the initial marketing path small.
+- Extend the current structure incrementally. Introduce `src/features/<feature>/` only when a feature has several related components, hooks, API calls, or domain helpers.
+- Apply memoization only after identifying expensive work or unstable props that cause meaningful rerenders.
+
+Example: `Dashboard.jsx` composes a billing feature, the feature owns its UI and hook, and `utils/api.js` owns transport details.

@@ -1,0 +1,17 @@
+---
+description: Require clear English naming across code, files, tests, and technical documentation
+alwaysApply: true
+---
+
+# English Naming Convention
+
+- Use English for every new or modified technical name: files, directories, variables, functions, classes, components, hooks, types, constants, configuration keys, API fields, error codes, and test names.
+- Use English for code comments, commit messages, technical documentation, specifications, migration notes, and pull request descriptions.
+- Choose names that express domain intent. Prefer `calculateOrderTotal` over vague names such as `processData` or abbreviations such as `calcOrdTot`.
+- Follow the repository's existing casing conventions: `PascalCase` for components and types, `camelCase` for functions and variables, `UPPER_SNAKE_CASE` for constants, and kebab-case for new file and directory names.
+- Keep one vocabulary for each domain concept. Reuse the established English term instead of introducing synonyms or mixed-language variants.
+- Product-facing Indonesian copy may remain Indonesian when it is intentionally localized UI, email, WhatsApp, or API message text.
+- Preserve public API fields, URLs, storage keys, analytics events, imports, and other external contracts unless an explicit compatibility migration is part of the requested change.
+- Do not mass-rename unrelated legacy Indonesian names. When an in-scope change touches one, rename it to English only after updating every reference and protecting external compatibility.
+
+Example: prefer `fetchCustomerOrders`, `order-history.jsx`, and `PAYMENT_FAILED`; avoid new names such as `ambilPesananPelanggan`, `riwayat-order.jsx`, or `PEMBAYARAN_GAGAL`.

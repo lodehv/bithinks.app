@@ -1,0 +1,18 @@
+---
+description: Require evidence that frontend changes render, remain accessible, and build safely
+globs: src/**/*.{js,jsx,css}
+alwaysApply: false
+---
+
+# Frontend Verification
+
+- Identify every affected route, viewport, interaction state, backend contract, and browser-visible environment value before verification.
+- Run `npm run lint` and `npm run build`. Existing lint debt may be recorded, but changed files must introduce no new errors or warnings.
+- For visual changes, run `npm run periksa:render` and `npm run periksa:tampilan`; inspect the generated views rather than treating command success as visual proof.
+- For interactive or accessibility changes, run `npm run periksa:akses` and manually exercise keyboard order, focus visibility, labels, error feedback, loading, empty, and failure states.
+- Verify changed routes at 375, 768, 1024, and 1440 pixels with no clipping, overlap, hidden fixed content, or horizontal scrolling.
+- Confirm the changed component is imported by an active page and appears in the rendered route; a successful Vite build alone is insufficient.
+- Verify API changes against the backend contract. Handle timeouts and failures without exposing credentials, raw payloads, or internal errors.
+- Review the final diff for secrets, generated output, unrelated formatting, and accidental contract changes.
+
+Completion requires recorded command results plus direct evidence for every affected route and interaction state.
