@@ -557,7 +557,8 @@ export default function MarketingDashboard() {
           <div className="summary-card-header">
             <h4>Posisi Uang — sekarang</h4>
             <span className="summary-card-subtitle">
-              Saldo, bukan periode · <b>tidak mengikuti saringan tanggal</b> · mengikuti pilihan platform &amp; toko
+              Setiap pesanan tepat di <b>satu</b> tahap · saldo, bukan periode ·{' '}
+              <b>tidak mengikuti saringan tanggal</b> · mengikuti pilihan platform &amp; toko
             </span>
           </div>
 
@@ -572,7 +573,7 @@ export default function MarketingDashboard() {
             </div>
             <div className="tahap-panah">→</div>
             <div className="tahap">
-              <span className="tahap-label">DI JALAN</span>
+              <span className="tahap-label">UANG DI JALAN</span>
               <div className="block-value">{formatRupiah(posisi.diJalan?.nilai ?? 0)}</div>
               <div className="tahap-note">
                 {posisi.diJalan?.pesanan ?? 0} pesanan · sudah keluar gudang
@@ -581,10 +582,21 @@ export default function MarketingDashboard() {
             </div>
             <div className="tahap-panah">→</div>
             <div className="tahap tahap-utama">
-              <span className="tahap-label">MENUNGGU CAIR</span>
+              <span className="tahap-label">MENUNGGU REKONSILIASI</span>
               <div className="block-value text-purple">{formatRupiah(posisi.menungguCair?.nilai ?? 0)}</div>
               <div className="tahap-note">
-                {posisi.menungguCair?.pesanan ?? 0} pesanan · hampir pasti jadi uang
+                {posisi.menungguCair?.pesanan ?? 0} pesanan · sudah sampai, uang belum dilepas
+                <span className="tanda-dasar">KOTOR</span>
+              </div>
+            </div>
+            <div className="tahap-panah">→</div>
+            {/* Tahap terakhir: rekonsiliasi selesai, uang sudah di dompet.
+                NETO — beban platform sudah dipotong sebelum masuk. */}
+            <div className="tahap tahap-selesai">
+              <span className="tahap-label">SELESAI REKONSILIASI</span>
+              <div className="block-value">{formatRupiah(posisi.sudahCair?.nilai ?? 0)}</div>
+              <div className="tahap-note">
+                {posisi.sudahCair?.pesanan ?? 0} pesanan · uang sudah di dompet
                 <span className="tanda-dasar tanda-neto">NETO</span>
               </div>
             </div>
@@ -600,7 +612,7 @@ export default function MarketingDashboard() {
               <span>
                 <b>{formatRupiah(posisi.belumDibayar.nilai)}</b> dari{' '}
                 {posisi.belumDibayar.pesanan} pesanan <b>belum dibayar</b> pembeli —
-                belum jadi uang, jadi tidak masuk ketiga tahap di atas
+                belum jadi uang, jadi tidak masuk keempat tahap di atas
               </span>
             </div>
           )}
