@@ -13,6 +13,7 @@ import { ADMIN_EMAIL } from "./dashboard/DashboardLayout";
 import ModulePlaceholder from "./dashboard/ModulePlaceholder";
 import MarketingDashboard from "./dashboard/MarketingDashboard";
 import { subscriptionApi } from "../utils/omniApi";
+import { PAYMENT_REQUIRED_EVENT } from "../utils/paymentRequired";
 import { Settings, Info } from "lucide-react";
 
 // ─── Map menu id → judul halaman ──────────────────────────────────────────────
@@ -60,11 +61,21 @@ function BillingBanner({ sub, onPay }) {
     );
   }
   if (sub.locked) {
+    const title = {
+      TRIAL_TIME_LIMIT: "Masa trial berakhir.",
+      TRIAL_ORDER_LIMIT: "Kuota 100 pesanan trial habis.",
+      TRIAL_STORE_LIMIT: "Batas toko trial tercapai.",
+      INSUFFICIENT_BALANCE: "Saldo tidak mencukupi.",
+      SUBSCRIPTION_REQUIRED: "Akses berbayar diperlukan.",
+    }[sub.reasonCode] ?? "Mode hanya-baca aktif.";
     return (
       <div style={{ ...base, background: "#FEF2F2", border: "1px solid #FECACA", color: "#B91C1C" }}>
         <Info size={16} color="#DC2626" />
-        <span><strong style={{ color: "#991B1B" }}>Trial berakhir.</strong> Aksi tulis terkunci (mode hanya-baca). Lakukan pembayaran untuk mengaktifkan kembali.</span>
-        <button onClick={onPay} style={{ ...billBtn, color: "#DC2626", borderColor: "#FECACA" }}>Bayar Sekarang</button>
+        <span>
+          <strong style={{ color: "#991B1B" }}>{title}</strong>{" "}
+          {sub.reason || "Data lama tetap bisa dilihat, tetapi aksi tulis dan sinkronisasi berhenti sementara."}
+        </span>
+        <button onClick={onPay} style={{ ...billBtn, color: "#DC2626", borderColor: "#FECACA" }}>Aktifkan Akses</button>
       </div>
     );
   }
@@ -94,10 +105,46 @@ export default function Dashboard() {
   // tidak boleh menempel dan diam-diam menyaring layar berikutnya.
   const pilihMenu = (id) => { if (id === "pesanan") setPesananTab(null); setActiveMenu(id); };
 
-  const refreshSub = useCallback(() => {
-    subscriptionApi.status().then(setSub).catch(() => setSub(null));
+  const goToPayment = useCallback(() => {
+    setPayPlan(null);
+    setActiveMenu("payment");
   }, []);
-  useEffect(() => { if (isAuthenticated) refreshSub(); }, [isAuthenticated, refreshSub]);
+
+  const refreshSub = useCallback(() => {
+    subscriptionApi.status().then(setSub).catch(() => {});
+  }, []);
+  useEffect(() => {
+    if (!isAuthenticated) return undefined;
+    refreshSub();
+    window.addEventListener("focus", refreshSub);
+    const timer = window.setInterval(() => {
+      if (document.visibilityState === "visible") refreshSub();
+    }, 60_000);
+    return () => {
+      window.removeEventListener("focus", refreshSub);
+      window.clearInterval(timer);
+    };
+  }, [isAuthenticated, refreshSub]);
+
+  // A 402 can arrive after the initial status fetch (another tab exhausted a
+  // quota, a webhook admitted the 100th order, or balance changed). Treat the
+  // failed server response as authoritative immediately and follow its action.
+  useEffect(() => {
+    const onPaymentRequired = (event) => {
+      const detail = event.detail ?? {};
+      setSub((current) => ({
+        ...(current ?? {}),
+        active: false,
+        locked: true,
+        reason: detail.message ?? current?.reason ?? null,
+        reasonCode: detail.reason ?? current?.reasonCode ?? "SUBSCRIPTION_REQUIRED",
+        action: detail.action ?? "TOP_UP",
+      }));
+      if (detail.action === "TOP_UP") goToPayment();
+    };
+    window.addEventListener(PAYMENT_REQUIRED_EVENT, onPaymentRequired);
+    return () => window.removeEventListener(PAYMENT_REQUIRED_EVENT, onPaymentRequired);
+  }, [goToPayment]);
 
   // Tangani kembalinya redirect penautan Shopee (?connect=shopee_ok|shopee_failed)
   useEffect(() => {
@@ -115,7 +162,6 @@ export default function Dashboard() {
     return null;
   }
 
-  const goToPayment = () => { setPayPlan(null); setActiveMenu("payment"); };
   const title = PAGES[activeMenu]?.title ?? "Dashboard";
   const locked = !!sub?.locked;
 

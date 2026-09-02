@@ -27,10 +27,14 @@ function LiveClock() {
 }
 
 // ─── GPS hook ─────────────────────────────────────────────────────────────────
-function useGps() {
+function useGps(enabled = true) {
   const [state, setState] = useState({ status: "idle", lat: null, lng: null, label: "" });
 
   const fetch = useCallback(() => {
+    if (!enabled) {
+      setState({ status: "idle", lat: null, lng: null, label: "" });
+      return;
+    }
     setState({ status: "loading", lat: null, lng: null, label: "Mengambil lokasi..." });
     if (!navigator.geolocation) {
       setState({ status: "error", lat: null, lng: null, label: "GPS tidak didukung browser ini" });
@@ -48,9 +52,9 @@ function useGps() {
       () => setState({ status: "error", lat: null, lng: null, label: "Akses lokasi ditolak" }),
       { enableHighAccuracy: true, timeout: 10000 }
     );
-  }, []);
+  }, [enabled]);
 
-  useEffect(() => { fetch(); }, [fetch]);
+  useEffect(() => { if (enabled) fetch(); }, [enabled, fetch]);
   return { ...state, refetch: fetch };
 }
 
@@ -200,9 +204,9 @@ function GpsCard({ gps }) {
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
-export default function Absensi() {
+export default function Absensi({ locked = false, onRequirePayment }) {
   const { user } = useAppContext();
-  const gps = useGps();
+  const gps = useGps(!locked);
 
   const [photo, setPhoto]         = useState(null);
   const [submitting, setSubmitting] = useState(false);
@@ -229,9 +233,10 @@ export default function Absensi() {
   const hasCheckedOut = todayLog?.checkOut != null;
   const actionType    = hasCheckedIn && !hasCheckedOut ? "checkout" : "checkin";
 
-  const canSubmit = photo && gps.status === "ok" && !submitting;
+  const canSubmit = !locked && photo && gps.status === "ok" && !submitting;
 
   const handleSubmit = async () => {
+    if (locked) return onRequirePayment?.();
     if (!canSubmit) return;
     setSubmitting(true);
     try {
@@ -318,34 +323,44 @@ export default function Absensi() {
         </div>
       ) : (
         <>
-          {/* Selfie */}
-          <SelfieCapture
-            captured={photo}
-            onCapture={setPhoto}
-            onClear={() => setPhoto(null)}
-          />
+          {locked && (
+            <div style={{ padding: 14, marginBottom: 12, borderRadius: 10, background: "#FEF2F2", color: "#991B1B", fontSize: 13 }}>
+              Mode hanya-baca aktif. Riwayat kehadiran tetap tersedia, tetapi check-in dan check-out berhenti sementara.
+            </div>
+          )}
 
-          {/* GPS */}
-          <GpsCard gps={gps} />
+          {!locked && (
+            <>
+              {/* Selfie */}
+              <SelfieCapture
+                captured={photo}
+                onCapture={setPhoto}
+                onClear={() => setPhoto(null)}
+              />
 
-          {/* Submit */}
-          <button
-            className={`btn-absensi ${actionType}`}
-            disabled={!canSubmit}
-            onClick={handleSubmit}
-          >
-            {submitting
-              ? <><Loader2 size={18} strokeWidth={2} className="spin" /> Menyimpan...</>
-              : actionType === "checkin"
-              ? <><LogIn size={18} strokeWidth={2} /> Check-In Sekarang</>
-              : <><LogOut size={18} strokeWidth={2} /> Check-Out Sekarang</>
-            }
-          </button>
+              {/* GPS */}
+              <GpsCard gps={gps} />
 
-          {!photo && (
-            <p style={{ textAlign: "center", fontSize: 12, color: "#bbb", marginTop: -8 }}>
-              Ambil foto selfie terlebih dahulu untuk melanjutkan
-            </p>
+              {/* Submit */}
+              <button
+                className={`btn-absensi ${actionType}`}
+                disabled={!canSubmit}
+                onClick={handleSubmit}
+              >
+                {submitting
+                  ? <><Loader2 size={18} strokeWidth={2} className="spin" /> Menyimpan...</>
+                  : actionType === "checkin"
+                  ? <><LogIn size={18} strokeWidth={2} /> Check-In Sekarang</>
+                  : <><LogOut size={18} strokeWidth={2} /> Check-Out Sekarang</>
+                }
+              </button>
+
+              {!photo && (
+                <p style={{ textAlign: "center", fontSize: 12, color: "#bbb", marginTop: -8 }}>
+                  Ambil foto selfie terlebih dahulu untuk melanjutkan
+                </p>
+              )}
+            </>
           )}
         </>
       )}

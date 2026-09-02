@@ -29,7 +29,7 @@ import { angka, hariIni, mundur, tanggal } from "./format-antrean";
 // tinggal mengurus keadaan (channel, sisi, tanggal) dan daftar isinya.
 // ─────────────────────────────────────────────────────────────────────────────
 
-export default function AntreanCetak() {
+export default function AntreanCetak({ locked = false, onRequirePayment }) {
   const [channel, setChannel] = useState("shopee");
   const [data, setData] = useState(null);
   const [memuat, setMemuat] = useState(true);
@@ -101,6 +101,7 @@ export default function AntreanCetak() {
         sisi={sisi} setSisi={setSisi}
         dari={dari} sampai={sampai} onTanggal={ubahTanggal}
         data={data} onSelesai={ambil}
+        locked={locked} onRequirePayment={onRequirePayment}
       />
 
       {/* SAAT MEMUAT ULANG, ISINYA TIDAK DIKOSONGKAN.
@@ -195,7 +196,11 @@ export default function AntreanCetak() {
           )}
 
           {data.kelompok.map((k) => (
-            <Kelompok key={k.sku} k={k} channel={channel} sisi={sisi} dari={dari} sampai={sampai} onSelesai={ambil} />
+            <Kelompok
+              key={k.sku} k={k} channel={channel} sisi={sisi}
+              dari={dari} sampai={sampai} onSelesai={ambil}
+              locked={locked} onRequirePayment={onRequirePayment}
+            />
           ))}
 
           <div style={{ fontSize: 12, color: "#9CA3AF", padding: "10px 2px", textAlign: "center" }}>

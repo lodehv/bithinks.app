@@ -42,7 +42,9 @@ export function Catatan({ ikon, warna, latar, children }) {
   );
 }
 
-export default function Kelompok({ k, channel, sisi, dari, sampai, onSelesai }) {
+export default function Kelompok({
+  k, channel, sisi, dari, sampai, onSelesai, locked, onRequirePayment,
+}) {
   const [buka, setBuka] = useState(false);
   return (
     <div style={{ border: "1px solid #E5E7EB", borderRadius: 10, marginBottom: 8, background: "#fff" }}>
@@ -98,6 +100,7 @@ export default function Kelompok({ k, channel, sisi, dari, sampai, onSelesai }) 
             jumlah={sisi === "sudah" ? k.jumlahPesanan : k.siapCetak}
             ulangi={sisi === "sudah"} dari={dari} sampai={sampai}
             onSelesai={onSelesai}
+            locked={locked} onRequirePayment={onRequirePayment}
           />
         </div>
       </div>

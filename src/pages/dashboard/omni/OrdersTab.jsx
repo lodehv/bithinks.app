@@ -261,7 +261,9 @@ export default function OrdersTab({ locked, onRequirePayment, tabAwal }) {
       )}
 
       {tab === "dikemas" && tampilan === "antrean" ? (
-        <div style={{ padding: "0 24px 24px" }}><AntreanCetak /></div>
+        <div style={{ padding: "0 24px 24px" }}>
+        <AntreanCetak locked={locked} onRequirePayment={onRequirePayment} />
+        </div>
       ) : tab === "dikemas" && tampilan === "riwayat" ? (
         <div style={{ padding: "0 24px 24px" }}><RiwayatCetak /></div>
       ) : <>

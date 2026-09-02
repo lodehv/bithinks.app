@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { announcePaymentRequired } from './paymentRequired'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Axios Instance — client HTTP untuk komunikasi dengan PADU Backend API
@@ -60,6 +61,11 @@ api.interceptors.response.use(
         window.location.href = '/login'
       }
     }
+
+    // US-02: one authoritative payment-required signal for every feature.
+    // Components may still show local context, while Dashboard owns the
+    // global view-only state and the server-provided TOP_UP action.
+    announcePaymentRequired(error)
 
     // Tambahkan pesan error yang ramah jika tidak ada koneksi ke server
     if (!error.response && error.code === 'ERR_NETWORK') {

@@ -19,26 +19,36 @@ import { renderToString } from 'react-dom/server'
 import { createElement } from 'react'
 
 const HALAMAN = [
-  '/src/pages/dashboard/MarketingDashboard.jsx',
+  { jalur: '/src/pages/dashboard/MarketingDashboard.jsx' },
   // Antrean cetak: layar yang paling sering diubah, dan yang paling mahal
   // kalau mati — di sinilah pemilik toko mencetak resi tiap hari.
-  '/src/pages/dashboard/omni/AntreanCetak.jsx',
+  { jalur: '/src/pages/dashboard/omni/AntreanCetak.jsx' },
   // Dirender tanpa prop apa pun. Itu memang maksudnya: yang diuji apakah
   // komponennya sanggup dieksekusi sekali dengan keadaan kosong.
-  '/src/pages/dashboard/omni/TombolAturKirim.jsx',
+  { jalur: '/src/pages/dashboard/omni/TombolAturKirim.jsx' },
   // Riwayat cetak: layar baru, dan layar baru yang tidak diuji adalah layar
   // yang mati diam-diam.
-  '/src/pages/dashboard/omni/RiwayatCetak.jsx',
+  { jalur: '/src/pages/dashboard/omni/RiwayatCetak.jsx' },
+  // US2: aksi berbayar harus tetap sanggup dirender dalam keadaan terkunci,
+  // serta benar-benar menghasilkan kontrol disabled yang menjelaskan sebabnya.
+  {
+    jalur: '/src/pages/dashboard/omni/TombolCetak.jsx',
+    props: { channel: 'shopee', jumlah: 12, locked: true },
+    harusMemuat: ['disabled=""', 'Mode hanya-baca: aktifkan akses untuk mencetak'],
+  },
 ]
 
 const vite = await createServer({ server: { middlewareMode: true }, appType: 'custom', logLevel: 'error' })
 
 let gagal = 0
-for (const jalur of HALAMAN) {
+for (const { jalur, props, harusMemuat = [] } of HALAMAN) {
   try {
     const mod = await vite.ssrLoadModule(jalur)
     if (typeof mod.default !== 'function') throw new Error('tidak mengekspor komponen default')
-    renderToString(createElement(mod.default))
+    const html = renderToString(createElement(mod.default, props))
+    for (const bagian of harusMemuat) {
+      if (!html.includes(bagian)) throw new Error(`hasil render tidak memuat: ${bagian}`)
+    }
     console.log(`  ✓ ${jalur}`)
   } catch (e) {
     gagal++

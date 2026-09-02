@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "periksa:render": "node scripts/render-halaman.mjs",
-    "periksa:tampilan": "node scripts/periksa-tampilan.mjs"
+    "periksa:tampilan": "node scripts/periksa-tampilan.mjs",
+    "periksa:akses": "node scripts/periksa-akses.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

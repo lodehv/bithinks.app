@@ -93,6 +93,7 @@ function Cip({ warna, latar, garis, children }) {
 
 export default function KepalaAntrean({
   channel, setChannel, sisi, setSisi, dari, sampai, onTanggal, data, onSelesai,
+  locked, onRequirePayment,
 }) {
   const platform = PLATFORM.find((p) => p.id === channel);
   const total = data ? angka(data.totalAntrean ?? data.totalLabel) : "—";
@@ -129,6 +130,7 @@ export default function KepalaAntrean({
               ulangi={sisi === "sudah"}
               dari={dari || undefined} sampai={sampai || undefined}
               utama onSelesai={onSelesai}
+              locked={locked} onRequirePayment={onRequirePayment}
             />
           </div>
         )}
