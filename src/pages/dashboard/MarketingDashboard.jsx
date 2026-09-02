@@ -236,24 +236,16 @@ export default function MarketingDashboard() {
   })();
   const rentangPanjang = hariRentang >= 7;
   const povOmset = pov?.omset?.nilai ?? 0;
-  const povTuntas = pov?.tuntas?.nilai ?? 0;
-  const povTerima = pov?.penerimaan?.nilai ?? 0;
 
-  // Cakupan: berapa yang PUNYA tanggalnya, dari yang seharusnya punya.
-  // Nol tanpa keterangan akan dibaca "tidak ada penjualan", padahal artinya
-  // "belum tahu". Itu persis penyakit temuan Rp 65 juta.
-  const cakupanTuntas = pov?.tuntas?.cakupan ?? null;
-  const cakupanTerima = pov?.penerimaan?.cakupan ?? null;
-  const persenCakupan = (c) =>
-    c && c.seharusnya > 0 ? Math.round((c.punyaTanggal / c.seharusnya) * 100) : null;
-
-  // Platform yang BELUM mengirim tanggal cair sama sekali. Diukur 29 Agu 2026:
-  // Shopee 0 dari 1.473. Menyebut namanya jauh lebih berguna daripada
-  // persentase gabungan — pemilik toko jadi tahu separuh mana yang hilang.
-  const NAMA_PLATFORM = { shopee: "Shopee", tiktok: "TikTok", tokopedia: "Tokopedia", lazada: "Lazada" };
-  const platformTanpaTanggal = (cakupanTerima?.perPlatform ?? [])
-    .filter((x) => x.seharusnya > 0 && x.punyaTanggal === 0)
-    .map((x) => NAMA_PLATFORM[x.channel] ?? x.channel);
+  // Turunan untuk kartu TUNTAS dan PENERIMAAN ikut dibuang bersama kartunya.
+  // Keputusan pemilik toko 29 Agu 2026: zona arus cukup memuat satu hitungan
+  // yang bisa dibaca berurutan. Kedua peristiwa itu memang menjawab pertanyaan
+  // lain, dan perjalanannya sudah tergambar utuh di Posisi Uang di atas —
+  // menampilkannya dua kali cuma mengundang orang menjumlahkannya.
+  //
+  // Nilainya masih dikirim server; kalau kelak tidak dipakai sama sekali,
+  // perhitungannya di route layak ikut dicabut supaya tidak jadi kerja sia-sia
+  // pada tiap permintaan.
 
   // Beban platform (PRD: biaya_api) + rincian per platform (cost_breakdown[]).
   // COGS dulu dipaku nol dengan catatan "menyusul" — catatan itu tertinggal.
@@ -625,8 +617,8 @@ export default function MarketingDashboard() {
           <div className="summary-card-header">
             <h4>Arus per periode</h4>
             <span className="summary-card-subtitle">
-              Baris atas dibaca berurutan: <b>omset − beban = laba</b> · dua kartu di bawahnya
-              peristiwa lain atas <b>kumpulan pesanan yang berbeda</b>
+              Dibaca berurutan: <b>omset − beban = laba</b> · ketiganya bersandar pada
+              sumbu yang sama, tanggal pesanan dibuat
             </span>
           </div>
 
@@ -680,48 +672,6 @@ export default function MarketingDashboard() {
             </div>
           </div>
 
-          <div className="pov-grid pov-grid-dua">
-            <div className="summary-block">
-              <div className="block-meta-row">
-                <span className="block-category">TUNTAS</span>
-                <Check size={13} className="text-purple" />
-              </div>
-              <div className="block-value">{formatRupiah(povTuntas)}</div>
-              <div className="block-subtext">Sampai ke pembeli di periode ini</div>
-              <div className="pov-kohort">pesanan dari ±8–9 hari sebelumnya</div>
-              <div className="pov-note">
-                Sumbu: tanggal sampai · <span className="tanda-dasar">KOTOR</span>
-                {persenCakupan(cakupanTuntas) !== null && (
-                  <> · tanggal diketahui untuk {persenCakupan(cakupanTuntas)}% pesanan</>
-                )}
-              </div>
-            </div>
-
-            <div className="summary-block">
-              <div className="block-meta-row">
-                <span className="block-category">PENERIMAAN</span>
-                <TrendingUp size={13} className="text-purple" />
-              </div>
-              <div className="block-value">{formatRupiah(povTerima)}</div>
-              <div className="block-subtext">Uang cair di periode ini</div>
-              <div className="pov-kohort">pencairan atas pesanan ±2 minggu sebelumnya</div>
-              {/* Angka separuh yang tidak menyebut separuhnya lebih berbahaya
-                  daripada tidak ada angka sama sekali. */}
-              {platformTanpaTanggal.length > 0 ? (
-                <div className="pov-note pov-note-peringatan">
-                  ⚠ Belum memuat {platformTanpaTanggal.join(" & ")} — tanggal pencairannya
-                  belum dikirim marketplace
-                </div>
-              ) : (
-                <div className="pov-note">
-                  Sumbu: tanggal cair · <span className="tanda-dasar tanda-neto">NETO</span> — beban platform sudah dipotong
-                  {persenCakupan(cakupanTerima) !== null && (
-                    <> · tercakup {persenCakupan(cakupanTerima)}%</>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
         </div>
       )}
 
