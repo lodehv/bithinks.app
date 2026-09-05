@@ -7,7 +7,7 @@ import ProductsTab from "./dashboard/omni/ProductsTab";
 import OrdersTab from "./dashboard/omni/OrdersTab";
 import WmsTab from "./dashboard/omni/wms/WmsTab";
 import PaymentPage from "./dashboard/PaymentPage";
-import PricingPage from "./dashboard/PricingPage";
+import WalletPage from "./dashboard/wallet-page";
 import AdminPanel from "./dashboard/AdminPanel";
 import { ADMIN_EMAIL } from "./dashboard/DashboardLayout";
 import ModulePlaceholder from "./dashboard/ModulePlaceholder";
@@ -25,7 +25,7 @@ const PAGES = {
   "kelola-produk":  { title: "Kelola Produk"          },
   marketing:        { title: "Laporan Penjualan"      },
   settings:         { title: "Pengaturan"             },
-  payment:          { title: "Pembayaran"             },
+  payment:          { title: "Saldo & Tagihan"        },
   admin:            { title: "Panel Admin"            },
 };
 
@@ -42,7 +42,7 @@ const billBtn = {
   padding: "5px 12px", cursor: "pointer", whiteSpace: "nowrap",
 };
 
-function BillingBanner({ sub, onPay }) {
+function BillingBanner({ sub, onPay, canManageBilling }) {
   if (!sub) return null;
 
   const base = {
@@ -56,7 +56,7 @@ function BillingBanner({ sub, onPay }) {
       <div style={{ ...base, background: "#FFF4EC", border: "1px solid #FED7AA", color: "#92400E" }}>
         <Info size={16} color="#F97316" />
         <span>Free Trial aktif — tersisa <strong style={{ color: "#C2410C" }}>{sub.daysLeft} hari</strong>. Aktifkan langganan agar fitur tidak terkunci.</span>
-        <button onClick={onPay} style={billBtn}>Bayar</button>
+        {canManageBilling ? <button onClick={onPay} style={billBtn}>Bayar</button> : <span style={{ marginLeft: "auto", fontSize: 12 }}>Hubungi owner/admin</span>}
       </div>
     );
   }
@@ -74,8 +74,11 @@ function BillingBanner({ sub, onPay }) {
         <span>
           <strong style={{ color: "#991B1B" }}>{title}</strong>{" "}
           {sub.reason || "Data lama tetap bisa dilihat, tetapi aksi tulis dan sinkronisasi berhenti sementara."}
+          {sub.reasonCode === "INSUFFICIENT_BALANCE" && sub.balance != null && sub.required != null && (
+            <span> Saldo {sub.currency || "IDR"} {Number(sub.balance).toLocaleString("id-ID")}; diperlukan {Number(sub.required).toLocaleString("id-ID")}.</span>
+          )}
         </span>
-        <button onClick={onPay} style={{ ...billBtn, color: "#DC2626", borderColor: "#FECACA" }}>Aktifkan Akses</button>
+        {canManageBilling ? <button onClick={onPay} style={{ ...billBtn, color: "#DC2626", borderColor: "#FECACA" }}>Aktifkan Akses</button> : <span style={{ marginLeft: "auto", fontSize: 12 }}>Hubungi owner/admin</span>}
       </div>
     );
   }
@@ -85,10 +88,17 @@ function BillingBanner({ sub, onPay }) {
 export default function Dashboard() {
   const { isAuthenticated, user } = useAppContext();
   const isAdmin = (user?.email ?? "").toLowerCase() === ADMIN_EMAIL;
-  const [activeMenu, setActiveMenu] = useState("dashboard");
+  const canManageBilling = user?.role === "owner" || user?.role === "admin";
+  const [activeMenu, setActiveMenu] = useState(() => (
+    new URLSearchParams(window.location.search).has("connect") ? "integrasi-toko" : "dashboard"
+  ));
   const [sub, setSub] = useState(null);
   const [payPlan, setPayPlan] = useState(null); // paket terpilih di halaman pricing
-  const [connectNotice, setConnectNotice] = useState(null); // 'ok' | 'failed'
+  const [connectNotice, setConnectNotice] = useState(() => {
+    const connectResult = new URLSearchParams(window.location.search).get("connect");
+    if (!connectResult) return null;
+    return connectResult.endsWith("_ok") ? "ok" : "failed";
+  });
 
   // Tab Pesanan yang dituju saat datang lewat pintasan dari dashboard.
   // null = buka apa adanya (tab bawaan "Semua Pesanan").
@@ -109,6 +119,18 @@ export default function Dashboard() {
     setPayPlan(null);
     setActiveMenu("payment");
   }, []);
+
+  const handleRequirePayment = useCallback(() => {
+    if (canManageBilling) {
+      goToPayment();
+      return;
+    }
+    setSub((current) => ({
+      ...(current ?? {}),
+      locked: true,
+      reason: "Hubungi owner atau admin tenant untuk mengelola saldo dan pembayaran.",
+    }));
+  }, [canManageBilling, goToPayment]);
 
   const refreshSub = useCallback(() => {
     subscriptionApi.status().then(setSub).catch(() => {});
@@ -139,26 +161,30 @@ export default function Dashboard() {
         reason: detail.message ?? current?.reason ?? null,
         reasonCode: detail.reason ?? current?.reasonCode ?? "SUBSCRIPTION_REQUIRED",
         action: detail.action ?? "TOP_UP",
+        balance: detail.balance ?? current?.balance ?? null,
+        required: detail.required ?? current?.required ?? null,
+        currency: detail.currency ?? current?.currency ?? "IDR",
       }));
-      if (detail.action === "TOP_UP") goToPayment();
+      if (detail.action === "TOP_UP") handleRequirePayment();
     };
     window.addEventListener(PAYMENT_REQUIRED_EVENT, onPaymentRequired);
     return () => window.removeEventListener(PAYMENT_REQUIRED_EVENT, onPaymentRequired);
-  }, [goToPayment]);
+  }, [handleRequirePayment]);
 
   // Tangani kembalinya redirect penautan Shopee (?connect=shopee_ok|shopee_failed)
   useEffect(() => {
     const c = new URLSearchParams(window.location.search).get("connect");
     if (!c) return;
-    setActiveMenu("integrasi-toko");
-    setConnectNotice(c.endsWith("_ok") ? "ok" : "failed");
     window.history.replaceState({}, "", "/dashboard");
     const t = setTimeout(() => setConnectNotice(null), 6000);
     return () => clearTimeout(t);
   }, []);
 
+  useEffect(() => {
+    if (!isAuthenticated) window.location.assign("/login");
+  }, [isAuthenticated]);
+
   if (!isAuthenticated) {
-    window.location.href = "/login";
     return null;
   }
 
@@ -167,14 +193,14 @@ export default function Dashboard() {
 
   return (
     <DashboardLayout activeMenu={activeMenu} onMenuClick={pilihMenu} pageTitle={title}>
-      {activeMenu === "payment" ? (
+      {activeMenu === "payment" && canManageBilling ? (
         payPlan ? (
           <PaymentPage
             plan={payPlan}
             onBack={() => { refreshSub(); setPayPlan(null); }}
           />
         ) : (
-          <PricingPage
+          <WalletPage
             currentPlan={sub?.plan}
             onBack={() => setActiveMenu("dashboard")}
             onSelect={(plan) => setPayPlan(plan)}
@@ -196,13 +222,13 @@ export default function Dashboard() {
             </div>
           )}
 
-          {(activeMenu !== "dashboard" || locked) && <BillingBanner sub={sub} onPay={goToPayment} />}
+          {(activeMenu !== "dashboard" || locked) && <BillingBanner sub={sub} onPay={handleRequirePayment} canManageBilling={canManageBilling} />}
 
           {activeMenu === "dashboard"      && <DashboardHome onMenuClick={pilihMenu} onBukaPesanan={bukaPesanan} />}
-          {activeMenu === "wms"            && <WmsTab      locked={locked} onRequirePayment={goToPayment} />}
-          {activeMenu === "integrasi-toko" && <div className="omni"><StoresTab   locked={locked} onRequirePayment={goToPayment} /></div>}
-          {activeMenu === "pesanan"        && <div className="omni"><OrdersTab   locked={locked} onRequirePayment={goToPayment} tabAwal={pesananTab} /></div>}
-          {activeMenu === "kelola-produk"  && <div className="omni"><ProductsTab locked={locked} onRequirePayment={goToPayment} /></div>}
+          {activeMenu === "wms"            && <WmsTab      locked={locked} onRequirePayment={handleRequirePayment} />}
+          {activeMenu === "integrasi-toko" && <div className="omni"><StoresTab   locked={locked} onRequirePayment={handleRequirePayment} /></div>}
+          {activeMenu === "pesanan"        && <div className="omni"><OrdersTab   locked={locked} onRequirePayment={handleRequirePayment} tabAwal={pesananTab} /></div>}
+          {activeMenu === "kelola-produk"  && <div className="omni"><ProductsTab locked={locked} onRequirePayment={handleRequirePayment} /></div>}
           {activeMenu === "marketing"      && <MarketingDashboard />}
           {activeMenu === "settings"       && <ModulePlaceholder name="Pengaturan" icon={Settings} />}
           {activeMenu === "admin"          && isAdmin && <AdminPanel />}

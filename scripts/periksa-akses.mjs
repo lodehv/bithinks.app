@@ -30,9 +30,13 @@ const attendance = readFileSync(new URL('../src/pages/dashboard/hrm/Absensi.jsx'
 
 assert.match(dashboard, /PAYMENT_REQUIRED_EVENT/)
 assert.match(dashboard, /detail\.action === "TOP_UP"/)
+assert.match(dashboard, /activeMenu === "payment" && canManageBilling/)
+assert.match(dashboard, /onRequirePayment=\{handleRequirePayment\}/)
+assert.doesNotMatch(dashboard, /onRequirePayment=\{goToPayment\}/)
 assert.match(orders, /<AntreanCetak locked=\{locked\}/)
 assert.match(attendance, /locked\s*=\s*false, onRequirePayment/)
 
 console.log('  ✓ stable 402 contract')
 console.log('  ✓ global top-up action')
+console.log('  ✓ restricted roles cannot open wallet routes')
 console.log('  ✓ nested paid actions receive view-only state')

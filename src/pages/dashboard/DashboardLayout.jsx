@@ -3,7 +3,7 @@ import { useAppContext } from "../../context/AppContext";
 import "./DashboardLayout.css";
 import {
   Store, ClipboardList, Menu, X, LogOut, Warehouse, Boxes, LineChart,
-  ChevronLeft, ChevronRight, LayoutDashboard, Lock, Settings, ShieldCheck
+  ChevronLeft, ChevronRight, LayoutDashboard, Lock, Settings, ShieldCheck, WalletCards
 } from "lucide-react";
 
 // Email admin platform — hanya user ini yang melihat menu Admin.
@@ -42,6 +42,7 @@ const NAV_SECTIONS = [
   {
     label: "Lainnya",
     items: [
+      { id: "payment", label: "Saldo & Tagihan", icon: WalletCards, module: null, financial: true },
       { id: "settings", label: "Pengaturan", icon: Settings, module: null },
     ],
   },
@@ -71,7 +72,11 @@ function Sidebar({ activeMenu, onMenuClick, collapsed, onToggleCollapse, mobileO
 
   // Sisipkan menu Admin hanya untuk email admin platform.
   const isAdmin = (user?.email ?? "").toLowerCase() === ADMIN_EMAIL;
-  const navSections = isAdmin ? [...NAV_SECTIONS, ADMIN_SECTION] : NAV_SECTIONS;
+  const canViewWallet = user?.role === "owner" || user?.role === "admin";
+  const navSections = (isAdmin ? [...NAV_SECTIONS, ADMIN_SECTION] : NAV_SECTIONS).map((section) => ({
+    ...section,
+    items: section.items.filter((item) => !item.financial || canViewWallet),
+  }));
 
   return (
     <>

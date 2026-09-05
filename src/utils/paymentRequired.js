@@ -12,6 +12,9 @@ export function paymentRequiredFrom(error) {
     message: typeof payload?.message === 'string' ? payload.message : DEFAULT_MESSAGE,
     reason: typeof payload?.reason === 'string' ? payload.reason : 'SUBSCRIPTION_REQUIRED',
     action: typeof payload?.action === 'string' ? payload.action : 'TOP_UP',
+    balance: payload?.balance ?? null,
+    required: payload?.required ?? null,
+    currency: typeof payload?.currency === 'string' ? payload.currency : 'IDR',
   }
 }
 

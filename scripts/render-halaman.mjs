@@ -36,6 +36,11 @@ const HALAMAN = [
     props: { channel: 'shopee', jumlah: 12, locked: true },
     harusMemuat: ['disabled=""', 'Mode hanya-baca: aktifkan akses untuk mencetak'],
   },
+  {
+    jalur: '/src/pages/dashboard/wallet-page.jsx',
+    props: { currentPlan: 'Free' },
+    harusMemuat: ['Saldo prabayar', 'Memuat riwayat'],
+  },
 ]
 
 const vite = await createServer({ server: { middlewareMode: true }, appType: 'custom', logLevel: 'error' })
