@@ -11,7 +11,8 @@ import './ProductDetail.css';
 import {
   ArrowLeft, ArrowRight, Zap, CheckCircle2, TrendingUp, Shield, BarChart3,
   Layers, Package, Users, Cpu, FileText, Smartphone, RefreshCw, Landmark,
-  Calendar, CheckSquare, Clock, Globe, Settings, Terminal, Check, Flame
+  Calendar, CheckSquare, Clock, Globe, Settings, Terminal, Check, Flame,
+  Printer, Calculator, Coins, Sliders, Tag, Receipt
 } from 'lucide-react';
 
 // Import Mockup Images (Matching AppSelector.jsx)
@@ -299,6 +300,188 @@ const productsData = {
       "Layanan dukungan teknis prioritas SLA tinggi (High SLA Service Level Agreement) 24/7."
     ]
   }
+};
+
+const BitOmniTopUpCalculator = ({ product }) => {
+  const [topUpAmount, setTopUpAmount] = useState(50000);
+  const RATE_PER_ORDER = 250;
+
+  const orderQuota = Math.floor(topUpAmount / RATE_PER_ORDER);
+
+  const presets = [
+    { amount: 25000, label: "Rp 25.000", orders: 100 },
+    { amount: 50000, label: "Rp 50.000", orders: 200, isPopular: true },
+    { amount: 100000, label: "Rp 100.000", orders: 400 },
+    { amount: 250000, label: "Rp 250.000", orders: 1000 },
+    { amount: 500000, label: "Rp 500.000", orders: 2000 },
+    { amount: 1000000, label: "Rp 1.000.000", orders: 4000 },
+  ];
+
+  const maxScaleOrders = 4000;
+  const barPercent = Math.min(Math.max((orderQuota / maxScaleOrders) * 100, 3), 100);
+
+  return (
+    <div className="topup-calc-container">
+      <div className="topup-calc-card">
+        {/* Header Badge & Title */}
+        <div className="topup-calc-header">
+          <div className="topup-badge">
+            <Coins size={15} /> SKEMA TOP-UP SESUKAMU
+          </div>
+          <h3 className="topup-calc-title">
+            Hanya <span className="highlight-price">Rp 250</span> / Pesanan
+          </h3>
+          <p className="topup-calc-sub">
+            Tanpa bayar langganan bulanan yang mengikat! Cukup top-up nominal berapa saja. Saldo <strong>tidak pernah hangus</strong> &amp; sudah mencakup fitur cetak resi instan, rekonsiliasi beban komplit, tracking COGS, hingga net profit per 1 pesanan.
+          </p>
+        </div>
+
+        {/* Interactive Controls */}
+        <div className="topup-interactive-box">
+          {/* Preset Buttons */}
+          <div className="topup-preset-header">Pilih Preset Nominal Top-up:</div>
+          <div className="topup-presets-grid">
+            {presets.map((p) => (
+              <button
+                key={p.amount}
+                className={`topup-preset-btn ${topUpAmount === p.amount ? 'active' : ''}`}
+                onClick={() => setTopUpAmount(p.amount)}
+              >
+                {p.isPopular && <span className="preset-pop-tag">Populer</span>}
+                <div className="preset-amount">{p.label}</div>
+                <div className="preset-orders">{p.orders.toLocaleString('id-ID')} pesanan</div>
+              </button>
+            ))}
+          </div>
+
+          {/* Range Slider */}
+          <div className="topup-slider-section">
+            <div className="topup-slider-header">
+              <label htmlFor="topup-range-input">Atur Nominal Top-up (Slider):</label>
+              <div className="topup-amount-display">
+                Rp {Number(topUpAmount).toLocaleString('id-ID')}
+              </div>
+            </div>
+            <input
+              id="topup-range-input"
+              type="range"
+              min="10000"
+              max="1000000"
+              step="5000"
+              value={topUpAmount}
+              onChange={(e) => setTopUpAmount(Number(e.target.value))}
+              className="topup-custom-slider"
+            />
+            <div className="topup-slider-labels">
+              <span>Rp 10.000 (40 pesanan)</span>
+              <span>Rp 500.000 (2.000 pesanan)</span>
+              <span>Rp 1.000.000 (4.000 pesanan)</span>
+            </div>
+          </div>
+
+          {/* Informative Graphic Bar Chart */}
+          <div className="topup-graphic-bar-box">
+            <div className="topup-bar-title-row">
+              <span className="topup-bar-title"><Sliders size={16} /> Grafik Kuota Pesanan Terkalkulasi</span>
+              <span className="topup-bar-equation">
+                Rp {Number(topUpAmount).toLocaleString('id-ID')} ÷ Rp 250 = <strong>{orderQuota.toLocaleString('id-ID')} Pesanan</strong>
+              </span>
+            </div>
+
+            <div className="topup-bar-track">
+              <div
+                className="topup-bar-fill"
+                style={{ width: `${barPercent}%` }}
+              >
+                <div className="topup-bar-glow"></div>
+                <span className="topup-bar-thumb-label">{orderQuota.toLocaleString('id-ID')} Pesanan</span>
+              </div>
+            </div>
+
+            <div className="topup-bar-ticks">
+              <div className="tick-item"><span>0</span></div>
+              <div className="tick-item"><span>1.000</span></div>
+              <div className="tick-item"><span>2.000</span></div>
+              <div className="tick-item"><span>3.000</span></div>
+              <div className="tick-item"><span>4.000+</span></div>
+            </div>
+          </div>
+
+          {/* Metric Highlights */}
+          <div className="topup-result-grid">
+            <div className="topup-result-card featured-result">
+              <div className="res-icon"><Printer size={22} /></div>
+              <div className="res-label">Kuota Cetak Resi &amp; Pesanan</div>
+              <div className="res-value">{orderQuota.toLocaleString('id-ID')} <span className="res-unit">Pesanan</span></div>
+              <div className="res-sub">Cetak resi otomatis &amp; sync stok multi-toko</div>
+            </div>
+
+            <div className="topup-result-card">
+              <div className="res-icon"><Calculator size={22} /></div>
+              <div className="res-label">Rekonsiliasi &amp; Net Profit</div>
+              <div className="res-value">100% Komplit</div>
+              <div className="res-sub">Rincian beban komplit hingga tahu net profit per 1 pesanan</div>
+            </div>
+
+            <div className="topup-result-card">
+              <div className="res-icon"><Tag size={22} /></div>
+              <div className="res-label">Biaya Per Pesanan</div>
+              <div className="res-value">Rp 250 <span className="res-unit">/ pesanan</span></div>
+              <div className="res-sub">Flat rate tanpa biaya tersembunyi &amp; tanpa kadaluwarsa</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Feature Check Grid */}
+        <div className="topup-features-section">
+          <h4 className="topup-features-title">Semua Fitur Canggih Ini Langsung Aktif Dengan Top-up:</h4>
+          <div className="topup-features-grid">
+            <div className="topup-feature-item">
+              <div className="feat-check"><Check size={16} strokeWidth={3} /></div>
+              <div>
+                <strong>Cetak Resi Instan Massal</strong>
+                <p>Cetak resi pengiriman otomatis untuk toko Shopee, Tokopedia, TikTok Shop, Lazada &amp; Blibli dalam 1 klik.</p>
+              </div>
+            </div>
+            <div className="topup-feature-item">
+              <div className="feat-check"><Check size={16} strokeWidth={3} /></div>
+              <div>
+                <strong>Rekonsiliasi Pesanan &amp; Beban Komplit</strong>
+                <p>Ketahui secara pasti net profit bersih dari 1 pesanan setelah dipotong komisi marketplace, ongkir, dan biaya iklan.</p>
+              </div>
+            </div>
+            <div className="topup-feature-item">
+              <div className="feat-check"><Check size={16} strokeWidth={3} /></div>
+              <div>
+                <strong>Atur Master Produk &amp; Tracking COGS</strong>
+                <p>Kelola Master SKU multi-toko dan lacak Beban HPP (Cost of Goods Sold) produk Anda secara real-time.</p>
+              </div>
+            </div>
+            <div className="topup-feature-item">
+              <div className="feat-check"><Check size={16} strokeWidth={3} /></div>
+              <div>
+                <strong>Masa Aktif Saldo Tanpa Kadaluwarsa</strong>
+                <p>Saldo top-up tersimpan aman di akun Anda dan tidak pernah hangus sampai kuota pesanan terpakai habis.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="topup-cta-row">
+          <button className="topup-btn-primary" onClick={() => navigateTo('/register')}>
+            Mulai Top-up Rp {Number(topUpAmount).toLocaleString('id-ID')} ({orderQuota.toLocaleString('id-ID')} Pesanan)
+          </button>
+          <button
+            className="topup-btn-secondary"
+            onClick={() => window.open(`https://wa.me/628113000676?text=Halo%20Bithinks,%20saya%20tertarik%20dengan%20sistem%20Top-up%20Sesukamu%20BitOmni%20Rp250/pesanan`, '_blank')}
+          >
+            Konsultasi via WhatsApp
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 const ProductDetail = ({ appId }) => {
@@ -713,68 +896,19 @@ module.exports = async function customWorkflow(ctx) {
           </div>
         </section>
 
-        {/* SECTION 3.5: Pricing (khusus BitOmni) */}
+        {/* SECTION 3.5: Pricing (khusus BitOmni - Top-up Sesukamu) */}
         {appId === 'bitomni' && (
           <section className="pp-section">
             <div className="container">
               <div className="p-section-header">
-                <span className="p-pretitle" style={{ color: product.color }}>HARGA BERLANGGANAN</span>
-                <h2 className="p-section-title">Pilih Paket Sesuai Skala Toko Anda</h2>
+                <span className="p-pretitle" style={{ color: product.color }}>SKEMA HARGA TRANSPARAN</span>
+                <h2 className="p-section-title">Top-up Sesukamu, Bayar Sesuai Pesanan</h2>
                 <p className="p-section-subtitle">
-                  Mulai gratis, upgrade kapan saja. Semua paket sudah termasuk sinkronisasi stok &amp; laporan multi-toko.
+                  Hanya Rp 250 per pesanan. Bebas atur nominal top-up tanpa biaya langganan bulanan mengikat. Saldo tidak pernah hangus!
                 </p>
               </div>
 
-              <div className="pp-toggle">
-                {PERIODS.map((p) => (
-                  <button
-                    key={p.key}
-                    className={`pp-toggle-btn ${period.key === p.key ? 'active' : ''}`}
-                    onClick={() => setPeriod(p)}
-                  >
-                    {p.save && <span className="pp-toggle-badge">{p.save}</span>}
-                    {p.label}
-                  </button>
-                ))}
-              </div>
-
-              <div className="pp-grid">
-                {PLANS.map((plan) => {
-                  const Icon = plan.icon;
-                  const isFree = plan.price === 0;
-                  const monthly = plan.price * (1 - period.disc);
-                  return (
-                    <div key={plan.key} className={`pp-card ${plan.highlighted ? 'featured' : ''}`}>
-                      {plan.badge && (
-                        <span className="pp-badge"><Flame size={12} /> {plan.badge}</span>
-                      )}
-                      <div className="pp-icon">
-                        {isFree ? <span className="pp-icon-free">FREE</span> : <Icon size={24} />}
-                      </div>
-                      <div className="pp-name">{plan.name}</div>
-                      <div className="pp-desc">{plan.desc}</div>
-                      <div className="pp-price-block">
-                        {isFree ? (
-                          <div className="pp-price">Gratis <span className="pp-per">/ bln</span></div>
-                        ) : (
-                          <>
-                            <div className="pp-price">{rupiah(monthly)} <span className="pp-per">/ bln</span></div>
-                            <div className="pp-note">*Harga termasuk PPN 11%</div>
-                          </>
-                        )}
-                      </div>
-                      <ul className="pp-features">
-                        {plan.features.map((f) => (
-                          <li key={f}><span className="pp-check"><Check size={12} strokeWidth={3} /></span>{f}</li>
-                        ))}
-                      </ul>
-                      <button className="pp-btn" onClick={() => navigateTo('/register')}>
-                        {isFree ? 'Mulai Gratis' : 'Pilih Paket'}
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
+              <BitOmniTopUpCalculator product={product} />
             </div>
           </section>
         )}
