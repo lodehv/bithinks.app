@@ -1533,10 +1533,9 @@
    TOP-UP SESUKAMU CALCULATOR SECTION STYLES
    ========================================================================== */
 
-.topup-calc-container {
-  width: 100%;
-  max-width: 1080px;
-  margin: 30px auto 0 auto;
+.topup-calc-container,
+.topup-calc-container * {
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
 }
 
 .topup-calc-card {
@@ -1559,7 +1558,7 @@
   gap: 6px;
   background: #EEF2FF;
   color: #4F46E5;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
   font-size: 0.8rem;
   font-weight: 700;
   padding: 6px 16px;
@@ -1570,7 +1569,7 @@
 }
 
 .topup-calc-title {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
   font-size: 2.2rem;
   font-weight: 800;
   color: #111827;
@@ -1587,7 +1586,7 @@
 }
 
 .topup-calc-sub {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
   font-size: 0.98rem;
   color: #6B7280;
   line-height: 1.6;
@@ -1605,7 +1604,7 @@
 }
 
 .topup-preset-header {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
   font-size: 0.9rem;
   font-weight: 700;
   color: #374151;
@@ -1661,7 +1660,7 @@
 }
 
 .preset-amount {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
   font-size: 0.92rem;
   font-weight: 800;
   color: #111827;
@@ -1673,10 +1672,10 @@
 }
 
 .preset-orders {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.73rem;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
+  font-size: 0.75rem;
   color: #6B7280;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .topup-preset-btn.active .preset-orders {
@@ -1700,20 +1699,53 @@
 }
 
 .topup-slider-header label {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
   font-size: 0.88rem;
   font-weight: 700;
   color: #374151;
 }
 
-.topup-amount-display {
-  font-family: 'Inter', sans-serif;
-  font-size: 1.3rem;
+.topup-amount-input-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #EEF2FF;
+  border: 1.5px solid #C7D2FE;
+  padding: 5px 14px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.topup-amount-input-box:focus-within {
+  border-color: #4F46E5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+  background: #ffffff;
+}
+
+.topup-order-number-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
+  font-size: 1.25rem;
   font-weight: 800;
   color: #4F46E5;
-  background: #EEF2FF;
-  padding: 4px 16px;
-  border-radius: 10px;
+  width: 75px;
+  text-align: right;
+  -moz-appearance: textfield;
+}
+
+.topup-order-number-input::-webkit-outer-spin-button,
+.topup-order-number-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.topup-order-unit-label {
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #4F46E5;
 }
 
 .topup-custom-slider {

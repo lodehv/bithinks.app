@@ -357,9 +357,32 @@ const BitOmniTopUpCalculator = ({ product }) => {
           {/* Range Slider for Order Count */}
           <div className="topup-slider-section">
             <div className="topup-slider-header">
-              <label htmlFor="topup-range-input">Atur Jumlah Pesanan Anda (Slider Pesanan):</label>
-              <div className="topup-amount-display">
-                {orderCount.toLocaleString('id-ID')} Pesanan
+              <label htmlFor="topup-range-input">Atur / Ketik Jumlah Pesanan Anda:</label>
+              <div className="topup-amount-input-box">
+                <input
+                  id="topup-number-input"
+                  type="number"
+                  min="1"
+                  max="50000"
+                  value={orderCount === 0 ? '' : orderCount}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === '') {
+                      setOrderCount(0);
+                    } else {
+                      const parsed = parseInt(val, 10);
+                      if (!isNaN(parsed)) {
+                        setOrderCount(parsed);
+                      }
+                    }
+                  }}
+                  onBlur={() => {
+                    if (!orderCount || orderCount < 1) setOrderCount(1);
+                  }}
+                  className="topup-order-number-input"
+                  placeholder="120"
+                />
+                <span className="topup-order-unit-label">Pesanan</span>
               </div>
             </div>
             <input
@@ -368,7 +391,7 @@ const BitOmniTopUpCalculator = ({ product }) => {
               min="40"
               max="4000"
               step="10"
-              value={orderCount}
+              value={Math.min(Math.max(orderCount, 40), 4000)}
               onChange={(e) => setOrderCount(Number(e.target.value))}
               className="topup-custom-slider"
             />
