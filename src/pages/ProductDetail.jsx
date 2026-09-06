@@ -303,22 +303,22 @@ const productsData = {
 };
 
 const BitOmniTopUpCalculator = ({ product }) => {
-  const [topUpAmount, setTopUpAmount] = useState(50000);
+  const [orderCount, setOrderCount] = useState(200);
   const RATE_PER_ORDER = 250;
 
-  const orderQuota = Math.floor(topUpAmount / RATE_PER_ORDER);
+  const topUpAmount = orderCount * RATE_PER_ORDER;
 
   const presets = [
-    { amount: 25000, label: "Rp 25.000", orders: 100 },
-    { amount: 50000, label: "Rp 50.000", orders: 200, isPopular: true },
-    { amount: 100000, label: "Rp 100.000", orders: 400 },
-    { amount: 250000, label: "Rp 250.000", orders: 1000 },
-    { amount: 500000, label: "Rp 500.000", orders: 2000 },
-    { amount: 1000000, label: "Rp 1.000.000", orders: 4000 },
+    { orders: 100, price: 25000, labelPrice: "Rp 25.000" },
+    { orders: 200, price: 50000, labelPrice: "Rp 50.000", isPopular: true },
+    { orders: 400, price: 100000, labelPrice: "Rp 100.000" },
+    { orders: 1000, price: 250000, labelPrice: "Rp 250.000" },
+    { orders: 2000, price: 500000, labelPrice: "Rp 500.000" },
+    { orders: 4000, price: 1000000, labelPrice: "Rp 1.000.000" },
   ];
 
   const maxScaleOrders = 4000;
-  const barPercent = Math.min(Math.max((orderQuota / maxScaleOrders) * 100, 3), 100);
+  const barPercent = Math.min(Math.max((orderCount / maxScaleOrders) * 100, 2), 100);
 
   return (
     <div className="topup-calc-container">
@@ -332,50 +332,53 @@ const BitOmniTopUpCalculator = ({ product }) => {
             Hanya <span className="highlight-price">Rp 250</span> / Pesanan
           </h3>
           <p className="topup-calc-sub">
-            Tanpa bayar langganan bulanan yang mengikat! Cukup top-up nominal berapa saja. Saldo <strong>tidak pernah hangus</strong> &amp; sudah mencakup fitur cetak resi instan, rekonsiliasi beban komplit, tracking COGS, hingga net profit per 1 pesanan.
+            Tanpa bayar langganan bulanan yang mengikat! Cukup atur target pesanan Anda. Saldo <strong>tidak pernah hangus</strong> &amp; sudah mencakup fitur cetak resi instan, rekonsiliasi beban komplit, tracking COGS, hingga net profit per 1 pesanan.
           </p>
         </div>
 
         {/* Interactive Controls */}
         <div className="topup-interactive-box">
           {/* Preset Buttons */}
-          <div className="topup-preset-header">Pilih Preset Nominal Top-up:</div>
+          <div className="topup-preset-header">Pilih Preset Jumlah Pesanan:</div>
           <div className="topup-presets-grid">
             {presets.map((p) => (
               <button
-                key={p.amount}
-                className={`topup-preset-btn ${topUpAmount === p.amount ? 'active' : ''}`}
-                onClick={() => setTopUpAmount(p.amount)}
+                key={p.orders}
+                className={`topup-preset-btn ${orderCount === p.orders ? 'active' : ''}`}
+                onClick={() => setOrderCount(p.orders)}
               >
                 {p.isPopular && <span className="preset-pop-tag">Populer</span>}
-                <div className="preset-amount">{p.label}</div>
-                <div className="preset-orders">{p.orders.toLocaleString('id-ID')} pesanan</div>
+                <div className="preset-amount">{p.orders.toLocaleString('id-ID')} Pesanan</div>
+                <div className="preset-orders">{p.labelPrice}</div>
               </button>
             ))}
           </div>
 
-          {/* Range Slider */}
+          {/* Range Slider for Order Count */}
           <div className="topup-slider-section">
             <div className="topup-slider-header">
-              <label htmlFor="topup-range-input">Atur Nominal Top-up (Slider):</label>
+              <label htmlFor="topup-range-input">Atur Jumlah Pesanan Anda (Slider Pesanan):</label>
               <div className="topup-amount-display">
-                Rp {Number(topUpAmount).toLocaleString('id-ID')}
+                {orderCount.toLocaleString('id-ID')} Pesanan
               </div>
             </div>
             <input
               id="topup-range-input"
               type="range"
-              min="10000"
-              max="1000000"
-              step="5000"
-              value={topUpAmount}
-              onChange={(e) => setTopUpAmount(Number(e.target.value))}
+              min="40"
+              max="4000"
+              step="10"
+              value={orderCount}
+              onChange={(e) => setOrderCount(Number(e.target.value))}
               className="topup-custom-slider"
             />
+            <div className="topup-slider-price-summary">
+              Biaya Top-up: <strong>Rp {topUpAmount.toLocaleString('id-ID')}</strong> ({orderCount.toLocaleString('id-ID')} pesanan × Rp 250)
+            </div>
             <div className="topup-slider-labels">
-              <span>Rp 10.000 (40 pesanan)</span>
-              <span>Rp 500.000 (2.000 pesanan)</span>
-              <span>Rp 1.000.000 (4.000 pesanan)</span>
+              <span>40 pesanan (Rp 10.000)</span>
+              <span>2.000 pesanan (Rp 500.000)</span>
+              <span>4.000 pesanan (Rp 1.000.000)</span>
             </div>
           </div>
 
@@ -384,7 +387,7 @@ const BitOmniTopUpCalculator = ({ product }) => {
             <div className="topup-bar-title-row">
               <span className="topup-bar-title"><Sliders size={16} /> Grafik Kuota Pesanan Terkalkulasi</span>
               <span className="topup-bar-equation">
-                Rp {Number(topUpAmount).toLocaleString('id-ID')} ÷ Rp 250 = <strong>{orderQuota.toLocaleString('id-ID')} Pesanan</strong>
+                {orderCount.toLocaleString('id-ID')} Pesanan × Rp 250 = <strong>Rp {topUpAmount.toLocaleString('id-ID')}</strong>
               </span>
             </div>
 
@@ -394,8 +397,13 @@ const BitOmniTopUpCalculator = ({ product }) => {
                 style={{ width: `${barPercent}%` }}
               >
                 <div className="topup-bar-glow"></div>
-                <span className="topup-bar-thumb-label">{orderQuota.toLocaleString('id-ID')} Pesanan</span>
+                {barPercent >= 18 && (
+                  <span className="topup-bar-thumb-label-inside">{orderCount.toLocaleString('id-ID')} Pesanan</span>
+                )}
               </div>
+              {barPercent < 18 && (
+                <span className="topup-bar-thumb-label-outside">{orderCount.toLocaleString('id-ID')} Pesanan</span>
+              )}
             </div>
 
             <div className="topup-bar-ticks">
@@ -411,15 +419,15 @@ const BitOmniTopUpCalculator = ({ product }) => {
           <div className="topup-result-grid">
             <div className="topup-result-card featured-result">
               <div className="res-icon"><Printer size={22} /></div>
-              <div className="res-label">Kuota Cetak Resi &amp; Pesanan</div>
-              <div className="res-value">{orderQuota.toLocaleString('id-ID')} <span className="res-unit">Pesanan</span></div>
+              <div className="res-label">Jumlah Kuota Pesanan</div>
+              <div className="res-value">{orderCount.toLocaleString('id-ID')} <span className="res-unit">Pesanan</span></div>
               <div className="res-sub">Cetak resi otomatis &amp; sync stok multi-toko</div>
             </div>
 
             <div className="topup-result-card">
               <div className="res-icon"><Calculator size={22} /></div>
-              <div className="res-label">Rekonsiliasi &amp; Net Profit</div>
-              <div className="res-value">100% Komplit</div>
+              <div className="res-label">Total Nominal Top-up</div>
+              <div className="res-value">Rp {topUpAmount.toLocaleString('id-ID')}</div>
               <div className="res-sub">Rincian beban komplit hingga tahu net profit per 1 pesanan</div>
             </div>
 
@@ -470,11 +478,11 @@ const BitOmniTopUpCalculator = ({ product }) => {
         {/* Action Buttons */}
         <div className="topup-cta-row">
           <button className="topup-btn-primary" onClick={() => navigateTo('/register')}>
-            Mulai Top-up Rp {Number(topUpAmount).toLocaleString('id-ID')} ({orderQuota.toLocaleString('id-ID')} Pesanan)
+            Mulai Top-up {orderCount.toLocaleString('id-ID')} Pesanan (Rp {topUpAmount.toLocaleString('id-ID')})
           </button>
           <button
             className="topup-btn-secondary"
-            onClick={() => window.open(`https://wa.me/628113000676?text=Halo%20Bithinks,%20saya%20tertarik%20dengan%20sistem%20Top-up%20Sesukamu%20BitOmni%20Rp250/pesanan`, '_blank')}
+            onClick={() => window.open(`https://wa.me/628113000676?text=Halo%20Bithinks,%20saya%20tertarik%20dengan%20sistem%20Top-up%20Sesukamu%20BitOmni%20${orderCount}%20pesanan%20(Rp${topUpAmount})`, '_blank')}
           >
             Konsultasi via WhatsApp
           </button>
