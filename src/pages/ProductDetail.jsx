@@ -761,10 +761,6 @@ module.exports = async function customWorkflow(ctx) {
                   </div>
                   <h3>Kelola Pesanan &amp; Cetak Resi</h3>
                   <span className="bitomni-card-chip">Cetak Resi 1-Klik</span>
-                  <div className="bitomni-card-tooltip">
-                    <p>Terima, proses, atur pickup kurir, dan cetak resi pengiriman otomatis &amp; massal (Shopee, Tokopedia, TikTok Shop, Lazada, Blibli) dari semua toko dalam satu layar terpusat — tanpa buka seller center satu per satu.</p>
-                    <div className="bitomni-tooltip-arrow"></div>
-                  </div>
                 </div>
 
                 {/* Card 2: Tracking Pesanan Objektif */}
@@ -774,10 +770,6 @@ module.exports = async function customWorkflow(ctx) {
                   </div>
                   <h3>Tracking Pesanan Objektif</h3>
                   <span className="bitomni-card-chip">Pemetaan Status Presisi</span>
-                  <div className="bitomni-card-tooltip">
-                    <p>Klasifikasikan &amp; lacak status pesanan secara terisolasi (Pesanan di Jalanan, Pesanan Selesai, Pesanan Retur/Batal). Pemetaan status real-time untuk menjamin laporan penjualan yang objektif dan transparan.</p>
-                    <div className="bitomni-tooltip-arrow"></div>
-                  </div>
                 </div>
 
                 {/* Card 3: Audit Retur & Beban Logistik */}
@@ -787,10 +779,6 @@ module.exports = async function customWorkflow(ctx) {
                   </div>
                   <h3>Audit Retur &amp; Beban Logistik</h3>
                   <span className="bitomni-card-chip">Restok Gudang &amp; Beban Ongkir</span>
-                  <div className="bitomni-card-tooltip">
-                    <p>Otomatisasi pencatatan fisik unit barang retur yang kembali ke gudang (Restok WMS) serta kalkulasi akurat beban logistik &amp; selisih ongkir retur — cegah kebocoran modal &amp; distorsi laporan keuangan.</p>
-                    <div className="bitomni-tooltip-arrow"></div>
-                  </div>
                 </div>
 
                 {/* Card 4: Laporan Penjualan Komprehensif */}
@@ -800,10 +788,6 @@ module.exports = async function customWorkflow(ctx) {
                   </div>
                   <h3>Laporan Penjualan Komprehensif</h3>
                   <span className="bitomni-card-chip">Net Profit Presisi</span>
-                  <div className="bitomni-card-tooltip">
-                    <p>Lihat omzet tiap toko, rincian potongan komisi platform, selisih ongkir, biaya iklan, hingga kalkulasi Net Profit bersih presisi per pesanan setelah dikurangi kompensasi retur &amp; biaya logistik.</p>
-                    <div className="bitomni-tooltip-arrow"></div>
-                  </div>
                 </div>
 
                 {/* Card 5: WMS Warehouse Management System */}
@@ -813,10 +797,6 @@ module.exports = async function customWorkflow(ctx) {
                   </div>
                   <h3>WMS (Warehouse System)</h3>
                   <span className="bitomni-card-chip">Stok Fisik &amp; Siap Jual</span>
-                  <div className="bitomni-card-tooltip">
-                    <p>Kontrol gudang modern dengan pemisahan stok fisik di gudang dan stok tersedia (siap jual). Sinkronisasi stok otomatis real-time ke semua marketplace &amp; cegah over-selling yang menyebabkan penalti toko.</p>
-                    <div className="bitomni-tooltip-arrow"></div>
-                  </div>
                 </div>
 
                 {/* Card 6: Kelola Produk Marketplace */}
@@ -826,10 +806,6 @@ module.exports = async function customWorkflow(ctx) {
                   </div>
                   <h3>Kelola Produk Marketplace</h3>
                   <span className="bitomni-card-chip">Sync SKU Massal</span>
-                  <div className="bitomni-card-tooltip">
-                    <p>Kelola katalog Master SKU sekali atur, lalu tayangkan, ubah harga, deskripsi, gambar, dan variasi produk secara massal ke seluruh toko online sekaligus tanpa perlu input ulang di tiap seller center.</p>
-                    <div className="bitomni-tooltip-arrow"></div>
-                  </div>
                 </div>
 
                 {/* Card 7: Copy & Crosslisting Massal */}
@@ -839,10 +815,6 @@ module.exports = async function customWorkflow(ctx) {
                   </div>
                   <h3>Copy &amp; Crosslisting Massal</h3>
                   <span className="bitomni-card-chip">Duplikasi Toko Instan</span>
-                  <div className="bitomni-card-tooltip">
-                    <p>Salin dan publikasikan katalog produk antar toko &amp; marketplace secara massal dalam hitungan detik tanpa perlu input ulang informasi produk satu per satu.</p>
-                    <div className="bitomni-tooltip-arrow"></div>
-                  </div>
                 </div>
 
                 {/* Card 8: Manajemen Stok Cadangan */}
@@ -852,10 +824,6 @@ module.exports = async function customWorkflow(ctx) {
                   </div>
                   <h3>Manajemen Stok Cadangan</h3>
                   <span className="bitomni-card-chip">Buffer Stock Gudang</span>
-                  <div className="bitomni-card-tooltip">
-                    <p>Sisihkan sejumlah stok cadangan agar tidak ikut terjual di marketplace dan tetap tersedia untuk kebutuhan operasional, toko offline, atau event promo tertentu.</p>
-                    <div className="bitomni-tooltip-arrow"></div>
-                  </div>
                 </div>
               </div>
             ) : (

@@ -2196,51 +2196,6 @@
   border-radius: 9999px;
 }
 
-/* Floating Dark Tooltip Popover (Matching Reference Screenshot) */
-.bitomni-card-tooltip {
-  position: absolute;
-  bottom: calc(100% + 12px);
-  left: 50%;
-  transform: translateX(-50%) translateY(6px);
-  width: 260px;
-  background: #0F172A;
-  color: #FFFFFF;
-  padding: 14px 16px;
-  border-radius: 12px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.82rem;
-  line-height: 1.5;
-  text-align: left;
-  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.3);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: 50;
-}
-
-.bitomni-card-tooltip p {
-  margin: 0;
-  color: #F8FAFC;
-  font-weight: 400;
-}
-
-.bitomni-tooltip-arrow {
-  position: absolute;
-  bottom: -5px;
-  left: 50%;
-  transform: translateX(-50%) rotate(45deg);
-  width: 10px;
-  height: 10px;
-  background: #0F172A;
-}
-
-.bitomni-feature-card:hover .bitomni-card-tooltip {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(0);
-}
-
 /* Responsive Media Queries */
 @media (max-width: 1024px) {
   .topup-presets-grid {
@@ -2281,21 +2236,6 @@
   }
   .bitomni-feature-card {
     padding: 24px 16px;
-  }
-  .bitomni-card-tooltip {
-    position: relative;
-    bottom: auto;
-    left: auto;
-    transform: none;
-    width: 100%;
-    margin-top: 12px;
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    background: #1E293B;
-  }
-  .bitomni-tooltip-arrow {
-    display: none;
   }
 }
 
