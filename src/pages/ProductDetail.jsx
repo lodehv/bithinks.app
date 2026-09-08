@@ -13,7 +13,8 @@ import {
   Layers, Package, Users, Cpu, FileText, Smartphone, RefreshCw, Landmark,
   Calendar, CheckSquare, Clock, Globe, Settings, Terminal, Check, Flame,
   Printer, Calculator, Coins, Sliders, Tag, Receipt, Upload, Copy, Gift,
-  Monitor, Info, CreditCard, Archive, Percent, Star, Boxes, Store
+  Monitor, Info, CreditCard, Archive, Percent, Star, Boxes, Store,
+  Truck, RotateCcw
 } from 'lucide-react';
 
 // Import Mockup Images (Matching AppSelector.jsx)
@@ -118,9 +119,10 @@ const productsData = {
       }
     ],
     whyUs: [
-      "Tahu profit bersih asli tiap toko setelah semua potongan biaya platform, bukan cuma omzet kotor.",
-      "Stok selalu sinkron di semua marketplace — cegah over-selling yang bikin poin toko kena penalti.",
-      "Hemat waktu admin: kelola pesanan & stok semua toko dari satu tempat, tanpa login bergantian."
+      "Tahu profit bersih asli tiap toko setelah potongan komisi platform & kompensasi retur, bukan sekadar omzet kotor.",
+      "Tracking pesanan objektif & audit retur otomatis — ketahui pasti unit barang kembali ke gudang & total beban logistik ongkir retur.",
+      "Stok selalu sinkron di semua marketplace (WMS stok fisik vs siap jual) — cegah over-selling & penalti toko.",
+      "Hemat waktu admin: cetak resi massal 1-klik & kelola produk multi-toko dari satu dashboard terpusat."
     ],
     ctaTitle: "Siap Naikkan Penjualan Semua Toko Marketplace Kamu?",
     ctaDesc: "Kelola stok, pesanan, sampai laporan omzet & profit semua toko dari satu tempat. Manajemen multi-toko yang lengkap bikin bisnis jalan tanpa ribet — kamu tinggal fokus jualan dan scale up."
@@ -766,7 +768,39 @@ module.exports = async function customWorkflow(ctx) {
                   </div>
                 </div>
 
-                {/* Card 2: Laporan Penjualan Komprehensif */}
+                {/* Card 2: Tracking Pesanan Objektif */}
+                <div className="bitomni-feature-card">
+                  <div className="bitomni-card-top-row">
+                    <div className="bitomni-card-icon-box icon-purple">
+                      <Truck size={26} color="#7E22CE" />
+                    </div>
+                    <span className="bitomni-chip chip-purple">Pemetaan Status Presisi</span>
+                  </div>
+                  <div className="bitomni-card-body">
+                    <h3>Tracking Pesanan Objektif</h3>
+                    <p>
+                      Klasifikasikan &amp; lacak status pesanan secara terisolasi (Pesanan di Jalanan, Pesanan Selesai, Pesanan Retur/Batal). Pemetaan status real-time untuk menjamin laporan penjualan yang objektif dan transparan.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Card 3: Audit Retur & Beban Logistik */}
+                <div className="bitomni-feature-card">
+                  <div className="bitomni-card-top-row">
+                    <div className="bitomni-card-icon-box icon-rose">
+                      <RotateCcw size={26} color="#E11D48" />
+                    </div>
+                    <span className="bitomni-chip chip-rose">Restok Gudang &amp; Beban Ongkir</span>
+                  </div>
+                  <div className="bitomni-card-body">
+                    <h3>Audit Retur &amp; Beban Logistik</h3>
+                    <p>
+                      Otomatisasi pencatatan fisik unit barang retur yang kembali ke gudang (Restok WMS) serta kalkulasi akurat beban logistik &amp; selisih ongkir retur — cegah kebocoran modal &amp; distorsi laporan keuangan.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Card 4: Laporan Penjualan Komprehensif */}
                 <div className="bitomni-feature-card">
                   <div className="bitomni-card-top-row">
                     <div className="bitomni-card-icon-box icon-emerald">
@@ -777,12 +811,12 @@ module.exports = async function customWorkflow(ctx) {
                   <div className="bitomni-card-body">
                     <h3>Laporan Penjualan Komprehensif</h3>
                     <p>
-                      Lihat omzet tiap toko, rincian potongan komisi platform, selisih ongkir, biaya iklan, hingga kalkulasi Net Profit bersih presisi per 1 pesanan — sanitasikan data penjualan Anda secara otomatis &amp; akurat.
+                      Lihat omzet tiap toko, rincian potongan komisi platform, selisih ongkir, biaya iklan, hingga kalkulasi Net Profit bersih presisi per pesanan setelah dikurangi kompensasi retur &amp; biaya logistik.
                     </p>
                   </div>
                 </div>
 
-                {/* Card 3: WMS Warehouse Management System */}
+                {/* Card 5: WMS Warehouse Management System */}
                 <div className="bitomni-feature-card">
                   <div className="bitomni-card-top-row">
                     <div className="bitomni-card-icon-box icon-amber">
@@ -793,12 +827,12 @@ module.exports = async function customWorkflow(ctx) {
                   <div className="bitomni-card-body">
                     <h3>WMS (Warehouse Management System)</h3>
                     <p>
-                      Kontrol gudang modern dengan fitur pemisahan stok fisik di gudang dan stok tersedia (siap jual). Sinkronisasi stok otomatis real-time ke semua marketplace &amp; cegah over-selling yang menyebabkan penalti toko.
+                      Kontrol gudang modern dengan pemisahan stok fisik di gudang dan stok tersedia (siap jual). Sinkronisasi stok otomatis real-time ke semua marketplace &amp; cegah over-selling yang menyebabkan penalti toko.
                     </p>
                   </div>
                 </div>
 
-                {/* Card 4: Kelola Produk Marketplace */}
+                {/* Card 6: Kelola Produk Marketplace */}
                 <div className="bitomni-feature-card">
                   <div className="bitomni-card-top-row">
                     <div className="bitomni-card-icon-box icon-blue">

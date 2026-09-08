@@ -2146,6 +2146,14 @@
   background: rgba(37, 99, 235, 0.08);
 }
 
+.bitomni-card-icon-box.icon-purple {
+  background: rgba(147, 51, 234, 0.08);
+}
+
+.bitomni-card-icon-box.icon-rose {
+  background: rgba(225, 29, 72, 0.08);
+}
+
 .bitomni-feature-card:hover .bitomni-card-icon-box {
   transform: scale(1.05);
 }
@@ -2183,6 +2191,18 @@
   background: #EFF6FF;
   color: #1D4ED8;
   border: 1px solid #BFDBFE;
+}
+
+.bitomni-chip.chip-purple {
+  background: #F3E8FF;
+  color: #7E22CE;
+  border: 1px solid #E9D5FF;
+}
+
+.bitomni-chip.chip-rose {
+  background: #FFE4E6;
+  color: #BE123C;
+  border: 1px solid #FECDD3;
 }
 
 /* Body Content */
