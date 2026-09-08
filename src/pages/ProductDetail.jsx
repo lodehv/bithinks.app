@@ -12,7 +12,8 @@ import {
   ArrowLeft, ArrowRight, Zap, CheckCircle2, TrendingUp, Shield, BarChart3,
   Layers, Package, Users, Cpu, FileText, Smartphone, RefreshCw, Landmark,
   Calendar, CheckSquare, Clock, Globe, Settings, Terminal, Check, Flame,
-  Printer, Calculator, Coins, Sliders, Tag, Receipt
+  Printer, Calculator, Coins, Sliders, Tag, Receipt, Upload, Copy, Gift,
+  Monitor, Info, CreditCard, Archive, Percent, Star, Boxes, Store
 } from 'lucide-react';
 
 // Import Mockup Images (Matching AppSelector.jsx)
@@ -747,17 +748,145 @@ module.exports = async function customWorkflow(ctx) {
               </p>
             </div>
 
-            <div className="p-features-showcase-grid">
-              {product.features.map((feat, idx) => (
-                <div className="p-feature-grid-card" key={idx}>
-                  <div className="p-feature-grid-icon-box" style={{ backgroundColor: product.bgColor }}>
-                    {feat.icon}
+            {appId === 'bitomni' ? (
+              <>
+                {/* 4 Main Briefing Cards Matching Reference Screenshot 1 */}
+                <div className="bitomni-featured-cards-grid">
+                  {/* Card 1: Kelola Pesanan & Cetak Resi */}
+                  <div className="bitomni-feature-card">
+                    <div className="bitomni-card-cyan-circle"></div>
+                    <div className="bitomni-card-badge-shape">
+                      <Printer size={24} color="#ffffff" />
+                    </div>
+                    <div className="bitomni-card-accent-corner"></div>
+                    <div className="bitomni-card-body">
+                      <h3>Kelola Pesanan &amp; Cetak Resi</h3>
+                      <p>
+                        Terima, proses, atur pickup kurir, dan cetak resi pengiriman otomatis &amp; massal (Shopee, Tokopedia, TikTok Shop, Lazada, Blibli) dari semua toko dalam satu layar terpusat — tanpa buka seller center satu per satu.
+                      </p>
+                    </div>
                   </div>
-                  <h3>{feat.title}</h3>
-                  <p>{feat.desc}</p>
+
+                  {/* Card 2: Laporan Penjualan Komprehensif */}
+                  <div className="bitomni-feature-card">
+                    <div className="bitomni-card-cyan-circle"></div>
+                    <div className="bitomni-card-badge-shape">
+                      <BarChart3 size={24} color="#ffffff" />
+                    </div>
+                    <div className="bitomni-card-accent-corner"></div>
+                    <div className="bitomni-card-body">
+                      <h3>Laporan Penjualan Komprehensif</h3>
+                      <p>
+                        Lihat omzet tiap toko, rincian potongan komisi platform, selisih ongkir, biaya iklan, hingga kalkulasi Net Profit bersih presisi per 1 pesanan — sanitasikan data penjualan Anda secara otomatis &amp; akurat.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Card 3: WMS Warehouse Management System */}
+                  <div className="bitomni-feature-card">
+                    <div className="bitomni-card-cyan-circle"></div>
+                    <div className="bitomni-card-badge-shape">
+                      <Boxes size={24} color="#ffffff" />
+                    </div>
+                    <div className="bitomni-card-accent-corner"></div>
+                    <div className="bitomni-card-body">
+                      <h3>WMS (Warehouse Management System)</h3>
+                      <p>
+                        Kontrol gudang modern dengan fitur pemisahan stok fisik di gudang dan stok tersedia (siap jual). Sinkronisasi stok otomatis real-time ke semua marketplace &amp; cegah over-selling yang menyebabkan penalti toko.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Card 4: Kelola Produk Marketplace */}
+                  <div className="bitomni-feature-card">
+                    <div className="bitomni-card-cyan-circle"></div>
+                    <div className="bitomni-card-badge-shape">
+                      <Layers size={24} color="#ffffff" />
+                    </div>
+                    <div className="bitomni-card-accent-corner"></div>
+                    <div className="bitomni-card-body">
+                      <h3>Kelola Produk Marketplace</h3>
+                      <p>
+                        Kelola katalog Master SKU sekali atur, lalu tayangkan, ubah harga, deskripsi, gambar, dan variasi produk secara massal ke seluruh toko online sekaligus tanpa perlu input ulang di tiap seller center.
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              ))}
-            </div>
+
+                {/* 12 Mini Feature Grid Cards Matching Reference Screenshot 2 */}
+                <div className="bitomni-mini-features-wrapper">
+                  <div className="bitomni-mini-header">
+                    <span className="bitomni-mini-badge">FITUR OPERASIONAL MASSAL</span>
+                    <h3 className="bitomni-mini-title">Kelengkapan Otomasi Marketplace BitOmni</h3>
+                  </div>
+
+                  <div className="bitomni-mini-grid">
+                    <div className="bitomni-mini-card">
+                      <div className="mini-card-icon-box"><Upload size={26} color="#3B82F6" /></div>
+                      <span className="mini-card-text">Upload Produk Massal</span>
+                    </div>
+                    <div className="bitomni-mini-card">
+                      <div className="mini-card-icon-box"><Copy size={26} color="#3B82F6" /></div>
+                      <span className="mini-card-text">Copylisting Massal</span>
+                    </div>
+                    <div className="bitomni-mini-card">
+                      <div className="mini-card-icon-box"><RefreshCw size={26} color="#3B82F6" /></div>
+                      <span className="mini-card-text">Crosslisting Massal</span>
+                    </div>
+                    <div className="bitomni-mini-card">
+                      <div className="mini-card-icon-box"><Tag size={26} color="#3B82F6" /></div>
+                      <span className="mini-card-text">Promosi Harga Coret</span>
+                    </div>
+
+                    <div className="bitomni-mini-card">
+                      <div className="mini-card-icon-box"><Gift size={26} color="#3B82F6" /></div>
+                      <span className="mini-card-text">Promosi Bundle &amp; Hadiah</span>
+                    </div>
+                    <div className="bitomni-mini-card">
+                      <div className="mini-card-icon-box"><Monitor size={26} color="#3B82F6" /></div>
+                      <span className="mini-card-text">Pantauan Produk</span>
+                    </div>
+                    <div className="bitomni-mini-card">
+                      <div className="mini-card-icon-box"><Info size={26} color="#3B82F6" /></div>
+                      <span className="mini-card-text">Pantauan Perbedaan Informasi</span>
+                    </div>
+                    <div className="bitomni-mini-card">
+                      <div className="mini-card-icon-box"><Sliders size={26} color="#3B82F6" /></div>
+                      <span className="mini-card-text">Edit dan Tambah Variasi</span>
+                    </div>
+
+                    <div className="bitomni-mini-card">
+                      <div className="mini-card-icon-box"><CreditCard size={26} color="#3B82F6" /></div>
+                      <span className="mini-card-text">Piutang Channel</span>
+                    </div>
+                    <div className="bitomni-mini-card">
+                      <div className="mini-card-icon-box"><Archive size={26} color="#3B82F6" /></div>
+                      <span className="mini-card-text">Stok Cadangan</span>
+                    </div>
+                    <div className="bitomni-mini-card">
+                      <div className="mini-card-icon-box"><Percent size={26} color="#3B82F6" /></div>
+                      <span className="mini-card-text">Persentase Stok</span>
+                    </div>
+                    <div className="bitomni-mini-card">
+                      <div className="mini-card-icon-box"><Star size={26} color="#3B82F6" /></div>
+                      <span className="mini-card-text">Toko Prioritas</span>
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="p-features-showcase-grid">
+                {product.features.map((feat, idx) => (
+                  <div className="p-feature-grid-card" key={idx}>
+                    <div className="p-feature-grid-icon-box" style={{ backgroundColor: product.bgColor }}>
+                      {feat.icon}
+                    </div>
+                    <h3>{feat.title}</h3>
+                    <p>{feat.desc}</p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </section>
 

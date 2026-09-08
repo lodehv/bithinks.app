@@ -2106,6 +2106,189 @@
   background: #F9FAFB;
 }
 
+/* ==========================================================================
+   BITOMNI REDESIGNED FEATURE CARDS & 12 MINI GRID STYLES
+   ========================================================================== */
+
+/* 4 Main Briefing Cards Grid */
+.bitomni-featured-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+  margin-bottom: 50px;
+}
+
+.bitomni-feature-card {
+  position: relative;
+  background: #ffffff;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 28px;
+  padding: 44px 36px 36px 36px;
+  text-align: left;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.bitomni-feature-card:hover {
+  transform: translateY(-5px);
+  border-color: #CBD5E1;
+  box-shadow: 0 20px 45px rgba(79, 70, 229, 0.09);
+}
+
+/* Cyan Decorative Circle Top-Left */
+.bitomni-card-cyan-circle {
+  position: absolute;
+  top: -6px;
+  left: 64px;
+  width: 48px;
+  height: 48px;
+  background: #38BDF8;
+  border-radius: 50%;
+  z-index: 1;
+  opacity: 0.95;
+}
+
+/* Dark Indigo Curved Badge Top-Left */
+.bitomni-card-badge-shape {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 105px;
+  height: 105px;
+  background: linear-gradient(135deg, #312E81 0%, #3730A3 50%, #4338CA 100%);
+  border-bottom-right-radius: 90px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-top: 24px;
+  padding-left: 24px;
+  z-index: 2;
+  box-shadow: 4px 4px 15px rgba(49, 46, 129, 0.25);
+}
+
+/* Cyan Soft Quarter Circle Accent Bottom-Right */
+.bitomni-card-accent-corner {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 68px;
+  height: 68px;
+  background: #BAE6FD;
+  border-top-left-radius: 68px;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+/* Body Content */
+.bitomni-card-body {
+  margin-top: 64px;
+  position: relative;
+  z-index: 3;
+}
+
+.bitomni-card-body h3 {
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0F172A;
+  letter-spacing: -0.3px;
+  margin: 0 0 12px 0;
+  line-height: 1.3;
+}
+
+.bitomni-card-body p {
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
+  font-size: 0.94rem;
+  line-height: 1.65;
+  color: #475569;
+  margin: 0;
+}
+
+/* 12 Mini Feature Grid Section */
+.bitomni-mini-features-wrapper {
+  background: #FAFCFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 28px;
+  padding: 44px 32px;
+  margin-top: 20px;
+}
+
+.bitomni-mini-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.bitomni-mini-badge {
+  display: inline-block;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #2563EB;
+  background: #EFF6FF;
+  padding: 5px 14px;
+  border-radius: 20px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.bitomni-mini-title {
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin: 0;
+}
+
+.bitomni-mini-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.bitomni-mini-card {
+  background: #ffffff;
+  border: 1.5px solid #BFDBFE;
+  border-radius: 20px;
+  padding: 28px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.03);
+}
+
+.bitomni-mini-card:hover {
+  transform: translateY(-3px);
+  border-color: #3B82F6;
+  box-shadow: 0 10px 24px rgba(59, 130, 246, 0.12);
+  background: #F8FAFC;
+}
+
+.mini-card-icon-box {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #EFF6FF;
+  border-radius: 14px;
+}
+
+.mini-card-text {
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #1E293B;
+  line-height: 1.35;
+}
+
 /* Responsive Media Queries */
 @media (max-width: 1024px) {
   .topup-presets-grid {
@@ -2113,6 +2296,14 @@
   }
   .topup-result-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+  .bitomni-featured-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  .bitomni-mini-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
   }
 }
 
@@ -2138,6 +2329,28 @@
   }
   .topup-btn-primary, .topup-btn-secondary {
     width: 100%;
+  }
+  .bitomni-featured-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .bitomni-feature-card {
+    padding: 36px 24px 28px 24px;
+  }
+  .bitomni-mini-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .bitomni-mini-features-wrapper {
+    padding: 28px 18px;
+  }
+  .bitomni-mini-title {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .bitomni-mini-grid {
+    grid-template-columns: 1fr;
   }
 }
 
