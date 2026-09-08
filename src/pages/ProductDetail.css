@@ -2132,7 +2132,7 @@
 
 .bitomni-featured-cards-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   margin-bottom: 50px;
 }
@@ -2140,11 +2140,11 @@
 .bitomni-feature-card {
   position: relative;
   background: #ffffff;
-  border: 1.5px solid #E2E8F0;
-  border-radius: 24px;
+  border: 1px solid #E2E8F0;
+  border-radius: 20px;
   padding: 32px 28px;
   text-align: left;
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.03);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
@@ -2152,97 +2152,44 @@
 
 .bitomni-feature-card:hover {
   transform: translateY(-4px);
-  border-color: #CBD5E1;
-  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.08);
+  border-color: #4F46E5;
+  box-shadow: 0 12px 28px rgba(79, 70, 229, 0.08);
 }
 
 .bitomni-card-top-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .bitomni-card-icon-box {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
-  background: rgba(79, 70, 229, 0.08);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #EEF2FF;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: transform 0.25s ease;
 }
 
-.bitomni-card-icon-box.icon-emerald {
-  background: rgba(5, 150, 105, 0.08);
-}
-
-.bitomni-card-icon-box.icon-amber {
-  background: rgba(217, 119, 6, 0.08);
-}
-
-.bitomni-card-icon-box.icon-blue {
-  background: rgba(37, 99, 235, 0.08);
-}
-
-.bitomni-card-icon-box.icon-purple {
-  background: rgba(147, 51, 234, 0.08);
-}
-
-.bitomni-card-icon-box.icon-rose {
-  background: rgba(225, 29, 72, 0.08);
-}
-
 .bitomni-feature-card:hover .bitomni-card-icon-box {
-  transform: scale(1.05);
+  transform: scale(1.06);
 }
 
 .bitomni-chip {
   display: inline-flex;
   align-items: center;
-  padding: 6px 14px;
+  padding: 5px 12px;
   border-radius: 9999px;
   font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.2px;
-}
-
-.bitomni-chip.chip-indigo {
-  background: #EEF2FF;
+  background: #EFF6FF;
   color: #4338CA;
   border: 1px solid #C7D2FE;
-}
-
-.bitomni-chip.chip-emerald {
-  background: #ECFDF5;
-  color: #047857;
-  border: 1px solid #A7F3D0;
-}
-
-.bitomni-chip.chip-amber {
-  background: #FFFBEB;
-  color: #B45309;
-  border: 1px solid #FDE68A;
-}
-
-.bitomni-chip.chip-blue {
-  background: #EFF6FF;
-  color: #1D4ED8;
-  border: 1px solid #BFDBFE;
-}
-
-.bitomni-chip.chip-purple {
-  background: #F3E8FF;
-  color: #7E22CE;
-  border: 1px solid #E9D5FF;
-}
-
-.bitomni-chip.chip-rose {
-  background: #FFE4E6;
-  color: #BE123C;
-  border: 1px solid #FECDD3;
 }
 
 /* Body Content */
@@ -2254,18 +2201,18 @@
 
 .bitomni-card-body h3 {
   font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: 800;
   color: #0F172A;
   letter-spacing: -0.3px;
   margin: 0 0 10px 0;
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
 .bitomni-card-body p {
   font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
-  font-size: 0.94rem;
-  line-height: 1.65;
+  font-size: 0.92rem;
+  line-height: 1.6;
   color: #475569;
   margin: 0;
 }

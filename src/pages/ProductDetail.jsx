@@ -758,9 +758,9 @@ module.exports = async function customWorkflow(ctx) {
                 <div className="bitomni-feature-card">
                   <div className="bitomni-card-top-row">
                     <div className="bitomni-card-icon-box">
-                      <Printer size={26} color="#4F46E5" />
+                      <Printer size={24} color="#4F46E5" />
                     </div>
-                    <span className="bitomni-chip chip-indigo">Cetak Resi 1-Klik</span>
+                    <span className="bitomni-chip">Cetak Resi 1-Klik</span>
                   </div>
                   <div className="bitomni-card-body">
                     <h3>Kelola Pesanan &amp; Cetak Resi</h3>
@@ -773,10 +773,10 @@ module.exports = async function customWorkflow(ctx) {
                 {/* Card 2: Tracking Pesanan Objektif */}
                 <div className="bitomni-feature-card">
                   <div className="bitomni-card-top-row">
-                    <div className="bitomni-card-icon-box icon-purple">
-                      <Truck size={26} color="#7E22CE" />
+                    <div className="bitomni-card-icon-box">
+                      <Truck size={24} color="#4F46E5" />
                     </div>
-                    <span className="bitomni-chip chip-purple">Pemetaan Status Presisi</span>
+                    <span className="bitomni-chip">Pemetaan Status Presisi</span>
                   </div>
                   <div className="bitomni-card-body">
                     <h3>Tracking Pesanan Objektif</h3>
@@ -789,10 +789,10 @@ module.exports = async function customWorkflow(ctx) {
                 {/* Card 3: Audit Retur & Beban Logistik */}
                 <div className="bitomni-feature-card">
                   <div className="bitomni-card-top-row">
-                    <div className="bitomni-card-icon-box icon-rose">
-                      <RotateCcw size={26} color="#E11D48" />
+                    <div className="bitomni-card-icon-box">
+                      <RotateCcw size={24} color="#4F46E5" />
                     </div>
-                    <span className="bitomni-chip chip-rose">Restok Gudang &amp; Beban Ongkir</span>
+                    <span className="bitomni-chip">Restok Gudang &amp; Beban Ongkir</span>
                   </div>
                   <div className="bitomni-card-body">
                     <h3>Audit Retur &amp; Beban Logistik</h3>
@@ -805,10 +805,10 @@ module.exports = async function customWorkflow(ctx) {
                 {/* Card 4: Laporan Penjualan Komprehensif */}
                 <div className="bitomni-feature-card">
                   <div className="bitomni-card-top-row">
-                    <div className="bitomni-card-icon-box icon-emerald">
-                      <BarChart3 size={26} color="#059669" />
+                    <div className="bitomni-card-icon-box">
+                      <BarChart3 size={24} color="#4F46E5" />
                     </div>
-                    <span className="bitomni-chip chip-emerald">Net Profit Presisi</span>
+                    <span className="bitomni-chip">Net Profit Presisi</span>
                   </div>
                   <div className="bitomni-card-body">
                     <h3>Laporan Penjualan Komprehensif</h3>
@@ -821,10 +821,10 @@ module.exports = async function customWorkflow(ctx) {
                 {/* Card 5: WMS Warehouse Management System */}
                 <div className="bitomni-feature-card">
                   <div className="bitomni-card-top-row">
-                    <div className="bitomni-card-icon-box icon-amber">
-                      <Boxes size={26} color="#D97706" />
+                    <div className="bitomni-card-icon-box">
+                      <Boxes size={24} color="#4F46E5" />
                     </div>
-                    <span className="bitomni-chip chip-amber">Stok Fisik &amp; Siap Jual</span>
+                    <span className="bitomni-chip">Stok Fisik &amp; Siap Jual</span>
                   </div>
                   <div className="bitomni-card-body">
                     <h3>WMS (Warehouse Management System)</h3>
@@ -837,10 +837,10 @@ module.exports = async function customWorkflow(ctx) {
                 {/* Card 6: Kelola Produk Marketplace */}
                 <div className="bitomni-feature-card">
                   <div className="bitomni-card-top-row">
-                    <div className="bitomni-card-icon-box icon-blue">
-                      <Layers size={26} color="#2563EB" />
+                    <div className="bitomni-card-icon-box">
+                      <Layers size={24} color="#4F46E5" />
                     </div>
-                    <span className="bitomni-chip chip-blue">Sync SKU Massal</span>
+                    <span className="bitomni-chip">Sync SKU Massal</span>
                   </div>
                   <div className="bitomni-card-body">
                     <h3>Kelola Produk Marketplace</h3>
