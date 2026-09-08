@@ -638,9 +638,6 @@ const ProductDetail = ({ appId }) => {
               {/* Left Info Column */}
               <div className="p-detail-hero-left">
                 <div className="p-detail-badge-strip">
-                  <div className="p-detail-logo-box">
-                    <img src={product.logo} alt={product.name} />
-                  </div>
                   <span className="p-detail-tagline" style={{ color: product.color }}>{product.tagline}</span>
                 </div>
                 
