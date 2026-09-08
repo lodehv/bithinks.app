@@ -92,8 +92,9 @@ const productsData = {
     logo: bitOmniLogo,
     mockupType: "omni",
     stats: [
-      { value: "Real-Time", label: "Laporan Omzet & Profit Bersih" },
-      { value: "0", label: "Selisih Stok Antar Marketplace" },
+      { value: "Real-Time", label: "Laporan Omzet & Net Profit" },
+      { value: "100% Objektif", label: "Tracking Status & Audit Retur" },
+      { value: "0 Selisih", label: "Stok Fisik vs Siap Jual WMS" },
       { value: "−80%", label: "Waktu Kelola Pesanan & Stok" }
     ],
     features: [
@@ -661,16 +662,6 @@ const ProductDetail = ({ appId }) => {
                     Hubungi Sales
                   </button>
                 </div>
-
-                {/* Staggered Stats row */}
-                <div className="p-detail-stats-row">
-                  {product.stats.map((stat, i) => (
-                    <div className="p-detail-stat-card" key={i} style={{ borderLeftColor: product.color }}>
-                      <div className="p-detail-stat-value" style={{ color: product.color }}>{stat.value}</div>
-                      <div className="p-detail-stat-label">{stat.label}</div>
-                    </div>
-                  ))}
-                </div>
               </div>
 
               {/* Right Mockup Representation Column */}
@@ -736,6 +727,17 @@ module.exports = async function customWorkflow(ctx) {
               </div>
 
             </div>
+
+            {/* Full-Width Floating Metric Ribbon Bar (OPSI 1) */}
+            <div className="p-detail-stats-row">
+              {product.stats.map((stat, i) => (
+                <div className="p-detail-stat-card" key={i}>
+                  <div className="p-detail-stat-value" style={{ color: product.color }}>{stat.value}</div>
+                  <div className="p-detail-stat-label">{stat.label}</div>
+                </div>
+              ))}
+            </div>
+
           </div>
         </section>
 
