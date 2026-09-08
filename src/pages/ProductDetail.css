@@ -1439,18 +1439,22 @@
     box-shadow: rgba(0, 0, 0, 0.04) 0px 20px 50px;
   }
   
-  /* Stacking layers with 25px offset to show previous card tops */
+  /* Stacking layers with clean step offsets to prevent awkward text clipping */
   .ds-omni .p-why-omni-stack-card:nth-child(1) {
-    top: 120px;
+    top: 100px;
     z-index: 10;
   }
   .ds-omni .p-why-omni-stack-card:nth-child(2) {
-    top: 145px;
+    top: 135px;
     z-index: 20;
   }
   .ds-omni .p-why-omni-stack-card:nth-child(3) {
     top: 170px;
     z-index: 30;
+  }
+  .ds-omni .p-why-omni-stack-card:nth-child(4) {
+    top: 205px;
+    z-index: 40;
   }
   
   .ds-omni .p-why-omni-stack-card:hover {

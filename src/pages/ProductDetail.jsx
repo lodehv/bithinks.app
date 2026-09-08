@@ -35,6 +35,7 @@ import why1Image from '../assets/logo_pilihan_fitur/why_1.png';
 import why2Image from '../assets/logo_pilihan_fitur/why_2.png';
 import why3Image from '../assets/logo_pilihan_fitur/why_3.png';
 import trackingAuditImage from '../assets/logo_pilihan_fitur/tracking_audit_mockup.png';
+import resiSkuImage from '../assets/logo_pilihan_fitur/resi_sku_mockup.png';
 
 const productsData = {
   bitone: {
@@ -978,7 +979,7 @@ module.exports = async function customWorkflow(ctx) {
                     </div>
                     <div className="p-why-omni-stack-right">
                       <div className="p-why-omni-img-wrapper">
-                        <img src={why1Image} alt="Cetak Resi Massal & Sync SKU Marketplace" />
+                        <img src={resiSkuImage} alt="Cetak Resi Massal &amp; Sync SKU Marketplace" />
                       </div>
                     </div>
                   </div>
