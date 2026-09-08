@@ -441,7 +441,7 @@ const BitOmniTopUpCalculator = ({ product }) => {
 
           {/* Metric Highlights */}
           <div className="topup-result-grid">
-            <div className="topup-result-card featured-result">
+            <div className="topup-result-card">
               <div className="res-icon"><Printer size={22} /></div>
               <div className="res-label">Jumlah Kuota Pesanan</div>
               <div className="res-value">{orderCount.toLocaleString('id-ID')} <span className="res-unit">Pesanan</span></div>

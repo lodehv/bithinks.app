@@ -1921,25 +1921,26 @@
 
 .topup-result-card {
   background: #ffffff;
-  border: 1px solid #E5E7EB;
-  border-radius: 16px;
-  padding: 20px;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 20px;
+  padding: 22px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+  transition: all 0.25s ease;
 }
 
-.topup-result-card.featured-result {
-  background: linear-gradient(135deg, #4F46E5 0%, #4338CA 100%);
-  border-color: transparent;
-  color: #ffffff;
-  box-shadow: 0 12px 28px rgba(79, 70, 229, 0.22);
+.topup-result-card:hover {
+  transform: translateY(-3px);
+  border-color: #C7D2FE;
+  box-shadow: 0 10px 24px rgba(79, 70, 229, 0.08);
 }
 
 .topup-result-card .res-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
   background: #EEF2FF;
   color: #4F46E5;
   display: flex;
@@ -1948,56 +1949,35 @@
   margin-bottom: 8px;
 }
 
-.topup-result-card.featured-result .res-icon {
-  background: rgba(255, 255, 255, 0.2);
-  color: #ffffff;
-}
-
 .res-label {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
   font-size: 0.78rem;
-  font-weight: 600;
-  color: #6B7280;
+  font-weight: 700;
+  color: #64748B;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.topup-result-card.featured-result .res-label {
-  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.6px;
 }
 
 .res-value {
-  font-family: 'Inter', sans-serif;
-  font-size: 1.5rem;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
+  font-size: 1.55rem;
   font-weight: 800;
-  color: #111827;
+  color: #0F172A;
   line-height: 1.1;
 }
 
-.topup-result-card.featured-result .res-value {
-  color: #ffffff;
-}
-
 .res-unit {
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   font-weight: 600;
-  color: #6B7280;
-}
-
-.topup-result-card.featured-result .res-unit {
-  color: rgba(255, 255, 255, 0.85);
+  color: #64748B;
 }
 
 .res-sub {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.78rem;
-  color: #9CA3AF;
-  line-height: 1.4;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
+  font-size: 0.8rem;
+  color: #64748B;
+  line-height: 1.45;
   margin-top: 2px;
-}
-
-.topup-result-card.featured-result .res-sub {
-  color: rgba(255, 255, 255, 0.75);
 }
 
 /* Features Section */
@@ -2006,7 +1986,7 @@
 }
 
 .topup-features-title {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
   font-size: 1.05rem;
   font-weight: 700;
   color: #111827;
@@ -2044,7 +2024,7 @@
 }
 
 .topup-feature-item strong {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
   font-size: 0.92rem;
   font-weight: 700;
   color: #111827;
@@ -2053,7 +2033,7 @@
 }
 
 .topup-feature-item p {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
   font-size: 0.82rem;
   color: #6B7280;
   line-height: 1.45;
@@ -2072,7 +2052,7 @@
   background: linear-gradient(135deg, #4F46E5 0%, #4338CA 100%);
   color: #ffffff;
   border: none;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
   font-size: 1rem;
   font-weight: 700;
   padding: 16px 36px;
@@ -2091,7 +2071,7 @@
   background: #ffffff;
   color: #374151;
   border: 1.5px solid #E5E7EB;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
   font-size: 0.95rem;
   font-weight: 700;
   padding: 16px 28px;
@@ -2223,12 +2203,9 @@
 
 @media (max-width: 768px) {
   .topup-calc-card {
-    padding: 28px 18px;
+    padding: 24px 16px;
   }
   .topup-calc-title {
-    font-size: 1.7rem;
-  }
-  .topup-presets-grid {
     grid-template-columns: repeat(2, 1fr);
   }
   .topup-result-grid {
