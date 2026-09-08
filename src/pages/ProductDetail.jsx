@@ -34,6 +34,7 @@ import hrmMockup from '../assets/logo_pilihan_fitur/hrm_mockup.png';
 import why1Image from '../assets/logo_pilihan_fitur/why_1.png';
 import why2Image from '../assets/logo_pilihan_fitur/why_2.png';
 import why3Image from '../assets/logo_pilihan_fitur/why_3.png';
+import trackingAuditImage from '../assets/logo_pilihan_fitur/tracking_audit_mockup.png';
 
 const productsData = {
   bitone: {
@@ -916,7 +917,7 @@ module.exports = async function customWorkflow(ctx) {
                     </div>
                     <div className="p-why-omni-stack-right">
                       <div className="p-why-omni-img-wrapper">
-                        <img src={why3Image} alt="Tracking Pesanan Objektif & Audit Retur" />
+                        <img src={trackingAuditImage} alt="Tracking Pesanan Objektif &amp; Audit Retur Logistik" />
                       </div>
                     </div>
                   </div>
