@@ -812,67 +812,6 @@ module.exports = async function customWorkflow(ctx) {
                     </div>
                   </div>
                 </div>
-
-                {/* 12 Mini Feature Grid Cards Matching Reference Screenshot 2 */}
-                <div className="bitomni-mini-features-wrapper">
-                  <div className="bitomni-mini-header">
-                    <span className="bitomni-mini-badge">FITUR OPERASIONAL MASSAL</span>
-                    <h3 className="bitomni-mini-title">Kelengkapan Otomasi Marketplace BitOmni</h3>
-                  </div>
-
-                  <div className="bitomni-mini-grid">
-                    <div className="bitomni-mini-card">
-                      <div className="mini-card-icon-box"><Upload size={26} color="#3B82F6" /></div>
-                      <span className="mini-card-text">Upload Produk Massal</span>
-                    </div>
-                    <div className="bitomni-mini-card">
-                      <div className="mini-card-icon-box"><Copy size={26} color="#3B82F6" /></div>
-                      <span className="mini-card-text">Copylisting Massal</span>
-                    </div>
-                    <div className="bitomni-mini-card">
-                      <div className="mini-card-icon-box"><RefreshCw size={26} color="#3B82F6" /></div>
-                      <span className="mini-card-text">Crosslisting Massal</span>
-                    </div>
-                    <div className="bitomni-mini-card">
-                      <div className="mini-card-icon-box"><Tag size={26} color="#3B82F6" /></div>
-                      <span className="mini-card-text">Promosi Harga Coret</span>
-                    </div>
-
-                    <div className="bitomni-mini-card">
-                      <div className="mini-card-icon-box"><Gift size={26} color="#3B82F6" /></div>
-                      <span className="mini-card-text">Promosi Bundle &amp; Hadiah</span>
-                    </div>
-                    <div className="bitomni-mini-card">
-                      <div className="mini-card-icon-box"><Monitor size={26} color="#3B82F6" /></div>
-                      <span className="mini-card-text">Pantauan Produk</span>
-                    </div>
-                    <div className="bitomni-mini-card">
-                      <div className="mini-card-icon-box"><Info size={26} color="#3B82F6" /></div>
-                      <span className="mini-card-text">Pantauan Perbedaan Informasi</span>
-                    </div>
-                    <div className="bitomni-mini-card">
-                      <div className="mini-card-icon-box"><Sliders size={26} color="#3B82F6" /></div>
-                      <span className="mini-card-text">Edit dan Tambah Variasi</span>
-                    </div>
-
-                    <div className="bitomni-mini-card">
-                      <div className="mini-card-icon-box"><CreditCard size={26} color="#3B82F6" /></div>
-                      <span className="mini-card-text">Piutang Channel</span>
-                    </div>
-                    <div className="bitomni-mini-card">
-                      <div className="mini-card-icon-box"><Archive size={26} color="#3B82F6" /></div>
-                      <span className="mini-card-text">Stok Cadangan</span>
-                    </div>
-                    <div className="bitomni-mini-card">
-                      <div className="mini-card-icon-box"><Percent size={26} color="#3B82F6" /></div>
-                      <span className="mini-card-text">Persentase Stok</span>
-                    </div>
-                    <div className="bitomni-mini-card">
-                      <div className="mini-card-icon-box"><Star size={26} color="#3B82F6" /></div>
-                      <span className="mini-card-text">Toko Prioritas</span>
-                    </div>
-                  </div>
-                </div>
               </>
             ) : (
               <div className="p-features-showcase-grid">
