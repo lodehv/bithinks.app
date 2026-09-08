@@ -749,70 +749,71 @@ module.exports = async function customWorkflow(ctx) {
             </div>
 
             {appId === 'bitomni' ? (
-              <>
-                {/* 4 Main Briefing Cards Matching Reference Screenshot 1 */}
-                <div className="bitomni-featured-cards-grid">
-                  {/* Card 1: Kelola Pesanan & Cetak Resi */}
-                  <div className="bitomni-feature-card">
-                    <div className="bitomni-card-cyan-circle"></div>
-                    <div className="bitomni-card-badge-shape">
-                      <Printer size={24} color="#ffffff" />
+              <div className="bitomni-featured-cards-grid">
+                {/* Card 1: Kelola Pesanan & Cetak Resi */}
+                <div className="bitomni-feature-card">
+                  <div className="bitomni-card-top-row">
+                    <div className="bitomni-card-icon-box">
+                      <Printer size={26} color="#4F46E5" />
                     </div>
-                    <div className="bitomni-card-accent-corner"></div>
-                    <div className="bitomni-card-body">
-                      <h3>Kelola Pesanan &amp; Cetak Resi</h3>
-                      <p>
-                        Terima, proses, atur pickup kurir, dan cetak resi pengiriman otomatis &amp; massal (Shopee, Tokopedia, TikTok Shop, Lazada, Blibli) dari semua toko dalam satu layar terpusat — tanpa buka seller center satu per satu.
-                      </p>
-                    </div>
+                    <span className="bitomni-chip chip-indigo">Cetak Resi 1-Klik</span>
                   </div>
-
-                  {/* Card 2: Laporan Penjualan Komprehensif */}
-                  <div className="bitomni-feature-card">
-                    <div className="bitomni-card-cyan-circle"></div>
-                    <div className="bitomni-card-badge-shape">
-                      <BarChart3 size={24} color="#ffffff" />
-                    </div>
-                    <div className="bitomni-card-accent-corner"></div>
-                    <div className="bitomni-card-body">
-                      <h3>Laporan Penjualan Komprehensif</h3>
-                      <p>
-                        Lihat omzet tiap toko, rincian potongan komisi platform, selisih ongkir, biaya iklan, hingga kalkulasi Net Profit bersih presisi per 1 pesanan — sanitasikan data penjualan Anda secara otomatis &amp; akurat.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Card 3: WMS Warehouse Management System */}
-                  <div className="bitomni-feature-card">
-                    <div className="bitomni-card-cyan-circle"></div>
-                    <div className="bitomni-card-badge-shape">
-                      <Boxes size={24} color="#ffffff" />
-                    </div>
-                    <div className="bitomni-card-accent-corner"></div>
-                    <div className="bitomni-card-body">
-                      <h3>WMS (Warehouse Management System)</h3>
-                      <p>
-                        Kontrol gudang modern dengan fitur pemisahan stok fisik di gudang dan stok tersedia (siap jual). Sinkronisasi stok otomatis real-time ke semua marketplace &amp; cegah over-selling yang menyebabkan penalti toko.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Card 4: Kelola Produk Marketplace */}
-                  <div className="bitomni-feature-card">
-                    <div className="bitomni-card-cyan-circle"></div>
-                    <div className="bitomni-card-badge-shape">
-                      <Layers size={24} color="#ffffff" />
-                    </div>
-                    <div className="bitomni-card-accent-corner"></div>
-                    <div className="bitomni-card-body">
-                      <h3>Kelola Produk Marketplace</h3>
-                      <p>
-                        Kelola katalog Master SKU sekali atur, lalu tayangkan, ubah harga, deskripsi, gambar, dan variasi produk secara massal ke seluruh toko online sekaligus tanpa perlu input ulang di tiap seller center.
-                      </p>
-                    </div>
+                  <div className="bitomni-card-body">
+                    <h3>Kelola Pesanan &amp; Cetak Resi</h3>
+                    <p>
+                      Terima, proses, atur pickup kurir, dan cetak resi pengiriman otomatis &amp; massal (Shopee, Tokopedia, TikTok Shop, Lazada, Blibli) dari semua toko dalam satu layar terpusat — tanpa buka seller center satu per satu.
+                    </p>
                   </div>
                 </div>
-              </>
+
+                {/* Card 2: Laporan Penjualan Komprehensif */}
+                <div className="bitomni-feature-card">
+                  <div className="bitomni-card-top-row">
+                    <div className="bitomni-card-icon-box icon-emerald">
+                      <BarChart3 size={26} color="#059669" />
+                    </div>
+                    <span className="bitomni-chip chip-emerald">Net Profit Presisi</span>
+                  </div>
+                  <div className="bitomni-card-body">
+                    <h3>Laporan Penjualan Komprehensif</h3>
+                    <p>
+                      Lihat omzet tiap toko, rincian potongan komisi platform, selisih ongkir, biaya iklan, hingga kalkulasi Net Profit bersih presisi per 1 pesanan — sanitasikan data penjualan Anda secara otomatis &amp; akurat.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Card 3: WMS Warehouse Management System */}
+                <div className="bitomni-feature-card">
+                  <div className="bitomni-card-top-row">
+                    <div className="bitomni-card-icon-box icon-amber">
+                      <Boxes size={26} color="#D97706" />
+                    </div>
+                    <span className="bitomni-chip chip-amber">Stok Fisik &amp; Siap Jual</span>
+                  </div>
+                  <div className="bitomni-card-body">
+                    <h3>WMS (Warehouse Management System)</h3>
+                    <p>
+                      Kontrol gudang modern dengan fitur pemisahan stok fisik di gudang dan stok tersedia (siap jual). Sinkronisasi stok otomatis real-time ke semua marketplace &amp; cegah over-selling yang menyebabkan penalti toko.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Card 4: Kelola Produk Marketplace */}
+                <div className="bitomni-feature-card">
+                  <div className="bitomni-card-top-row">
+                    <div className="bitomni-card-icon-box icon-blue">
+                      <Layers size={26} color="#2563EB" />
+                    </div>
+                    <span className="bitomni-chip chip-blue">Sync SKU Massal</span>
+                  </div>
+                  <div className="bitomni-card-body">
+                    <h3>Kelola Produk Marketplace</h3>
+                    <p>
+                      Kelola katalog Master SKU sekali atur, lalu tayangkan, ubah harga, deskripsi, gambar, dan variasi produk secara massal ke seluruh toko online sekaligus tanpa perlu input ulang di tiap seller center.
+                    </p>
+                  </div>
+                </div>
+              </div>
             ) : (
               <div className="p-features-showcase-grid">
                 {product.features.map((feat, idx) => (
