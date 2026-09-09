@@ -168,6 +168,25 @@ export default function AntreanCetak({ locked = false, onRequirePayment }) {
             </Catatan>
           )}
 
+          {/* ATUR PENGIRIMAN — dihidupkan lagi 9 September 2026.
+              Blok ini terbuang tanpa disengaja pada commit e7cd438, yang
+              diminta pemilik toko untuk membuang catatan permintaan batal
+              beserta tombolnya. Pesan commit-nya tidak pernah menyebut Atur
+              Pengiriman, dan komentar yang ikut terbuang justru berargumen
+              untuk mempertahankannya.
+
+              Akibatnya dua minggu: layar berhenti di kalimat "perlu atur
+              pengiriman" tanpa satu pun cara mengerjakannya, dan importnya
+              tertinggal sebagai satu-satunya bekas. */}
+          {channel === "shopee" && data.totalPerluAtur > 0 && (
+            <TombolAturKirim
+              jumlah={data.totalPerluAtur}
+              dari={dari || undefined}
+              sampai={sampai || undefined}
+              onSelesai={ambil}
+            />
+          )}
+
           <CerminSellerCenter channel={channel} dari={dari} sampai={sampai} />
 
           {data.pesananLintasKelompok > 0 && (
