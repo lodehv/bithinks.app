@@ -138,6 +138,9 @@ export const antreanTiruan = {
     },
   ],
   totalLabel: 10, totalSiapCetak: 6, totalDimintaBatal: 1,
+  // totalPerluAtur > 0 supaya tombol Atur Pengiriman ikut terpotret. Tombol
+  // itu pernah terbuang dari render tanpa disengaja, dan tidak ada satu pun
+  // potret yang bisa menunjukkan ia hilang.
   totalPerluAtur: 1, totalDitinjauShopee: 1, totalBelumDiketahui: 1,
   // Hanya untuk potret: baris pesanan dibuka supaya lencananya benar-benar
   // terlihat, bukan cuma ada di kode.
