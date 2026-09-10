@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { walletApi } from "../../utils/omniApi";
+import { loadPaymentPageData } from "./loadPaymentPageData";
 import "./PaymentPage.css";
 
 const rupiah = (value) => "Rp" + Number(value || 0).toLocaleString("id-ID");
@@ -36,19 +37,23 @@ export default function PaymentPage({ onBack, onWalletChanged, onPaymentComplete
 
   useEffect(() => {
     let ignore = false;
-    Promise.all([walletApi.get(), walletApi.topupState()])
-      .then(([nextWallet, state]) => {
+    loadPaymentPageData(walletApi)
+      .then(({ wallet: nextWallet, state, walletError, stateError }) => {
         if (ignore) return;
-        setWallet(nextWallet);
-        setBanks(state.banks ?? []);
-        setMinimumAmount(state.minimumAmount ?? 10000);
-        setBankCode((current) => current || state.banks?.[0]?.code || "");
-        if (state.payment) {
+        if (nextWallet) setWallet(nextWallet);
+        if (state) {
+          setBanks(state.banks ?? []);
+          setMinimumAmount(state.minimumAmount ?? 10000);
+          setBankCode((current) => current || state.banks?.[0]?.code || "");
+        }
+        if (state?.payment) {
           setPayment(state.payment);
           setAmount(String(state.payment.amount));
           if (state.payment.method !== "mock") setMethod(state.payment.method);
           if (state.payment.selectedBankCode) setBankCode(state.payment.selectedBankCode);
         }
+        if (walletError) setError("Saldo belum dapat dimuat. Coba muat ulang halaman.");
+        else if (stateError) setError("Status pembayaran lama belum dapat dipulihkan. Anda tetap dapat membuat pembayaran QRIS baru.");
       })
       .catch((err) => {
         if (!ignore) setError(err?.response?.data?.error?.message ?? "Pembayaran belum dapat dimuat.");
@@ -153,7 +158,7 @@ export default function PaymentPage({ onBack, onWalletChanged, onPaymentComplete
       <div className="pay-grid">
         <section className="pay-card pay-balance" aria-live="polite">
           <span className="pay-kicker">Saldo tersedia</span>
-          <strong>{wallet ? rupiah(wallet.balance) : "Memuat…"}</strong>
+          <strong>{wallet ? rupiah(wallet.balance) : loading ? "Memuat…" : "Tidak tersedia"}</strong>
           <span>Setara {wallet ? Math.floor(Number(wallet.balance) / 250).toLocaleString("id-ID") : "–"} pesanan berikutnya</span>
         </section>
 

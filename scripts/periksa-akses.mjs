@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { paymentRequiredFrom } from '../src/utils/paymentRequired.js'
+import { loadPaymentPageData } from '../src/pages/dashboard/loadPaymentPageData.js'
 
 const paymentError = {
   response: {
@@ -24,6 +25,14 @@ assert.deepEqual(paymentRequiredFrom(paymentError), {
 })
 assert.equal(paymentRequiredFrom({ response: { status: 403 } }), null)
 
+const partialPaymentLoad = await loadPaymentPageData({
+  get: async () => ({ balance: '50000' }),
+  topupState: async () => { throw new Error('status endpoint unavailable') },
+})
+assert.equal(partialPaymentLoad.wallet.balance, '50000')
+assert.equal(partialPaymentLoad.state, null)
+assert.ok(partialPaymentLoad.stateError)
+
 const dashboard = readFileSync(new URL('../src/pages/Dashboard.jsx', import.meta.url), 'utf8')
 const orders = readFileSync(new URL('../src/pages/dashboard/omni/OrdersTab.jsx', import.meta.url), 'utf8')
 const attendance = readFileSync(new URL('../src/pages/dashboard/hrm/Absensi.jsx', import.meta.url), 'utf8')
@@ -46,3 +55,4 @@ console.log('  ✓ stable 402 contract')
 console.log('  ✓ global top-up action')
 console.log('  ✓ nested paid actions receive view-only state')
 console.log('  ✓ top-up uses presets, bank choices, recovery, and browser history')
+console.log('  ✓ wallet remains visible when payment recovery is unavailable')
