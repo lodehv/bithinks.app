@@ -145,6 +145,16 @@ export const antreanTiruan = {
   // Hanya untuk potret: baris pesanan dibuka supaya lencananya benar-benar
   // terlihat, bukan cuma ada di kode.
   pratinjauTerbuka: true,
+  // Panel "kenapa tidak bisa dicetak" hanya muncul setelah cip diklik, jadi
+  // pratinjau membukanya sendiri supaya ia ikut terpotret.
+  pratinjauTahap: 'bukan_untuk_dicetak',
+  alasanTahap: {
+    perlu_atur: 'Pengirimannya belum diatur, jadi resinya belum terbit.',
+    ditinjau_shopee: 'Sedang ditinjau Tim Shopee. Pengirimannya belum bisa diatur — biasanya selesai dalam 24 jam.',
+    belum_diketahui: 'Keterangan pengiriman dari Shopee belum sampai ke kami. Sedang kami ambil — biasanya beberapa detik.',
+    bukan_untuk_dicetak: 'Status pesanan ini di marketplace bukan keadaan yang bisa dicetak.',
+    perlu_diperiksa: 'Status pesanan ini belum dikenali sistem. Perlu diperiksa dulu.',
+  },
   totalPerluDiperiksa: 0, totalBukanUntukDicetak: 1,
   pesananLintasKelompok: 1, pesananPaketPecah: 0, totalPernahGagal: 1,
   // Dua angka pencegahan, ikut dipotret supaya kalimatnya benar-benar terlihat.

@@ -4,8 +4,9 @@ import { omniApi } from "../../../utils/omniApi";
 import CerminSellerCenter from "./CerminSellerCenter";
 import KepalaAntrean from "./KepalaAntrean";
 import Kelompok, { Catatan } from "./KelompokSku";
+import RincianTahap from "./RincianTahap";
 import TombolAturKirim from "./TombolAturKirim";
-import { angka, hariIni, lamanya, mundur, namaChannel, tanggal } from "./format-antrean";
+import { angka, hariIni, lamanya, mundur, namaChannel } from "./format-antrean";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ANTREAN CETAK RESI
@@ -43,6 +44,12 @@ export default function AntreanCetak({ locked = false, onRequirePayment }) {
   // sempat ditempel bisa dicetak ulang. Berkas PDF-nya sengaja tidak disimpan,
   // jadi satu-satunya jalan adalah membuatnya lagi dari riwayat.
   const [sisi, setSisi] = useState("belum");
+  // Tahap yang sedang dibuka lewat cip di kepala. null = tidak ada.
+  //
+  // Pratinjau potret bisa membukanya sendiri lewat `pratinjauTahap`: panel ini
+  // hanya muncul setelah diklik, jadi tanpa itu tidak ada potret yang pernah
+  // memperlihatkannya.
+  const [tahapDipilih, setTahapDipilih] = useState(null);
 
   // Saringan tanggal memakai tanggal PESANAN, bukan tanggal cetak. Kalau
   // memakai tanggal cetak, sisi "belum" tidak punya tanggal untuk disaring dan
@@ -102,7 +109,16 @@ export default function AntreanCetak({ locked = false, onRequirePayment }) {
         dari={dari} sampai={sampai} onTanggal={ubahTanggal}
         data={data} onSelesai={ambil}
         locked={locked} onRequirePayment={onRequirePayment}
+        tahapDipilih={tahapDipilih} setTahapDipilih={setTahapDipilih}
       />
+
+      {data && (tahapDipilih || data.pratinjauTahap) && (
+        <RincianTahap
+          data={data}
+          tahap={tahapDipilih || data.pratinjauTahap}
+          onTutup={() => setTahapDipilih(null)}
+        />
+      )}
 
       {/* SAAT MEMUAT ULANG, ISINYA TIDAK DIKOSONGKAN.
           Dulu tiap muat ulang mengganti seluruh isi dengan "Memuat antrean…".
