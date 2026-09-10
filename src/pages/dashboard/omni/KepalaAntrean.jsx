@@ -78,21 +78,40 @@ function Ruas({ pilihan, nilai, onPilih }) {
  * itu ada DI DALAM-nya. Bentuk chip bertitik menyatakan hubungan itu tanpa
  * perlu kalimat.
  */
-function Cip({ warna, latar, garis, children }) {
-  return (
-    <span style={{
-      display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 11px",
-      borderRadius: 999, background: latar, color: warna, border: `1px solid ${garis}`,
-      fontSize: 12.5, fontWeight: 500, fontVariantNumeric: "tabular-nums",
-    }}>
-      <span style={{ width: 6, height: 6, borderRadius: 999, background: warna, flexShrink: 0 }} />
+// Cip yang BISA DIKLIK saat ia mewakili satu tahap.
+//
+// Aturan pemilik toko 10 September 2026: angka "3 pesanan tidak untuk dicetak"
+// harus bisa ditekan dan menyebutkan kenapa. Angka tanpa sebab memaksa orang
+// menebak, dan menebak soal resi adalah hal yang seluruh layar ini hindari.
+function Cip({ warna, latar, garis, children, tahap, aktif, onPilih }) {
+  const gaya = {
+    display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 11px",
+    borderRadius: 999, background: aktif ? warna : latar, color: aktif ? "#fff" : warna,
+    border: `1px solid ${aktif ? warna : garis}`,
+    fontSize: 12.5, fontWeight: 500, fontVariantNumeric: "tabular-nums",
+  };
+  const isi = (
+    <>
+      <span style={{
+        width: 6, height: 6, borderRadius: 999,
+        background: aktif ? "#fff" : warna, flexShrink: 0,
+      }} />
       {children}
-    </span>
+    </>
+  );
+  if (!tahap) return <span style={gaya}>{isi}</span>;
+  return (
+    <button
+      type="button"
+      onClick={() => onPilih(aktif ? null : tahap)}
+      style={{ ...gaya, cursor: "pointer", fontFamily: "inherit" }}
+    >{isi}</button>
   );
 }
 
 export default function KepalaAntrean({
   channel, setChannel, sisi, setSisi, dari, sampai, onTanggal, data, onSelesai,
+  tahapDipilih, setTahapDipilih,
   locked, onRequirePayment,
 }) {
   const platform = PLATFORM.find((p) => p.id === channel);
@@ -162,32 +181,32 @@ export default function KepalaAntrean({
         />
 
         {data?.totalDimintaBatal > 0 && (
-          <Cip warna="#9A3412" latar="#FFF7ED" garis="#FED7AA">
+          <Cip tahap="diminta_batal" aktif={tahapDipilih === "diminta_batal"} onPilih={setTahapDipilih} warna="#9A3412" latar="#FFF7ED" garis="#FED7AA">
             {angka(data.totalDimintaBatal)} di antaranya diminta batal
           </Cip>
         )}
         {data?.totalDitinjauShopee > 0 && (
-          <Cip warna="#3730A3" latar="#EEF2FF" garis="#C7D2FE">
+          <Cip tahap="ditinjau_shopee" aktif={tahapDipilih === "ditinjau_shopee"} onPilih={setTahapDipilih} warna="#3730A3" latar="#EEF2FF" garis="#C7D2FE">
             {angka(data.totalDitinjauShopee)} ditinjau Tim Shopee
           </Cip>
         )}
         {data?.totalBelumDiketahui > 0 && (
-          <Cip warna="#3F3F46" latar="#FAFAFA" garis="#E4E4E7">
+          <Cip tahap="belum_diketahui" aktif={tahapDipilih === "belum_diketahui"} onPilih={setTahapDipilih} warna="#3F3F46" latar="#FAFAFA" garis="#E4E4E7">
             {angka(data.totalBelumDiketahui)} menunggu keterangan Shopee
           </Cip>
         )}
         {data?.totalPerluAtur > 0 && (
-          <Cip warna="#92400E" latar="#FFFBEB" garis="#FDE68A">
+          <Cip tahap="perlu_atur" aktif={tahapDipilih === "perlu_atur"} onPilih={setTahapDipilih} warna="#92400E" latar="#FFFBEB" garis="#FDE68A">
             {angka(data.totalPerluAtur)} perlu atur pengiriman
           </Cip>
         )}
         {data?.totalBukanUntukDicetak > 0 && (
-          <Cip warna="#3F3F46" latar="#FAFAFA" garis="#E4E4E7">
+          <Cip tahap="bukan_untuk_dicetak" aktif={tahapDipilih === "bukan_untuk_dicetak"} onPilih={setTahapDipilih} warna="#3F3F46" latar="#FAFAFA" garis="#E4E4E7">
             {angka(data.totalBukanUntukDicetak)} pesanan tidak untuk dicetak
           </Cip>
         )}
         {data?.totalPerluDiperiksa > 0 && (
-          <Cip warna="#991B1B" latar="#FEF2F2" garis="#FECACA">
+          <Cip tahap="perlu_diperiksa" aktif={tahapDipilih === "perlu_diperiksa"} onPilih={setTahapDipilih} warna="#991B1B" latar="#FEF2F2" garis="#FECACA">
             {angka(data.totalPerluDiperiksa)} pesanan perlu diperiksa
           </Cip>
         )}
