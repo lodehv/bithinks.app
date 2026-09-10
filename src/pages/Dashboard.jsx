@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useAppContext } from "../context/AppContext";
 import DashboardLayout from "./dashboard/DashboardLayout";
 import DashboardHome from "./dashboard/DashboardHome";
@@ -7,7 +7,6 @@ import ProductsTab from "./dashboard/omni/ProductsTab";
 import OrdersTab from "./dashboard/omni/OrdersTab";
 import WmsTab from "./dashboard/omni/wms/WmsTab";
 import PaymentPage from "./dashboard/PaymentPage";
-import PricingPage from "./dashboard/PricingPage";
 import AdminPanel from "./dashboard/AdminPanel";
 import { ADMIN_EMAIL } from "./dashboard/DashboardLayout";
 import ModulePlaceholder from "./dashboard/ModulePlaceholder";
@@ -28,6 +27,14 @@ const PAGES = {
   payment:          { title: "Pembayaran"             },
   admin:            { title: "Panel Admin"            },
 };
+const PAGE_IDS = new Set(Object.keys(PAGES));
+
+function menuFromLocation() {
+  const params = new URLSearchParams(window.location.search);
+  const menu = params.get("view");
+  if (params.get("connect")) return "integrasi-toko";
+  return PAGE_IDS.has(menu) ? menu : "dashboard";
+}
 
 // ─── Banner billing global (status langganan live) ────────────────────────────
 // Gaya tombol tagihan. Ditaruh SEBELUM komponen yang memakainya — bukan soal
@@ -85,10 +92,13 @@ function BillingBanner({ sub, onPay }) {
 export default function Dashboard() {
   const { isAuthenticated, user } = useAppContext();
   const isAdmin = (user?.email ?? "").toLowerCase() === ADMIN_EMAIL;
-  const [activeMenu, setActiveMenu] = useState("dashboard");
+  const [activeMenu, setActiveMenu] = useState(menuFromLocation);
+  const activeMenuRef = useRef(activeMenu);
   const [sub, setSub] = useState(null);
-  const [payPlan, setPayPlan] = useState(null); // paket terpilih di halaman pricing
-  const [connectNotice, setConnectNotice] = useState(null); // 'ok' | 'failed'
+  const [connectNotice, setConnectNotice] = useState(() => {
+    const value = new URLSearchParams(window.location.search).get("connect");
+    return value ? (value.endsWith("_ok") ? "ok" : "failed") : null;
+  }); // 'ok' | 'failed'
 
   // Tab Pesanan yang dituju saat datang lewat pintasan dari dashboard.
   // null = buka apa adanya (tab bawaan "Semua Pesanan").
@@ -99,20 +109,56 @@ export default function Dashboard() {
   // ditekan dan halaman yang terbuka harus bercerita hal yang sama.
   const [pesananTab, setPesananTab] = useState(null);
 
-  const bukaPesanan = (tab) => { setPesananTab(tab); setActiveMenu("pesanan"); };
+  const navigateMenu = useCallback((menu, options = {}) => {
+    if (!PAGE_IDS.has(menu)) return;
+    const current = activeMenuRef.current;
+    activeMenuRef.current = menu;
+    setActiveMenu(menu);
+    const url = menu === "dashboard" ? "/dashboard" : `/dashboard?view=${encodeURIComponent(menu)}`;
+    const state = { dashboardMenu: menu, ...(menu === "payment" ? { returnMenu: current } : {}) };
+    if (options.replace) window.history.replaceState(state, "", url);
+    else if (current !== menu) window.history.pushState(state, "", url);
+  }, []);
+
+  useEffect(() => {
+    activeMenuRef.current = activeMenu;
+  }, [activeMenu]);
+
+  useEffect(() => {
+    window.history.replaceState({ ...window.history.state, dashboardMenu: menuFromLocation() }, "", window.location.href);
+    const restoreMenu = () => {
+      const menu = PAGE_IDS.has(window.history.state?.dashboardMenu)
+        ? window.history.state.dashboardMenu
+        : menuFromLocation();
+      activeMenuRef.current = menu;
+      setActiveMenu(menu);
+      if (menu === "pesanan") setPesananTab(null);
+    };
+    window.addEventListener("popstate", restoreMenu);
+    return () => window.removeEventListener("popstate", restoreMenu);
+  }, []);
+
+  const bukaPesanan = (tab) => { setPesananTab(tab); navigateMenu("pesanan"); };
 
   // Klik menu di sidebar membuka Pesanan apa adanya — pintasan sebelumnya
   // tidak boleh menempel dan diam-diam menyaring layar berikutnya.
-  const pilihMenu = (id) => { if (id === "pesanan") setPesananTab(null); setActiveMenu(id); };
+  const pilihMenu = (id) => { if (id === "pesanan") setPesananTab(null); navigateMenu(id); };
 
   const goToPayment = useCallback(() => {
-    setPayPlan(null);
-    setActiveMenu("payment");
-  }, []);
+    navigateMenu("payment");
+  }, [navigateMenu]);
 
   const refreshSub = useCallback(() => {
     subscriptionApi.status().then(setSub).catch(() => {});
   }, []);
+  const leavePayment = useCallback(() => {
+    refreshSub();
+    if (window.history.state?.dashboardMenu === "payment" && window.history.state?.returnMenu) {
+      window.history.back();
+    } else {
+      navigateMenu("dashboard");
+    }
+  }, [navigateMenu, refreshSub]);
   useEffect(() => {
     if (!isAuthenticated) return undefined;
     refreshSub();
@@ -150,15 +196,16 @@ export default function Dashboard() {
   useEffect(() => {
     const c = new URLSearchParams(window.location.search).get("connect");
     if (!c) return;
-    setActiveMenu("integrasi-toko");
-    setConnectNotice(c.endsWith("_ok") ? "ok" : "failed");
-    window.history.replaceState({}, "", "/dashboard");
+    window.history.replaceState({ dashboardMenu: "integrasi-toko" }, "", "/dashboard?view=integrasi-toko");
     const t = setTimeout(() => setConnectNotice(null), 6000);
     return () => clearTimeout(t);
   }, []);
 
+  useEffect(() => {
+    if (!isAuthenticated) window.location.assign("/login");
+  }, [isAuthenticated]);
+
   if (!isAuthenticated) {
-    window.location.href = "/login";
     return null;
   }
 
@@ -168,18 +215,7 @@ export default function Dashboard() {
   return (
     <DashboardLayout activeMenu={activeMenu} onMenuClick={pilihMenu} pageTitle={title}>
       {activeMenu === "payment" ? (
-        payPlan ? (
-          <PaymentPage
-            plan={payPlan}
-            onBack={() => { refreshSub(); setPayPlan(null); }}
-          />
-        ) : (
-          <PricingPage
-            currentPlan={sub?.plan}
-            onBack={() => setActiveMenu("dashboard")}
-            onSelect={(plan) => setPayPlan(plan)}
-          />
-        )
+        <PaymentPage onBack={leavePayment} onWalletChanged={refreshSub} onPaymentComplete={leavePayment} />
       ) : (
         <>
           {connectNotice && (

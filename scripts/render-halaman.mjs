@@ -19,6 +19,11 @@ import { renderToString } from 'react-dom/server'
 import { createElement } from 'react'
 
 const HALAMAN = [
+  {
+    jalur: '/src/pages/dashboard/PaymentPage.jsx',
+    props: { onBack: () => {} },
+    harusMemuat: ['Isi saldo prabayar', 'Menyiapkan pembayaran'],
+  },
   { jalur: '/src/pages/dashboard/MarketingDashboard.jsx' },
   // Antrean cetak: layar yang paling sering diubah, dan yang paling mahal
   // kalau mati — di sinilah pemilik toko mencetak resi tiap hari.

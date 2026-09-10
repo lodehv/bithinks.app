@@ -169,6 +169,13 @@ export const subscriptionApi = {
   checkout: (months = 1)  => api.post('/api/subscription/checkout', { periodMonths: months }).then(unwrap),
 }
 
+export const walletApi = {
+  get: () => api.get('/api/wallet').then(unwrap),
+  topupState: (paymentId) => api.get('/api/wallet/topup', { params: paymentId ? { paymentId } : {} }).then(unwrap),
+  topup: (payload) => api.post('/api/wallet/topup', payload).then(unwrap),
+  completeMockTopup: (paymentId) => api.post('/api/wallet/topup/mock/complete', { paymentId }).then(unwrap),
+}
+
 // Panel admin platform (akses khusus demo@bithinks.id — gerbang di backend).
 export const adminApi = {
   subscribers: () => api.get('/api/admin/subscribers').then(unwrap),
