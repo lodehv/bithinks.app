@@ -73,14 +73,17 @@ function BillingBanner({ sub, onPay }) {
       TRIAL_ORDER_LIMIT: "Kuota 100 pesanan trial habis.",
       TRIAL_STORE_LIMIT: "Batas toko trial tercapai.",
       INSUFFICIENT_BALANCE: "Saldo tidak mencukupi.",
-      SUBSCRIPTION_REQUIRED: "Akses berbayar diperlukan.",
+      SUBSCRIPTION_REQUIRED: "Isi saldo untuk melanjutkan.",
     }[sub.reasonCode] ?? "Mode hanya-baca aktif.";
+    const reason = sub.reasonCode === "SUBSCRIPTION_REQUIRED" && sub.action === "TOP_UP"
+      ? "Saldo prabayar diperlukan untuk membuka kembali fitur."
+      : sub.reason;
     return (
       <div style={{ ...base, background: "#FEF2F2", border: "1px solid #FECACA", color: "#B91C1C" }}>
         <Info size={16} color="#DC2626" />
         <span>
           <strong style={{ color: "#991B1B" }}>{title}</strong>{" "}
-          {sub.reason || "Data lama tetap bisa dilihat, tetapi aksi tulis dan sinkronisasi berhenti sementara."}
+          {reason || "Data lama tetap bisa dilihat, tetapi aksi tulis dan sinkronisasi berhenti sementara."}
         </span>
         <button onClick={onPay} style={{ ...billBtn, color: "#DC2626", borderColor: "#FECACA" }}>Aktifkan Akses</button>
       </div>

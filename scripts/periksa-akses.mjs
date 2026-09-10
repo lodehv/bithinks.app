@@ -41,6 +41,8 @@ const walletApi = readFileSync(new URL('../src/utils/omniApi.js', import.meta.ur
 
 assert.match(dashboard, /PAYMENT_REQUIRED_EVENT/)
 assert.match(dashboard, /detail\.action === "TOP_UP"/)
+assert.doesNotMatch(dashboard, /Akses berbayar diperlukan/)
+assert.match(dashboard, /Saldo prabayar diperlukan untuk membuka kembali fitur/)
 assert.match(orders, /<AntreanCetak locked=\{locked\}/)
 assert.match(attendance, /locked\s*=\s*false, onRequirePayment/)
 assert.match(payment, /const PRESETS = \[50000, 100000, 250000, 500000\]/)
