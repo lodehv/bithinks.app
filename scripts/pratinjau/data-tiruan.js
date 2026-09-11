@@ -80,6 +80,15 @@ export const statsTiruan = {
     sudahCair: { nilai: 1027335403, pesanan: 17415, dasar: 'neto' },
     belumDibayar: { nilai: 190115, pesanan: 5, dasar: 'kotor' },
     ikutSaringanTanggal: false,
+    // Sel rincian: tahap × platform × toko. Dua toko per platform supaya
+    // pengelompokan benar-benar teruji — satu toko saja akan terlihat rapi
+    // apa pun bentuk kodenya.
+    perToko: [
+      { tahap: 'diJalan', channel: 'shopee', storeId: 't0', toko: 'Bithinks Official Shop Jakarta', pesanan: 5, nilai: 903_000 },
+      { tahap: 'diJalan', channel: 'shopee', storeId: 't3', toko: 'Bithinks Grosir Bandung', pesanan: 1, nilai: 58_000 },
+      { tahap: 'diJalan', channel: 'tiktok', storeId: 't1', toko: 'Bithinks Store Indonesia', pesanan: 2, nilai: 512_000 },
+      { tahap: 'sampai', channel: 'tiktok', storeId: 't2', toko: 'Bithinks Beauty Official', pesanan: 10, nilai: 2_105_900 },
+    ],
   },
   // Cakupan beban sengaja TIDAK lengkap di pratinjau — justru keadaan itulah
   // yang perlu terlihat di potret. Angkanya meniru produksi 29 Agu 2026.
@@ -107,11 +116,20 @@ export const statsTiruan = {
     diJalan: { nilai: 1_473_000, pesanan: 8 },
     sampai: { nilai: 2_105_900, pesanan: 10 },
     ikutSaringanTanggal: false,
+    // Sel rincian: tahap × platform × toko. Dua toko per platform supaya
+    // pengelompokan benar-benar teruji — satu toko saja akan terlihat rapi
+    // apa pun bentuk kodenya.
+    perToko: [
+      { tahap: 'diJalan', channel: 'shopee', storeId: 't0', toko: 'Bithinks Official Shop Jakarta', pesanan: 5, nilai: 903_000 },
+      { tahap: 'diJalan', channel: 'shopee', storeId: 't3', toko: 'Bithinks Grosir Bandung', pesanan: 1, nilai: 58_000 },
+      { tahap: 'diJalan', channel: 'tiktok', storeId: 't1', toko: 'Bithinks Store Indonesia', pesanan: 2, nilai: 512_000 },
+      { tahap: 'sampai', channel: 'tiktok', storeId: 't2', toko: 'Bithinks Beauty Official', pesanan: 10, nilai: 2_105_900 },
+    ],
     daftar: [
       {
         id: 'R1', tahap: 'diJalan', pesanan: '250911ABCD1234',
         channel: 'Shopee', toko: 'Bithinks Official Shop Jakarta',
-        item: 'Serum Vitamin C 20ml × 2', nominal: 189_000,
+        item: '[PAKET RESELLER KCL] Business Package KCL - Pupuk Dewa Dewi, Pupuk Manohara Merah - 100% Original × 1 +1 item lain', nominal: 189_000,
         alasan: 'Barang rusak saat diterima', alasanAsli: 'DAMAGED',
         resi: 'SPXID048812345678',
         jejak: [
@@ -135,7 +153,7 @@ export const statsTiruan = {
       {
         id: 'R3', tahap: 'sampai', pesanan: '576461234567890999',
         channel: 'TikTok', toko: 'Bithinks Beauty Official',
-        item: 'Paket Skincare Lengkap × 1', nominal: 410_000,
+        item: '[Paket Lebih murah 2Pcs] Pupuk Dewa Dewi 1 Liter -KCL- Original untuk Tanaman dalam masa Pembuahan Umbi dan Buah × 1', nominal: 410_000,
         alasan: 'Pembeli berubah pikiran', alasanAsli: 'CHANGE_OF_MIND',
         resi: 'JX8827361007',
         jejak: [
