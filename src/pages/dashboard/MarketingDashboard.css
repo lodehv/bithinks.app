@@ -1779,11 +1779,25 @@
   .retur-kolom { grid-template-columns: 1fr; }
 }
 
+/* Tahap adalah TOMBOL, bukan kartu pajangan. Yang aktif ditandai garis bawah
+   tebal dan latar netral, bukan warna merek — aksen merek dipakai sekali per
+   layar untuk aksi utama, dan dua aksen berhenti menunjuk apa pun. */
 .retur-tahap {
   border: 1px solid #EBEBEB;
+  border-bottom: 3px solid #EBEBEB;
   border-radius: 10px;
   padding: 16px;
   background: #ffffff;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+  font: inherit;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.retur-tahap:hover { background: #FAFAFA; }
+.retur-tahap-aktif {
+  border-bottom-color: #4F46E5;
+  background: #FAFAFA;
 }
 
 .retur-tahap-kepala {
@@ -1840,14 +1854,25 @@
 
 /* Nama toko boleh menyusut dan terpotong; angkanya tidak pernah. Angka yang
    terpotong berhenti jadi angka. */
+/* Toko juga tombol: menekannya membuka daftar pesanannya di bawah. */
 .retur-toko-baris {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto auto;
   align-items: baseline;
   gap: 8px;
-  padding: 3px 0;
+  width: 100%;
+  padding: 5px 8px;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
   font-size: 12px;
 }
+.retur-toko-baris:hover { background: #F3F4F6; }
+.retur-toko-aktif { background: #EEF2FF; }
+.retur-toko-aktif .retur-toko-nama { font-weight: 700; color: #4338CA; }
 
 .retur-toko-nama {
   color: #111827;
@@ -1866,8 +1891,14 @@
 
 /* ── Daftar rincian, dikelompokkan per toko ─────────────────────────────── */
 
-.retur-grup { border-top: 1px solid #F3F4F6; }
-.retur-grup:first-of-type { border-top: none; }
+/* Daftar pesanan toko terpilih. Hanya SATU toko yang pernah tampil sekaligus —
+   itulah yang menghentikan layar terbaca bercecer, bukan baris yang lebih
+   rapi. */
+.retur-daftar {
+  margin-top: 16px;
+  padding-top: 4px;
+  border-top: 1px solid #EBEBEB;
+}
 
 .retur-grup-kepala {
   display: flex;
@@ -1905,7 +1936,7 @@
    saat barisnya dibuka dan sebagai `title` saat kursor berhenti. */
 .retur-item-baris {
   display: grid;
-  grid-template-columns: 16px minmax(120px, 170px) minmax(0, 1fr) auto 86px;
+  grid-template-columns: 16px minmax(120px, 170px) minmax(0, 1fr) auto;
   align-items: center;
   gap: 12px;
   width: 100%;
