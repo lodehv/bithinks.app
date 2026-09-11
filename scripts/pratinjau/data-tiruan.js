@@ -96,6 +96,63 @@ export const statsTiruan = {
   total_biaya_beban: j('fees') + j('cogs') + j('iklan'),
   profit: omsetPerkiraan - j('fees') - j('cogs') - j('iklan'),
   profit_margin: (omsetPerkiraan - j('fees') - j('cogs') - j('iklan')) / omsetPerkiraan * 100,
+  // ── RETUR ────────────────────────────────────────────────────────────────
+  // Jumlah pesanan diambil dari sensus produksi 11 Sep 2026 supaya bentuk
+  // nyatanya ikut terpotret: retur kecil, dan Shopee menumpuk di tahap awal.
+  //
+  // Satu baris SENGAJA tanpa resi dan tanpa titik perjalanan. Marketplace tidak
+  // selalu mengirim keduanya, dan potret yang semua barisnya lengkap tidak
+  // pernah memperlihatkan bagaimana baris yang tidak lengkap terbaca.
+  retur: {
+    diJalan: { nilai: 1_473_000, pesanan: 8 },
+    sampai: { nilai: 2_105_900, pesanan: 10 },
+    daftar: [
+      {
+        id: 'R1', tahap: 'diJalan', pesanan: '250911ABCD1234',
+        channel: 'Shopee', toko: 'Bithinks Official Shop Jakarta',
+        item: 'Serum Vitamin C 20ml × 2', nominal: 189_000,
+        alasan: 'Barang rusak saat diterima', alasanAsli: 'DAMAGED',
+        resi: 'SPXID048812345678',
+        jejak: [
+          { waktu: '11 Sep 09:12', teks: 'Pembeli mengajukan retur' },
+          { waktu: '11 Sep 14:40', teks: 'Penjual menyetujui' },
+          { waktu: '12 Sep 08:05', teks: 'Paket diserahkan ke kurir' },
+        ],
+      },
+      {
+        id: 'R2', tahap: 'diJalan', pesanan: '576461234567890123',
+        channel: 'TikTok', toko: 'Bithinks Store Indonesia',
+        item: 'Masker Wajah Charcoal × 1', nominal: 74_500,
+        alasan: 'Barang tidak sesuai deskripsi', alasanAsli: 'ITEM_NOT_AS_DESCRIBED',
+        resi: 'JX8827361192',
+        jejak: [
+          { waktu: '10 Sep 20:31', teks: 'Pembeli mengajukan retur' },
+          { waktu: '11 Sep 07:15', teks: 'Disetujui otomatis' },
+          { waktu: '11 Sep 16:48', teks: 'Pembeli mengirim barang' },
+        ],
+      },
+      {
+        id: 'R3', tahap: 'sampai', pesanan: '576461234567890999',
+        channel: 'TikTok', toko: 'Bithinks Beauty Official',
+        item: 'Paket Skincare Lengkap × 1', nominal: 410_000,
+        alasan: 'Pembeli berubah pikiran', alasanAsli: 'CHANGE_OF_MIND',
+        resi: 'JX8827361007',
+        jejak: [
+          { waktu: '05 Sep 11:02', teks: 'Pembeli mengajukan retur' },
+          { waktu: '06 Sep 09:44', teks: 'Pembeli mengirim barang' },
+          { waktu: '09 Sep 13:20', teks: 'Barang sampai di gudang · stok naik' },
+        ],
+      },
+      {
+        id: 'R4', tahap: 'diJalan', pesanan: '250910WXYZ9876',
+        channel: 'Shopee', toko: 'Bithinks Grosir Bandung',
+        item: 'Sabun Batang Kemasan 6 pcs × 1', nominal: 58_000,
+        alasan: 'Ukuran tidak sesuai', alasanAsli: 'WRONG_SIZE',
+        resi: null,
+        jejak: [],
+      },
+    ],
+  },
   meta: { granularity: 'day', asOf: null, startDate: null, endDate: null },
 }
 
