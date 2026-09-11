@@ -11,7 +11,7 @@ import AdminPanel from "./dashboard/AdminPanel";
 import { ADMIN_EMAIL } from "./dashboard/DashboardLayout";
 import ModulePlaceholder from "./dashboard/ModulePlaceholder";
 import MarketingDashboard from "./dashboard/MarketingDashboard";
-import { subscriptionApi } from "../utils/omniApi";
+import { subscriptionApi, walletApi } from "../utils/omniApi";
 import { PAYMENT_REQUIRED_EVENT } from "../utils/paymentRequired";
 import { Settings, Info } from "lucide-react";
 
@@ -95,9 +95,12 @@ function BillingBanner({ sub, onPay }) {
 export default function Dashboard() {
   const { isAuthenticated, user } = useAppContext();
   const isAdmin = (user?.email ?? "").toLowerCase() === ADMIN_EMAIL;
+  const canViewWallet = ["owner", "admin"].includes(String(user?.role ?? "").toLowerCase());
   const [activeMenu, setActiveMenu] = useState(menuFromLocation);
   const activeMenuRef = useRef(activeMenu);
   const [sub, setSub] = useState(null);
+  const [walletHeader, setWalletHeader] = useState({ status: "loading", balance: null });
+  const walletRequestRef = useRef(0);
   const [connectNotice, setConnectNotice] = useState(() => {
     const value = new URLSearchParams(window.location.search).get("connect");
     return value ? (value.endsWith("_ok") ? "ok" : "failed") : null;
@@ -154,6 +157,34 @@ export default function Dashboard() {
   const refreshSub = useCallback(() => {
     subscriptionApi.status().then(setSub).catch(() => {});
   }, []);
+  const refreshWalletHeader = useCallback(() => {
+    if (!canViewWallet) return Promise.resolve(null);
+    const requestId = ++walletRequestRef.current;
+    return walletApi.get()
+      .then((nextWallet) => {
+        if (requestId === walletRequestRef.current) {
+          setWalletHeader({ status: "ready", balance: nextWallet.balance });
+        }
+        return nextWallet;
+      })
+      .catch(() => {
+        if (requestId === walletRequestRef.current) {
+          setWalletHeader((current) => current.status === "ready"
+            ? current
+            : { status: "error", balance: null });
+        }
+        return null;
+      });
+  }, [canViewWallet]);
+  const handleWalletChanged = useCallback((nextWallet) => {
+    refreshSub();
+    if (nextWallet?.balance !== undefined) {
+      walletRequestRef.current += 1;
+      setWalletHeader({ status: "ready", balance: nextWallet.balance });
+    } else {
+      refreshWalletHeader();
+    }
+  }, [refreshSub, refreshWalletHeader]);
   const leavePayment = useCallback(() => {
     refreshSub();
     if (window.history.state?.dashboardMenu === "payment" && window.history.state?.returnMenu) {
@@ -174,6 +205,20 @@ export default function Dashboard() {
       window.clearInterval(timer);
     };
   }, [isAuthenticated, refreshSub]);
+
+  useEffect(() => {
+    if (!isAuthenticated || !canViewWallet) return undefined;
+    refreshWalletHeader();
+    const onFocus = () => refreshWalletHeader();
+    window.addEventListener("focus", onFocus);
+    const timer = window.setInterval(() => {
+      if (document.visibilityState === "visible") refreshWalletHeader();
+    }, 60_000);
+    return () => {
+      window.removeEventListener("focus", onFocus);
+      window.clearInterval(timer);
+    };
+  }, [canViewWallet, isAuthenticated, refreshWalletHeader]);
 
   // A 402 can arrive after the initial status fetch (another tab exhausted a
   // quota, a webhook admitted the 100th order, or balance changed). Treat the
@@ -216,9 +261,15 @@ export default function Dashboard() {
   const locked = !!sub?.locked;
 
   return (
-    <DashboardLayout activeMenu={activeMenu} onMenuClick={pilihMenu} pageTitle={title}>
+    <DashboardLayout
+      activeMenu={activeMenu}
+      onMenuClick={pilihMenu}
+      pageTitle={title}
+      walletState={canViewWallet ? walletHeader : null}
+      onWalletClick={goToPayment}
+    >
       {activeMenu === "payment" ? (
-        <PaymentPage onBack={leavePayment} onWalletChanged={refreshSub} onPaymentComplete={leavePayment} />
+        <PaymentPage onBack={leavePayment} onWalletChanged={handleWalletChanged} onPaymentComplete={leavePayment} />
       ) : (
         <>
           {connectNotice && (

@@ -79,7 +79,7 @@ export default function PaymentPage({ onBack, onWalletChanged, onPaymentComplete
 
   useEffect(() => {
     if (payment?.status !== "credited") return undefined;
-    refreshWallet().then(() => onWalletChanged?.()).catch(() => {});
+    refreshWallet().then((nextWallet) => onWalletChanged?.(nextWallet)).catch(() => {});
     const timer = window.setTimeout(() => onPaymentComplete?.(), 2000);
     return () => window.clearTimeout(timer);
   }, [onPaymentComplete, onWalletChanged, payment?.status, refreshWallet]);

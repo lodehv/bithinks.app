@@ -3,7 +3,7 @@ import { useAppContext } from "../../context/AppContext";
 import "./DashboardLayout.css";
 import {
   Store, ClipboardList, Menu, X, LogOut, Warehouse, Boxes, LineChart,
-  ChevronLeft, ChevronRight, LayoutDashboard, Lock, Settings, ShieldCheck
+  ChevronLeft, ChevronRight, LayoutDashboard, Lock, Settings, ShieldCheck, Wallet
 } from "lucide-react";
 
 // Email admin platform — hanya user ini yang melihat menu Admin.
@@ -67,8 +67,6 @@ function Sidebar({ activeMenu, onMenuClick, collapsed, onToggleCollapse, mobileO
     ? user.name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase()
     : "U";
 
-  const planStatus = tenant?.status ?? "trial";
-
   // Sisipkan menu Admin hanya untuk email admin platform.
   const isAdmin = (user?.email ?? "").toLowerCase() === ADMIN_EMAIL;
   const navSections = isAdmin ? [...NAV_SECTIONS, ADMIN_SECTION] : NAV_SECTIONS;
@@ -77,26 +75,12 @@ function Sidebar({ activeMenu, onMenuClick, collapsed, onToggleCollapse, mobileO
     <>
       {mobileOpen && <div className="sidebar-overlay" onClick={onCloseMobile} />}
 
-      <aside className={`sidebar ${collapsed ? "collapsed" : ""} ${mobileOpen ? "mobile-open" : ""}`}>
+      <aside id="dashboard-sidebar" className={`sidebar ${collapsed ? "collapsed" : ""} ${mobileOpen ? "mobile-open" : ""}`}>
 
         {/* Brand */}
         <div className="sidebar-brand" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', padding: '12px 16px', gap: '8px', lineHeight: 1 }}>
           <img src="/bithinks.png" alt="Logo" style={{ height: '30px', width: 'auto' }} />
           <span className="sidebar-brand-name" style={{ fontFamily: 'Montserrat, sans-serif', fontSize: '13px', fontWeight: 800, letterSpacing: '0.5px', textTransform: 'lowercase' }}>bithinks</span>
-        </div>
-
-        {/* Billing strip */}
-        <div className="sidebar-billing">
-          <div className="sidebar-billing-top">
-            <span className="sidebar-billing-label">Paket kamu</span>
-            <span className={`sidebar-billing-badge ${planStatus}`}>
-              {tenant?.plan ?? "Free"}
-            </span>
-          </div>
-          <div className="sidebar-billing-name">{tenant?.name ?? "–"}</div>
-          <div className="sidebar-billing-sub">
-            Status: {planStatus === "trial" ? "Free Trial" : planStatus}
-          </div>
         </div>
 
         {/* Nav */}
@@ -150,7 +134,53 @@ function Sidebar({ activeMenu, onMenuClick, collapsed, onToggleCollapse, mobileO
   );
 }
 
-export default function DashboardLayout({ activeMenu, onMenuClick, children, pageTitle }) {
+const fullRupiah = new Intl.NumberFormat("id-ID", {
+  style: "currency", currency: "IDR", maximumFractionDigits: 0,
+});
+const compactRupiah = new Intl.NumberFormat("id-ID", {
+  style: "currency", currency: "IDR", notation: "compact", maximumFractionDigits: 0,
+});
+
+function wholeRupiah(value) {
+  const digits = String(value ?? "").match(/^\d+/)?.[0];
+  return digits ? BigInt(digits) : null;
+}
+
+function WalletIndicator({ walletState, onClick }) {
+  if (!walletState) return null;
+  const amount = walletState.status === "ready" ? wholeRupiah(walletState.balance) : null;
+  const low = amount !== null && amount < 250n;
+  const unavailable = walletState.status === "error" || (walletState.status === "ready" && amount === null);
+  const spokenValue = walletState.status === "loading"
+    ? "sedang dimuat"
+    : unavailable ? "belum dapat dimuat" : fullRupiah.format(amount);
+
+  return (
+    <button
+      type="button"
+      className={`topbar-wallet ${low ? "low" : ""} ${unavailable ? "unavailable" : ""}`}
+      onClick={onClick}
+      aria-label={`Saldo: ${spokenValue}. Buka halaman isi saldo.`}
+    >
+      <Wallet size={18} strokeWidth={1.8} aria-hidden="true" />
+      {walletState.status === "loading" ? (
+        <span className="topbar-wallet-skeleton" aria-hidden="true" />
+      ) : (
+        <>
+          <span className="topbar-wallet-label">{low ? "Isi saldo" : "Saldo"}</span>
+          <strong className="topbar-wallet-amount topbar-wallet-full">
+            {unavailable ? "—" : fullRupiah.format(amount)}
+          </strong>
+          <strong className="topbar-wallet-amount topbar-wallet-compact">
+            {unavailable ? "—" : compactRupiah.format(amount)}
+          </strong>
+        </>
+      )}
+    </button>
+  );
+}
+
+export default function DashboardLayout({ activeMenu, onMenuClick, children, pageTitle, walletState, onWalletClick }) {
   const { tenant } = useAppContext();
   const [collapsed, setCollapsed]   = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -166,12 +196,20 @@ export default function DashboardLayout({ activeMenu, onMenuClick, children, pag
         onCloseMobile={() => setMobileOpen(false)}
       />
 
-      <div className="dashboard-main">
+      <div className="dashboard-main" id="dashboard-main">
         <header className="topbar">
-          <button className="topbar-hamburger" onClick={() => setMobileOpen(o => !o)}>
+          <button
+            type="button"
+            className="topbar-hamburger"
+            onClick={() => setMobileOpen(o => !o)}
+            aria-label={mobileOpen ? "Tutup menu" : "Buka menu"}
+            aria-expanded={mobileOpen}
+            aria-controls="dashboard-sidebar"
+          >
             {mobileOpen ? <X size={18} strokeWidth={1.8} /> : <Menu size={18} strokeWidth={1.8} />}
           </button>
           <span className="topbar-title">{pageTitle}</span>
+          <WalletIndicator walletState={walletState} onClick={onWalletClick} />
           {tenant?.name && (
             <span className="topbar-tenant-badge">{tenant.name}</span>
           )}
