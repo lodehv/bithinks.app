@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Users, Search, MessageCircle, RefreshCw, ShieldCheck } from "lucide-react";
 import { adminApi } from "../../utils/omniApi";
 import AdminLeads from "./AdminLeads";
+import RecoveryQueue from "./RecoveryQueue";
 import "./AdminPanel.css";
 
 // wa.me link dari nomor Indonesia (0812… → 62812…).
@@ -25,14 +26,14 @@ const FILTERS = [
 ];
 
 export default function AdminPanel() {
-  const [tab, setTab]     = useState("subscribers"); // 'subscribers' | 'leads'
+  const [tab, setTab]     = useState("subscribers"); // 'subscribers' | 'leads' | 'recovery'
   const [data, setData]   = useState(null);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
   const [error, setError] = useState("");
   const [busy, setBusy]   = useState(false);
 
-  const load = () => {
+  const load = useCallback(() => {
     setBusy(true); setError("");
     adminApi.subscribers()
       .then(setData)
@@ -40,8 +41,11 @@ export default function AdminPanel() {
         ? "Akses ditolak. Panel ini khusus admin."
         : "Gagal memuat data pelanggan."))
       .finally(() => setBusy(false));
-  };
-  useEffect(load, []);
+  }, []);
+  useEffect(() => {
+    const timer = window.setTimeout(() => { void load(); }, 0);
+    return () => window.clearTimeout(timer);
+  }, [load]);
 
   const rows = useMemo(() => {
     const list = data?.rows ?? [];
@@ -74,9 +78,11 @@ export default function AdminPanel() {
       <div className="adm-tabs">
         <button className={tab === "subscribers" ? "active" : ""} onClick={() => setTab("subscribers")}>Pelanggan</button>
         <button className={tab === "leads" ? "active" : ""} onClick={() => setTab("leads")}>Registrasi (Lead)</button>
+        <button className={tab === "recovery" ? "active" : ""} onClick={() => setTab("recovery")}>Pemulihan pembayaran</button>
       </div>
 
       {tab === "leads" && <AdminLeads />}
+      {tab === "recovery" && <RecoveryQueue />}
 
       {tab === "subscribers" && <>
       {s && (

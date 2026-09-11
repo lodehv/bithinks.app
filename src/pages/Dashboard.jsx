@@ -7,6 +7,7 @@ import ProductsTab from "./dashboard/omni/ProductsTab";
 import OrdersTab from "./dashboard/omni/OrdersTab";
 import WmsTab from "./dashboard/omni/wms/WmsTab";
 import PaymentPage from "./dashboard/PaymentPage";
+import WalletAccessDenied from "./dashboard/WalletAccessDenied";
 import AdminPanel from "./dashboard/AdminPanel";
 import { ADMIN_EMAIL } from "./dashboard/DashboardLayout";
 import ModulePlaceholder from "./dashboard/ModulePlaceholder";
@@ -269,7 +270,9 @@ export default function Dashboard() {
       onWalletClick={goToPayment}
     >
       {activeMenu === "payment" ? (
-        <PaymentPage onBack={leavePayment} onWalletChanged={handleWalletChanged} onPaymentComplete={leavePayment} />
+        canViewWallet
+          ? <PaymentPage onBack={leavePayment} onWalletChanged={handleWalletChanged} onPaymentComplete={leavePayment} />
+          : <WalletAccessDenied onBack={() => navigateMenu("dashboard", { replace: true })} />
       ) : (
         <>
           {connectNotice && (

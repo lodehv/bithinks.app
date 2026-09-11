@@ -180,6 +180,9 @@ export const walletApi = {
 export const adminApi = {
   subscribers: () => api.get('/api/admin/subscribers').then(unwrap),
   leads:       () => api.get('/api/admin/leads').then(unwrap),
+  walletRecovery: () => api.get('/api/admin/wallet-recovery').then(unwrap),
+  retryCredit: (paymentId, reason) => api.post(`/api/admin/wallet-recovery/${paymentId}/retry-credit`, { reason }).then(unwrap),
+  retryRefund: (refundId, reason) => api.post(`/api/admin/wallet-recovery/${refundId}/retry-refund`, { reason }).then(unwrap),
 }
 
 /** True bila error berasal dari gate langganan (trial/langganan habis). */
