@@ -736,7 +736,8 @@ export default function MarketingDashboard() {
           <div className="summary-card-header">
             <h4>Retur</h4>
             <span className="summary-card-subtitle">
-              Barang yang dikembalikan pembeli · sumbu: tanggal pesanan dibuat
+              Barang yang dikembalikan pembeli · saldo, bukan periode ·{' '}
+              <b>tidak mengikuti saringan tanggal</b> · mengikuti pilihan platform &amp; toko
             </span>
           </div>
 

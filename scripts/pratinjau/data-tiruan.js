@@ -106,6 +106,7 @@ export const statsTiruan = {
   retur: {
     diJalan: { nilai: 1_473_000, pesanan: 8 },
     sampai: { nilai: 2_105_900, pesanan: 10 },
+    ikutSaringanTanggal: false,
     daftar: [
       {
         id: 'R1', tahap: 'diJalan', pesanan: '250911ABCD1234',
