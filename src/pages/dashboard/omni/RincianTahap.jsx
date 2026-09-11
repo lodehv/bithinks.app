@@ -2,6 +2,12 @@ import { X } from "lucide-react";
 import { TAHAP } from "./tahap-label";
 import { angka } from "./format-antrean";
 
+/** "31 jam" / "3 hari" — sudah berapa lama pesanan ini menunggu. */
+function umurJam(iso) {
+  const jam = Math.floor((Date.now() - new Date(iso).getTime()) / 3600_000);
+  return jam < 48 ? `${jam} jam` : `${Math.floor(jam / 24)} hari`;
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // KENAPA PESANAN INI TIDAK BISA DICETAK — dibuka dari cip di kepala antrean.
 //
@@ -18,19 +24,48 @@ import { angka } from "./format-antrean";
 // keterangan yang bukan terjemahan kami.
 // ─────────────────────────────────────────────────────────────────────────────
 
+// Dua cip di kepala bukan tahap: keduanya menyaring pesanan lintas tahap.
+// Mereka tetap harus bisa dibuka, karena angka yang tidak bisa ditekan memaksa
+// orang menebak pesanan mana yang dimaksud.
+const SOROTAN = {
+  menunggu_lama: {
+    teks: "Menunggu lebih dari batas",
+    warna: "#9A3412",
+    latar: "#FFF7ED",
+    // Ditandai server. Menghitung ulang di sini akan membuat angka di cip dan
+    // jumlah baris di panel bisa berbeda, dan tidak ada yang tahu mana benar.
+    cocok: (p) => Boolean(p.menungguLama),
+    alasan: (data) =>
+      `Resinya sudah siap dan belum juga dicetak lebih dari ${data.batasLamaJam ?? 24} jam. ` +
+      "Marketplace membatasi waktu pengiriman, jadi yang paling tua paling dekat ke batas itu.",
+  },
+  pernah_gagal: {
+    teks: "Pernah gagal dicetak",
+    warna: "#991B1B",
+    latar: "#FEF2F2",
+    cocok: (p) => p.gagalBerulang > 0,
+    alasan: () =>
+      "Marketplace pernah menolak mencetak pesanan ini. Kode terakhirnya ada di tiap baris.",
+  },
+};
+
 export default function RincianTahap({ data, tahap, onTutup }) {
-  const t = TAHAP[tahap] ?? TAHAP.perlu_diperiksa;
+  const sorotan = SOROTAN[tahap];
+  const t = sorotan ?? TAHAP[tahap] ?? TAHAP.perlu_diperiksa;
+  const cocok = sorotan
+    ? (p) => sorotan.cocok(p, data)
+    : (p) => p.tahap === tahap;
 
   // Satu pesanan bisa muncul di beberapa kelompok SKU. Di sini ia disebut
   // sekali: yang ditanya "kenapa pesanan ini", bukan "kenapa baris ini".
   const unik = new Map();
   for (const k of data.kelompok ?? []) {
     for (const p of k.pesanan ?? []) {
-      if (p.tahap === tahap && !unik.has(p.id)) unik.set(p.id, p);
+      if (cocok(p) && !unik.has(p.id)) unik.set(p.id, p);
     }
   }
   const pesanan = [...unik.values()];
-  const alasan = data.alasanTahap?.[tahap];
+  const alasan = sorotan ? sorotan.alasan(data) : data.alasanTahap?.[tahap];
 
   return (
     <div style={{
@@ -74,6 +109,11 @@ export default function RincianTahap({ data, tahap, onTutup }) {
             {/* Kata asli marketplace. Satu-satunya keterangan yang bukan
                 terjemahan kami, jadi ia yang bisa dibawa saat bertanya ke
                 Seller Center. */}
+            {tahap === "menunggu_lama" && p.orderedAt && (
+              <span style={{ color: "#9A3412", fontSize: 11, flexShrink: 0 }}>
+                {umurJam(p.orderedAt)}
+              </span>
+            )}
             {p.statusMarketplace && (
               <span style={{ color: "#6B7280", fontSize: 11, flexShrink: 0 }}>{p.statusMarketplace}</span>
             )}

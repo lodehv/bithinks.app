@@ -165,9 +165,10 @@ export const tokoTiruan = per_toko.map((t) => ({ id: t.storeId, name: t.storeNam
 // nama dan warnanya sendiri — bukan satu warna yang menampung apa saja.
 const pesanan = (n, tahap, extra = {}) => ({
   id: `p-${n}`, nomorPesanan: `2608${31}RK${n}Q9N3J`, penerima: `Penerima ${n}`,
-  qty: 1 + (n % 3), orderedAt: '2026-08-31T02:00:00.000Z', tahap,
+  qty: 1 + (n % 3), orderedAt: extra.orderedAt ?? '2026-08-31T02:00:00.000Z', tahap,
   statusMarketplace: extra.sm ?? 'READY_TO_SHIP', statusPaket: extra.sp ?? null,
   adaDiKelompokLain: Boolean(extra.skuLain), skuLain: extra.skuLain ?? [], packageCount: 1,
+  menungguLama: Boolean(extra.lama),
   gagalBerulang: extra.gagal ?? 0, kodeGagal: extra.kode ?? null,
 });
 
@@ -179,8 +180,8 @@ export const antreanTiruan = {
       jumlahPesanan: 6, siapCetak: 4, totalQty: 9,
       dimintaBatal: 0, perluAtur: 1, ditinjauShopee: 0, belumDiketahui: 1, perluDiperiksa: 0,
       pesanan: [
-        pesanan(1, 'siap_cetak', { sm: 'PROCESSED', sp: 'LOGISTICS_REQUEST_CREATED' }),
-        pesanan(2, 'siap_cetak', { sm: 'PROCESSED', sp: 'LOGISTICS_REQUEST_CREATED' }),
+        pesanan(1, 'siap_cetak', { sm: 'PROCESSED', sp: 'LOGISTICS_REQUEST_CREATED', lama: true }),
+        pesanan(2, 'siap_cetak', { sm: 'PROCESSED', sp: 'LOGISTICS_REQUEST_CREATED', lama: true }),
         pesanan(3, 'siap_cetak', { sm: 'PROCESSED', sp: 'LOGISTICS_PICKUP_DONE' }),
         pesanan(4, 'siap_cetak', { sm: 'PROCESSED', sp: 'LOGISTICS_REQUEST_CREATED' }),
         pesanan(5, 'perlu_atur', { sm: 'READY_TO_SHIP', sp: 'LOGISTICS_READY', gagal: 5, kode: '21042105' }),
@@ -211,7 +212,7 @@ export const antreanTiruan = {
   pratinjauTerbuka: true,
   // Panel "kenapa tidak bisa dicetak" hanya muncul setelah cip diklik, jadi
   // pratinjau membukanya sendiri supaya ia ikut terpotret.
-  pratinjauTahap: 'bukan_untuk_dicetak',
+  pratinjauTahap: 'menunggu_lama',
   alasanTahap: {
     perlu_atur: 'Pengirimannya belum diatur, jadi resinya belum terbit.',
     ditinjau_shopee: 'Sedang ditinjau Tim Shopee. Pengirimannya belum bisa diatur — biasanya selesai dalam 24 jam.',

@@ -215,12 +215,12 @@ export default function KepalaAntrean({
             menit lalu atau ada yang sudah menunggu tiga hari. Sebelum ini,
             pesanan yang lewat tanpa dicetak baru ketahuan sesudah kejadian. */}
         {data?.totalPernahGagal > 0 && (
-          <Cip warna="#991B1B" latar="#FEF2F2" garis="#FECACA">
+          <Cip tahap="pernah_gagal" aktif={tahapDipilih === "pernah_gagal"} onPilih={setTahapDipilih} warna="#991B1B" latar="#FEF2F2" garis="#FECACA">
             {angka(data.totalPernahGagal)} pernah gagal dicetak
           </Cip>
         )}
         {data?.menungguLama > 0 && (
-          <Cip warna="#9A3412" latar="#FFF7ED" garis="#FED7AA">
+          <Cip tahap="menunggu_lama" aktif={tahapDipilih === "menunggu_lama"} onPilih={setTahapDipilih} warna="#9A3412" latar="#FFF7ED" garis="#FED7AA">
             {angka(data.menungguLama)} pesanan menunggu lebih dari {data.batasLamaJam ?? 24} jam
           </Cip>
         )}
