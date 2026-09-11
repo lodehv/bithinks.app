@@ -2053,3 +2053,19 @@
   align-items: center;
   justify-content: space-between;
 }
+
+/* Tahap adalah tombol yang MEMBUKA panel, jadi panahnya menunjuk ke samping —
+   ke tempat lain — bukan ke bawah seperti sesuatu yang mengembang di tempat. */
+.retur-panah-kanan { transform: rotate(-90deg); }
+
+.retur-tahap:disabled { cursor: default; opacity: 0.75; }
+.retur-tahap:disabled:hover { background: #ffffff; }
+
+/* Ajakan dituliskan, bukan diserahkan pada tebakan. Kartu yang bisa diklik dan
+   yang tidak harus terbaca berbeda tanpa perlu dicoba dulu. */
+.retur-ajakan {
+  margin-top: 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #4F46E5;
+}
