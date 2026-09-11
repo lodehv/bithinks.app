@@ -131,7 +131,7 @@ export const statsTiruan = {
         channel: 'Shopee', toko: 'Bithinks Official Shop Jakarta',
         item: '[PAKET RESELLER KCL] Business Package KCL - Pupuk Dewa Dewi, Pupuk Manohara Merah - 100% Original × 1 +1 item lain', nominal: 189_000,
         alasan: 'Barang rusak saat diterima', alasanAsli: 'DAMAGED',
-        resi: 'SPXID048812345678',
+        resi: 'SPXID048812345678', status: 'ACCEPTED', tanggal: '11 Sep 09:12',
         jejak: [
           { waktu: '11 Sep 09:12', teks: 'Pembeli mengajukan retur' },
           { waktu: '11 Sep 14:40', teks: 'Penjual menyetujui' },
@@ -143,7 +143,7 @@ export const statsTiruan = {
         channel: 'TikTok', toko: 'Bithinks Store Indonesia',
         item: 'Masker Wajah Charcoal × 1', nominal: 74_500,
         alasan: 'Barang tidak sesuai deskripsi', alasanAsli: 'ITEM_NOT_AS_DESCRIBED',
-        resi: 'JX8827361192',
+        resi: 'JX8827361192', status: 'BUYER_SHIPPED_ITEM', tanggal: '10 Sep 20:31',
         jejak: [
           { waktu: '10 Sep 20:31', teks: 'Pembeli mengajukan retur' },
           { waktu: '11 Sep 07:15', teks: 'Disetujui otomatis' },
@@ -155,7 +155,7 @@ export const statsTiruan = {
         channel: 'TikTok', toko: 'Bithinks Beauty Official',
         item: '[Paket Lebih murah 2Pcs] Pupuk Dewa Dewi 1 Liter -KCL- Original untuk Tanaman dalam masa Pembuahan Umbi dan Buah × 1', nominal: 410_000,
         alasan: 'Pembeli berubah pikiran', alasanAsli: 'CHANGE_OF_MIND',
-        resi: 'JX8827361007',
+        resi: 'JX8827361007', status: 'RETURN_OR_REFUND_REQUEST_COMPLETE', tanggal: '05 Sep 11:02',
         jejak: [
           { waktu: '05 Sep 11:02', teks: 'Pembeli mengajukan retur' },
           { waktu: '06 Sep 09:44', teks: 'Pembeli mengirim barang' },
@@ -167,7 +167,7 @@ export const statsTiruan = {
         channel: 'Shopee', toko: 'Bithinks Grosir Bandung',
         item: 'Sabun Batang Kemasan 6 pcs × 1', nominal: 58_000,
         alasan: 'Ukuran tidak sesuai', alasanAsli: 'WRONG_SIZE',
-        resi: null,
+        resi: null, status: 'ACCEPTED', tanggal: '10 Sep 14:02',
         jejak: [],
       },
     ],
