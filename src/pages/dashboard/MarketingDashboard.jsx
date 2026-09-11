@@ -264,50 +264,46 @@ export default function MarketingDashboard() {
   const adaTahapRetur = returTahap !== null;
   const daftarRetur = Array.isArray(returTahap?.daftar) ? returTahap.daftar : [];
 
-  // ── Sel rincian → tahap → platform → toko ──────────────────────────────────
-  // Dikelompokkan di sini, bukan di server, karena bentuknya murni urusan
-  // tampilan: server mengirim sel datar supaya angkanya tetap bisa dijumlahkan
-  // dengan cara lain kalau kelak layarnya berubah.
-  const returPerPlatform = (() => {
-    const kosong = { diJalan: [], sampai: [] };
+  // ── DRILL-DOWN: tahap → platform & toko → daftar → detail ─────────────────
+  // Rancangan pemilik toko 11 September 2026: kedua tahap DIKLIK, dan isinya
+  // mengerucut. Versi sebelumnya menampilkan ringkasan DAN seluruh daftar
+  // sekaligus — 22 baris sekali layar — jadi tetap terbaca bercecer walau
+  // barisnya sudah rapi. Yang memperbaikinya bukan baris yang lebih rapi,
+  // melainkan lebih sedikit yang tampil pada satu waktu.
+  const [tahapAktif, setTahapAktif] = useState('diJalan');
+  const [tokoAktif, setTokoAktif] = useState(null);
+
+  // Sel datar dari server → platform → toko, untuk tahap yang sedang dipilih.
+  const returPlatformAktif = (() => {
     const sel = Array.isArray(returTahap?.perToko) ? returTahap.perToko : [];
-    if (sel.length === 0) return kosong;
-    const hasil = { diJalan: new Map(), sampai: new Map() };
+    const peta = new Map();
     for (const c of sel) {
-      const tahap = hasil[c.tahap];
-      if (!tahap) continue;
-      const kunci = c.channel;
-      if (!tahap.has(kunci)) {
-        tahap.set(kunci, { channel: NAMA_PLATFORM[kunci] ?? kunci, pesanan: 0, toko: [] });
+      if (c.tahap !== tahapAktif) continue;
+      if (!peta.has(c.channel)) {
+        peta.set(c.channel, { channel: c.channel, nama: NAMA_PLATFORM[c.channel] ?? c.channel, pesanan: 0, toko: [] });
       }
-      const p = tahap.get(kunci);
+      const p = peta.get(c.channel);
       p.pesanan += c.pesanan;
-      p.toko.push({ toko: c.toko, pesanan: c.pesanan, nilai: c.nilai });
+      // Kuncinya memakai NAMA platform, bukan kunci mentahnya: daftar rincian
+      // sudah datang dengan nama tampilan, dan dua bentuk kunci untuk hal yang
+      // sama pasti akan gagal bertemu suatu hari.
+      p.toko.push({ kunci: `${p.nama}|${c.toko}`, toko: c.toko, pesanan: c.pesanan, nilai: c.nilai });
     }
-    const rapikan = (peta) =>
-      [...peta.values()]
-        .map((p) => ({ ...p, toko: [...p.toko].sort((a, b) => b.nilai - a.nilai) }))
-        .sort((a, b) => b.pesanan - a.pesanan);
-    return { diJalan: rapikan(hasil.diJalan), sampai: rapikan(hasil.sampai) };
+    return [...peta.values()]
+      .map((p) => ({ ...p, toko: [...p.toko].sort((a, b) => b.nilai - a.nilai) }))
+      .sort((a, b) => b.pesanan - a.pesanan);
   })();
 
-  // Daftar dikelompokkan PER TOKO, mengikuti rancangan pemilik toko: toko dulu,
-  // baru nomor pesanannya. Urutan kelompoknya mengikuti urutan daftar yang sudah
-  // disusun server (yang masih berjalan lebih dulu), jadi tidak ada aturan urut
-  // kedua yang bisa berbeda pendapat dengan yang pertama.
-  const returPerToko = (() => {
-    const peta = new Map();
-    for (const r of daftarRetur) {
-      const kunci = `${r.channel}|${r.toko}`;
-      if (!peta.has(kunci)) {
-        peta.set(kunci, { kunci, toko: r.toko, channel: r.channel, nilai: 0, baris: [] });
-      }
-      const g = peta.get(kunci);
-      g.baris.push(r);
-      g.nilai += r.nominal ?? 0;
-    }
-    return [...peta.values()];
-  })();
+  // Toko yang dipilih harus ada DI TAHAP INI. Tanpa pemeriksaan itu, berpindah
+  // tahap meninggalkan daftar toko lain yang terbuka di bawahnya — daftar yang
+  // tidak ada hubungannya dengan tahap yang sedang dilihat.
+  const tokoTerpilih = returPlatformAktif
+    .flatMap((p) => p.toko)
+    .find((t) => t.kunci === tokoAktif) ?? null;
+
+  const daftarTokoAktif = tokoTerpilih
+    ? daftarRetur.filter((r) => r.tahap === tahapAktif && `${r.channel}|${r.toko}` === tokoAktif)
+    : [];
 
   // Baris mana yang linimasanya sedang dibuka. Satu saja: membuka semuanya
   // sekaligus membuat tabel lebih panjang daripada yang bisa dibaca sekali
@@ -796,19 +792,30 @@ export default function MarketingDashboard() {
             </span>
           </div>
 
-          {/* DUA KOLOM BERTINGKAT, rancangan pemilik toko 11 September 2026:
-              tahap → platform → toko. Sebelumnya kedua tahap cuma satu angka
-              besar, dan untuk tahu toko mana yang returnya menumpuk orang harus
-              membaca seluruh daftar di bawahnya baris demi baris. */}
+          {/* BERTINGKAT DAN MENGERUCUT, rancangan pemilik toko 11 September 2026:
+              kedua tahap DIKLIK, lalu platform & toko, lalu daftar pesanannya,
+              lalu rinciannya.
+
+              Versi sebelumnya menampilkan ringkasan DAN seluruh daftar retur
+              sekaligus — 22 baris dalam satu layar — jadi tetap terbaca
+              bercecer walau tiap barisnya sudah rapi. Yang memperbaikinya bukan
+              baris yang lebih rapi, melainkan lebih sedikit yang tampil pada
+              satu waktu. */}
           <div className="retur-kolom">
             {TAHAP_RETUR.map(({ kunci, judul, catatan }) => {
               const ringkas = kunci === 'diJalan' ? returDiJalan : returSampai;
-              const perPlatform = returPerPlatform[kunci];
+              const aktif = tahapAktif === kunci;
               return (
-                <div key={kunci} className="retur-tahap">
+                <button
+                  type="button"
+                  key={kunci}
+                  className={`retur-tahap${aktif ? ' retur-tahap-aktif' : ''}`}
+                  onClick={() => { setTahapAktif(kunci); setTokoAktif(null); setReturTerbuka(null); }}
+                  aria-pressed={aktif}
+                >
                   <div className="retur-tahap-kepala">
                     <span className="block-category">{judul}</span>
-                    <RefreshCw size={13} className="text-purple" />
+                    <ChevronDown size={14} className={`retur-panah${aktif ? ' retur-panah-buka' : ''}`} />
                   </div>
                   {/* Garis pendek, bukan Rp 0. Nol berarti "tidak ada retur";
                       yang benar saat server belum mengirim datanya adalah
@@ -819,32 +826,124 @@ export default function MarketingDashboard() {
                   <div className="block-subtext">
                     {adaTahapRetur ? `${ringkas.pesanan} pesanan · ${catatan}` : 'Menunggu data dari server'}
                   </div>
-
-                  {perPlatform.length > 0 && (
-                    <div className="retur-platform-baris">
-                      {perPlatform.map((p) => (
-                        <div key={p.channel} className="retur-platform">
-                          <div className="retur-platform-nama">
-                            {p.channel}
-                            <span className="retur-platform-jumlah">{p.pesanan}</span>
-                          </div>
-                          <ul className="retur-toko-daftar">
-                            {p.toko.map((t) => (
-                              <li key={t.toko} className="retur-toko-baris">
-                                <span className="retur-toko-nama" title={t.toko}>{t.toko}</span>
-                                <span className="retur-toko-jumlah">{t.pesanan}</span>
-                                <span className="retur-toko-nilai">{formatRupiahRingkas(t.nilai)}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                </button>
               );
             })}
           </div>
+
+          {/* TINGKAT DUA — platform & toko dari tahap yang sedang dipilih. */}
+          {returPlatformAktif.length > 0 && (
+            <div className="retur-platform-baris">
+              {returPlatformAktif.map((p) => (
+                <div key={p.channel} className="retur-platform">
+                  <div className="retur-platform-nama">
+                    {p.nama}
+                    <span className="retur-platform-jumlah">{p.pesanan}</span>
+                  </div>
+                  <ul className="retur-toko-daftar">
+                    {p.toko.map((t) => (
+                      <li key={t.kunci}>
+                        <button
+                          type="button"
+                          className={`retur-toko-baris${tokoAktif === t.kunci ? ' retur-toko-aktif' : ''}`}
+                          onClick={() => {
+                            setTokoAktif(tokoAktif === t.kunci ? null : t.kunci);
+                            setReturTerbuka(null);
+                          }}
+                        >
+                          <span className="retur-toko-nama" title={t.toko}>{t.toko}</span>
+                          <span className="retur-toko-jumlah">{t.pesanan}</span>
+                          <span className="retur-toko-nilai">{formatRupiahRingkas(t.nilai)}</span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* TINGKAT TIGA — daftar pesanan toko terpilih. Hanya SATU toko yang
+              pernah tampil sekaligus; itulah yang menghentikan bercecernya. */}
+          {tokoTerpilih && (
+            <div className="retur-daftar">
+              <div className="retur-grup-kepala">
+                <span className="retur-grup-toko">{tokoTerpilih.toko}</span>
+                <span className="retur-grup-hitung">
+                  {tokoTerpilih.pesanan} retur · {formatRupiah(tokoTerpilih.nilai)}
+                </span>
+              </div>
+
+              {daftarTokoAktif.length === 0 ? (
+                /* Sel dihitung dari SELURUH baris, daftarnya dibatasi 200. Kalau
+                   tokonya di luar batas itu, jujur menyebutnya lebih baik
+                   daripada memperlihatkan kelompok kosong tanpa penjelasan. */
+                <div className="retur-jejak-kosong">
+                  Rincian toko ini belum termuat pada halaman daftar saat ini.
+                </div>
+              ) : (
+                daftarTokoAktif.map((r) => {
+                  const buka = returTerbuka === r.id;
+                  return (
+                    <div key={r.id} className={`retur-item${buka ? ' retur-item-buka' : ''}`}>
+                      <button
+                        type="button"
+                        className="retur-item-baris"
+                        onClick={() => setReturTerbuka(buka ? null : r.id)}
+                      >
+                        <ChevronDown size={14} className={`retur-panah${buka ? ' retur-panah-buka' : ''}`} />
+                        <span className="retur-item-no">{r.pesanan}</span>
+                        <span className="retur-item-nama" title={r.item || undefined}>
+                          {r.item || '—'}
+                        </span>
+                        <span className="retur-item-nominal">{formatRupiah(r.nominal ?? 0)}</span>
+                      </button>
+
+                      {buka && (
+                        <div className="retur-detail">
+                          <dl className="retur-fakta">
+                            <div>
+                              <dt>Barang</dt>
+                              <dd>{r.item || '—'}</dd>
+                            </div>
+                            <div>
+                              <dt>Alasan</dt>
+                              <dd>
+                                {r.alasan || '—'}
+                                {r.alasanAsli && <span className="retur-alasan-asli">{r.alasanAsli}</span>}
+                              </dd>
+                            </div>
+                            <div>
+                              <dt>Resi retur</dt>
+                              {/* Garis pendek, bukan kolom kosong: marketplace
+                                  belum tentu mengirimkannya, dan kosong terbaca
+                                  seperti kesalahan tampilan. */}
+                              <dd className="retur-resi">{r.resi || '— belum ada resi'}</dd>
+                            </div>
+                          </dl>
+
+                          {(Array.isArray(r.jejak) ? r.jejak : []).length === 0 ? (
+                            <div className="retur-jejak-kosong">
+                              Marketplace belum memberikan titik perjalanan untuk retur ini.
+                            </div>
+                          ) : (
+                            <ol className="retur-jejak">
+                              {r.jejak.map((j, i) => (
+                                <li key={i} className={i === r.jejak.length - 1 ? 'jejak-kini' : ''}>
+                                  <span className="jejak-waktu">{j.waktu}</span>
+                                  <span className="jejak-teks">{j.teks}</span>
+                                </li>
+                              ))}
+                            </ol>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          )}
         </div>
 
         {/* Card 1b: BEBAN PLATFORM — zona sendiri.
@@ -1347,113 +1446,6 @@ export default function MarketingDashboard() {
             </table>
           </div>
         </div>
-      </div>
-
-      {/* ─── RINCIAN RETUR — dikelompokkan PER TOKO ────────────────────────
-          Bentuk lama tabel lima kolom, dan nama barang di sini panjang-panjang
-          ("[PAKET RESELLER KCL] Business Package KCL – Pupuk Dewa Dewi…").
-          Satu baris jadi menuruni tiga baris teks, kolom kanan terdorong keluar
-          layar, dan tabelnya terbaca bercecer.
-
-          Sekarang: kepala kelompok per toko, lalu satu baris satu retur dengan
-          nama barang dipotong satu baris. Nama utuhnya tetap ada — muncul saat
-          barisnya dibuka, dan sebagai `title` saat kursor berhenti di atasnya.
-          Memotong di layar tidak sama dengan membuang. */}
-      <div className="marketing-table-card">
-        <div className="table-card-header">
-          <div className="header-title-group">
-            <h3>Rincian Retur</h3>
-          </div>
-        </div>
-
-        {daftarRetur.length === 0 ? (
-          <div className="empty-state-container">
-            <RefreshCw size={32} className="empty-icon text-gray" />
-            <h4>{adaTahapRetur ? 'Tidak Ada Retur' : 'Belum Ada Data Retur'}</h4>
-            <p>
-              {adaTahapRetur
-                ? 'Tidak ada retur yang sedang berjalan untuk pilihan platform & toko ini.'
-                : 'Server belum mengirim rincian retur. Daftar ini terisi begitu datanya tersedia.'}
-            </p>
-          </div>
-        ) : (
-          returPerToko.map((grup) => (
-            <div key={grup.kunci} className="retur-grup">
-              <div className="retur-grup-kepala">
-                <span className="retur-grup-toko">{grup.toko}</span>
-                <span className="retur-grup-channel">{grup.channel}</span>
-                <span className="retur-grup-hitung">
-                  {grup.baris.length} retur · {formatRupiah(grup.nilai)}
-                </span>
-              </div>
-
-              {grup.baris.map((r) => {
-                const buka = returTerbuka === r.id;
-                const sampai = r.tahap === 'sampai';
-                const jejak = Array.isArray(r.jejak) ? r.jejak : [];
-                return (
-                  <div key={r.id} className={`retur-item${buka ? ' retur-item-buka' : ''}`}>
-                    <button
-                      type="button"
-                      className="retur-item-baris"
-                      onClick={() => setReturTerbuka(buka ? null : r.id)}
-                    >
-                      <ChevronDown size={14} className={`retur-panah${buka ? ' retur-panah-buka' : ''}`} />
-                      <span className="retur-item-no">{r.pesanan}</span>
-                      <span className="retur-item-nama" title={r.item || undefined}>
-                        {r.item || '—'}
-                      </span>
-                      <span className="retur-item-nominal">{formatRupiah(r.nominal ?? 0)}</span>
-                      <span className={`lacak-pil ${sampai ? 'lacak-sampai' : 'lacak-jalan'}`}>
-                        {sampai ? 'SELESAI' : 'DI JALAN'}
-                      </span>
-                    </button>
-
-                    {buka && (
-                      <div className="retur-detail">
-                        <dl className="retur-fakta">
-                          <div>
-                            <dt>Barang</dt>
-                            <dd>{r.item || '—'}</dd>
-                          </div>
-                          <div>
-                            <dt>Alasan</dt>
-                            <dd>
-                              {r.alasan || '—'}
-                              {r.alasanAsli && <span className="retur-alasan-asli">{r.alasanAsli}</span>}
-                            </dd>
-                          </div>
-                          <div>
-                            <dt>Resi retur</dt>
-                            {/* Garis pendek, bukan kolom kosong: marketplace
-                                belum tentu mengirimkannya, dan kosong terbaca
-                                seperti kesalahan tampilan. */}
-                            <dd className="retur-resi">{r.resi || '— belum ada resi'}</dd>
-                          </div>
-                        </dl>
-
-                        {jejak.length === 0 ? (
-                          <div className="retur-jejak-kosong">
-                            Marketplace belum memberikan titik perjalanan untuk retur ini.
-                          </div>
-                        ) : (
-                          <ol className="retur-jejak">
-                            {jejak.map((j, i) => (
-                              <li key={i} className={i === jejak.length - 1 ? 'jejak-kini' : ''}>
-                                <span className="jejak-waktu">{j.waktu}</span>
-                                <span className="jejak-teks">{j.teks}</span>
-                              </li>
-                            ))}
-                          </ol>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          ))
-        )}
       </div>
 
       {/* ─── Balance Sheet Ledger Modal ─── */}
