@@ -149,7 +149,7 @@ export const omniApi = {
   // Metrik Dashboard Marketing. params: { startDate, endDate, platforms[], stores[], granularity, asOf }
   // Response: { totals, buckets, meta }. Acuan logika: docs/SPEC-dashboard-marketing.md
   getMarketingStats: (params = {}) => {
-    const { startDate, endDate, platforms, stores, granularity, asOf, adSpend } = params
+    const { startDate, endDate, platforms, stores, granularity, asOf } = params
     const query = {}
     if (startDate) query.startDate = startDate
     if (endDate) query.endDate = endDate
@@ -157,9 +157,23 @@ export const omniApi = {
     if (stores?.length) query.stores = stores.join(',')
     if (granularity) query.granularity = granularity
     if (asOf) query.asOf = asOf
-    if (adSpend) query.adSpend = adSpend
     return api.get('/api/omni/marketing/stats', { params: query }).then(unwrap)
   },
+
+  // Biaya iklan per toko per hari — satu-satunya beban yang tidak dilaporkan
+  // marketplace, jadi satu-satunya yang diketik pemilik toko sendiri.
+  // Sebelum 11 Sep 2026 angkanya dikirim sebagai query `adSpend` pada stats:
+  // tidak tersimpan, hilang tiap muat ulang, dan bisa diubah dari kolom alamat.
+  getAdSpend: ({ startDate, endDate } = {}) => {
+    const query = {}
+    if (startDate) query.startDate = startDate
+    if (endDate) query.endDate = endDate
+    return api.get('/api/omni/marketing/ad-spend', { params: query }).then(unwrap)
+  },
+  // `amount` boleh berupa string yang masih berpemisah ribuan ("1.000") —
+  // penafsirannya dilakukan server, di satu tempat saja.
+  saveAdSpend: ({ storeId, date, amount, note }) =>
+    api.put('/api/omni/marketing/ad-spend', { storeId, date, amount, note }).then(unwrap),
 }
 
 export const subscriptionApi = {

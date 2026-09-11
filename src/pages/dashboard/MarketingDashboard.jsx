@@ -1,5 +1,6 @@
 import { useState, useEffect, Fragment } from "react";
 import { omniApi } from "../../utils/omniApi";
+import { teksRibuan, bacaRibuan } from "../../utils/angka";
 import { 
   Calendar, Filter, ChevronDown, Check, X, 
   HelpCircle, RefreshCw, BarChart3, DollarSign, 
@@ -68,7 +69,12 @@ export default function MarketingDashboard() {
   const marketingData = Array.isArray(stats?.per_toko) ? stats.per_toko : [];
   const [isSubmittingFilters, setIsSubmittingFilters] = useState(false);
   const [showFeeModal, setShowFeeModal] = useState(false);
-  const [adSpend, setAdSpend] = useState(0);
+  // Biaya iklan yang SEDANG DIKETIK, per toko. Terpisah dari angka tersimpan
+  // supaya sel yang sedang disunting tidak ditimpa saat laporan dimuat ulang.
+  // Kuncinya storeId; nilainya teks apa adanya, masih berpemisah ribuan.
+  const [iklanDraf, setIklanDraf] = useState({});
+  const [iklanSimpan, setIklanSimpan] = useState(null); // storeId yang sedang disimpan
+  const [iklanGagal, setIklanGagal] = useState(null);   // storeId yang gagal disimpan
   const [hoverIdx, setHoverIdx] = useState(null); // titik tren yang di-hover
 
   // List of standard platforms
@@ -117,7 +123,8 @@ export default function MarketingDashboard() {
     setEndDate(tanggalWib(0));
     setSelectedPlatforms([]);
     setSelectedStores([]);
-    setAdSpend(0);
+    setIklanDraf({});
+    setIklanGagal(null);
   };
 
   // ─── Ambil metrik dari backend ─────────────────────────────────────────────
@@ -130,12 +137,49 @@ export default function MarketingDashboard() {
         platforms: selectedPlatforms,
         stores: selectedStores,
         granularity: "day",
-        adSpend,
         ...overrides,
       })
       .then((data) => setStats(data))
       .catch((err) => console.error("Gagal memuat metrik marketing:", err))
       .finally(() => setIsSubmittingFilters(false));
+  };
+
+  // ─── Biaya iklan per toko ──────────────────────────────────────────────────
+  // Disimpan per toko per HARI. Butir yang lebih kasar tidak bisa dipotong
+  // mengikuti rentang mana pun tanpa membagi rata, dan membagi rata berarti
+  // mengarang angka yang bukan biaya iklan toko itu.
+  //
+  // Akibatnya kolomnya hanya bisa disunting saat rentangnya TEPAT SATU HARI.
+  // Pada rentang yang lebih panjang angkanya tetap ditampilkan sebagai jumlah,
+  // tapi tidak bisa diketik — menerima ketikan di sana berarti kita harus
+  // menebak hari mana yang dimaksud.
+  const rentangSatuHari = Boolean(startDate) && startDate === endDate;
+
+  const simpanIklan = (storeId, teks) => {
+    if (!rentangSatuHari) return;
+    setIklanSimpan(storeId);
+    setIklanGagal(null);
+    return omniApi
+      .saveAdSpend({ storeId, date: startDate, amount: bacaRibuan(teks) })
+      .then(() => {
+        // Draf dilepas supaya sel kembali membaca angka dari server. Selama
+        // draf masih ada, layar memperlihatkan yang diketik — bukan yang
+        // benar-benar tersimpan.
+        setIklanDraf((d) => {
+          const salin = { ...d };
+          delete salin[storeId];
+          return salin;
+        });
+        return fetchStats();
+      })
+      .catch((err) => {
+        console.error("Gagal menyimpan biaya iklan:", err);
+        // Draf SENGAJA dipertahankan. Menghapusnya akan membuat angka yang
+        // diketik lenyap tanpa pernah tersimpan, dan layar akan terlihat
+        // seperti tidak terjadi apa-apa.
+        setIklanGagal(storeId);
+      })
+      .finally(() => setIklanSimpan(null));
   };
 
   // Muat awal memakai rentang bawaan HARI INI (lihat HARI_BAWAAN di atas), bukan
@@ -258,7 +302,11 @@ export default function MarketingDashboard() {
   // Versi lama menghitungnya sendiri sebagai omset − COGS − beban, TANPA biaya
   // iklan — sementara server mengurangkan iklan juga. Dua rumus untuk angka
   // yang sama, dan yang tampil di layar adalah yang melupakan iklan.
-  const totalProfit = stats?.profit ?? (totalOmsetPerkiraan - totalCogs - totalFees - adSpend);
+  // Biaya iklan dijumlahkan dari BARIS PER TOKO, bukan dari satu kolom isian.
+  // Sumber yang sama dengan yang dipakai tiap barisnya, jadi total dan rincian
+  // tidak bisa berselisih.
+  const totalIklan = marketingData.reduce((a, b) => a + (b.iklan || 0), 0);
+  const totalProfit = stats?.profit ?? (totalOmsetPerkiraan - totalCogs - totalFees - totalIklan);
   const marginPercent = stats?.profit_margin
     ?? (totalOmsetPerkiraan > 0 ? (totalProfit / totalOmsetPerkiraan) * 100 : 0);
 
@@ -291,7 +339,7 @@ export default function MarketingDashboard() {
   const profitOffset = 0;
   const feesOffset = -profitDash;
   const returOffset = -(profitDash + feesDash);
-  const adSpendPct = pct(adSpend);
+  const adSpendPct = pct(totalIklan);
   const adSpendDash = (adSpendPct / 100) * circumference;
   const adSpendOffset = -(profitDash + feesDash + returDash);
   const cogsOffset = -(profitDash + feesDash + returDash + adSpendDash);
@@ -500,19 +548,16 @@ export default function MarketingDashboard() {
             )}
           </div>
 
-          {/* 4. Biaya Iklan Input */}
+          {/* 4. Biaya Iklan — sekarang diisi PER TOKO di tabel paling bawah.
+              Kolom isian tunggal yang dulu ada di sini mengirim angkanya lewat
+              URL: tidak tersimpan, hilang tiap muat ulang, dan satu angka untuk
+              semua toko sekaligus. Tidak ada yang bisa dijawabnya — "toko mana
+              yang iklannya memakan laba" justru pertanyaan utamanya. */}
           <div className="filter-item">
             <label className="filter-label">Biaya Iklan (Ad Spend)</label>
-            <div className="ad-spend-input-wrapper">
-              <span className="currency-symbol">Rp</span>
-              <input 
-                type="number" 
-                min="0"
-                value={adSpend || ""} 
-                onChange={(e) => setAdSpend(Math.max(0, parseInt(e.target.value) || 0))}
-                placeholder="0"
-                className="filter-ad-spend-input"
-              />
+            <div className="iklan-petunjuk">
+              <span className="iklan-petunjuk-nilai">{formatRupiah(totalIklan)}</span>
+              <span className="iklan-petunjuk-teks">Diisi per toko di tabel bawah</span>
             </div>
           </div>
         </div>
@@ -1042,7 +1087,7 @@ export default function MarketingDashboard() {
                 <div className="legend-text-group">
                   <span className="legend-label">Biaya Iklan</span>
                   <span className="legend-value font-bold text-black">
-                    {formatRupiah(adSpend)} ({hasData ? adSpendPct.toFixed(1) + "%" : "—"})
+                    {formatRupiah(totalIklan)} ({hasData ? adSpendPct.toFixed(1) + "%" : "—"})
                   </span>
                 </div>
               </div>
@@ -1139,11 +1184,58 @@ export default function MarketingDashboard() {
                       <td className="text-right">{formatRupiah(row.cogs)}</td>
                       <td className="text-right">{formatRupiah(row.fees)}</td>
                       <td className="text-right text-purple font-semibold">{formatRupiah(row.retur || 0)}</td>
-                      {/* Biaya iklan per toko belum diisi — keputusan pemilik
-                          toko 20 Agu 2026: kolomnya disiapkan, angkanya menyusul
-                          per toko. TIDAK dibagi rata dari satu angka global,
-                          karena hasil bagi rata bukan biaya iklan toko itu. */}
-                      <td className="text-right text-gray" title="Belum diisi per toko">—</td>
+                      {/* Biaya iklan — satu-satunya angka di tabel ini yang
+                          diketik pemilik toko, karena tidak ada marketplace yang
+                          melaporkannya. Disunting DI TEMPAT: memindahkannya ke
+                          jendela terpisah berarti angka toko sebelah hilang dari
+                          pandangan justru saat sedang dibandingkan.
+                          Isian menampilkan pemisah ribuan sambil diketik; tanpa
+                          itu "1500000" harus dihitung digitnya sendiri. */}
+                      <td className="text-right sel-iklan">
+                        {rentangSatuHari ? (
+                          <div className="iklan-isian">
+                            <span className="iklan-rp">Rp</span>
+                            <input
+                              type="text"
+                              inputMode="numeric"
+                              className={`iklan-input${iklanGagal === row.storeId ? " iklan-input-gagal" : ""}`}
+                              value={iklanDraf[row.storeId] ?? teksRibuan(row.iklan || 0)}
+                              disabled={!row.storeId || iklanSimpan === row.storeId}
+                              onChange={(e) =>
+                                setIklanDraf((d) => ({
+                                  ...d,
+                                  [row.storeId]: teksRibuan(bacaRibuan(e.target.value)),
+                                }))
+                              }
+                              onBlur={(e) => {
+                                if (iklanDraf[row.storeId] === undefined) return;
+                                simpanIklan(row.storeId, e.target.value);
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") e.currentTarget.blur();
+                                if (e.key === "Escape") {
+                                  setIklanDraf((d) => {
+                                    const salin = { ...d };
+                                    delete salin[row.storeId];
+                                    return salin;
+                                  });
+                                  setIklanGagal(null);
+                                }
+                              }}
+                            />
+                          </div>
+                        ) : (
+                          <span
+                            className="text-gray"
+                            title="Biaya iklan dicatat per hari. Pilih satu tanggal untuk mengisinya."
+                          >
+                            {formatRupiah(row.iklan || 0)}
+                          </span>
+                        )}
+                        {iklanGagal === row.storeId && (
+                          <div className="iklan-galat">Gagal disimpan — coba lagi</div>
+                        )}
+                      </td>
                       <td className="text-right font-semibold text-black">{formatRupiah(row.netProfit)}</td>
                       <td className="text-right font-semibold text-purple">{(row.margin ?? 0).toFixed(1)}%</td>
                     </tr>
@@ -1165,7 +1257,7 @@ export default function MarketingDashboard() {
                     <td className="text-right font-bold text-black">{formatRupiah(totalCogs)}</td>
                     <td className="text-right font-bold text-black">{formatRupiah(totalFees)}</td>
                     <td className="text-right font-bold text-black">{formatRupiah(totalRetur)}</td>
-                    <td className="text-right font-bold text-gray">{formatRupiah(adSpend)}</td>
+                    <td className="text-right font-bold text-gray">{formatRupiah(totalIklan)}</td>
                     <td className="text-right font-bold text-purple">{formatRupiah(totalProfit)}</td>
                     <td className="text-right font-bold text-purple">{marginPercent.toFixed(1)}%</td>
                   </tr>

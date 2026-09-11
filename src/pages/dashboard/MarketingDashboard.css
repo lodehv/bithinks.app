@@ -1686,3 +1686,100 @@
   .laba-rugi-tanda { transform: rotate(90deg); }
   .pov-grid-dua { grid-template-columns: 1fr; }
 }
+
+/* ─── BIAYA IKLAN PER TOKO ───────────────────────────────────────────────────
+   Satu-satunya angka di tabel ini yang diketik pemilik toko, karena tidak ada
+   marketplace yang melaporkannya. Disunting di tempat, sebaris dengan angka
+   toko lain, supaya perbandingan antar toko tidak terputus saat mengisi.
+   Isian menampilkan pemisah ribuan sambil diketik; tanpa itu "1500000" harus
+   dihitung digitnya sendiri untuk tahu apakah itu 1,5 juta atau 15 juta. */
+
+/* Pengganti kolom isian global di baris saringan: menyebut angkanya, lalu
+   menunjuk ke tempat mengisinya. */
+.iklan-petunjuk {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  height: 38px;
+  padding: 0 12px;
+  background-color: #FAFAFA;
+  border: 1px dashed #E5E7EB;
+  border-radius: 6px;
+}
+
+.iklan-petunjuk-nilai {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.1;
+}
+
+.iklan-petunjuk-teks {
+  font-size: 11px;
+  color: #9CA3AF;
+  line-height: 1.1;
+}
+
+.sel-iklan {
+  white-space: nowrap;
+}
+
+.iklan-isian {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: flex-end;
+  background-color: #FAFAFA;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  padding: 0 8px;
+  height: 30px;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+.iklan-isian:focus-within {
+  border-color: #4F46E5;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+  background-color: #ffffff;
+}
+
+.iklan-rp {
+  font-size: 11px;
+  font-weight: 700;
+  color: #9CA3AF;
+}
+
+.iklan-input {
+  border: none;
+  background: transparent;
+  width: 96px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+  text-align: right;
+  padding: 0;
+  outline: none;
+  /* Angka rata kanan hanya terbaca kalau lebar digitnya sama. Tanpa ini
+     "111.111" terlihat lebih pendek daripada "999.999" dan kolom yang
+     seharusnya sejajar jadi bergerigi. */
+  font-variant-numeric: tabular-nums;
+}
+
+.iklan-input:disabled {
+  color: #9CA3AF;
+  cursor: progress;
+}
+
+/* Gagal simpan tidak boleh diam. Angkanya masih di layar tapi TIDAK ada di
+   server, dan itu perbedaan yang harus terlihat. */
+.iklan-input-gagal {
+  color: #B91C1C;
+}
+
+.iklan-galat {
+  font-size: 11px;
+  font-weight: 600;
+  color: #B91C1C;
+  margin-top: 3px;
+}
