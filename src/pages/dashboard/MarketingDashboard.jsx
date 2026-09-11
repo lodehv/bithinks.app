@@ -233,6 +233,34 @@ export default function MarketingDashboard() {
   // kontrol yang berbohong — pelajaran yang sama dengan kolom tanggal kosong.
   const posisi = stats?.posisi ?? null;
 
+  // ─── RETUR: DUA TAHAP, BUKAN SATU ANGKA ────────────────────────────────────
+  //
+  // Kartu lama berisi `retur + dibatalkan` dijumlahkan jadi satu. Sensus
+  // produksi 11 September 2026: 1.232 pembatalan berbanding 42 retur — jadi
+  // kartu bernama RETUR sebenarnya menampilkan pembatalan, dan retur yang
+  // sesungguhnya tenggelam di dalamnya.
+  //
+  // Sekarang dipecah mengikuti perjalanan barangnya:
+  //   di jalan → barang belum kembali (diajukan, disetujui, dikirim pembeli)
+  //   sampai   → barang di gudang, stok sudah naik
+  //
+  // Keputusan pemilik toko 11 September 2026: tahap "diajukan" dan "disetujui"
+  // ikut DI JALAN, dan pembatalan sebelum barang dikirim tidak dihitung sebagai
+  // retur sama sekali.
+  const returTahap = stats?.retur ?? null;
+  const returDiJalan = returTahap?.diJalan ?? { nilai: 0, pesanan: 0 };
+  const returSampai = returTahap?.sampai ?? { nilai: 0, pesanan: 0 };
+  // Server belum tentu mengirimnya. Selama belum, kartu lama dipertahankan —
+  // dua kartu bernilai nol akan terbaca sebagai "tidak ada retur", padahal
+  // yang benar "belum diketahui", dan keduanya bukan hal yang sama.
+  const adaTahapRetur = returTahap !== null;
+  const daftarRetur = Array.isArray(returTahap?.daftar) ? returTahap.daftar : [];
+
+  // Baris mana yang linimasanya sedang dibuka. Satu saja: membuka semuanya
+  // sekaligus membuat tabel lebih panjang daripada yang bisa dibaca sekali
+  // pandang, dan pertanyaannya memang selalu tentang SATU retur.
+  const [returTerbuka, setReturTerbuka] = useState(null);
+
   // ─── CAKUPAN BEBAN — peringatannya dihapus 11 September 2026 ──────────────
   // Layar pernah memuat spanduk "Laba di bawah ini masih terlalu besar" yang
   // menyebut persentase cakupan dan jarak sinkronisasi terakhir. Keputusan
@@ -696,17 +724,27 @@ export default function MarketingDashboard() {
       {/* ─── Summary Cards Section (Omset Harian & Status Breakdown) ─── */}
       <div className={`marketing-summary-wrapper${rentangPanjang ? "" : " satu-kartu"}`}>
         
-        {/* Card 1: Ringkasan Omset Harian */}
+        {/* Card 1: Ringkasan Omset Harian.
+
+            BEBAN PLATFORM dipindah ke zonanya sendiri di bawah. Selama ini ia
+            duduk sebaris dengan pengurang omset, jadi terbaca seolah ikut
+            dikurangkan di sini — padahal tidak: `kotor − retur = omset`, beban
+            platform baru muncul di zona arus.
+
+            RETUR dipecah jadi DUA tahap. Sebelumnya satu kartu berisi
+            `retur + dibatalkan`, dan diukur 11 Sep 2026 isinya 1.232 pembatalan
+            berbanding 42 retur — jadi kartu bernama RETUR sebenarnya
+            menampilkan pembatalan. Pembatalan sebelum barang dikirim bukan
+            retur dan tidak lagi ikut di sini. */}
         <div className="summary-card">
           <div className="summary-card-header">
             <h4>Asal-usul angka OMSET</h4>
             <span className="summary-card-subtitle">
-              Kotor − retur &amp; batal = <b>OMSET</b> di atas · sumbu: tanggal pesanan dibuat
+              Kotor − retur = <b>OMSET</b> di atas · sumbu: tanggal pesanan dibuat
             </span>
           </div>
 
           <div className="summary-blocks-grid tiga-blok">
-            {/* Block 1: Omset Kotor */}
             <div className="summary-block">
               <div className="block-meta-row">
                 <span className="block-category">OMSET KOTOR</span>
@@ -716,24 +754,64 @@ export default function MarketingDashboard() {
               <div className="block-subtext">Termasuk retur &amp; batal</div>
             </div>
 
-            {/* Block 2: Retur */}
-            <div className="summary-block block-danger-accent">
-              <div className="block-meta-row">
-                <span className="block-category">RETUR</span>
-                <RefreshCw size={13} className="text-purple" />
+            {adaTahapRetur ? (
+              <>
+                <div className="summary-block blok-pengurang">
+                  <div className="block-meta-row">
+                    <span className="block-category">RETUR DI JALAN</span>
+                    <RefreshCw size={13} className="text-purple" />
+                  </div>
+                  <div className="block-value">- {formatRupiah(returDiJalan.nilai)}</div>
+                  <div className="block-subtext">
+                    {returDiJalan.pesanan} pesanan · barang belum kembali
+                  </div>
+                </div>
+                <div className="summary-block blok-pengurang">
+                  <div className="block-meta-row">
+                    <span className="block-category">RETUR SAMPAI</span>
+                    <RefreshCw size={13} className="text-purple" />
+                  </div>
+                  <div className="block-value">- {formatRupiah(returSampai.nilai)}</div>
+                  <div className="block-subtext">
+                    {returSampai.pesanan} pesanan · stok sudah naik
+                  </div>
+                </div>
+              </>
+            ) : (
+              /* Server belum mengirim tahap retur. Menampilkan dua kartu
+                 bernilai nol akan berbohong — nol berarti "tidak ada retur",
+                 bukan "belum diketahui". Jadi kartu lama dipertahankan apa
+                 adanya sampai datanya benar-benar datang. */
+              <div className="summary-block blok-pengurang">
+                <div className="block-meta-row">
+                  <span className="block-category">RETUR &amp; BATAL</span>
+                  <RefreshCw size={13} className="text-purple" />
+                </div>
+                <div className="block-value">- {formatRupiah(totalRetur + totalDibatalkan)}</div>
+                <div className="block-subtext">Belum dipecah per tahap</div>
               </div>
-              <div className="block-value">- {formatRupiah(totalRetur + totalDibatalkan)}</div>
-              <div className="block-subtext">Pembatalan & retur pesanan</div>
-            </div>
+            )}
+          </div>
+        </div>
 
-            {/* Block 4: Platform Fees */}
-            <div className="summary-block clickable-block" onClick={() => setShowFeeModal(true)}>
-              <div className="block-meta-row">
-                <span className="block-category">BEBAN PLATFORM</span>
-                <DollarSign size={13} className="text-purple" />
-              </div>
+        {/* Card 1b: BEBAN PLATFORM — zona sendiri.
+            Bukan pengurang omset, jadi tidak boleh sebaris dengan pengurang. */}
+        <div className="summary-card">
+          <div className="summary-card-header">
+            <h4>Beban Platform</h4>
+            <span className="summary-card-subtitle">
+              Komisi &amp; potongan marketplace · bukan bagian dari hitungan omset di atas
+            </span>
+          </div>
+          <div className="beban-baris clickable-block" onClick={() => setShowFeeModal(true)}>
+            <div>
               <div className="block-value hover-underline">{formatRupiah(totalFees)}</div>
-              <div className="block-subtext">Komisi platform <span className="kpi-action-purple">(rincian)</span></div>
+              <div className="block-subtext">
+                {totalOmsetPerkiraan > 0
+                  ? `${((totalFees / totalOmsetPerkiraan) * 100).toFixed(1)}% dari omset · `
+                  : ''}
+                <span className="kpi-action-purple">(rincian per platform)</span>
+              </div>
             </div>
           </div>
         </div>
@@ -1217,6 +1295,109 @@ export default function MarketingDashboard() {
           </div>
         </div>
       </div>
+
+      {/* ─── RINCIAN RETUR ─────────────────────────────────────────────────────
+          Enam hal yang wajib ada pada tiap retur, permintaan pemilik toko
+          11 September 2026: nomor pesanan, toko, item, alasan, nominal, dan
+          pelacakan. Alasannya ditulis dua lapis — terjemahan di atas, kode asli
+          marketplace di bawahnya. Kode itulah yang dikenal Shopee dan TikTok
+          saat pemilik toko menghubungi mereka; menyembunyikannya memaksa orang
+          menebak istilah yang sebetulnya sudah kita punya.
+
+          Linimasa dibuka DI TEMPAT, bukan di jendela terpisah: pertanyaannya
+          hampir selalu "kenapa yang ini lebih lama", dan jawabannya butuh baris
+          sebelahnya tetap terlihat. */}
+      {adaTahapRetur && (
+        <div className="marketing-table-card">
+          <div className="table-card-header">
+            <div className="header-title-group">
+              <h3>Rincian Retur</h3>
+            </div>
+          </div>
+          <div className="table-responsive">
+            <table className="marketing-table retur-tabel">
+              <thead>
+                <tr>
+                  <th>No. Pesanan &amp; Toko</th>
+                  <th>Item</th>
+                  <th>Alasan Retur</th>
+                  <th className="text-right">Nominal</th>
+                  <th>Pelacakan</th>
+                </tr>
+              </thead>
+              <tbody>
+                {daftarRetur.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" className="table-empty-row">
+                      <div className="empty-state-container">
+                        <RefreshCw size={32} className="empty-icon text-gray" />
+                        <h4>Tidak Ada Retur</h4>
+                        <p>Tidak ada retur yang sedang berjalan untuk pilihan platform &amp; toko ini.</p>
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  daftarRetur.map((r) => {
+                    const buka = returTerbuka === r.id;
+                    const sampai = r.tahap === 'sampai';
+                    const jejak = Array.isArray(r.jejak) ? r.jejak : [];
+                    return (
+                      <Fragment key={r.id}>
+                        <tr
+                          className="retur-baris"
+                          onClick={() => setReturTerbuka(buka ? null : r.id)}
+                        >
+                          <td>
+                            <div className="retur-no">{r.pesanan}</div>
+                            <div className="retur-toko">{r.channel} · {r.toko}</div>
+                          </td>
+                          <td>{r.item || '—'}</td>
+                          <td>
+                            <div>{r.alasan || '—'}</div>
+                            {r.alasanAsli && (
+                              <div className="retur-alasan-asli">{r.alasanAsli}</div>
+                            )}
+                          </td>
+                          <td className="text-right retur-nominal">{formatRupiah(r.nominal ?? 0)}</td>
+                          <td>
+                            <span className={`lacak-pil ${sampai ? 'lacak-sampai' : 'lacak-jalan'}`}>
+                              {sampai ? 'SAMPAI' : 'DI JALAN'}
+                            </span>
+                            {/* Resi retur belum tentu dikirim marketplace. Garis
+                                pendek lebih jujur daripada kolom kosong yang
+                                terbaca seperti kesalahan tampilan. */}
+                            <div className="retur-resi">{r.resi || '— belum ada resi'}</div>
+                          </td>
+                        </tr>
+                        {buka && (
+                          <tr className="retur-jejak-baris">
+                            <td colSpan="5">
+                              {jejak.length === 0 ? (
+                                <div className="retur-jejak-kosong">
+                                  Marketplace belum memberikan titik perjalanan untuk retur ini.
+                                </div>
+                              ) : (
+                                <ol className="retur-jejak">
+                                  {jejak.map((j, i) => (
+                                    <li key={i} className={i === jejak.length - 1 ? 'jejak-kini' : ''}>
+                                      <span className="jejak-waktu">{j.waktu}</span>
+                                      <span className="jejak-teks">{j.teks}</span>
+                                    </li>
+                                  ))}
+                                </ol>
+                              )}
+                            </td>
+                          </tr>
+                        )}
+                      </Fragment>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
       {/* ─── Balance Sheet Ledger Modal ─── */}
       {showFeeModal && (
