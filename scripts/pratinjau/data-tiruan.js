@@ -14,9 +14,16 @@ const toko = [
   ['tiktok', 'Bithinks Cabang Palembang', 940000, 300000, 184300, 5500],
 ]
 
+// Biaya iklan SENGAJA tidak seragam. Dua toko dibiarkan nol supaya potretnya
+// memperlihatkan kolom kosong dan kolom terisi bersebelahan — dan toko terakhir
+// beriklan lebih besar daripada labanya, keadaan yang justru paling perlu
+// terbaca di layar.
+const iklanTiruan = [12500000, 9800000, 6250000, 1750000, 880000, 0, 145000, 0, 62000, 1200000]
+
 const per_toko = toko.map(([channel, storeName, omset, cogs, fees, retur], i) => {
-  const netProfit = omset - cogs - fees
-  return { storeId: `t${i}`, storeName, channel, omset, cogs, fees, retur,
+  const iklan = iklanTiruan[i] ?? 0
+  const netProfit = omset - cogs - fees - iklan
+  return { storeId: `t${i}`, storeName, channel, omset, cogs, fees, retur, iklan,
            netProfit, margin: omset > 0 ? (netProfit / omset) * 100 : 0 }
 })
 
@@ -45,7 +52,7 @@ export const statsTiruan = {
   // itulah yang paling perlu terlihat di potret.
   pov: {
     omset: { nilai: 1414149566, pesanan: 5231, dikeluarkan: { nilai: 936929, pesanan: 13 } },
-    beban: { nilai: 726366963, platform: 290044639, cogs: 436322324, iklan: 0 },
+    beban: { nilai: 726366963 + j('iklan'), platform: 290044639, cogs: 436322324, iklan: j('iklan') },
     laba: { nilai: 687782603, margin: 48.6 },
     tuntas: {
       nilai: 38295057, pesanan: 575,
@@ -84,11 +91,11 @@ export const statsTiruan = {
   },
   biaya_api: j('fees'),
   cost_breakdown: [],
-  biaya_iklan: 0,
+  biaya_iklan: j('iklan'),
   cogs_total: j('cogs'),
-  total_biaya_beban: j('fees') + j('cogs'),
-  profit: omsetPerkiraan - j('fees') - j('cogs'),
-  profit_margin: (omsetPerkiraan - j('fees') - j('cogs')) / omsetPerkiraan * 100,
+  total_biaya_beban: j('fees') + j('cogs') + j('iklan'),
+  profit: omsetPerkiraan - j('fees') - j('cogs') - j('iklan'),
+  profit_margin: (omsetPerkiraan - j('fees') - j('cogs') - j('iklan')) / omsetPerkiraan * 100,
   meta: { granularity: 'day', asOf: null, startDate: null, endDate: null },
 }
 
