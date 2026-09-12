@@ -1,6 +1,7 @@
 import React from 'react';
 import './Footer.css';
 import logoPengayoman from '../assets/logo_pilihan_fitur/logo_pengayoman_new.png';
+import { navigateTo } from '../utils/navigation';
 
 const Footer = () => {
   return (
@@ -57,8 +58,18 @@ const Footer = () => {
           <div className="footer-col-nav">
             <h4>Kebijakan Kami</h4>
             <ul className="footer-link-list">
-              <li><a href="/terms">Syarat &amp; Ketentuan</a></li>
-              <li><a href="/privacy">Privasi &amp; Keamanan Data</a></li>
+              <li>
+                <a 
+                  href="/terms" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigateTo('/terms');
+                  }}
+                >
+                  Syarat &amp; Ketentuan
+                </a>
+              </li>
+              <li><a href="/privacy" onClick={(e) => { e.preventDefault(); navigateTo('/terms'); }}>Privasi &amp; Keamanan Data</a></li>
             </ul>
 
             {/* Kemenkumham Verified Badge */}

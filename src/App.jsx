@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import OAuthDone from './pages/OAuthDone';
 import ProductDetail from './pages/ProductDetail';
+import TermsConditions from './pages/TermsConditions';
 import { AppProvider } from './context/AppContext';
 
 function InnerApp() {
@@ -21,6 +22,7 @@ function InnerApp() {
   if (route === '/login')               return <Login />;
   if (route.startsWith('/oauth/done'))  return <OAuthDone />;
   if (route.startsWith('/dashboard'))   return <Dashboard />;
+  if (route === '/terms' || route === '/syarat-ketentuan') return <TermsConditions />;
   if (route === '/bitone')              return <ProductDetail appId="bitone" />;
   if (route === '/bitomni')             return <ProductDetail appId="bitomni" />;
   if (route === '/bitfine')             return <ProductDetail appId="bitfine" />;
