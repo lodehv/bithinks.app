@@ -208,12 +208,8 @@ const TermsConditions = () => {
                 </p>
                 <div className="terms-hours-card">
                   <div className="hours-row">
-                    <span className="day-label">Senin s/d Sabtu:</span>
-                    <span className="time-value">08.00 WIB – 02.00 WIB</span>
-                  </div>
-                  <div className="hours-row">
-                    <span className="day-label">Minggu &amp; Libur Nasional:</span>
-                    <span className="time-value">09.00 WIB – 02.00 WIB</span>
+                    <span className="day-label">Dukungan Customer Support &amp; Live Chat:</span>
+                    <span className="time-value">24 Jam / 7 Hari (Nonstop)</span>
                   </div>
                 </div>
               </section>
