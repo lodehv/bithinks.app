@@ -3,26 +3,12 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 import logoPengayoman from '../assets/logo_pilihan_fitur/logo_pengayoman_new.png';
-import { navigateTo } from '../utils/navigation';
-import { ShieldCheck, MapPin, Building2, Clock, Lock, ArrowUpRight, CheckCircle, Sparkles, MessageCircle } from 'lucide-react';
-import './AboutUs.css';
-
-// Product logos
-import bitOneLogo from '../assets/logo_pilihan_fitur/bitone_logo-removebg-preview.png';
 import bitOmniLogo from '../assets/logo_pilihan_fitur/bithinks_omnichannel_logo-removebg-preview.png';
-import bitFineLogo from '../assets/logo_pilihan_fitur/bit_finance_logo-removebg-preview.png';
-import bitPosLogo from '../assets/logo_pilihan_fitur/bithinks_pos_logo_v2-removebg-preview.png';
-import bitTeamLogo from '../assets/logo_pilihan_fitur/bithinks_hrm_logo-removebg-preview.png';
-import bitDevLogo from '../assets/logo_pilihan_fitur/bithinks_dev_logo-removebg-preview.png';
-
-const APPS = [
-  { id: 'bitomni', title: 'Bithinks Omnichannel', logo: bitOmniLogo, color: '#FF6B00', tag: 'BitOmni', desc: 'Sinkronisasi stok real-time & cetak resi pengiriman massal 1-klik dari seluruh toko online.' },
-  { id: 'bitone', title: 'Bithinks One', logo: bitOneLogo, color: '#0066FF', tag: 'BitOne', desc: 'Sistem operasi terpadu untuk mengelola seluruh divisi bisnis dalam 1 dashboard.' },
-  { id: 'bitfine', title: 'Bithinks Finance', logo: bitFineLogo, color: '#3B82F6', tag: 'BitFine', desc: 'Laporan keuangan terintegrasi & rekonsilasi omset dari semua saluran penjualan.' },
-  { id: 'bitpos', title: 'Bithinks POS', logo: bitPosLogo, color: '#EC4899', tag: 'BitPos', desc: 'Manajemen kasir dan penjualan ritel toko fisik offline secara akurat.' },
-  { id: 'bitteam', title: 'Bithinks Team', logo: bitTeamLogo, color: '#10B981', tag: 'BitTeam', desc: 'Manajemen data karyawan, absensi, dan skema penggajian terorganisir.' },
-  { id: 'bitdev', title: 'Bithinks Customize', logo: bitDevLogo, color: '#4B5563', tag: 'BitDev', desc: 'Pengembangan fitur dan perangkat lunak kustom sesuai kebutuhan spesifik bisnis Anda.' },
-];
+import resiSkuMockup from '../assets/logo_pilihan_fitur/resi_sku_mockup.png';
+import trackingAuditMockup from '../assets/logo_pilihan_fitur/tracking_audit_mockup.png';
+import { navigateTo } from '../utils/navigation';
+import { ShieldCheck, MapPin, ArrowUpRight, CheckCircle, RefreshCw, Printer, Layers, Truck, DollarSign, MessageCircle } from 'lucide-react';
+import './AboutUs.css';
 
 const AboutUs = () => {
   useEffect(() => {
@@ -46,11 +32,11 @@ const AboutUs = () => {
               </div>
 
               <h1 className="about-hero-heading">
-                Keandalan Sistem Ritel &amp; Omnichannel. Transparan Tanpa Biaya Tersembunyi.
+                Keandalan Sistem Ritel &amp; Bithinks Omnichannel. Transparan Tanpa Biaya Tersembunyi.
               </h1>
 
               <p className="about-hero-body">
-                Kami membangun Bithinks untuk membantu para pebisnis online dan UMKM di Indonesia mengelola toko dengan efisien — didukung legalitas entitas resmi, transparansi skema biaya, dan komitmen perlindungan data yang kuat.
+                Kami membangun Bithinks Omnichannel untuk membantu para pebisnis online dan UMKM di Indonesia mengelola seluruh toko marketplace dalam satu platform terpusat — didukung legalitas entitas resmi, transparansi skema biaya, dan komitmen perlindungan data yang kuat.
               </p>
 
               <div className="about-hero-actions">
@@ -91,8 +77,8 @@ const AboutUs = () => {
                     <span className="spec-value">Kementerian Hukum &amp; HAM RI</span>
                   </div>
                   <div className="spec-row">
-                    <span className="spec-label">Sektor Usaha:</span>
-                    <span className="spec-value">Pengembangan Perangkat Lunak Ritel &amp; Omnichannel</span>
+                    <span className="spec-label">Sektor Utama Usaha:</span>
+                    <span className="spec-value">Platform Omnichannel &amp; Manajemen Ritel</span>
                   </div>
                   <div className="spec-row">
                     <span className="spec-label">Dukungan CS:</span>
@@ -165,7 +151,7 @@ const AboutUs = () => {
               </p>
 
               <p>
-                Kami tidak mengklaim sebagai platform terbesar atau terhebat. Komitmen kami sederhana dan jelas: menghadirkan sistem omnichannel dan manajemen ritel yang <strong>stabil, mudah dioperasikan, memiliki biaya yang jujur, serta mendampingi bisnis Anda secara berkelanjutan.</strong>
+                Kami tidak mengklaim sebagai platform terbesar atau terhebat. Komitmen kami sederhana dan jelas: menghadirkan sistem omnichannel yang <strong>stabil, mudah dioperasikan, memiliki biaya yang jujur, serta mendampingi bisnis Anda secara berkelanjutan.</strong>
               </p>
 
               <div className="principles-checklist">
@@ -194,47 +180,99 @@ const AboutUs = () => {
             </div>
           </div>
 
-          {/* Product Ecosystem Section */}
-          <div className="ecosystem-section">
-            <div className="ecosystem-intro">
-              <span className="section-kicker">EKOSISTEM BITHINKS</span>
-              <h2>Aplikasi Terintegrasi Sesuai Skala Bisnis Anda</h2>
-              <p>Pilih modul perangkat lunak yang sesuai dengan kebutuhan operasional toko Anda hari ini.</p>
+          {/* Detailed Bithinks Omnichannel Feature Showcase Section */}
+          <div className="omni-deepdive-section">
+            <div className="omni-intro-header">
+              <div className="omni-badge-tag">
+                <img src={bitOmniLogo} alt="Bithinks Omnichannel" className="omni-badge-logo" />
+                <span>SOLUSI UTAMA BITHINKS OMNICHANNEL</span>
+              </div>
+              <h2>Kemampuan Utama Bithinks Omnichannel untuk Bisnis Anda</h2>
+              <p>Satu layar terpusat untuk memproses pesanan, mengelola stok, dan mengawasi pengiriman toko online Anda.</p>
             </div>
 
-            <div className="apps-grid-3">
-              {APPS.map((app) => (
-                <div 
-                  key={app.id} 
-                  className="app-card-item"
-                  onClick={() => navigateTo(`/${app.id}`)}
-                >
-                  <div className="app-card-top">
-                    <div className="app-logo-box">
-                      <img src={app.logo} alt={app.title} className="app-logo-img" />
-                    </div>
-                    <span className="app-badge-tag" style={{ color: app.color, background: `${app.color}15` }}>
-                      {app.tag}
-                    </span>
-                  </div>
-
-                  <h3 className="app-card-title">{app.title}</h3>
-                  <p className="app-card-desc">{app.desc}</p>
-
-                  <div className="app-card-footer">
-                    <span>Pelajari Fitur</span>
-                    <ArrowUpRight size={14} />
-                  </div>
+            {/* Feature 1: Cetak Resi Massal & Sync SKU */}
+            <div className="omni-feature-row">
+              <div className="omni-feature-text">
+                <div className="feature-icon-badge">
+                  <Printer size={24} color="#FF6B00" />
                 </div>
-              ))}
+                <h3>Cetak Resi Massal 1-Klik &amp; Sync SKU Marketplace</h3>
+                <p>
+                  Terima, proses, atur pickup kurir, dan cetak resi pengiriman otomatis &amp; massal dari semua toko dalam satu layar terpusat, serta kelola katalog Master SKU sekali atur ke seluruh toko online.
+                </p>
+                <ul className="omni-feature-list">
+                  <li>Proses ratusan pesanan tanpa perlu login seller center bergantian.</li>
+                  <li>Kelola Master SKU &amp; sync harga/deskripsi sekali atur.</li>
+                  <li>Cetak label pengiriman otomatis presisi dengan ukuran thermal printer.</li>
+                </ul>
+              </div>
+              <div className="omni-feature-mockup">
+                <img src={resiSkuMockup} alt="Cetak Resi Massal & Sync SKU Marketplace" className="mockup-img" />
+              </div>
             </div>
+
+            {/* Feature 2: Tracking Audit & Sinkronisasi Stok */}
+            <div className="omni-feature-row reverse">
+              <div className="omni-feature-text">
+                <div className="feature-icon-badge">
+                  <RefreshCw size={24} color="#10B981" />
+                </div>
+                <h3>Sinkronisasi Stok Real-Time &amp; Tracking Audit Retur</h3>
+                <p>
+                  Setiap kali pesanan baru masuk di salah satu toko (Shopee/Tokopedia/TikTok Shop/Lazada/Blibli), stok barang di toko lain otomatis terpotong secara real-time untuk mencegah <em>overselling</em>.
+                </p>
+                <ul className="omni-feature-list">
+                  <li>Audit retur barang dan pelacakan status kurir ekspedisi transparan.</li>
+                  <li>Peringatan otomatis saat stok di gudang mencapai batas minimum.</li>
+                  <li>Pencatatan riwayat perubahan stok yang tidak dapat dimanipulasi.</li>
+                </ul>
+              </div>
+              <div className="omni-feature-mockup">
+                <img src={trackingAuditMockup} alt="Tracking Audit & Sinkronisasi Stok Realtime" className="mockup-img" />
+              </div>
+            </div>
+
+            {/* Feature Cards Grid (Transparent Pricing & Integration) */}
+            <div className="omni-cards-grid">
+              <div className="omni-spec-card">
+                <div className="card-icon-box">
+                  <DollarSign size={24} color="#059669" />
+                </div>
+                <h4>Top-Up Saldo Transparan Rp 250 / Pesanan</h4>
+                <p>
+                  Perhitungan kuota transparan per pesanan yang berhasil diproses. Saldo kuota tidak memiliki tanggal kadaluarsa dan <strong>tidak pernah hangus</strong>.
+                </p>
+              </div>
+
+              <div className="omni-spec-card">
+                <div className="card-icon-box">
+                  <Layers size={24} color="#2563EB" />
+                </div>
+                <h4>Integrasi Resmi API Marketplace</h4>
+                <p>
+                  Terhubung secara sah melalui API resmi ke Shopee, Tokopedia, TikTok Shop, Lazada, dan Blibli untuk keamanan dan stabilitas pertukaran data.
+                </p>
+              </div>
+
+              <div className="omni-spec-card">
+                <div className="card-icon-box">
+                  <Truck size={24} color="#D97706" />
+                </div>
+                <h4>Dukungan Kurir Logistik Indonesia</h4>
+                <p>
+                  Mendukung pembuatan resi otomatis dan pemanggilan pickup kurir ekspedisi terkemuka di Indonesia (J&amp;T, JNE, SiCepat, Anteraja, Shopee Express, GoSend, GrabExpress).
+                </p>
+              </div>
+            </div>
+
           </div>
 
           {/* Final Call to Action */}
           <div className="about-cta-banner">
             <div className="cta-banner-content">
-              <h2>Mulai Kelola Toko Anda Lebih Efisien Hari Ini</h2>
-              <p>Konsultasikan kebutuhan manajemen omnichannel dan toko ritel Anda secara gratis bersama tim Bithinks.</p>
+              <h2>Siap Mengoptimalkan Toko Online Anda Bersama Bithinks Omnichannel?</h2>
+              <p>Konsultasikan kebutuhan integrasi toko dan manajemen pesanan Anda secara gratis bersama tim teknis kami.</p>
               <div className="cta-action-buttons">
                 <a href="https://wa.me/6285156297948" target="_blank" rel="noopener noreferrer" className="cta-btn-main">
                   Konsultasi Gratis via WhatsApp (0851-5629-7948)

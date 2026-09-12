@@ -1,4 +1,4 @@
-/* AboutUs.css - Bespoke Human-Crafted Modern Design for Bithinks */
+/* AboutUs.css - Bespoke Human-Crafted Modern Design for Bithinks Omnichannel */
 
 .about-page-wrapper {
   min-height: 100vh;
@@ -286,7 +286,7 @@
   grid-template-columns: 1.15fr 0.85fr;
   gap: 56px;
   align-items: center;
-  margin-bottom: 90px;
+  margin-bottom: 80px;
 }
 
 .section-kicker {
@@ -351,60 +351,170 @@
   color: #4f46e5;
 }
 
-/* Ecosystem Section */
-.ecosystem-section {
+/* Bithinks Omnichannel Deep-Dive Feature Showcase */
+.omni-deepdive-section {
   margin-bottom: 90px;
+  padding-top: 40px;
+  border-top: 1px solid #f1f5f9;
 }
 
-.ecosystem-intro {
+.omni-intro-header {
   text-align: center;
-  max-width: 600px;
-  margin: 0 auto 48px;
+  max-width: 700px;
+  margin: 0 auto 56px;
 }
 
-.ecosystem-intro h2 {
-  font-size: 30px;
+.omni-badge-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff7ed;
+  border: 1px solid #ffedd5;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #ea580c;
+  letter-spacing: 0.05em;
+  margin-bottom: 14px;
+}
+
+.omni-badge-logo {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.omni-intro-header h2 {
+  font-size: 32px;
   font-weight: 800;
   color: #0f172a;
-  margin: 8px 0;
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
 }
 
-.ecosystem-intro p {
+.omni-intro-header p {
   font-size: 16px;
   color: #64748b;
+  line-height: 1.6;
 }
 
-.apps-grid-3 {
+/* Feature Row Cards */
+.omni-feature-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  margin-bottom: 48px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  padding: 44px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
 }
 
-.app-card-item {
+.omni-feature-row.reverse {
+  grid-template-columns: 1fr 1fr;
+}
+
+.omni-feature-row.reverse .omni-feature-text {
+  order: 2;
+}
+
+.omni-feature-row.reverse .omni-feature-mockup {
+  order: 1;
+}
+
+.feature-icon-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
   background: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: 16px;
-  padding: 24px;
-  cursor: pointer;
-  transition: all 0.3s ease;
   display: flex;
-  flex-direction: column;
-}
-
-.app-card-item:hover {
-  transform: translateY(-4px);
-  border-color: #cbd5e1;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
-}
-
-.app-card-top {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: center;
   margin-bottom: 18px;
 }
 
-.app-logo-box {
+.omni-feature-text h3 {
+  font-size: 24px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 14px;
+  line-height: 1.3;
+}
+
+.omni-feature-text p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #475569;
+  margin-bottom: 20px;
+}
+
+.omni-feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.omni-feature-list li {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  position: relative;
+  padding-left: 22px;
+}
+
+.omni-feature-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #10b981;
+  font-weight: 800;
+}
+
+.omni-feature-mockup {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 16px 32px -10px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+}
+
+.mockup-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* Feature Spec Cards Grid */
+.omni-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 48px;
+}
+
+.omni-spec-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 28px 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  transition: transform 0.3s ease;
+}
+
+.omni-spec-card:hover {
+  transform: translateY(-4px);
+  border-color: #cbd5e1;
+}
+
+.card-icon-box {
   width: 44px;
   height: 44px;
   border-radius: 10px;
@@ -413,44 +523,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6px;
+  margin-bottom: 16px;
 }
 
-.app-logo-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.app-badge-tag {
-  font-size: 11px;
-  font-weight: 800;
-  padding: 4px 10px;
-  border-radius: 20px;
-}
-
-.app-card-title {
-  font-size: 17px;
+.omni-spec-card h4 {
+  font-size: 16px;
   font-weight: 800;
   color: #0f172a;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  line-height: 1.4;
 }
 
-.app-card-desc {
+.omni-spec-card p {
   font-size: 14px;
   line-height: 1.6;
   color: #64748b;
-  margin-bottom: 20px;
-  flex-grow: 1;
-}
-
-.app-card-footer {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 700;
-  color: #4f46e5;
+  margin: 0;
 }
 
 /* CTA Banner */
@@ -471,7 +559,6 @@
   font-size: 32px;
   font-weight: 800;
   margin-bottom: 12px;
-
 }
 
 .cta-banner-content p {
@@ -520,7 +607,21 @@
     grid-template-columns: 1fr;
   }
 
-  .apps-grid-3 {
+  .omni-feature-row,
+  .omni-feature-row.reverse {
+    grid-template-columns: 1fr;
+    padding: 28px;
+  }
+
+  .omni-feature-row.reverse .omni-feature-text {
+    order: 1;
+  }
+
+  .omni-feature-row.reverse .omni-feature-mockup {
+    order: 2;
+  }
+
+  .omni-cards-grid {
     grid-template-columns: 1fr;
   }
 }
