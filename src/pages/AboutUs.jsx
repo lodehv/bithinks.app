@@ -7,7 +7,7 @@ import bitOmniLogo from '../assets/logo_pilihan_fitur/bithinks_omnichannel_logo-
 import resiSkuMockup from '../assets/logo_pilihan_fitur/resi_sku_mockup.png';
 import trackingAuditMockup from '../assets/logo_pilihan_fitur/tracking_audit_mockup.png';
 import { navigateTo } from '../utils/navigation';
-import { ShieldCheck, MapPin, ArrowUpRight, CheckCircle, RefreshCw, Printer, Layers, Truck, DollarSign, MessageCircle } from 'lucide-react';
+import { ShieldCheck, MapPin, ArrowUpRight, CheckCircle, RefreshCw, Printer, Layers, Truck, DollarSign, MessageCircle, Building2 } from 'lucide-react';
 import './AboutUs.css';
 
 const AboutUs = () => {
@@ -19,24 +19,17 @@ const AboutUs = () => {
     <div className="about-page-wrapper">
       <Navbar />
 
-      {/* Hero Header Area - Clean Editorial Light Theme */}
-      <header className="about-hero-clean">
-        <div className="container">
+      {/* Hero Banner Header matching Jubelio reference design */}
+      <header className="about-hero-banner">
+        <div className="about-hero-container">
           <div className="about-hero-grid">
             
             {/* Left Narrative Column */}
-            <div className="about-hero-left">
-              <div className="company-badge-pill">
-                <span className="dot-active"></span>
-                <span>PT. BITHINKS DIGITAL TEKNOLOGI</span>
-              </div>
-
-              <h1 className="about-hero-heading">
-                Keandalan Sistem Ritel &amp; Bithinks Omnichannel. Transparan Tanpa Biaya Tersembunyi.
-              </h1>
-
-              <p className="about-hero-body">
-                Kami membangun Bithinks Omnichannel untuk membantu para pebisnis online dan UMKM di Indonesia mengelola seluruh toko marketplace dalam satu platform terpusat — didukung legalitas entitas resmi, transparansi skema biaya, dan komitmen perlindungan data yang kuat.
+            <div className="about-hero-text">
+              <span className="about-pretitle">PT. BITHINKS DIGITAL TEKNOLOGI</span>
+              <h1 className="about-main-title">TENTANG BITHINKS OMNICHANNEL</h1>
+              <p className="about-hero-subtitle">
+                Sistem manajemen ritel &amp; platform omnichannel terpercaya di Indonesia — dikembangkan dengan transparansi skema biaya, keandalan operasional, dan perlindungan data yang kuat.
               </p>
 
               <div className="about-hero-actions">
@@ -44,59 +37,33 @@ const AboutUs = () => {
                   <MessageCircle size={18} /> Hubungi Tim Bithinks
                 </a>
                 <button onClick={() => navigateTo('/terms')} className="btn-terms-link">
-                  Syarat &amp; Ketentuan Respon <ArrowUpRight size={16} />
+                  Syarat &amp; Ketentuan <ArrowUpRight size={16} />
                 </button>
               </div>
             </div>
 
-            {/* Right Official Verification Card */}
-            <div className="about-hero-right">
-              <div className="official-legal-card">
-                
-                {/* Header Tag */}
-                <div className="legal-card-header">
-                  <div className="kemenkumham-mini-logo">
-                    <img src={logoPengayoman} alt="Kemenkumham RI" className="mini-logo-img" />
-                  </div>
-                  <div>
-                    <span className="legal-tag-badge">TERDAFTAR &amp; TERVERIFIKASI</span>
-                    <h4 className="legal-entity-name">PT. BITHINKS DIGITAL TEKNOLOGI</h4>
-                  </div>
+            {/* Right 3D Paper Stack Graphic Header Illustration */}
+            <div className="about-hero-illustration">
+              <div className="about-3d-paper-stack">
+                <div className="about-paper paper-1">
+                  <div className="paper-line long"></div>
+                  <div className="paper-line medium"></div>
+                  <div className="paper-line short"></div>
+                  <div className="paper-line long"></div>
                 </div>
-
-                <div className="legal-divider"></div>
-
-                {/* Legal Meta Specs */}
-                <div className="legal-specs-list">
-                  <div className="spec-row">
-                    <span className="spec-label">Bentuk Badan Hukum:</span>
-                    <span className="spec-value">Perseroan Terbatas (PT)</span>
-                  </div>
-                  <div className="spec-row">
-                    <span className="spec-label">Pengesahan Pemerintah:</span>
-                    <span className="spec-value">Kementerian Hukum &amp; HAM RI</span>
-                  </div>
-                  <div className="spec-row">
-                    <span className="spec-label">Sektor Utama Usaha:</span>
-                    <span className="spec-value">Platform Omnichannel &amp; Manajemen Ritel</span>
-                  </div>
-                  <div className="spec-row">
-                    <span className="spec-label">Dukungan CS:</span>
-                    <span className="spec-value highlight-green">24 Jam / 7 Hari Nonstop</span>
-                  </div>
+                <div className="about-paper paper-2">
+                  <div className="paper-line long"></div>
+                  <div className="paper-line medium"></div>
+                  <div className="paper-line short"></div>
                 </div>
-
-                {/* Physical Location Box */}
-                <div className="office-location-card">
-                  <MapPin size={18} color="#EF4444" style={{ flexShrink: 0, marginTop: '2px' }} />
-                  <div>
-                    <span className="location-city-tag">Kantor Operasional Solo:</span>
-                    <p className="location-address-text">
-                      JL Pleret, Desa/Kelurahan Malangjiwan, Kec. Colomadu, Kab. Karanganyar, Jawa Tengah, 57177
-                    </p>
+                <div className="about-paper paper-3">
+                  <div className="paper-icon-badge">
+                    <img src={logoPengayoman} alt="Kemenkumham RI" className="paper-gov-img" />
                   </div>
+                  <div className="paper-line long"></div>
+                  <div className="paper-line short"></div>
+                  <div className="paper-status-tag">TERDAFTAR RESMI KEMENKUMHAM</div>
                 </div>
-
               </div>
             </div>
 
@@ -171,11 +138,34 @@ const AboutUs = () => {
             </div>
 
             <div className="story-highlight-box">
-              <div className="quote-box">
-                <p className="quote-text">
-                  "Kepercayaan dari para pengusaha dan seller tidak dibangun dengan klaim yang muluk-muluk, melainkan dari keandalan sistem harian dan pelayanan yang selalu ada saat dibutuhkan."
-                </p>
-                <span className="quote-author">— PT. Bithinks Digital Teknologi</span>
+              <div className="legal-verification-card-box">
+                <div className="card-gov-badge-header">
+                  <div className="gov-logo-frame">
+                    <img src={logoPengayoman} alt="Kemenkumham RI" className="gov-logo-img" />
+                  </div>
+                  <div>
+                    <span className="gov-status-tag">VERIFIKASI RESMI KEMENKUMHAM RI</span>
+                    <h3 className="gov-company-title">PT. BITHINKS DIGITAL TEKNOLOGI</h3>
+                  </div>
+                </div>
+
+                <div className="card-specs-list">
+                  <div className="spec-row">
+                    <span className="spec-label">Bentuk Usaha:</span>
+                    <span className="spec-value">Perseroan Terbatas (PT)</span>
+                  </div>
+                  <div className="spec-row">
+                    <span className="spec-label">Kantor Operasional:</span>
+                    <span className="spec-value">Solo, Jawa Tengah</span>
+                  </div>
+                </div>
+
+                <div className="card-office-address">
+                  <MapPin size={16} color="#EF4444" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <p>
+                    JL Pleret, Desa/Kelurahan Malangjiwan, Kec. Colomadu, Kab. Karanganyar, Jawa Tengah, 57177
+                  </p>
+                </div>
               </div>
             </div>
           </div>

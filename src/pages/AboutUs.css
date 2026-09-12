@@ -1,4 +1,4 @@
-/* AboutUs.css - Bespoke Human-Crafted Modern Design for Bithinks Omnichannel */
+/* AboutUs.css - Jubelio Reference Style Hero Header for Bithinks */
 
 .about-page-wrapper {
   min-height: 100vh;
@@ -7,58 +7,53 @@
   color: #0f172a;
 }
 
-/* Hero Header Area */
-.about-hero-clean {
-  padding: 110px 0 70px;
-  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
-  border-bottom: 1px solid #f1f5f9;
+/* Hero Banner Header matching Jubelio reference design */
+.about-hero-banner {
+  background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 45%, #f0fdf4 100%);
+  padding: 100px 0 70px;
+  border-bottom: 1px solid #e2e8f0;
+  position: relative;
+  overflow: hidden;
+}
+
+.about-hero-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
 }
 
 .about-hero-grid {
   display: grid;
-  grid-template-columns: 1.25fr 0.95fr;
-  gap: 56px;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 48px;
   align-items: center;
 }
 
 /* Left Narrative Column */
-.company-badge-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
+.about-pretitle {
+  display: inline-block;
+  font-size: 13px;
   font-weight: 800;
   color: #4f46e5;
-  background: #e0e7ff;
-  border: 1px solid #c7d2fe;
-  padding: 6px 14px;
-  border-radius: 20px;
-  letter-spacing: 0.06em;
-  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
 }
 
-.dot-active {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #10b981;
-  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
-}
-
-.about-hero-heading {
+.about-main-title {
   font-size: 40px;
   font-weight: 800;
   color: #0f172a;
-  line-height: 1.25;
   letter-spacing: -0.02em;
-  margin-bottom: 20px;
+  line-height: 1.2;
+  margin-bottom: 16px;
 }
 
-.about-hero-body {
+.about-hero-subtitle {
   font-size: 17px;
-  line-height: 1.7;
+  line-height: 1.6;
   color: #475569;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
   max-width: 580px;
 }
 
@@ -94,7 +89,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #f1f5f9;
+  background: #ffffff;
   color: #334155;
   font-size: 14px;
   font-weight: 600;
@@ -106,123 +101,116 @@
 }
 
 .btn-terms-link:hover {
-  background: #e2e8f0;
+  background: #f8fafc;
   color: #0f172a;
 }
 
-/* Right Official Verification Card */
-.official-legal-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 20px;
-  padding: 28px;
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.07);
-}
-
-.legal-card-header {
+/* 3D Paper Stack Graphic Header Illustration */
+.about-hero-illustration {
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 16px;
+  position: relative;
+  height: 260px;
 }
 
-.kemenkumham-mini-logo {
-  width: 52px;
-  height: 52px;
+.about-3d-paper-stack {
+  position: relative;
+  width: 220px;
+  height: 240px;
+}
+
+.about-paper {
+  position: absolute;
+  width: 170px;
+  height: 210px;
   border-radius: 12px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  padding: 24px 20px;
+  box-shadow: 0 20px 30px -10px rgba(79, 70, 229, 0.18), 0 8px 16px -6px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: all 0.4s ease;
+}
+
+.about-paper.paper-1 {
+  background: #e0e7ff;
+  left: 0;
+  top: 0;
+  transform: rotate(-10deg);
+  opacity: 0.6;
+  border: 1px solid #c7d2fe;
+}
+
+.about-paper.paper-2 {
+  background: #ede9fe;
+  left: 20px;
+  top: 10px;
+  transform: rotate(-4deg);
+  opacity: 0.85;
+  border: 1px solid #ddd6fe;
+}
+
+.about-paper.paper-3 {
+  background: #ffffff;
+  left: 40px;
+  top: 20px;
+  transform: rotate(6deg);
+  border: 2px solid #818cf8;
+}
+
+.about-3d-paper-stack:hover .paper-3 {
+  transform: rotate(2deg) translateY(-8px);
+}
+
+.paper-icon-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #e0e7ff;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 4px;
-  flex-shrink: 0;
+  margin-bottom: 2px;
 }
 
-.mini-logo-img {
+.paper-gov-img {
   width: 100%;
   height: 100%;
   object-fit: contain;
 }
 
-.legal-tag-badge {
-  display: inline-block;
-  font-size: 10px;
+.paper-line {
+  height: 8px;
+  border-radius: 4px;
+  background: #e2e8f0;
+}
+
+.paper-line.long {
+  width: 100%;
+}
+
+.paper-line.medium {
+  width: 70%;
+  background: #cbd5e1;
+}
+
+.paper-line.short {
+  width: 45%;
+  background: #818cf8;
+}
+
+.paper-status-tag {
+  font-size: 9px;
   font-weight: 800;
   color: #15803d;
   background: #dcfce7;
-  padding: 2px 8px;
+  padding: 4px 6px;
   border-radius: 4px;
-  letter-spacing: 0.06em;
-  margin-bottom: 4px;
-}
-
-.legal-entity-name {
-  font-size: 15px;
-  font-weight: 800;
-  color: #0f172a;
-  margin: 0;
-}
-
-.legal-divider {
-  height: 1px;
-  background: #f1f5f9;
-  margin: 20px 0;
-}
-
-.legal-specs-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.spec-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 13px;
-}
-
-.spec-label {
-  color: #64748b;
-  font-weight: 500;
-}
-
-.spec-value {
-  color: #1e293b;
-  font-weight: 700;
-}
-
-.spec-value.highlight-green {
-  color: #166534;
-  background: #f0fdf4;
-  padding: 2px 8px;
-  border-radius: 4px;
-  border: 1px solid #bbf7d0;
-}
-
-.office-location-card {
-  display: flex;
-  gap: 12px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 14px 16px;
-}
-
-.location-city-tag {
-  display: block;
-  font-size: 12px;
-  font-weight: 800;
-  color: #0f172a;
-  margin-bottom: 2px;
-}
-
-.location-address-text {
-  font-size: 12px;
-  color: #475569;
-  line-height: 1.5;
-  margin: 0;
+  margin-top: auto;
+  text-align: center;
+  letter-spacing: 0.04em;
 }
 
 /* 4 Pillars Trust Bar */
@@ -331,24 +319,86 @@
 }
 
 .story-highlight-box {
-  background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
-  border: 1px solid #c7d2fe;
-  border-radius: 20px;
-  padding: 40px 32px;
+  background: #ffffff;
 }
 
-.quote-text {
-  font-size: 17px;
-  font-style: italic;
-  line-height: 1.7;
-  color: #3730a3;
+.legal-verification-card-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.06);
+}
+
+.card-gov-badge-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
   margin-bottom: 20px;
 }
 
-.quote-author {
-  font-size: 13px;
+.gov-logo-frame {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  flex-shrink: 0;
+}
+
+.gov-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.gov-status-tag {
+  display: inline-block;
+  font-size: 10px;
   font-weight: 800;
-  color: #4f46e5;
+  color: #15803d;
+  background: #dcfce7;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.gov-company-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.card-specs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 0;
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 16px;
+}
+
+.card-office-address {
+  display: flex;
+  gap: 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 12px;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.card-office-address p {
+  margin: 0;
 }
 
 /* Bithinks Omnichannel Deep-Dive Feature Showcase */
@@ -593,7 +643,17 @@
 @media (max-width: 992px) {
   .about-hero-grid {
     grid-template-columns: 1fr;
+    text-align: center;
     gap: 40px;
+  }
+
+  .about-hero-subtitle {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .about-hero-actions {
+    justify-content: center;
   }
 
   .pillars-grid-4 {
