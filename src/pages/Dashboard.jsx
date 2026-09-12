@@ -9,10 +9,9 @@ import WmsTab from "./dashboard/omni/wms/WmsTab";
 import PaymentPage from "./dashboard/PaymentPage";
 import WalletAccessDenied from "./dashboard/WalletAccessDenied";
 import AdminPanel from "./dashboard/AdminPanel";
-import { ADMIN_EMAIL } from "./dashboard/DashboardLayout";
 import ModulePlaceholder from "./dashboard/ModulePlaceholder";
 import MarketingDashboard from "./dashboard/MarketingDashboard";
-import { subscriptionApi, walletApi } from "../utils/omniApi";
+import { subscriptionApi, walletApi, adminApi } from "../utils/omniApi";
 import { PAYMENT_REQUIRED_EVENT } from "../utils/paymentRequired";
 import { Settings, Info } from "lucide-react";
 
@@ -95,7 +94,7 @@ function BillingBanner({ sub, onPay }) {
 
 export default function Dashboard() {
   const { isAuthenticated, user } = useAppContext();
-  const isAdmin = (user?.email ?? "").toLowerCase() === ADMIN_EMAIL;
+  const [isPlatformAdmin, setIsPlatformAdmin] = useState(false);
   const canViewWallet = ["owner", "admin"].includes(String(user?.role ?? "").toLowerCase());
   const [activeMenu, setActiveMenu] = useState(menuFromLocation);
   const activeMenuRef = useRef(activeMenu);
@@ -164,7 +163,7 @@ export default function Dashboard() {
     return walletApi.get()
       .then((nextWallet) => {
         if (requestId === walletRequestRef.current) {
-          setWalletHeader({ status: "ready", balance: nextWallet.balance });
+          setWalletHeader({ status: "ready", balance: nextWallet.balance, lowBalanceThreshold: nextWallet.lowBalanceThreshold });
         }
         return nextWallet;
       })
@@ -181,7 +180,7 @@ export default function Dashboard() {
     refreshSub();
     if (nextWallet?.balance !== undefined) {
       walletRequestRef.current += 1;
-      setWalletHeader({ status: "ready", balance: nextWallet.balance });
+      setWalletHeader({ status: "ready", balance: nextWallet.balance, lowBalanceThreshold: nextWallet.lowBalanceThreshold });
     } else {
       refreshWalletHeader();
     }
@@ -196,6 +195,7 @@ export default function Dashboard() {
   }, [navigateMenu, refreshSub]);
   useEffect(() => {
     if (!isAuthenticated) return undefined;
+    adminApi.session().then(() => setIsPlatformAdmin(true)).catch(() => setIsPlatformAdmin(false));
     refreshSub();
     window.addEventListener("focus", refreshSub);
     const timer = window.setInterval(() => {
@@ -268,6 +268,9 @@ export default function Dashboard() {
       pageTitle={title}
       walletState={canViewWallet ? walletHeader : null}
       onWalletClick={goToPayment}
+      isPlatformAdmin={isPlatformAdmin}
+      onOpenTopup={goToPayment}
+      onOpenPayment={goToPayment}
     >
       {activeMenu === "payment" ? (
         canViewWallet
@@ -298,7 +301,7 @@ export default function Dashboard() {
           {activeMenu === "kelola-produk"  && <div className="omni"><ProductsTab locked={locked} onRequirePayment={goToPayment} /></div>}
           {activeMenu === "marketing"      && <MarketingDashboard />}
           {activeMenu === "settings"       && <ModulePlaceholder name="Pengaturan" icon={Settings} />}
-          {activeMenu === "admin"          && isAdmin && <AdminPanel />}
+          {activeMenu === "admin"          && isPlatformAdmin && <AdminPanel />}
         </>
       )}
     </DashboardLayout>

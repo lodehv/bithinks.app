@@ -5,10 +5,7 @@ import {
   Store, ClipboardList, Menu, X, LogOut, Warehouse, Boxes, LineChart,
   ChevronLeft, ChevronRight, LayoutDashboard, Lock, Settings, ShieldCheck, Wallet
 } from "lucide-react";
-
-// Email admin platform — hanya user ini yang melihat menu Admin.
-// (Gerbang sebenarnya ditegakkan di backend; ini hanya untuk UI.)
-export const ADMIN_EMAIL = "demo@bithinks.id";
+import NotificationBell from "./NotificationBell";
 
 const ADMIN_SECTION = {
   label: "Admin",
@@ -60,16 +57,14 @@ function isModuleActive(moduleKey, tenant) {
   return mods.includes(moduleKey.toLowerCase());
 }
 
-function Sidebar({ activeMenu, onMenuClick, collapsed, onToggleCollapse, mobileOpen, onCloseMobile }) {
+function Sidebar({ activeMenu, onMenuClick, collapsed, onToggleCollapse, mobileOpen, onCloseMobile, isPlatformAdmin }) {
   const { user, tenant, logout } = useAppContext();
 
   const initials = user?.name
     ? user.name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase()
     : "U";
 
-  // Sisipkan menu Admin hanya untuk email admin platform.
-  const isAdmin = (user?.email ?? "").toLowerCase() === ADMIN_EMAIL;
-  const navSections = isAdmin ? [...NAV_SECTIONS, ADMIN_SECTION] : NAV_SECTIONS;
+  const navSections = isPlatformAdmin ? [...NAV_SECTIONS, ADMIN_SECTION] : NAV_SECTIONS;
 
   return (
     <>
@@ -149,7 +144,8 @@ function wholeRupiah(value) {
 function WalletIndicator({ walletState, onClick }) {
   if (!walletState) return null;
   const amount = walletState.status === "ready" ? wholeRupiah(walletState.balance) : null;
-  const low = amount !== null && amount < 250n;
+  const threshold = wholeRupiah(walletState.lowBalanceThreshold ?? "25000") ?? 25000n;
+  const low = amount !== null && amount <= threshold;
   const unavailable = walletState.status === "error" || (walletState.status === "ready" && amount === null);
   const spokenValue = walletState.status === "loading"
     ? "sedang dimuat"
@@ -180,7 +176,7 @@ function WalletIndicator({ walletState, onClick }) {
   );
 }
 
-export default function DashboardLayout({ activeMenu, onMenuClick, children, pageTitle, walletState, onWalletClick }) {
+export default function DashboardLayout({ activeMenu, onMenuClick, children, pageTitle, walletState, onWalletClick, onOpenTopup, onOpenPayment, isPlatformAdmin }) {
   const { tenant } = useAppContext();
   const [collapsed, setCollapsed]   = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -194,6 +190,7 @@ export default function DashboardLayout({ activeMenu, onMenuClick, children, pag
         onToggleCollapse={() => setCollapsed(c => !c)}
         mobileOpen={mobileOpen}
         onCloseMobile={() => setMobileOpen(false)}
+        isPlatformAdmin={isPlatformAdmin}
       />
 
       <div className="dashboard-main" id="dashboard-main">
@@ -210,6 +207,7 @@ export default function DashboardLayout({ activeMenu, onMenuClick, children, pag
           </button>
           <span className="topbar-title">{pageTitle}</span>
           <WalletIndicator walletState={walletState} onClick={onWalletClick} />
+          <NotificationBell onOpenTopup={onOpenTopup} onOpenPayment={onOpenPayment} />
           {tenant?.name && (
             <span className="topbar-tenant-badge">{tenant.name}</span>
           )}

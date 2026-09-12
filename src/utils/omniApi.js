@@ -176,13 +176,27 @@ export const walletApi = {
   completeMockTopup: (paymentId) => api.post('/api/wallet/topup/mock/complete', { paymentId }).then(unwrap),
 }
 
+export const notificationApi = {
+  list: (params = {}) => api.get('/api/notifications', { params }).then(unwrap),
+  markRead: (id) => api.patch(`/api/notifications/${id}`).then(unwrap),
+  markAllRead: () => api.post('/api/notifications/read-all').then(unwrap),
+}
+
 // Panel admin platform (akses khusus demo@bithinks.id — gerbang di backend).
 export const adminApi = {
+  session: () => api.get('/api/admin/session').then(unwrap),
   subscribers: () => api.get('/api/admin/subscribers').then(unwrap),
   leads:       () => api.get('/api/admin/leads').then(unwrap),
+  payments: (params = {}) => api.get('/api/admin/payments', { params }).then(unwrap),
+  payment: (id) => api.get(`/api/admin/payments/${id}`).then(unwrap),
+  reviewPayment: (id, payload, key) => api.post(`/api/admin/payments/${id}/review`, payload, { headers: { 'Idempotency-Key': key } }).then(unwrap),
+  wallets: (params = {}) => api.get('/api/admin/wallets', { params }).then(unwrap),
+  ledger: (params = {}) => api.get('/api/admin/wallet-ledger', { params }).then(unwrap),
+  audits: (params = {}) => api.get('/api/admin/financial-audit', { params }).then(unwrap),
+  changeTenantStatus: (id, payload, key) => api.post(`/api/admin/tenants/${id}/status`, payload, { headers: { 'Idempotency-Key': key } }).then(unwrap),
   walletRecovery: () => api.get('/api/admin/wallet-recovery').then(unwrap),
-  retryCredit: (paymentId, reason) => api.post(`/api/admin/wallet-recovery/${paymentId}/retry-credit`, { reason }).then(unwrap),
-  retryRefund: (refundId, reason) => api.post(`/api/admin/wallet-recovery/${refundId}/retry-refund`, { reason }).then(unwrap),
+  retryCredit: (paymentId, reason, key = crypto.randomUUID()) => api.post(`/api/admin/wallet-recovery/${paymentId}/retry-credit`, { reason }, { headers: { 'Idempotency-Key': key } }).then(unwrap),
+  retryRefund: (refundId, reason, key = crypto.randomUUID()) => api.post(`/api/admin/wallet-recovery/${refundId}/retry-refund`, { reason }, { headers: { 'Idempotency-Key': key } }).then(unwrap),
 }
 
 /** True bila error berasal dari gate langganan (trial/langganan habis). */

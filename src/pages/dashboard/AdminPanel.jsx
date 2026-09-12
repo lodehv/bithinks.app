@@ -3,6 +3,7 @@ import { Users, Search, MessageCircle, RefreshCw, ShieldCheck } from "lucide-rea
 import { adminApi } from "../../utils/omniApi";
 import AdminLeads from "./AdminLeads";
 import RecoveryQueue from "./RecoveryQueue";
+import AdminFinance from "./AdminFinance";
 import "./AdminPanel.css";
 
 // wa.me link dari nomor Indonesia (0812… → 62812…).
@@ -26,12 +27,13 @@ const FILTERS = [
 ];
 
 export default function AdminPanel() {
-  const [tab, setTab]     = useState("subscribers"); // 'subscribers' | 'leads' | 'recovery'
+  const [tab, setTab]     = useState("subscribers");
   const [data, setData]   = useState(null);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
   const [error, setError] = useState("");
   const [busy, setBusy]   = useState(false);
+  const [statusBusy, setStatusBusy] = useState("");
 
   const load = useCallback(() => {
     setBusy(true); setError("");
@@ -60,6 +62,15 @@ export default function AdminPanel() {
   }, [data, query, filter]);
 
   const s = data?.summary;
+  const changeStatus = async (row) => {
+    const action = row.status === "suspended" ? "resume" : "suspend";
+    const reason = window.prompt(`Alasan ${action === "suspend" ? "penangguhan" : "pengaktifan kembali"} (wajib)`);
+    if (!reason?.trim()) return;
+    setStatusBusy(row.tenantId); setError("");
+    try { await adminApi.changeTenantStatus(row.tenantId, { action, reason }, crypto.randomUUID()); await load(); }
+    catch { setError("Status tenant belum dapat diubah."); }
+    finally { setStatusBusy(""); }
+  };
 
   return (
     <div className="adm">
@@ -78,11 +89,17 @@ export default function AdminPanel() {
       <div className="adm-tabs">
         <button className={tab === "subscribers" ? "active" : ""} onClick={() => setTab("subscribers")}>Pelanggan</button>
         <button className={tab === "leads" ? "active" : ""} onClick={() => setTab("leads")}>Registrasi (Lead)</button>
+        <button className={tab === "payments" ? "active" : ""} onClick={() => setTab("payments")}>Pembayaran</button>
+        <button className={tab === "wallets" ? "active" : ""} onClick={() => setTab("wallets")}>Wallet</button>
         <button className={tab === "recovery" ? "active" : ""} onClick={() => setTab("recovery")}>Pemulihan pembayaran</button>
+        <button className={tab === "audit" ? "active" : ""} onClick={() => setTab("audit")}>Audit</button>
       </div>
 
       {tab === "leads" && <AdminLeads />}
+      {tab === "payments" && <AdminFinance section="payments" />}
+      {tab === "wallets" && <AdminFinance section="wallets" />}
       {tab === "recovery" && <RecoveryQueue />}
+      {tab === "audit" && <AdminFinance section="audit" />}
 
       {tab === "subscribers" && <>
       {s && (
@@ -133,6 +150,7 @@ export default function AdminPanel() {
                       <MessageCircle size={13} /> Follow-up
                     </a>
                   ) : "—"}
+                  <button className="adm-status-action" disabled={statusBusy === r.tenantId} onClick={() => void changeStatus(r)}>{statusBusy === r.tenantId ? "…" : r.status === "suspended" ? "Resume" : "Suspend"}</button>
                 </td>
               </tr>
             ))}
