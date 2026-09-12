@@ -94,10 +94,10 @@ const productsData = {
     logo: bitOmniLogo,
     mockupType: "omni",
     stats: [
-      { value: "Real-Time", label: "Laporan Omzet & Net Profit" },
-      { value: "100% Objektif", label: "Tracking Status & Audit Retur" },
-      { value: "0 Selisih", label: "Stok Fisik vs Siap Jual WMS" },
-      { value: "−80%", label: "Waktu Kelola Pesanan & Stok" }
+      { value: "Auto-Sync", label: "Stok & Pesanan Real-Time" },
+      { value: "Akurat", label: "Rekonsiliasi Omset, COGS & Net Profit" },
+      { value: "Bebas Kebocoran", label: "Kontrol Stok Multi-Toko" },
+      { value: "Efisiensi 1-Klik", label: "Cetak Resi Massal Pengiriman" }
     ],
     features: [
       {

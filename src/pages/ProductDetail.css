@@ -208,10 +208,11 @@
 
 .p-detail-stat-value {
   font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
-  font-size: 1.75rem;
+  font-size: 1.35rem;
   font-weight: 800;
   margin-bottom: 4px;
-  letter-spacing: -0.4px;
+  letter-spacing: -0.3px;
+  line-height: 1.2;
 }
 
 .p-detail-stat-label {
