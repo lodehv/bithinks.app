@@ -27,9 +27,11 @@ const PrivacyPolicy = () => {
         <div className="privacy-hero-container">
           <div className="privacy-hero-grid">
             <div className="privacy-hero-text">
-              <button className="page-back-breadcrumb" onClick={() => navigateTo('/bitomni')}>
-                <ArrowLeft size={14} /> <span>Kembali ke Bithinks Omnichannel</span>
-              </button>
+              <div className="hero-breadcrumb-wrapper">
+                <button className="page-back-breadcrumb" onClick={() => navigateTo('/bitomni')}>
+                  <ArrowLeft size={14} /> <span>Kembali ke Bithinks Omnichannel</span>
+                </button>
+              </div>
               <span className="privacy-pretitle">KEBIJAKAN PRIVASI BITHINKS OMNICHANNEL</span>
               <h1 className="privacy-main-title">KEBIJAKAN PRIVASI BITHINKS</h1>
               <p className="privacy-hero-subtitle">

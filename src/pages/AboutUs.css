@@ -30,6 +30,12 @@
 }
 
 /* Left Narrative Column */
+.about-hero-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .about-pretitle {
   display: inline-block;
   font-size: 13px;

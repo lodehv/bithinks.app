@@ -29,6 +29,12 @@
   align-items: center;
 }
 
+.terms-hero-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .terms-pretitle {
   display: inline-block;
   font-size: 13px;

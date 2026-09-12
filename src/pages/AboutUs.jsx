@@ -26,9 +26,11 @@ const AboutUs = () => {
             
             {/* Left Narrative Column */}
             <div className="about-hero-text">
-              <button className="page-back-breadcrumb" onClick={() => navigateTo('/bitomni')}>
-                <ArrowLeft size={14} /> <span>Kembali ke Bithinks Omnichannel</span>
-              </button>
+              <div className="hero-breadcrumb-wrapper">
+                <button className="page-back-breadcrumb" onClick={() => navigateTo('/bitomni')}>
+                  <ArrowLeft size={14} /> <span>Kembali ke Bithinks Omnichannel</span>
+                </button>
+              </div>
               <span className="about-pretitle">PT. BITHINKS DIGITAL TEKNOLOGI</span>
               <h1 className="about-main-title">TENTANG BITHINKS OMNICHANNEL</h1>
               <p className="about-hero-subtitle">

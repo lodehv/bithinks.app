@@ -29,6 +29,12 @@
   align-items: center;
 }
 
+.privacy-hero-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .privacy-pretitle {
   display: inline-block;
   font-size: 13px;

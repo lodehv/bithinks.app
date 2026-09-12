@@ -27,9 +27,11 @@ const TermsConditions = () => {
         <div className="terms-hero-container">
           <div className="terms-hero-grid">
             <div className="terms-hero-text">
-              <button className="page-back-breadcrumb" onClick={() => navigateTo('/bitomni')}>
-                <ArrowLeft size={14} /> <span>Kembali ke Bithinks Omnichannel</span>
-              </button>
+              <div className="hero-breadcrumb-wrapper">
+                <button className="page-back-breadcrumb" onClick={() => navigateTo('/bitomni')}>
+                  <ArrowLeft size={14} /> <span>Kembali ke Bithinks Omnichannel</span>
+                </button>
+              </div>
               <span className="terms-pretitle">SYARAT &amp; KETENTUAN BITHINKS OMNICHANNEL</span>
               <h1 className="terms-main-title">SYARAT &amp; KETENTUAN BITHINKS</h1>
               <p className="terms-hero-subtitle">
