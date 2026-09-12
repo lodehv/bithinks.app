@@ -34,13 +34,6 @@ const Footer = () => {
               <p className="info-section-text">Email : bithinksdigital@gmail.com</p>
             </div>
 
-            <div className="footer-info-section">
-              <h4 className="info-section-header">
-                Direktorat Jendral Perlindungan Konsumen dan Tertib Niaga Kementerian Perdagangan RI
-              </h4>
-              <p className="info-section-text">Whatsapp: +62 853 1111 1010</p>
-            </div>
-
             {/* Social Media Icons */}
             <div className="footer-social-links">
               <a href="https://www.instagram.com/bithinks.id/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
