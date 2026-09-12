@@ -4,8 +4,25 @@ import Footer from '../components/Footer';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 import logoPengayoman from '../assets/logo_pilihan_fitur/logo_pengayoman_new.png';
 import { navigateTo } from '../utils/navigation';
-import { ShieldCheck, Target, HeartHandshake, MapPin, Building2, CheckCircle2, Clock, Lock, Sparkles, MessageSquare, Scale } from 'lucide-react';
+import { ShieldCheck, MapPin, Building2, Clock, Lock, ArrowUpRight, CheckCircle, Sparkles, MessageCircle } from 'lucide-react';
 import './AboutUs.css';
+
+// Product logos
+import bitOneLogo from '../assets/logo_pilihan_fitur/bitone_logo-removebg-preview.png';
+import bitOmniLogo from '../assets/logo_pilihan_fitur/bithinks_omnichannel_logo-removebg-preview.png';
+import bitFineLogo from '../assets/logo_pilihan_fitur/bit_finance_logo-removebg-preview.png';
+import bitPosLogo from '../assets/logo_pilihan_fitur/bithinks_pos_logo_v2-removebg-preview.png';
+import bitTeamLogo from '../assets/logo_pilihan_fitur/bithinks_hrm_logo-removebg-preview.png';
+import bitDevLogo from '../assets/logo_pilihan_fitur/bithinks_dev_logo-removebg-preview.png';
+
+const APPS = [
+  { id: 'bitomni', title: 'Bithinks Omnichannel', logo: bitOmniLogo, color: '#FF6B00', tag: 'BitOmni', desc: 'Sinkronisasi stok real-time & cetak resi pengiriman massal 1-klik dari seluruh toko online.' },
+  { id: 'bitone', title: 'Bithinks One', logo: bitOneLogo, color: '#0066FF', tag: 'BitOne', desc: 'Sistem operasi terpadu untuk mengelola seluruh divisi bisnis dalam 1 dashboard.' },
+  { id: 'bitfine', title: 'Bithinks Finance', logo: bitFineLogo, color: '#3B82F6', tag: 'BitFine', desc: 'Laporan keuangan terintegrasi & rekonsilasi omset dari semua saluran penjualan.' },
+  { id: 'bitpos', title: 'Bithinks POS', logo: bitPosLogo, color: '#EC4899', tag: 'BitPos', desc: 'Manajemen kasir dan penjualan ritel toko fisik offline secara akurat.' },
+  { id: 'bitteam', title: 'Bithinks Team', logo: bitTeamLogo, color: '#10B981', tag: 'BitTeam', desc: 'Manajemen data karyawan, absensi, dan skema penggajian terorganisir.' },
+  { id: 'bitdev', title: 'Bithinks Customize', logo: bitDevLogo, color: '#4B5563', tag: 'BitDev', desc: 'Pengembangan fitur dan perangkat lunak kustom sesuai kebutuhan spesifik bisnis Anda.' },
+];
 
 const AboutUs = () => {
   useEffect(() => {
@@ -16,209 +33,215 @@ const AboutUs = () => {
     <div className="about-page-wrapper">
       <Navbar />
 
-      {/* Hero Header Section */}
-      <header className="about-hero-section">
+      {/* Hero Header Area - Clean Editorial Light Theme */}
+      <header className="about-hero-clean">
         <div className="container">
-          <div className="about-hero-content">
-            <span className="about-pretitle">TENTANG PT. BITHINKS DIGITAL TEKNOLOGI</span>
-            <h1 className="about-main-title">
-              Teknologi Omnichannel &amp; Manajemen Ritel yang Transparan, Handal, dan Membumi.
-            </h1>
-            <p className="about-hero-subtitle">
-              Kami membangun Bithinks untuk mempermudah operasional bisnis ritel dan e-commerce di Indonesia — tanpa janji manis yang berlebihan, tanpa biaya tersembunyi, dan mengutamakan kepercayaan jangka panjang.
-            </p>
+          <div className="about-hero-grid">
+            
+            {/* Left Narrative Column */}
+            <div className="about-hero-left">
+              <div className="company-badge-pill">
+                <span className="dot-active"></span>
+                <span>PT. BITHINKS DIGITAL TEKNOLOGI</span>
+              </div>
+
+              <h1 className="about-hero-heading">
+                Keandalan Sistem Ritel &amp; Omnichannel. Transparan Tanpa Biaya Tersembunyi.
+              </h1>
+
+              <p className="about-hero-body">
+                Kami membangun Bithinks untuk membantu para pebisnis online dan UMKM di Indonesia mengelola toko dengan efisien — didukung legalitas entitas resmi, transparansi skema biaya, dan komitmen perlindungan data yang kuat.
+              </p>
+
+              <div className="about-hero-actions">
+                <a href="https://wa.me/6285156297948" target="_blank" rel="noopener noreferrer" className="btn-consult-wa">
+                  <MessageCircle size={18} /> Hubungi Tim Bithinks
+                </a>
+                <button onClick={() => navigateTo('/terms')} className="btn-terms-link">
+                  Syarat &amp; Ketentuan Respon <ArrowUpRight size={16} />
+                </button>
+              </div>
+            </div>
+
+            {/* Right Official Verification Card */}
+            <div className="about-hero-right">
+              <div className="official-legal-card">
+                
+                {/* Header Tag */}
+                <div className="legal-card-header">
+                  <div className="kemenkumham-mini-logo">
+                    <img src={logoPengayoman} alt="Kemenkumham RI" className="mini-logo-img" />
+                  </div>
+                  <div>
+                    <span className="legal-tag-badge">TERDAFTAR &amp; TERVERIFIKASI</span>
+                    <h4 className="legal-entity-name">PT. BITHINKS DIGITAL TEKNOLOGI</h4>
+                  </div>
+                </div>
+
+                <div className="legal-divider"></div>
+
+                {/* Legal Meta Specs */}
+                <div className="legal-specs-list">
+                  <div className="spec-row">
+                    <span className="spec-label">Bentuk Badan Hukum:</span>
+                    <span className="spec-value">Perseroan Terbatas (PT)</span>
+                  </div>
+                  <div className="spec-row">
+                    <span className="spec-label">Pengesahan Pemerintah:</span>
+                    <span className="spec-value">Kementerian Hukum &amp; HAM RI</span>
+                  </div>
+                  <div className="spec-row">
+                    <span className="spec-label">Sektor Usaha:</span>
+                    <span className="spec-value">Pengembangan Perangkat Lunak Ritel &amp; Omnichannel</span>
+                  </div>
+                  <div className="spec-row">
+                    <span className="spec-label">Dukungan CS:</span>
+                    <span className="spec-value highlight-green">24 Jam / 7 Hari Nonstop</span>
+                  </div>
+                </div>
+
+                {/* Physical Location Box */}
+                <div className="office-location-card">
+                  <MapPin size={18} color="#EF4444" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <div>
+                    <span className="location-city-tag">Kantor Operasional Solo:</span>
+                    <p className="location-address-text">
+                      JL Pleret, Desa/Kelurahan Malangjiwan, Kec. Colomadu, Kab. Karanganyar, Jawa Tengah, 57177
+                    </p>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
           </div>
         </div>
       </header>
 
-      {/* Trust Highlights Strip */}
-      <section className="trust-highlights-strip">
+      {/* 4 Pillars Trust Grid (Crisp Numeric Stat Bar) */}
+      <section className="pillars-trust-bar">
         <div className="container">
-          <div className="trust-grid-4">
-            <div className="trust-card-item">
-              <div className="trust-icon-box indigo">
-                <Building2 size={24} color="#4F46E5" />
-              </div>
-              <div className="trust-text">
-                <h3>Badan Hukum Resmi</h3>
-                <p>Terdaftar di Kemenkumham RI sebagai PT. Bithinks Digital Teknologi.</p>
-              </div>
+          <div className="pillars-grid-4">
+            
+            <div className="pillar-item">
+              <span className="pillar-num">01</span>
+              <h4>Badan Hukum Sah</h4>
+              <p>Terdaftar resmi di Kemenkumham RI sebagai PT. Bithinks Digital Teknologi.</p>
             </div>
 
-            <div className="trust-card-item">
-              <div className="trust-icon-box emerald">
-                <ShieldCheck size={24} color="#10B981" />
-              </div>
-              <div className="trust-text">
-                <h3>Transparan &amp; Jujur</h3>
-                <p>Top-up saldo pesanan Rp 250 / pesanan tanpa masa kadaluarsa (tidak hangus).</p>
-              </div>
+            <div className="pillar-item">
+              <span className="pillar-num">02</span>
+              <h4>Harga Transparan</h4>
+              <p>Top-up saldo pesanan Rp 250 / pesanan. Kuota tidak memiliki masa kadaluarsa (tidak pernah hangus).</p>
             </div>
 
-            <div className="trust-card-item">
-              <div className="trust-icon-box amber">
-                <Clock size={24} color="#D97706" />
-              </div>
-              <div className="trust-text">
-                <h3>Customer Support 24/7</h3>
-                <p>Tim dukungan responsif yang siap membantu kendala operasional Anda nonstop.</p>
-              </div>
+            <div className="pillar-item">
+              <span className="pillar-num">03</span>
+              <h4>Keamanan Data UU PDP</h4>
+              <p>Data inventori dan omset toko 100% milik Anda. Dilindungi enkripsi SSL 256-bit.</p>
             </div>
 
-            <div className="trust-card-item">
-              <div className="trust-icon-box blue">
-                <Lock size={24} color="#2563EB" />
-              </div>
-              <div className="trust-text">
-                <h3>Keamanan Data UU PDP</h3>
-                <p>Data bisnis dan transaksi Anda 100% milik Anda &amp; dilindungi enkripsi SSL.</p>
-              </div>
+            <div className="pillar-item">
+              <span className="pillar-num">04</span>
+              <h4>Support Manusia 24/7</h4>
+              <p>Dukungan teknis responsif yang siap membantu kendala operasional Anda kapan saja.</p>
             </div>
+
           </div>
         </div>
       </section>
 
-      {/* Main Story & Values */}
-      <main className="about-main-content">
+      {/* Story & Mission Section */}
+      <main className="about-main-section">
         <div className="container">
           
-          {/* Section 1: Siapa Kami (Tanpa Overclaim) */}
-          <section className="about-story-block">
-            <div className="story-grid">
-              <div className="story-text-col">
-                <div className="badge-tag">SIAPA KAMI</div>
-                <h2>Membangun Solusi Operasional Ritel dengan Fakta, Bukan Overclaim</h2>
-                <p className="story-paragraph">
-                  <strong>PT. Bithinks Digital Teknologi</strong> didirikan dengan semangat untuk menyelesaikan masalah riil yang dihadapi oleh para pengusaha, pebisnis online, dan UMKM di Indonesia: kompleksitas dalam mengelola banyak toko marketplace, sinkronisasi stok yang sering tidak akurat, cetak resi massal yang memakan waktu, serta perhitungan laporan keuangan yang membingungkan.
-                </p>
-                <p className="story-paragraph">
-                  Kami tidak mengklaim sebagai platform terhebat di dunia. Fokus utama kami adalah menghadirkan sistem perangkat lunak yang <strong>stabil, mudah digunakan, transparan dari segi biaya, dan benar-benar membantu produktivitas harian tim Anda.</strong>
-                </p>
-              </div>
-
-              <div className="story-badge-card">
-                <div className="gov-verification-box">
-                  <div className="gov-logo-frame">
-                    <img src={logoPengayoman} alt="Kemenkumham RI" className="gov-logo-img" />
-                  </div>
-                  <div className="gov-info-text">
-                    <span className="gov-status">ENTITY TERVERIFIKASI RESMI</span>
-                    <h3 className="gov-company-title">PT. BITHINKS DIGITAL TEKNOLOGI</h3>
-                    <p className="gov-legal-desc">
-                      Perusahaan teknologi perangkat lunak berbadan hukum sah di bawah Republik Indonesia.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="office-address-box">
-                  <MapPin size={20} color="#EF4444" style={{ flexShrink: 0, marginTop: '2px' }} />
-                  <div>
-                    <strong className="address-city-title">Alamat Operasional &amp; Kantor Resmi:</strong>
-                    <p className="address-full-text">
-                      JL Pleret, Desa/Kelurahan Malangjiwan, Kec. Colomadu, Kab. Karanganyar, Provinsi Jawa Tengah, 57177
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Section 2: Prinsip Utama Kepercayaan (Our Core Values) */}
-          <section className="about-values-section">
-            <div className="section-title-center">
-              <span className="pre-label">PRINSIP UTAMA KAMI</span>
-              <h2>Mengapa Pebisnis Mempercayakan Operasionalnya pada Bithinks?</h2>
-              <p className="sub-desc">
-                Kepercayaan dibentuk dari konsistensi, kejujuran, dan bukti nyata dalam mendampingi pertumbuhan bisnis Anda.
+          <div className="story-split-container">
+            <div className="story-editorial-text">
+              <span className="section-kicker">FILOSOFI KAMI</span>
+              <h2>Fokus Pada Solusi Nyata Operasional, Bukan Janji Berlebihan</h2>
+              
+              <p>
+                Bithinks lahir dari pengamatan langsung terhadap tantangan nyata para seller dan pemilik usaha di Indonesia: kebingungan dalam menyinkronkan stok di berbagai marketplace, proses cetak resi pengiriman yang lambat dan berisiko salah kirim, serta biaya langganan bulanan yang membengkak tanpa kepastian.
               </p>
-            </div>
 
-            <div className="values-grid-3">
-              <div className="value-card">
-                <div className="val-icon-header">
-                  <HeartHandshake size={28} color="#4F46E5" />
-                  <h3>1. Kejujuran Biaya (No Hidden Fee)</h3>
-                </div>
-                <p>
-                  Kami menolak praktik biaya tersembunyi. Skema perhitungan saldo pesanan Bithinks sebesar Rp 250 / pesanan dijelaskan secara terbuka dari awal. Kuota saldo yang Anda beli <strong>tidak memiliki tanggal kadaluarsa</strong> dan tidak akan hangus.
-                </p>
-              </div>
+              <p>
+                Kami tidak mengklaim sebagai platform terbesar atau terhebat. Komitmen kami sederhana dan jelas: menghadirkan sistem omnichannel dan manajemen ritel yang <strong>stabil, mudah dioperasikan, memiliki biaya yang jujur, serta mendampingi bisnis Anda secara berkelanjutan.</strong>
+              </p>
 
-              <div className="value-card">
-                <div className="val-icon-header">
-                  <Scale size={28} color="#10B981" />
-                  <h3>2. Keamanan &amp; Kerahasiaan Data</h3>
+              <div className="principles-checklist">
+                <div className="check-item">
+                  <CheckCircle size={18} color="#10B981" />
+                  <span>Tanpa biaya tersembunyi atau potongan komisi siluman.</span>
                 </div>
-                <p>
-                  Data produk, data pelanggan, dan omset toko Anda adalah aset paling berharga milik Anda. Bithinks tidak pernah dan tidak akan pernah menjual atau membagikan data bisnis Anda kepada pihak ketiga untuk kepentingan komersial.
-                </p>
-              </div>
-
-              <div className="value-card">
-                <div className="val-icon-header">
-                  <MessageSquare size={28} color="#2563EB" />
-                  <h3>3. Dukungan Manusia 24/7</h3>
+                <div className="check-item">
+                  <CheckCircle size={18} color="#10B981" />
+                  <span>Integrasi resmi API marketplace (Shopee, Tokopedia, TikTok Shop, Lazada, Blibli).</span>
                 </div>
-                <p>
-                  Saat terjadi kendala di lapangan, Anda tidak akan ditinggalkan sendiri bersama robot otomatis. Tim Customer Support Bithinks siap mendampingi Anda 24 jam sehari, 7 hari seminggu melalui WhatsApp dan Live Chat.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* Section 3: Ekosistem Aplikasi Bithinks */}
-          <section className="about-ecosystem-section">
-            <div className="ecosystem-box-wrapper">
-              <div className="ecosystem-header">
-                <Sparkles size={24} color="#818CF8" />
-                <h2>Ekosistem Perangkat Lunak Bithinks</h2>
-                <p>Satu platform terintegrasi yang tumbuh menyesuaikan skala bisnis Anda.</p>
-              </div>
-
-              <div className="apps-pill-grid">
-                <div className="app-pill-item">
-                  <span className="app-pill-title">BitOmni</span>
-                  <span className="app-pill-desc">Omnichannel Sync &amp; Bulk Shipping Label</span>
-                </div>
-                <div className="app-pill-item">
-                  <span className="app-pill-title">BitOne</span>
-                  <span className="app-pill-desc">All-in-one Business Operating System</span>
-                </div>
-                <div className="app-pill-item">
-                  <span className="app-pill-title">BitFine</span>
-                  <span className="app-pill-desc">Laporan Keuangan &amp; Rekonsilasi Omset</span>
-                </div>
-                <div className="app-pill-item">
-                  <span className="app-pill-title">BitPos</span>
-                  <span className="app-pill-desc">Kasir Penjualan Ritel Offline</span>
-                </div>
-                <div className="app-pill-item">
-                  <span className="app-pill-title">BitTeam</span>
-                  <span className="app-pill-desc">Manajemen Karyawan &amp; Absensi</span>
-                </div>
-                <div className="app-pill-item">
-                  <span className="app-pill-title">BitDev</span>
-                  <span className="app-pill-desc">Custom Software Solution</span>
+                <div className="check-item">
+                  <CheckCircle size={18} color="#10B981" />
+                  <span>Dukungan penuh tim Customer Support 24 jam nonstop.</span>
                 </div>
               </div>
             </div>
-          </section>
 
-          {/* Call to Action */}
-          <section className="about-cta-section">
-            <div className="cta-card">
-              <h2>Siap Mengoptimalkan Operasional Toko Anda?</h2>
-              <p>Mulai dengan konsultasi gratis bersama tim spesialis kami tanpa komitmen apapun.</p>
-              <div className="cta-btn-group">
-                <a href="https://wa.me/6285156297948" target="_blank" rel="noopener noreferrer" className="cta-btn primary">
-                  Konsultasi Gratis via WhatsApp
+            <div className="story-highlight-box">
+              <div className="quote-box">
+                <p className="quote-text">
+                  "Kepercayaan dari para pengusaha dan seller tidak dibangun dengan klaim yang muluk-muluk, melainkan dari keandalan sistem harian dan pelayanan yang selalu ada saat dibutuhkan."
+                </p>
+                <span className="quote-author">— PT. Bithinks Digital Teknologi</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Product Ecosystem Section */}
+          <div className="ecosystem-section">
+            <div className="ecosystem-intro">
+              <span className="section-kicker">EKOSISTEM BITHINKS</span>
+              <h2>Aplikasi Terintegrasi Sesuai Skala Bisnis Anda</h2>
+              <p>Pilih modul perangkat lunak yang sesuai dengan kebutuhan operasional toko Anda hari ini.</p>
+            </div>
+
+            <div className="apps-grid-3">
+              {APPS.map((app) => (
+                <div 
+                  key={app.id} 
+                  className="app-card-item"
+                  onClick={() => navigateTo(`/${app.id}`)}
+                >
+                  <div className="app-card-top">
+                    <div className="app-logo-box">
+                      <img src={app.logo} alt={app.title} className="app-logo-img" />
+                    </div>
+                    <span className="app-badge-tag" style={{ color: app.color, background: `${app.color}15` }}>
+                      {app.tag}
+                    </span>
+                  </div>
+
+                  <h3 className="app-card-title">{app.title}</h3>
+                  <p className="app-card-desc">{app.desc}</p>
+
+                  <div className="app-card-footer">
+                    <span>Pelajari Fitur</span>
+                    <ArrowUpRight size={14} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Final Call to Action */}
+          <div className="about-cta-banner">
+            <div className="cta-banner-content">
+              <h2>Mulai Kelola Toko Anda Lebih Efisien Hari Ini</h2>
+              <p>Konsultasikan kebutuhan manajemen omnichannel dan toko ritel Anda secara gratis bersama tim Bithinks.</p>
+              <div className="cta-action-buttons">
+                <a href="https://wa.me/6285156297948" target="_blank" rel="noopener noreferrer" className="cta-btn-main">
+                  Konsultasi Gratis via WhatsApp (0851-5629-7948)
                 </a>
-                <button onClick={() => navigateTo('/terms')} className="cta-btn secondary">
-                  Baca Syarat &amp; Ketentuan
-                </button>
               </div>
             </div>
-          </section>
+          </div>
 
         </div>
       </main>
