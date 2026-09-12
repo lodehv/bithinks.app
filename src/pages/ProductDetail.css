@@ -1770,6 +1770,12 @@
   padding: 4px 12px;
   border-radius: 10px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  transition: all 0.2s ease;
+}
+
+.topup-input-inline:focus-within {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
 }
 
 .topup-number-field {
@@ -1779,8 +1785,16 @@
   font-size: 16px;
   font-weight: 800;
   color: #4f46e5;
-  width: 60px;
+  min-width: 95px;
+  width: 115px;
   text-align: right;
+  -moz-appearance: textfield;
+}
+
+.topup-number-field::-webkit-outer-spin-button,
+.topup-number-field::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .topup-unit-text {

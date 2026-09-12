@@ -371,7 +371,7 @@ const BitOmniTopUpCalculator = ({ product }) => {
                   <input
                     type="number"
                     min="1"
-                    max="50000"
+                    max="10000000"
                     value={orderCount === 0 ? '' : orderCount}
                     onChange={(e) => {
                       const val = e.target.value;
