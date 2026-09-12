@@ -101,7 +101,17 @@ const Footer = () => {
           <div className="footer-col-nav">
             <h4>Perusahaan</h4>
             <ul className="footer-link-list">
-              <li><a href="#about">Tentang Bithinks</a></li>
+              <li>
+                <a 
+                  href="/about" 
+                  onClick={(e) => { 
+                    e.preventDefault(); 
+                    navigateTo('/about'); 
+                  }}
+                >
+                  Tentang Bithinks
+                </a>
+              </li>
               <li><a href="#promo">Event &amp; Promo</a></li>
               <li><a href="#career">Karir</a></li>
               <li><a href="https://wa.me/6285156297948" target="_blank" rel="noopener noreferrer">Hubungi Kami</a></li>

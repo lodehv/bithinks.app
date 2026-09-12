@@ -171,7 +171,17 @@ const Navbar = () => {
             </div>
           </div>
 
-          <a href="#about" className="navbar-link" onClick={() => setIsMobileMenuOpen(false)}>{t.navbar.about}</a>
+          <a 
+            href="/about" 
+            className="navbar-link" 
+            onClick={(e) => {
+              e.preventDefault();
+              setIsMobileMenuOpen(false);
+              navigateTo('/about');
+            }}
+          >
+            {t.navbar.about}
+          </a>
           <a href="#pricing" className="navbar-link" onClick={() => setIsMobileMenuOpen(false)}>{t.navbar.pricing}</a>
           <a href="/login" className="navbar-link mobile-only-link" onClick={() => setIsMobileMenuOpen(false)}>{t.navbar.login}</a>
         </div>
