@@ -31,19 +31,6 @@ const Navbar = () => {
         <div className={`navbar-links ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
 
           <a 
-            href="/bitomni" 
-            className="navbar-link nav-home-back-link" 
-            onClick={(e) => {
-              e.preventDefault();
-              setIsMobileMenuOpen(false);
-              navigateTo('/bitomni');
-            }}
-            style={{ fontWeight: 700, color: '#4F46E5' }}
-          >
-            ← Beranda BitOmni
-          </a>
-
-          <a 
             href="/about" 
             className="navbar-link" 
             onClick={(e) => {

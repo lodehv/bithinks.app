@@ -595,11 +595,6 @@ const ProductDetail = ({ appId }) => {
           <div className="p-detail-bg-accent" style={{ '--theme-glow': product.glowColor }}></div>
           
           <div className="container">
-            {/* Back to Home Button */}
-            <button className="p-detail-back-btn" onClick={() => navigateTo('/')}>
-              <ArrowLeft size={16} /> <span>Kembali ke Beranda</span>
-            </button>
-
             <div className="p-detail-hero-grid">
               
               {/* Left Info Column */}
