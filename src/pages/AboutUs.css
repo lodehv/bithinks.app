@@ -73,21 +73,21 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background: #25d366;
+  background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
   color: #ffffff;
   font-size: 15px;
   font-weight: 700;
   padding: 12px 24px;
   border-radius: 10px;
   text-decoration: none;
-  box-shadow: 0 8px 20px -4px rgba(37, 211, 102, 0.4);
+  box-shadow: 0 8px 20px -4px rgba(79, 70, 229, 0.4);
   transition: all 0.25s ease;
 }
 
 .btn-consult-wa:hover {
-  background: #22bf5b;
+  background: linear-gradient(135deg, #4338ca 0%, #312e81 100%);
   transform: translateY(-2px);
-  box-shadow: 0 12px 24px -4px rgba(37, 211, 102, 0.5);
+  box-shadow: 0 12px 24px -4px rgba(79, 70, 229, 0.5);
 }
 
 .btn-terms-link {
@@ -543,11 +543,12 @@
 
 /* CTA Banner */
 .about-cta-banner {
-  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4f46e5 100%);
   border-radius: 24px;
   padding: 56px 40px;
   color: #ffffff;
   text-align: center;
+  box-shadow: 0 20px 40px -15px rgba(79, 70, 229, 0.3);
 }
 
 .cta-banner-content {
@@ -563,28 +564,29 @@
 
 .cta-banner-content p {
   font-size: 16px;
-  color: #cbd5e1;
+  color: #e0e7ff;
   margin-bottom: 28px;
   line-height: 1.6;
 }
 
 .cta-btn-main {
   display: inline-block;
-  background: #25d366;
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
   color: #ffffff;
   font-size: 16px;
   font-weight: 800;
   padding: 16px 36px;
   border-radius: 30px;
   text-decoration: none;
-  box-shadow: 0 10px 25px -5px rgba(37, 211, 102, 0.4);
+  box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.5);
   transition: all 0.25s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .cta-btn-main:hover {
-  background: #22bf5b;
+  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
   transform: translateY(-2px);
-  box-shadow: 0 14px 28px -5px rgba(37, 211, 102, 0.5);
+  box-shadow: 0 14px 28px -5px rgba(79, 70, 229, 0.6);
 }
 
 /* Responsive */
