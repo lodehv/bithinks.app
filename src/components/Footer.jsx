@@ -23,16 +23,9 @@ const Footer = () => {
             <h3 className="footer-company-name">PT. Bithinks Digital Teknologi</h3>
             
             <div className="footer-office-block">
-              <p className="office-city">Jakarta</p>
+              <p className="office-city">Solo</p>
               <p className="office-address">
-                Sampoerna Strategic Square North Tower Lt. 16, Jl. Jend. Sudirman Kav 45-46, Karet Semanggi, Kota Administrasi Jakarta Selatan.
-              </p>
-            </div>
-
-            <div className="footer-office-block">
-              <p className="office-city">Surabaya</p>
-              <p className="office-address">
-                Jl. Ahmad Yani No.88, Ketintang, Kec. Gayungan, Surabaya, Jawa Timur
+                JL Pleret, Desa/Kelurahan Malangjiwan, Kec. Colomadu, Kab. Karanganyar, Provinsi Jawa Tengah, 57177
               </p>
             </div>
 
