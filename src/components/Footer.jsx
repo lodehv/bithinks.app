@@ -69,7 +69,17 @@ const Footer = () => {
                   Syarat &amp; Ketentuan
                 </a>
               </li>
-              <li><a href="/privacy" onClick={(e) => { e.preventDefault(); navigateTo('/terms'); }}>Privasi &amp; Keamanan Data</a></li>
+              <li>
+                <a 
+                  href="/privacy" 
+                  onClick={(e) => { 
+                    e.preventDefault(); 
+                    navigateTo('/privacy'); 
+                  }}
+                >
+                  Privasi &amp; Keamanan Data
+                </a>
+              </li>
             </ul>
 
             {/* Kemenkumham Verified Badge */}
