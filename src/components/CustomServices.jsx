@@ -38,7 +38,7 @@ const CustomServices = () => {
           <p className="custom-services-desc">
             {t.customServices.desc}
           </p>
-          <a href="https://wa.me/6287823439210?text=Halo%20Bithinks,%20saya%20tertarik%20dengan%20layanan%20pembuatan%20aplikasi%20custom" target="_blank" rel="noopener noreferrer" className="custom-services-btn">
+          <a href="https://wa.me/6285156297948?text=Halo%20Bithinks,%20saya%20tertarik%20dengan%20layanan%20pembuatan%20aplikasi%20custom" target="_blank" rel="noopener noreferrer" className="custom-services-btn">
             <MessageCircle size={20} />
             {t.customServices.btn}
           </a>

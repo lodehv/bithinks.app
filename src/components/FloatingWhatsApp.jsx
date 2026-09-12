@@ -4,7 +4,7 @@ import './FloatingWhatsApp.css';
 
 const FloatingWhatsApp = () => {
   const [isHovered, setIsHovered] = useState(false);
-  const phoneNumber = '6287823439210';
+  const phoneNumber = '6285156297948';
   const message = encodeURIComponent('Halo Bithinks! Saya ingin bertanya seputar layanan Anda.');
   const waLink = `https://wa.me/${phoneNumber}?text=${message}`;
 

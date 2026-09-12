@@ -33,7 +33,7 @@ export function SubmitButton({ loading, label, loadingLabel, icon }) {
 export function WaHelperButton({ helpText, waHelp }) {
   const handleWhatsapp = () => {
     window.open(
-      "https://wa.me/6281234567890?text=Halo tim Bithinks, saya ingin daftar tapi terkendala OTP.",
+      "https://wa.me/6285156297948?text=Halo tim Bithinks, saya ingin daftar tapi terkendala OTP.",
       "_blank"
     );
   };

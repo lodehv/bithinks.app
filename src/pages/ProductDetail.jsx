@@ -511,7 +511,7 @@ const BitOmniTopUpCalculator = ({ product }) => {
           </button>
           <button
             className="topup-btn-secondary"
-            onClick={() => window.open(`https://wa.me/628113000676?text=Halo%20Bithinks,%20saya%20tertarik%20dengan%20sistem%20Top-up%20Sesukamu%20BitOmni%20${orderCount}%20pesanan%20(Rp${topUpAmount})`, '_blank')}
+            onClick={() => window.open(`https://wa.me/6285156297948?text=Halo%20Bithinks,%20saya%20tertarik%20dengan%20sistem%20Top-up%20Sesukamu%20BitOmni%20${orderCount}%20pesanan%20(Rp${topUpAmount})`, '_blank')}
           >
             Konsultasi via WhatsApp
           </button>
@@ -656,7 +656,7 @@ const ProductDetail = ({ appId }) => {
                   </button>
                   <button 
                     className="p-btn-secondary"
-                    onClick={() => window.open('https://wa.me/628113000676?text=Halo%20Bithinks,%20saya%20ingin%20tanya%20mengenai%20fitur%20' + product.name, '_blank')}
+                    onClick={() => window.open('https://wa.me/6285156297948?text=Halo%20Bithinks,%20saya%20ingin%20tanya%20mengenai%20fitur%20' + product.name, '_blank')}
                   >
                     Hubungi Sales
                   </button>
@@ -1071,7 +1071,7 @@ module.exports = async function customWorkflow(ctx) {
                   </button>
                   <button 
                     className="p-cta-btn-outline"
-                    onClick={() => window.open('https://wa.me/628113000676?text=Halo%20Bithinks,%20saya%20tertarik%20dengan%20' + product.name, '_blank')}
+                    onClick={() => window.open('https://wa.me/6285156297948?text=Halo%20Bithinks,%20saya%20tertarik%20dengan%20' + product.name, '_blank')}
                   >
                     Konsultasi Kustom
                   </button>
