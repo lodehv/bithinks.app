@@ -32,9 +32,6 @@ const TermsConditions = () => {
               <p className="terms-hero-subtitle">
                 Aturan resmi dan kesepakatan penggunaan seluruh ekosistem layanan PT. Bithinks Digital Teknologi.
               </p>
-              <div className="terms-update-badge">
-                <Clock size={14} /> Terakhir diperbarui: 12 September 2026
-              </div>
             </div>
 
             <div className="terms-hero-illustration">
