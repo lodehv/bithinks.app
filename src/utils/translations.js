@@ -3,7 +3,9 @@ export const translations = {
     navbar: {
       home: "Beranda",
       product: "Produk",
-      about: "Tentang Kami",
+      about: "Tentang Bithinks",
+      terms: "Syarat & Ketentuan",
+      privacy: "Privasi & Keamanan Data",
       pricing: "Harga",
       login: "Login",
       register: "Daftar Gratis"
@@ -189,8 +191,10 @@ export const translations = {
   en: {
     navbar: {
       home: "Home",
-      product: "Product",
-      about: "About Us",
+      product: "Products",
+      about: "About Bithinks",
+      terms: "Terms & Conditions",
+      privacy: "Privacy & Data Security",
       pricing: "Pricing",
       login: "Login",
       register: "Register Free"

@@ -123,7 +123,7 @@ const Navbar = () => {
               style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
               onClick={(e) => { e.preventDefault(); setShowProductMenu(!showProductMenu); }}
             >
-              {t.navbar.product}
+              Produk
               <ChevronDown size={16} style={{ transform: showProductMenu ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.3s' }} />
             </a>
 
@@ -180,10 +180,31 @@ const Navbar = () => {
               navigateTo('/about');
             }}
           >
-            {t.navbar.about}
+            Tentang Bithinks
           </a>
-          <a href="#pricing" className="navbar-link" onClick={() => setIsMobileMenuOpen(false)}>{t.navbar.pricing}</a>
-          <a href="/login" className="navbar-link mobile-only-link" onClick={() => setIsMobileMenuOpen(false)}>{t.navbar.login}</a>
+          <a 
+            href="/terms" 
+            className="navbar-link" 
+            onClick={(e) => {
+              e.preventDefault();
+              setIsMobileMenuOpen(false);
+              navigateTo('/terms');
+            }}
+          >
+            Syarat &amp; Ketentuan
+          </a>
+          <a 
+            href="/privacy" 
+            className="navbar-link" 
+            onClick={(e) => {
+              e.preventDefault();
+              setIsMobileMenuOpen(false);
+              navigateTo('/privacy');
+            }}
+          >
+            Privasi &amp; Keamanan Data
+          </a>
+          <a href="/login" className="navbar-link mobile-only-link" onClick={() => setIsMobileMenuOpen(false)}>Login</a>
         </div>
 
         {/* Actions */}

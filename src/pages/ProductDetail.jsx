@@ -323,199 +323,165 @@ const BitOmniTopUpCalculator = ({ product }) => {
     { orders: 4000, price: 1000000, labelPrice: "Rp 1.000.000" },
   ];
 
-  const maxScaleOrders = 4000;
-  const barPercent = Math.min(Math.max((orderCount / maxScaleOrders) * 100, 2), 100);
-
   return (
     <div className="topup-calc-container">
       <div className="topup-calc-card">
-        {/* Header Badge & Title */}
+        
+        {/* Header Title */}
         <div className="topup-calc-header">
-          <div className="topup-badge">
-            <Coins size={15} /> SKEMA TOP-UP SESUKAMU
-          </div>
+          <span className="topup-kicker">SKEMA TOP-UP SESUKAMU</span>
           <h3 className="topup-calc-title">
-            Hanya <span className="highlight-price">Rp 250</span> / Pesanan
+            Hanya <strong>Rp 250</strong> / Pesanan
           </h3>
           <p className="topup-calc-sub">
-            Tanpa bayar langganan bulanan yang mengikat! Cukup atur target pesanan Anda. Saldo <strong>tidak pernah hangus</strong> &amp; sudah mencakup fitur cetak resi instan, rekonsiliasi beban komplit, tracking COGS, hingga net profit per 1 pesanan.
+            Tanpa biaya langganan bulanan yang mengikat. Saldo <strong>tidak pernah hangus</strong> &amp; sudah mencakup fitur cetak resi massal, rekonsiliasi beban komplit, tracking COGS, hingga net profit per 1 pesanan.
           </p>
         </div>
 
-        {/* Interactive Controls */}
-        <div className="topup-interactive-box">
-          {/* Preset Buttons */}
-          <div className="topup-preset-header">Pilih Preset Jumlah Pesanan:</div>
-          <div className="topup-presets-grid">
-            {presets.map((p) => (
-              <button
-                key={p.orders}
-                className={`topup-preset-btn ${orderCount === p.orders ? 'active' : ''}`}
-                onClick={() => setOrderCount(p.orders)}
-              >
-                {p.isPopular && <span className="preset-pop-tag">Populer</span>}
-                <div className="preset-amount">{p.orders.toLocaleString('id-ID')} Pesanan</div>
-                <div className="preset-orders">{p.labelPrice}</div>
-              </button>
-            ))}
-          </div>
+        {/* Modern Split Calculator Grid */}
+        <div className="topup-split-grid">
+          
+          {/* LEFT: Controls & Included Features */}
+          <div className="topup-left-col">
+            
+            {/* Preset Quantity Pills */}
+            <div className="topup-group">
+              <label className="topup-label">Pilih Target Jumlah Pesanan:</label>
+              <div className="topup-presets-pills">
+                {presets.map((p) => (
+                  <button
+                    key={p.orders}
+                    type="button"
+                    className={`topup-pill-btn ${orderCount === p.orders ? 'active' : ''}`}
+                    onClick={() => setOrderCount(p.orders)}
+                  >
+                    {p.isPopular && <span className="topup-pill-tag">POPULER</span>}
+                    <span className="pill-orders">{p.orders.toLocaleString('id-ID')} Pesanan</span>
+                    <span className="pill-price">{p.labelPrice}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
 
-          {/* Range Slider for Order Count */}
-          <div className="topup-slider-section">
-            <div className="topup-slider-header">
-              <label htmlFor="topup-range-input">Atur / Ketik Jumlah Pesanan Anda:</label>
-              <div className="topup-amount-input-box">
-                <input
-                  id="topup-number-input"
-                  type="number"
-                  min="1"
-                  max="50000"
-                  value={orderCount === 0 ? '' : orderCount}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    if (val === '') {
-                      setOrderCount(0);
-                    } else {
-                      const parsed = parseInt(val, 10);
-                      if (!isNaN(parsed)) {
-                        setOrderCount(parsed);
+            {/* Range Slider & Custom Input */}
+            <div className="topup-group topup-slider-group">
+              <div className="topup-slider-row-head">
+                <span className="topup-label">Atur / Ketik Jumlah Pesanan:</span>
+                <div className="topup-input-inline">
+                  <input
+                    type="number"
+                    min="1"
+                    max="50000"
+                    value={orderCount === 0 ? '' : orderCount}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '') setOrderCount(0);
+                      else {
+                        const parsed = parseInt(val, 10);
+                        if (!isNaN(parsed)) setOrderCount(parsed);
                       }
-                    }
-                  }}
-                  onBlur={() => {
-                    if (!orderCount || orderCount < 1) setOrderCount(1);
-                  }}
-                  className="topup-order-number-input"
-                  placeholder="120"
-                />
-                <span className="topup-order-unit-label">Pesanan</span>
+                    }}
+                    onBlur={() => {
+                      if (!orderCount || orderCount < 1) setOrderCount(1);
+                    }}
+                    className="topup-number-field"
+                    placeholder="200"
+                  />
+                  <span className="topup-unit-text">Pesanan</span>
+                </div>
+              </div>
+
+              <input
+                type="range"
+                min="40"
+                max="4000"
+                step="10"
+                value={Math.min(Math.max(orderCount, 40), 4000)}
+                onChange={(e) => setOrderCount(Number(e.target.value))}
+                className="topup-range-slider"
+                style={{
+                  backgroundSize: `${((Math.min(Math.max(orderCount, 40), 4000) - 40) * 100) / (4000 - 40)}% 100%`
+                }}
+              />
+              
+              <div className="topup-slider-ticks">
+                <span>40 pesanan (Rp 10.000)</span>
+                <span>2.000 pesanan (Rp 500.000)</span>
+                <span>4.000 pesanan (Rp 1.000.000)</span>
               </div>
             </div>
-            <input
-              id="topup-range-input"
-              type="range"
-              min="40"
-              max="4000"
-              step="10"
-              value={Math.min(Math.max(orderCount, 40), 4000)}
-              onChange={(e) => setOrderCount(Number(e.target.value))}
-              className="topup-custom-slider"
-            />
-            <div className="topup-slider-price-summary">
-              Biaya Top-up: <strong>Rp {topUpAmount.toLocaleString('id-ID')}</strong> ({orderCount.toLocaleString('id-ID')} pesanan × Rp 250)
+
+            {/* Included Features List */}
+            <div className="topup-included-section">
+              <h5 className="topup-inc-title">Termasuk Layanan Penuh:</h5>
+              <div className="topup-inc-grid">
+                <div className="topup-inc-item">
+                  <span className="topup-inc-check"><Check size={14} strokeWidth={3} /></span>
+                  <span>Cetak Resi Massal 1-Klik Multi-Channel</span>
+                </div>
+                <div className="topup-inc-item">
+                  <span className="topup-inc-check"><Check size={14} strokeWidth={3} /></span>
+                  <span>Sinkronisasi Stok Real-Time Bebas Overselling</span>
+                </div>
+                <div className="topup-inc-item">
+                  <span className="topup-inc-check"><Check size={14} strokeWidth={3} /></span>
+                  <span>Rekonsiliasi Omset &amp; COGS Akurat</span>
+                </div>
+                <div className="topup-inc-item">
+                  <span className="topup-inc-check"><Check size={14} strokeWidth={3} /></span>
+                  <span>Dukungan CS Manusia Nonstop 24/7</span>
+                </div>
+              </div>
             </div>
-            <div className="topup-slider-labels">
-              <span>40 pesanan (Rp 10.000)</span>
-              <span>2.000 pesanan (Rp 500.000)</span>
-              <span>4.000 pesanan (Rp 1.000.000)</span>
-            </div>
+
           </div>
 
-          {/* Informative Graphic Bar Chart */}
-          <div className="topup-graphic-bar-box">
-            <div className="topup-bar-title-row">
-              <span className="topup-bar-title"><Sliders size={16} /> Grafik Kuota Pesanan Terkalkulasi</span>
-              <span className="topup-bar-equation">
-                {orderCount.toLocaleString('id-ID')} Pesanan × Rp 250 = <strong>Rp {topUpAmount.toLocaleString('id-ID')}</strong>
-              </span>
+          {/* RIGHT: High-Trust Hero Summary Card */}
+          <div className="topup-summary-card">
+            <div className="summary-badge">RINGKASAN TOP-UP</div>
+
+            <div className="summary-main-price">
+              <span className="summary-price-lbl">Total Nominal</span>
+              <div className="summary-price-val">Rp {topUpAmount.toLocaleString('id-ID')}</div>
+              <div className="summary-price-sub">Rp 250 × {orderCount.toLocaleString('id-ID')} pesanan</div>
             </div>
 
-            <div className="topup-bar-track">
-              <div
-                className="topup-bar-fill"
-                style={{ width: `${barPercent}%` }}
+            <div className="summary-divider"></div>
+
+            <div className="summary-details-list">
+              <div className="summary-row">
+                <span className="lbl">Kuota Pesanan</span>
+                <span className="val highlight">{orderCount.toLocaleString('id-ID')} Pesanan</span>
+              </div>
+              <div className="summary-row">
+                <span className="lbl">Tarif Per Pesanan</span>
+                <span className="val">Rp 250 / pesanan</span>
+              </div>
+              <div className="summary-row">
+                <span className="lbl">Masa Berlaku Saldo</span>
+                <span className="val pos">Selamanya (Tanpa Hangus)</span>
+              </div>
+              <div className="summary-row">
+                <span className="lbl">Biaya Bulanan</span>
+                <span className="val pos">Rp 0 (Gratis)</span>
+              </div>
+            </div>
+
+            <div className="summary-action-box">
+              <a 
+                href={`https://wa.me/6285156297948?text=Halo%20Bithinks,%20saya%20tertarik%20dengan%20sistem%20Top-Up%20BitOmni%20${orderCount.toLocaleString('id-ID')}%20pesanan%20(Rp%20${topUpAmount.toLocaleString('id-ID')})`} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="topup-wa-btn"
               >
-                <div className="topup-bar-glow"></div>
-                {barPercent >= 18 && (
-                  <span className="topup-bar-thumb-label-inside">{orderCount.toLocaleString('id-ID')} Pesanan</span>
-                )}
-              </div>
-              {barPercent < 18 && (
-                <span className="topup-bar-thumb-label-outside">{orderCount.toLocaleString('id-ID')} Pesanan</span>
-              )}
-            </div>
-
-            <div className="topup-bar-ticks">
-              <div className="tick-item"><span>0</span></div>
-              <div className="tick-item"><span>1.000</span></div>
-              <div className="tick-item"><span>2.000</span></div>
-              <div className="tick-item"><span>3.000</span></div>
-              <div className="tick-item"><span>4.000+</span></div>
+                Top-Up Saldo via WhatsApp
+              </a>
+              <span className="summary-note-cs">Proses instan 24 jam dengan CS Bithinks</span>
             </div>
           </div>
 
-          {/* Metric Highlights */}
-          <div className="topup-result-grid">
-            <div className="topup-result-card">
-              <div className="res-icon"><Printer size={22} /></div>
-              <div className="res-label">Jumlah Kuota Pesanan</div>
-              <div className="res-value">{orderCount.toLocaleString('id-ID')} <span className="res-unit">Pesanan</span></div>
-              <div className="res-sub">Cetak resi otomatis &amp; sync stok multi-toko</div>
-            </div>
-
-            <div className="topup-result-card">
-              <div className="res-icon"><Calculator size={22} /></div>
-              <div className="res-label">Total Nominal Top-up</div>
-              <div className="res-value">Rp {topUpAmount.toLocaleString('id-ID')}</div>
-              <div className="res-sub">Rincian beban komplit hingga tahu net profit per 1 pesanan</div>
-            </div>
-
-            <div className="topup-result-card">
-              <div className="res-icon"><Tag size={22} /></div>
-              <div className="res-label">Biaya Per Pesanan</div>
-              <div className="res-value">Rp 250 <span className="res-unit">/ pesanan</span></div>
-              <div className="res-sub">Flat rate tanpa biaya tersembunyi &amp; tanpa kadaluwarsa</div>
-            </div>
-          </div>
         </div>
 
-        {/* Feature Check Grid */}
-        <div className="topup-features-section">
-          <h4 className="topup-features-title">Semua Fitur Canggih Ini Langsung Aktif Dengan Top-up:</h4>
-          <div className="topup-features-grid">
-            <div className="topup-feature-item">
-              <div className="feat-check"><Check size={16} strokeWidth={3} /></div>
-              <div>
-                <strong>Cetak Resi Instan Massal</strong>
-                <p>Cetak resi pengiriman otomatis untuk toko Shopee, Tokopedia, TikTok Shop, Lazada &amp; Blibli dalam 1 klik.</p>
-              </div>
-            </div>
-            <div className="topup-feature-item">
-              <div className="feat-check"><Check size={16} strokeWidth={3} /></div>
-              <div>
-                <strong>Rekonsiliasi Pesanan &amp; Beban Komplit</strong>
-                <p>Ketahui secara pasti net profit bersih dari 1 pesanan setelah dipotong komisi marketplace, ongkir, dan biaya iklan.</p>
-              </div>
-            </div>
-            <div className="topup-feature-item">
-              <div className="feat-check"><Check size={16} strokeWidth={3} /></div>
-              <div>
-                <strong>Atur Master Produk &amp; Tracking COGS</strong>
-                <p>Kelola Master SKU multi-toko dan lacak Beban HPP (Cost of Goods Sold) produk Anda secara real-time.</p>
-              </div>
-            </div>
-            <div className="topup-feature-item">
-              <div className="feat-check"><Check size={16} strokeWidth={3} /></div>
-              <div>
-                <strong>Masa Aktif Saldo Tanpa Kadaluwarsa</strong>
-                <p>Saldo top-up tersimpan aman di akun Anda dan tidak pernah hangus sampai kuota pesanan terpakai habis.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="topup-cta-row">
-          <button className="topup-btn-primary" onClick={() => navigateTo('/register')}>
-            Mulai Top-up {orderCount.toLocaleString('id-ID')} Pesanan (Rp {topUpAmount.toLocaleString('id-ID')})
-          </button>
-          <button
-            className="topup-btn-secondary"
-            onClick={() => window.open(`https://wa.me/6285156297948?text=Halo%20Bithinks,%20saya%20tertarik%20dengan%20sistem%20Top-up%20Sesukamu%20BitOmni%20${orderCount}%20pesanan%20(Rp${topUpAmount})`, '_blank')}
-          >
-            Konsultasi via WhatsApp
-          </button>
-        </div>
       </div>
     </div>
   );
