@@ -160,36 +160,33 @@
   text-decoration: underline;
 }
 
-/* Kemenkumham Logo Slot Styling */
+/* Kemenkumham Logo Badge Styling */
 .kemenkumham-logo-slot {
-  margin-top: 28px;
-}
-
-.kemenkumham-img {
-  max-width: 200px;
-  max-height: 100px;
-  object-fit: contain;
-  border-radius: 8px;
-}
-
-.kemenkumham-fallback {
-  display: flex;
+  margin-top: 24px;
 }
 
 .kemenkumham-badge-box {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   background: #F8FAFC;
   border: 1.5px dashed #CBD5E1;
-  border-radius: 12px;
-  padding: 12px 14px;
-  max-width: 240px;
+  border-radius: 18px;
+  padding: 14px 18px;
+  max-width: 340px;
 }
 
-.kemenkumham-icon-shield {
-  font-size: 1.6rem;
-  line-height: 1;
+.kemenkumham-logo-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.kemenkumham-img {
+  height: 54px;
+  width: auto;
+  object-fit: contain;
 }
 
 .kemenkumham-badge-text {
@@ -198,24 +195,26 @@
 }
 
 .kemenkumham-badge-text .gov-tag {
-  font-size: 0.65rem;
+  font-size: 0.72rem;
   font-weight: 800;
   color: #10B981;
   letter-spacing: 0.5px;
+  text-transform: uppercase;
   margin-bottom: 2px;
 }
 
 .kemenkumham-badge-text .gov-name {
-  font-size: 0.85rem;
+  font-size: 1.05rem;
   font-weight: 800;
   color: #0F172A;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 .kemenkumham-badge-text .gov-sub {
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   color: #64748B;
   margin-top: 2px;
+  line-height: 1.35;
 }
 
 /* Bottom Copyright Bar */

@@ -1,5 +1,6 @@
 import React from 'react';
 import './Footer.css';
+import logoPengayoman from '../assets/logo_pilihan_fitur/logo_pengayoman_new.png';
 
 const Footer = () => {
   return (
@@ -77,7 +78,7 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Column 2: Kebijakan Kami & Kemenkumham Logo Slot */}
+          {/* Column 2: Kebijakan Kami & Kemenkumham Badge */}
           <div className="footer-col-nav">
             <h4>Kebijakan Kami</h4>
             <ul className="footer-link-list">
@@ -85,27 +86,16 @@ const Footer = () => {
               <li><a href="/privacy">Privasi &amp; Keamanan Data</a></li>
             </ul>
 
-            {/* Slot Container for Kemenkumham Logo */}
+            {/* Kemenkumham Verified Badge */}
             <div className="kemenkumham-logo-slot">
-              <img 
-                src="/kemenkumham_logo.png" 
-                alt="Logo Kemenkumham RI" 
-                className="kemenkumham-img"
-                onError={(e) => {
-                  // Fallback visual jika file logo kemenkumham belum diupload oleh user
-                  e.currentTarget.style.display = 'none';
-                  const fallback = e.currentTarget.parentElement.querySelector('.kemenkumham-fallback');
-                  if (fallback) fallback.style.display = 'flex';
-                }}
-              />
-              <div className="kemenkumham-fallback" style={{ display: 'none' }}>
-                <div className="kemenkumham-badge-box">
-                  <div className="kemenkumham-icon-shield">⚖️</div>
-                  <div className="kemenkumham-badge-text">
-                    <span className="gov-tag">TERDAFTAR &amp; TERVERIFIKASI</span>
-                    <strong className="gov-name">KEMENKUMHAM RI</strong>
-                    <span className="gov-sub">Kementerian Hukum dan Hak Asasi Manusia</span>
-                  </div>
+              <div className="kemenkumham-badge-box">
+                <div className="kemenkumham-logo-wrapper">
+                  <img src={logoPengayoman} alt="Logo Pengayoman Kemenkumham RI" className="kemenkumham-img" />
+                </div>
+                <div className="kemenkumham-badge-text">
+                  <span className="gov-tag">TERDAFTAR &amp; TERVERIFIKASI</span>
+                  <strong className="gov-name">KEMENKUMHAM RI</strong>
+                  <span className="gov-sub">Kementerian Hukum dan Hak Asasi Manusia</span>
                 </div>
               </div>
             </div>
