@@ -122,11 +122,7 @@ const Footer = () => {
           <div className="footer-col-nav">
             <h4>Resources</h4>
             <ul className="footer-link-list">
-              <li><a href="#help">Bantuan</a></li>
-              <li><a href="#api">Dokumentasi API</a></li>
-              <li><a href="#whitepaper">E-book dan Whitepaper</a></li>
-              <li><a href="#blog">Blog</a></li>
-              <li><a href="#faq">FAQ</a></li>
+              <li><a href="https://wa.me/6285156297948" target="_blank" rel="noopener noreferrer">Bantuan</a></li>
             </ul>
           </div>
 
