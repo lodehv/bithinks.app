@@ -468,15 +468,14 @@ const BitOmniTopUpCalculator = ({ product }) => {
             </div>
 
             <div className="summary-action-box">
-              <a 
-                href={`https://wa.me/6285156297948?text=Halo%20Bithinks,%20saya%20tertarik%20dengan%20sistem%20Top-Up%20BitOmni%20${orderCount.toLocaleString('id-ID')}%20pesanan%20(Rp%20${topUpAmount.toLocaleString('id-ID')})`} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="topup-wa-btn"
+              <button 
+                type="button"
+                onClick={() => navigateTo('/register')} 
+                className="topup-action-btn"
               >
-                Top-Up Saldo via WhatsApp
-              </a>
-              <span className="summary-note-cs">Proses instan 24 jam dengan CS Bithinks</span>
+                Mulai Top-Up Saldo Sekarang
+              </button>
+              <span className="summary-note-cs">Daftar akun gratis 1 menit &amp; langsung aktifkan saldo</span>
             </div>
           </div>
 
