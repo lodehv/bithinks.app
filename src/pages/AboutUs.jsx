@@ -173,10 +173,6 @@ const AboutUs = () => {
           {/* Detailed Bithinks Omnichannel Feature Showcase Section */}
           <div className="omni-deepdive-section">
             <div className="omni-intro-header">
-              <div className="omni-badge-tag">
-                <img src={bitOmniLogo} alt="Bithinks Omnichannel" className="omni-badge-logo" />
-                <span>SOLUSI UTAMA BITHINKS OMNICHANNEL</span>
-              </div>
               <h2>Kemampuan Utama Bithinks Omnichannel untuk Bisnis Anda</h2>
               <p>Satu layar terpusat untuk memproses pesanan, mengelola stok, dan mengawasi pengiriman toko online Anda.</p>
             </div>
