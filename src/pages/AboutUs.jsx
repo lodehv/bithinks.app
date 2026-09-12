@@ -7,7 +7,7 @@ import bitOmniLogo from '../assets/logo_pilihan_fitur/bithinks_omnichannel_logo-
 import resiSkuMockup from '../assets/logo_pilihan_fitur/resi_sku_mockup.png';
 import trackingAuditMockup from '../assets/logo_pilihan_fitur/tracking_audit_mockup.png';
 import { navigateTo } from '../utils/navigation';
-import { ShieldCheck, MapPin, ArrowUpRight, CheckCircle, RefreshCw, Printer, Layers, Truck, DollarSign, MessageCircle, Building2 } from 'lucide-react';
+import { ShieldCheck, MapPin, ArrowUpRight, CheckCircle, RefreshCw, Printer, Layers, Truck, DollarSign, MessageCircle, Building2, ArrowLeft } from 'lucide-react';
 import './AboutUs.css';
 
 const AboutUs = () => {
@@ -26,6 +26,9 @@ const AboutUs = () => {
             
             {/* Left Narrative Column */}
             <div className="about-hero-text">
+              <button className="page-back-breadcrumb" onClick={() => navigateTo('/bitomni')}>
+                <ArrowLeft size={14} /> <span>Kembali ke Bithinks Omnichannel</span>
+              </button>
               <span className="about-pretitle">PT. BITHINKS DIGITAL TEKNOLOGI</span>
               <h1 className="about-main-title">TENTANG BITHINKS OMNICHANNEL</h1>
               <p className="about-hero-subtitle">

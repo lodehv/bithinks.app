@@ -19,7 +19,7 @@ const Navbar = () => {
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="container">
         {/* Logo */}
-        <a href="/" className="navbar-logo" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }} onClick={(e) => { e.preventDefault(); navigateTo('/'); }}>
+        <a href="/bitomni" className="navbar-logo" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }} onClick={(e) => { e.preventDefault(); navigateTo('/bitomni'); }}>
           <div className="brand-logo-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', lineHeight: 1 }}>
             <img src="/bithinks.png" alt="Logo Bithinks" style={{ height: '38px', width: 'auto', objectFit: 'contain' }} />
             <span style={{ fontFamily: 'Montserrat, sans-serif', fontSize: '10px', fontWeight: 800, color: '#0F172A', letterSpacing: '0.5px', marginTop: '3px', textTransform: 'lowercase' }}>bithinks</span>
@@ -30,7 +30,18 @@ const Navbar = () => {
         {/* Nav Links */}
         <div className={`navbar-links ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
 
-
+          <a 
+            href="/bitomni" 
+            className="navbar-link nav-home-back-link" 
+            onClick={(e) => {
+              e.preventDefault();
+              setIsMobileMenuOpen(false);
+              navigateTo('/bitomni');
+            }}
+            style={{ fontWeight: 700, color: '#4F46E5' }}
+          >
+            ← Beranda BitOmni
+          </a>
 
           <a 
             href="/about" 

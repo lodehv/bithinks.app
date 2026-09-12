@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 import { navigateTo } from '../utils/navigation';
-import { ShieldCheck, FileText, CheckCircle2, ChevronRight, Scale, Lock, Server, Clock, AlertTriangle } from 'lucide-react';
+import { ShieldCheck, FileText, CheckCircle2, ChevronRight, Scale, Lock, Server, Clock, AlertTriangle, ArrowLeft } from 'lucide-react';
 import './TermsConditions.css';
 
 const TermsConditions = () => {
@@ -27,6 +27,9 @@ const TermsConditions = () => {
         <div className="terms-hero-container">
           <div className="terms-hero-grid">
             <div className="terms-hero-text">
+              <button className="page-back-breadcrumb" onClick={() => navigateTo('/bitomni')}>
+                <ArrowLeft size={14} /> <span>Kembali ke Bithinks Omnichannel</span>
+              </button>
               <span className="terms-pretitle">SYARAT &amp; KETENTUAN BITHINKS OMNICHANNEL</span>
               <h1 className="terms-main-title">SYARAT &amp; KETENTUAN BITHINKS</h1>
               <p className="terms-hero-subtitle">

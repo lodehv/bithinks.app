@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 import { navigateTo } from '../utils/navigation';
-import { ShieldCheck, Lock, Eye, FileText, Database, Server, ChevronRight, UserCheck, KeyRound } from 'lucide-react';
+import { ShieldCheck, Lock, Eye, FileText, Database, Server, ChevronRight, UserCheck, KeyRound, ArrowLeft } from 'lucide-react';
 import './PrivacyPolicy.css';
 
 const PrivacyPolicy = () => {
@@ -27,6 +27,9 @@ const PrivacyPolicy = () => {
         <div className="privacy-hero-container">
           <div className="privacy-hero-grid">
             <div className="privacy-hero-text">
+              <button className="page-back-breadcrumb" onClick={() => navigateTo('/bitomni')}>
+                <ArrowLeft size={14} /> <span>Kembali ke Bithinks Omnichannel</span>
+              </button>
               <span className="privacy-pretitle">KEBIJAKAN PRIVASI BITHINKS OMNICHANNEL</span>
               <h1 className="privacy-main-title">KEBIJAKAN PRIVASI BITHINKS</h1>
               <p className="privacy-hero-subtitle">
