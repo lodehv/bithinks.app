@@ -113,13 +113,17 @@ export const statsTiruan = {
   // selalu mengirim keduanya, dan potret yang semua barisnya lengkap tidak
   // pernah memperlihatkan bagaimana baris yang tidak lengkap terbaca.
   retur: {
-    total: { nilai: 3_578_900, pesanan: 18 },
+    total: { nilai: 14_295_039, pesanan: 141 },
     diJalan: { nilai: 1_473_000, pesanan: 8 },
     sampai: { nilai: 2_105_900, pesanan: 10 },
     // Posisi HARI INI atas pesanan bulan lain. Angkanya meniru produksi
     // 14 Sep 2026 — termasuk yang sudah diam sebulan, karena baris yang diam
     // panjang itulah yang paling perlu terbaca di potret.
     luarPeriode: { nilai: 2_576_597, pesanan: 10, diamTerlama: 32 },
+    // Pembatalan sesudah barang keluar gudang. Angkanya meniru produksi
+    // 14 Sep 2026 — kelompok inilah yang paling besar, dan potret yang
+    // tidak memuatnya tidak pernah memperlihatkan tiga blok bersebelahan.
+    batalSesudahKirim: { nilai: 10_716_139, pesanan: 123 },
     ikutSaringanTanggal: true,
     // Sel rincian: tahap × platform × toko. Dua toko per platform supaya
     // pengelompokan benar-benar teruji — satu toko saja akan terlihat rapi
