@@ -114,16 +114,9 @@ export const statsTiruan = {
   // pernah memperlihatkan bagaimana baris yang tidak lengkap terbaca.
   retur: {
     total: { nilai: 14_295_039, pesanan: 141 },
-    diJalan: { nilai: 1_473_000, pesanan: 8 },
+    periodeLalu: { nilai: 2_576_597, pesanan: 10 },
+    diJalan: { nilai: 11_713_442, pesanan: 130 },
     sampai: { nilai: 2_105_900, pesanan: 10 },
-    // Posisi HARI INI atas pesanan bulan lain. Angkanya meniru produksi
-    // 14 Sep 2026 — termasuk yang sudah diam sebulan, karena baris yang diam
-    // panjang itulah yang paling perlu terbaca di potret.
-    luarPeriode: { nilai: 2_576_597, pesanan: 10, diamTerlama: 32 },
-    // Pembatalan sesudah barang keluar gudang. Angkanya meniru produksi
-    // 14 Sep 2026 — kelompok inilah yang paling besar, dan potret yang
-    // tidak memuatnya tidak pernah memperlihatkan tiga blok bersebelahan.
-    batalSesudahKirim: { nilai: 10_716_139, pesanan: 123 },
     ikutSaringanTanggal: true,
     // Sel rincian: tahap × platform × toko. Dua toko per platform supaya
     // pengelompokan benar-benar teruji — satu toko saja akan terlihat rapi
@@ -136,7 +129,7 @@ export const statsTiruan = {
     ],
     daftar: [
       {
-        id: 'R1', tahap: 'diJalan', pesanan: '250911ABCD1234',
+        id: 'R1', kartu: 'diJalan', tahap: 'diJalan', pesanan: '250911ABCD1234',
         channel: 'Shopee', toko: 'Bithinks Official Shop Jakarta',
         item: '[PAKET RESELLER KCL] Business Package KCL - Pupuk Dewa Dewi, Pupuk Manohara Merah - 100% Original × 1 +1 item lain', nominal: 189_000,
         alasan: 'Barang rusak saat diterima', alasanAsli: 'DAMAGED',
@@ -149,7 +142,7 @@ export const statsTiruan = {
         ],
       },
       {
-        id: 'R2', tahap: 'diJalan', pesanan: '576461234567890123',
+        id: 'R2', kartu: 'diJalan', tahap: 'diJalan', pesanan: '576461234567890123',
         channel: 'TikTok', toko: 'Bithinks Store Indonesia',
         item: 'Masker Wajah Charcoal × 1', nominal: 74_500,
         alasan: 'Barang tidak sesuai deskripsi', alasanAsli: 'ITEM_NOT_AS_DESCRIBED',
@@ -162,7 +155,7 @@ export const statsTiruan = {
         ],
       },
       {
-        id: 'R3', tahap: 'sampai', pesanan: '576461234567890999',
+        id: 'R3', kartu: 'sampai', tahap: 'sampai', pesanan: '576461234567890999',
         channel: 'TikTok', toko: 'Bithinks Beauty Official',
         item: '[Paket Lebih murah 2Pcs] Pupuk Dewa Dewi 1 Liter -KCL- Original untuk Tanaman dalam masa Pembuahan Umbi dan Buah × 1', nominal: 410_000,
         alasan: 'Pembeli berubah pikiran', alasanAsli: 'CHANGE_OF_MIND',
@@ -175,7 +168,7 @@ export const statsTiruan = {
         ],
       },
       {
-        id: 'R4', tahap: 'diJalan', pesanan: '250910WXYZ9876',
+        id: 'R4', kartu: 'periodeLalu', tahap: 'diJalan', pesanan: '250910WXYZ9876',
         channel: 'Shopee', toko: 'Bithinks Grosir Bandung',
         item: 'Sabun Batang Kemasan 6 pcs × 1', nominal: 58_000,
         alasan: 'Ukuran tidak sesuai', alasanAsli: 'WRONG_SIZE',
