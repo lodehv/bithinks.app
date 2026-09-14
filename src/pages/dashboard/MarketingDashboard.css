@@ -1770,6 +1770,38 @@
    dan pertanyaan "toko mana yang returnya menumpuk" cuma bisa dijawab dengan
    membaca seluruh daftar baris demi baris. */
 
+/* ANGKA UTAMA RETUR — satu angka besar, dua baris keterangan.
+   Ditaruh DI ATAS kedua tahap karena keduanya adalah pecahannya; membaca
+   pecahan sebelum keseluruhannya memaksa mata menjumlah sendiri. */
+.retur-utama {
+  margin-bottom: 18px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #F1F1F1;
+}
+
+.retur-utama-angka {
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.retur-utama-catatan {
+  margin-top: 5px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Omset setelah retur: angka hasil, bukan angka retur. Warnanya netral —
+   satu warna pengurang per zona sudah dipakai angka di atasnya. */
+.retur-utama-sisa {
+  margin-top: 2px;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.retur-utama-sisa b { color: #374151; font-weight: 600; }
+
 .retur-kolom {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

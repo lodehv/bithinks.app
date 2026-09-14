@@ -262,6 +262,11 @@ export default function MarketingDashboard() {
   // yang benar "belum diketahui", dan keduanya bukan hal yang sama.
   const adaTahapRetur = returTahap !== null;
   const daftarRetur = Array.isArray(returTahap?.daftar) ? returTahap.daftar : [];
+  const returTotal = returTahap?.total ?? { nilai: 0, pesanan: 0 };
+  // Posisi HARI INI di luar periode: barang yang masih balik atas pesanan bulan
+  // lain. null berarti server belum menghitungnya — berbeda dari nol, yang
+  // berarti sudah dihitung dan memang tidak ada.
+  const returLuar = returTahap?.luarPeriode ?? null;
 
   // ── PANEL RINCIAN ─────────────────────────────────────────────────────────
   // Kedua tahap adalah TOMBOL: menekannya membuka panel berisi saringan
@@ -288,6 +293,13 @@ export default function MarketingDashboard() {
   // datanya sudah ada tanpa perlu menyentuh backend.
 
   const povOmset = pov?.omset?.nilai ?? 0;
+
+  // Persentase terhadap omset periode yang SAMA. Tanpa ini, Rp 413.246 tidak
+  // berarti apa-apa; dengan 0,07% pemilik toko langsung tahu retur bukan
+  // masalah bulan ini. Pembaginya POV omset, bukan omset perkiraan — sumbu
+  // keduanya sama, tanggal pesanan dibuat.
+  const returPersen = povOmset > 0 ? (returTotal.nilai / povOmset) * 100 : null;
+  const omsetSetelahRetur = povOmset - returTotal.nilai;
 
   // Turunan untuk kartu TUNTAS dan PENERIMAAN ikut dibuang bersama kartunya.
   // Keputusan pemilik toko 29 Agu 2026: zona arus cukup memuat satu hitungan
@@ -750,6 +762,30 @@ export default function MarketingDashboard() {
             </span>
           </div>
 
+          {/* ANGKA UTAMA — pertanyaan pemilik toko, dijawab satu baris:
+              "omset bulan ini sekian, dari situ yang diretur berapa".
+
+              Persentasenya yang membuat rupiahnya berarti. Rp 413.246 sendirian
+              tidak bisa dinilai; 0,07% dari omset langsung menjawab "besar atau
+              tidak". Dan "omset setelah retur" ditulis di sini, di tempat ia
+              lahir — bukan diulang di zona Arus, karena angka ditulis sekali. */}
+          {adaTahapRetur && (
+            <div className="retur-utama">
+              <div className="retur-utama-angka blok-pengurang-nilai">
+                - {formatRupiah(returTotal.nilai)}
+              </div>
+              <div className="retur-utama-catatan">
+                {returTotal.pesanan} pesanan
+                {returPersen !== null && <> · <b>{returPersen.toFixed(2)}%</b> dari omset</>}
+              </div>
+              {returPersen !== null && (
+                <div className="retur-utama-sisa">
+                  Omset setelah retur <b>{formatRupiah(omsetSetelahRetur)}</b>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Kedua tahap adalah TOMBOL. Menekannya membuka panel rincian:
               saringan platform & toko, ringkasan, lalu tabel pesanannya —
               bentuk yang diminta pemilik toko 11 September 2026.
@@ -787,6 +823,31 @@ export default function MarketingDashboard() {
               );
             })}
           </div>
+
+          {/* JAM KEDUA. Kartu di atas menjawab pertanyaan akuntansi: dari omset
+              periode ini, berapa yang kembali. Baris ini menjawab pertanyaan
+              gudang: barang apa yang sedang balik HARI INI, bulan apa pun
+              pesanannya.
+
+              Tanpanya, menggeser periode membuat barang yang menggantung lenyap
+              dari pandangan — diukur 14 September 2026: 10 retur senilai
+              Rp 2.576.597 atas pesanan Juli dan Agustus, terlama diam 32 hari.
+
+              Bentuknya sengaja meniru `DI LUAR HITUNGAN` di zona Arus: mata
+              sudah kenal artinya, yaitu "benar, tapi bukan bagian dari angka
+              di atas". */}
+          {(returLuar?.pesanan ?? 0) > 0 && (
+            <div className="posisi-diluar">
+              <span className="posisi-diluar-label">DI LUAR PERIODE</span>
+              <span>
+                <b>{returLuar.pesanan} retur</b> atas pesanan bulan lain masih
+                tercatat di jalan · <b>{formatRupiah(returLuar.nilai)}</b>
+                {returLuar.diamTerlama !== null && (
+                  <> · terlama diam <b>{returLuar.diamTerlama} hari</b></>
+                )}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Card 1b: BEBAN PLATFORM — zona sendiri.
