@@ -757,8 +757,8 @@ export default function MarketingDashboard() {
           <div className="summary-card-header">
             <h4>Retur</h4>
             <span className="summary-card-subtitle">
-              Barang yang dikembalikan pembeli · saldo, bukan periode ·{' '}
-              <b>tidak mengikuti saringan tanggal</b> · mengikuti pilihan platform &amp; toko
+              Barang yang dikembalikan pembeli · dihitung atas{' '}
+              <b>pesanan pada periode ini</b> · mengikuti pilihan platform &amp; toko
             </span>
           </div>
 
@@ -1308,8 +1308,8 @@ export default function MarketingDashboard() {
           judul={panelTahap === 'diJalan' ? 'Retur Di Jalan' : 'Retur Selesai'}
           keterangan={
             panelTahap === 'diJalan'
-              ? 'Barang belum kembali ke gudang · saldo, tidak mengikuti saringan tanggal'
-              : 'Barang sudah sampai di gudang, stok sudah naik · saldo, tidak mengikuti saringan tanggal'
+              ? 'Barang belum kembali ke gudang'
+              : 'Barang sudah sampai di gudang, stok sudah naik'
           }
           baris={barisPanel}
           onTutup={() => setPanelTahap(null)}
