@@ -214,8 +214,6 @@ export default function MarketingDashboard() {
   // Partisi status → Kotor = pipeline+terkonfirmasi+berisiko+retur+dibatalkan (tidak dobel).
   const t = stats?.totals ?? {};
   const totalOmsetPerkiraan = t.omsetPerkiraan ?? 0; // pipeline + terkonfirmasi + berisiko
-  const totalPipeline       = t.pipeline       ?? 0;
-  const totalBerisiko       = t.berisiko       ?? 0;
   const totalRetur          = t.retur          ?? 0;
 
   // ─── TIGA SUDUT PANDANG ────────────────────────────────────────────────────
@@ -289,16 +287,6 @@ export default function MarketingDashboard() {
   // hilang cuma tempat menampilkannya; kalau kelak perlu ditampilkan lagi,
   // datanya sudah ada tanpa perlu menyentuh backend.
 
-  // "Breakdown status" hanya berarti untuk rentang PANJANG. Di rentang satu
-  // hari, Pipeline selalu sama persis dengan Omset Perkiraan (pesanan hari ini
-  // belum mungkin sampai), jadi ia cuma mengulang angka yang sudah ada di
-  // sebelahnya — dan angka yang sama muncul empat kali di satu layar.
-  const hariRentang = (() => {
-    if (!startDate || !endDate) return 999;
-    const a = Date.parse(startDate), b = Date.parse(endDate);
-    return Number.isFinite(a) && Number.isFinite(b) ? Math.round((b - a) / 86_400_000) + 1 : 999;
-  })();
-  const rentangPanjang = hariRentang >= 7;
   const povOmset = pov?.omset?.nilai ?? 0;
 
   // Turunan untuk kartu TUNTAS dan PENERIMAAN ikut dibuang bersama kartunya.
@@ -740,8 +728,8 @@ export default function MarketingDashboard() {
         </div>
       )}
 
-      {/* ─── Summary Cards Section (Omset Harian & Status Breakdown) ─── */}
-      <div className={`marketing-summary-wrapper${rentangPanjang ? "" : " satu-kartu"}`}>
+      {/* ─── Zona Retur ─── */}
+      <div className="marketing-summary-wrapper satu-kartu">
         
         {/* Card 1: RETUR — dipecah jadi dua tahap.
 
@@ -823,39 +811,6 @@ export default function MarketingDashboard() {
           </div>
         </div>
 
-        {/* Card 2: Status Breakdown — HANYA untuk rentang panjang.
-            Di rentang pendek ia mengulang: Pipeline == Omset Perkiraan, dan
-            angka yang sama jadi muncul empat kali di satu layar. */}
-        {rentangPanjang && (
-        <div className="summary-card">
-          <div className="summary-card-header">
-            <h4>Breakdown status</h4>
-            <span className="summary-card-subtitle">Sumbu: tanggal pesanan dibuat · pecahan dari Omset Perkiraan</span>
-          </div>
-
-          <div className="summary-blocks-grid">
-            {/* Block 3: Pipeline */}
-            <div className="summary-block">
-              <div className="block-meta-row">
-                <span className="block-category">PIPELINE</span>
-                <TrendingUp size={13} className="text-purple" />
-              </div>
-              <div className="block-value">{formatRupiah(totalPipeline)}</div>
-              <div className="block-subtext">Masih di jalan — baru, dikemas, dikirim</div>
-            </div>
-
-            {/* Block 4: Berisiko */}
-            <div className="summary-block">
-              <div className="block-meta-row">
-                <span className="block-category">BERISIKO</span>
-                <HelpCircle size={13} className="text-purple" />
-              </div>
-              <div className="block-value">{formatRupiah(totalBerisiko)}</div>
-              <div className="block-subtext">Ada permintaan batal, belum final</div>
-            </div>
-          </div>
-        </div>
-        )}
 
       </div>
 
