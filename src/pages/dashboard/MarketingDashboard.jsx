@@ -87,8 +87,6 @@ const TAHAP_SELESAI = {
   kunci: 'selesai', judul: 'SELESAI KE TANGAN PEMBELI', catatan: 'sudah diterima pembeli',
 };
 
-const HARI_BAWAAN = 1;
-
 // Tanggal hari ini menurut WIB, bukan menurut jam mesin pemakainya.
 // Backend membatasi harinya di WIB (lib/waktu/wib.ts); kalau sisi ini memakai
 // zona laptop, batas rentangnya bisa meleset satu hari untuk pemakai di luar WIB.
@@ -97,9 +95,33 @@ function tanggalWib(mundurHari = 0) {
   return wib.toISOString().slice(0, 10);
 }
 
+/**
+ * Tanggal 1 bulan berjalan, WIB.
+ *
+ * RENTANG BAWAAN: 1 sampai hari ini, bukan hari ini saja.
+ *
+ * Bawaan lama satu hari, dan pada rentang itu separuh halaman selalu nol —
+ * bukan karena rusak, melainkan karena pertanyaannya tidak bisa dijawab dalam
+ * sehari. Diukur di produksi 15 September 2026:
+ *
+ *   rentang 15 Sep saja  → selesai ke tangan pembeli Rp 0, 0 pesanan
+ *   rentang 1–15 Sep     → Rp 256.261.747, 3.686 pesanan
+ *
+ * Pesanan yang dibuat hari ini mustahil sudah sampai ke pembeli — rata-rata 8–9
+ * hari — jadi kartu itu nol tiap kali halaman dibuka. Hal yang sama menimpa
+ * kedua kartu retur. Pemilik toko menabraknya tiga kali sebelum sebabnya
+ * ketahuan, dan tiap kali terbaca seperti data hilang.
+ *
+ * Bulan berjalan juga yang dia pakai saat bicara: "omset bulan ini sekian, dari
+ * situ yang diretur berapa".
+ */
+function awalBulanWib() {
+  return `${tanggalWib(0).slice(0, 7)}-01`;
+}
+
 export default function MarketingDashboard() {
   // ─── Filter States ────────────────────────────────────────────────────────
-  const [startDate, setStartDate] = useState(() => tanggalWib(HARI_BAWAAN - 1));
+  const [startDate, setStartDate] = useState(() => awalBulanWib());
   const [endDate, setEndDate] = useState(() => tanggalWib(0));
   const [selectedPlatforms, setSelectedPlatforms] = useState([]);
   const [selectedStores, setSelectedStores] = useState([]);
@@ -171,11 +193,12 @@ export default function MarketingDashboard() {
     );
   };
 
-  // "Atur Ulang" mengembalikan ke keadaan bawaan — termasuk rentang hari ini.
+  // "Atur Ulang" mengembalikan ke keadaan bawaan — termasuk rentang bulan
+  // berjalan.
   // Dikosongkan sama sekali justru bukan "bersih", melainkan diam-diam menarik
   // seluruh riwayat: kebalikan dari yang diharapkan orang saat menekan tombol ini.
   const clearAllFilters = () => {
-    setStartDate(tanggalWib(HARI_BAWAAN - 1));
+    setStartDate(awalBulanWib());
     setEndDate(tanggalWib(0));
     setSelectedPlatforms([]);
     setSelectedStores([]);
@@ -238,8 +261,8 @@ export default function MarketingDashboard() {
       .finally(() => setIklanSimpan(null));
   };
 
-  // Muat awal memakai rentang bawaan HARI INI (lihat HARI_BAWAAN di atas), bukan
-  // lagi seluruh riwayat.
+  // Muat awal memakai rentang bawaan BULAN BERJALAN (lihat awalBulanWib di
+  // atas), bukan seluruh riwayat dan bukan pula hari ini saja.
   useEffect(() => {
     fetchStats();
     // eslint-disable-next-line react-hooks/exhaustive-deps
