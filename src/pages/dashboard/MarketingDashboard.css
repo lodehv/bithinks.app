@@ -1837,10 +1837,14 @@
 }
 .retur-tahap:hover { background: #FAFAFA; }
 
-/* Blok yang tidak bisa dibuka: tidak ada rincian di baliknya, jadi ia tidak
-   boleh terlihat seperti tombol. Kursornya biasa dan hover-nya diam. */
-.retur-tahap-pasif { cursor: default; }
-.retur-tahap-pasif:hover { background: #ffffff; }
+/* Arti kartu ditulis di kartunya. Tiga kartu yang bunyinya mirip harus bisa
+   dibedakan tanpa mengarahkan kursor ke masing-masing. */
+.retur-tahap-arti {
+  margin-top: 8px;
+  font-size: 10.5px;
+  line-height: 1.45;
+  color: #9ca3af;
+}
 .retur-tahap-aktif {
   border-bottom-color: #4F46E5;
   background: #FAFAFA;

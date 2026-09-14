@@ -34,9 +34,32 @@ import "./MarketingDashboard.css";
 // ─────────────────────────────────────────────────────────────────────────────
 // Dua tahap retur, ditulis sekali supaya judul dan keterangannya tidak bisa
 // berbeda antara kartu, daftar, dan pengelompokan di bawahnya.
+// RETUR di layar ini berarti: apa pun yang sudah KELUAR GUDANG lalu berbalik —
+// retur dari pembeli maupun pembatalan sesudah barang dikirim. Marketplace
+// memecahnya jadi dua nama, tapi nasib barangnya sama dan pemilik toko
+// menghitungnya sebagai satu hal.
+//
+// Pembatalan SEBELUM dikirim tidak pernah ikut: barangnya tidak berangkat, jadi
+// tidak ada yang harus kembali.
 const TAHAP_RETUR = [
-  { kunci: 'diJalan', judul: 'RETUR DI JALAN', catatan: 'barang belum kembali' },
-  { kunci: 'sampai', judul: 'RETUR SELESAI', catatan: 'stok sudah naik' },
+  {
+    kunci: 'diJalan',
+    judul: 'RETUR DI JALAN',
+    catatan: 'sudah keluar gudang, belum kembali',
+    keterangan: 'Retur pembeli dan pembatalan sesudah dikirim — barangnya belum tercatat kembali',
+  },
+  {
+    kunci: 'sampai',
+    judul: 'RETUR SELESAI',
+    catatan: 'sudah kembali ke gudang',
+    keterangan: 'Muara dari kartu pertama: barang sudah sampai di gudang, stok naik',
+  },
+  {
+    kunci: 'periodeLalu',
+    judul: 'BELUM SELESAI DARI PERIODE LALU',
+    catatan: 'pesanan bulan lain, masih menggantung',
+    keterangan: 'Retur dan pembatalan atas pesanan periode sebelumnya yang sampai kini belum kembali',
+  },
 ];
 
 const HARI_BAWAAN = 1;
@@ -263,16 +286,9 @@ export default function MarketingDashboard() {
   const adaTahapRetur = returTahap !== null;
   const daftarRetur = Array.isArray(returTahap?.daftar) ? returTahap.daftar : [];
   const returTotal = returTahap?.total ?? { nilai: 0, pesanan: 0 };
-  // Posisi HARI INI di luar periode: barang yang masih balik atas pesanan bulan
-  // lain. null berarti server belum menghitungnya — berbeda dari nol, yang
-  // berarti sudah dihitung dan memang tidak ada.
-  const returLuar = returTahap?.luarPeriode ?? null;
-  // Pesanan yang dibatalkan SETELAH barangnya keluar gudang. Marketplace
-  // menamainya pembatalan, jadi ia tidak pernah masuk tabel retur — tapi
-  // barangnya berangkat lalu berbalik, dan harus kembali ke rak sama seperti
-  // retur. Terukur 14 September 2026: 123 pesanan senilai Rp 10.716.139,
-  // sementara retur yang terhitung hanya Rp 413.246.
-  const returBatalKirim = returTahap?.batalSesudahKirim ?? null;
+  // Kartu ketiga: pesanan periode SEBELUMNYA yang barangnya belum kembali.
+  // Menggeser periode tidak boleh membuat barang yang menggantung lenyap.
+  const returPeriodeLalu = returTahap?.periodeLalu ?? { nilai: 0, pesanan: 0 };
 
   // ── PANEL RINCIAN ─────────────────────────────────────────────────────────
   // Kedua tahap adalah TOMBOL: menekannya membuka panel berisi saringan
@@ -285,7 +301,7 @@ export default function MarketingDashboard() {
   const [panelTahap, setPanelTahap] = useState(null);
 
   const barisPanel = panelTahap
-    ? daftarRetur.filter((r) => r.tahap === panelTahap)
+    ? daftarRetur.filter((r) => r.kartu === panelTahap)
     : [];
 
 
@@ -799,9 +815,11 @@ export default function MarketingDashboard() {
               Rinciannya TIDAK lagi menempel di halaman. Pada data sungguhan itu
               22 baris sekaligus, dan halaman laporan terbaca bercecer justru
               oleh bagian yang paling jarang dibutuhkan. */}
-          <div className={`retur-kolom${returBatalKirim ? " retur-kolom-tiga" : ""}`}>
-            {TAHAP_RETUR.map(({ kunci, judul, catatan }) => {
-              const ringkas = kunci === 'diJalan' ? returDiJalan : returSampai;
+          <div className="retur-kolom retur-kolom-tiga">
+            {TAHAP_RETUR.map(({ kunci, judul, catatan, keterangan }) => {
+              const ringkas = kunci === 'diJalan' ? returDiJalan
+                : kunci === 'sampai' ? returSampai
+                  : returPeriodeLalu;
               const bisaDibuka = adaTahapRetur && ringkas.pesanan > 0;
               return (
                 <button
@@ -810,6 +828,7 @@ export default function MarketingDashboard() {
                   className="retur-tahap"
                   onClick={() => bisaDibuka && setPanelTahap(kunci)}
                   disabled={!bisaDibuka}
+                  title={keterangan}
                 >
                   <div className="retur-tahap-kepala">
                     <span className="block-category">{judul}</span>
@@ -824,58 +843,15 @@ export default function MarketingDashboard() {
                   <div className="block-subtext">
                     {adaTahapRetur ? `${ringkas.pesanan} pesanan · ${catatan}` : 'Menunggu data dari server'}
                   </div>
-                  {bisaDibuka && <div className="retur-ajakan">Lihat rincian</div>}
+                  {/* Keterangan ditulis di kartunya, bukan disembunyikan di
+                      tooltip: tiga kartu yang bunyinya mirip harus bisa
+                      dibedakan tanpa mengarahkan kursor ke masing-masing. */}
+                  <div className="retur-tahap-arti">{keterangan}</div>
+                  {bisaDibuka && <div className="retur-ajakan">Lihat nomor pesanan</div>}
                 </button>
               );
             })}
-
-            {/* Blok ketiga, dan sengaja BUKAN tombol: marketplace tidak
-                memberi nomor retur untuk pembatalan, jadi tidak ada baris
-                rincian untuk dibuka.
-
-                Juga sengaja tidak dipaksakan ke salah satu tahap. Tidak ada
-                resi balik maupun status logistiknya, jadi kedatangannya tidak
-                punya sumber — menaruhnya di "di jalan" akan menumpuk selamanya,
-                di "selesai" akan mengaku barangnya sudah di rak tanpa dasar. */}
-            {returBatalKirim && (
-              <div className="retur-tahap retur-tahap-pasif">
-                <div className="retur-tahap-kepala">
-                  <span className="block-category">BATAL SETELAH DIKIRIM</span>
-                </div>
-                <div className="block-value blok-pengurang-nilai">
-                  - {formatRupiah(returBatalKirim.nilai)}
-                </div>
-                <div className="block-subtext">
-                  {returBatalKirim.pesanan} pesanan · barang sudah keluar gudang
-                </div>
-              </div>
-            )}
           </div>
-
-          {/* JAM KEDUA. Kartu di atas menjawab pertanyaan akuntansi: dari omset
-              periode ini, berapa yang kembali. Baris ini menjawab pertanyaan
-              gudang: barang apa yang sedang balik HARI INI, bulan apa pun
-              pesanannya.
-
-              Tanpanya, menggeser periode membuat barang yang menggantung lenyap
-              dari pandangan — diukur 14 September 2026: 10 retur senilai
-              Rp 2.576.597 atas pesanan Juli dan Agustus, terlama diam 32 hari.
-
-              Bentuknya sengaja meniru `DI LUAR HITUNGAN` di zona Arus: mata
-              sudah kenal artinya, yaitu "benar, tapi bukan bagian dari angka
-              di atas". */}
-          {(returLuar?.pesanan ?? 0) > 0 && (
-            <div className="posisi-diluar">
-              <span className="posisi-diluar-label">DI LUAR PERIODE</span>
-              <span>
-                <b>{returLuar.pesanan} retur</b> atas pesanan bulan lain masih
-                tercatat di jalan · <b>{formatRupiah(returLuar.nilai)}</b>
-                {returLuar.diamTerlama !== null && (
-                  <> · terlama diam <b>{returLuar.diamTerlama} hari</b></>
-                )}
-              </span>
-            </div>
-          )}
         </div>
 
         {/* Card 1b: BEBAN PLATFORM — zona sendiri.
@@ -1349,12 +1325,8 @@ export default function MarketingDashboard() {
 
       {panelTahap && (
         <PanelRetur
-          judul={panelTahap === 'diJalan' ? 'Retur Di Jalan' : 'Retur Selesai'}
-          keterangan={
-            panelTahap === 'diJalan'
-              ? 'Barang belum kembali ke gudang'
-              : 'Barang sudah sampai di gudang, stok sudah naik'
-          }
+          judul={TAHAP_RETUR.find((t) => t.kunci === panelTahap)?.judul ?? 'Retur'}
+          keterangan={TAHAP_RETUR.find((t) => t.kunci === panelTahap)?.keterangan ?? ''}
           baris={barisPanel}
           onTutup={() => setPanelTahap(null)}
         />
