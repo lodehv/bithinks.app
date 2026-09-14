@@ -330,3 +330,17 @@
   background: #FFFBEB;
   text-transform: uppercase;
 }
+
+/* Daftar yang dipotong server disebut, bukan disembunyikan. Yang dilarang
+   bukan memotong — melainkan memotong diam-diam, karena angka yang dijumlahkan
+   dari potongan akan selalu lebih kecil daripada kenyataannya. */
+.panel-terpotong {
+  margin-left: 8px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  color: #92400e;
+  font-size: 10px;
+  font-weight: 600;
+}

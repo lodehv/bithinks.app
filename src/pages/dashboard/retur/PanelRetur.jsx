@@ -18,7 +18,7 @@ const rupiah = (v) =>
   new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 })
     .format(Number(v) || 0)
 
-export default function PanelRetur({ judul, keterangan, baris, onTutup }) {
+export default function PanelRetur({ judul, keterangan, baris, ringkasan, onTutup }) {
   const [platform, setPlatform] = useState(null)
   const [toko, setToko] = useState([])
   const [bukaToko, setBukaToko] = useState(false)
@@ -49,6 +49,24 @@ export default function PanelRetur({ judul, keterangan, baris, onTutup }) {
   )
 
   const total = tersaring.reduce((a, r) => a + (r.nominal ?? 0), 0)
+
+  // ── ANGKA PANEL HARUS SAMA DENGAN ANGKA KARTUNYA ────────────────────────────
+  //
+  // Panel ini dulu menjumlahkan barisnya sendiri, sementara kartunya dihitung
+  // dari agregat di server. Begitu daftarnya dipotong, keduanya berbeda tanpa
+  // satu pun tanda — terlihat di layar 15 September 2026: kartu Rp 282.525.748
+  // dari 3.684 pesanan, panel Rp 56.907.923 dari 810.
+  //
+  // Sekarang: selama tidak ada saringan platform/toko yang dipasang, yang
+  // ditampilkan adalah angka KARTU. Begitu pemakai menyaring, barulah jumlah
+  // baris yang tampil — karena itu memang yang ditanyakan.
+  const adaSaringan = platform !== null || toko.length > 0
+  const pakaiRingkasan = !adaSaringan && ringkasan != null
+  const jumlahTampil = pakaiRingkasan ? ringkasan.pesanan : tersaring.length
+  const nilaiTampil = pakaiRingkasan ? ringkasan.nilai : total
+  // Daftar yang dipotong server. Dilarang memotong diam-diam, bukan dilarang
+  // memotong: yang tidak tampil harus disebut jumlahnya.
+  const terpotong = pakaiRingkasan && baris.length < (ringkasan.pesanan ?? 0)
 
   const salinNomor = () => {
     const teks = tersaring.map((r) => r.pesanan).join('\n')
@@ -153,9 +171,14 @@ export default function PanelRetur({ judul, keterangan, baris, onTutup }) {
 
         <div className="panel-retur-ringkas">
           <span className="panel-ringkas-jumlah">
-            <b>{tersaring.length}</b> pesanan retur
+            <b>{jumlahTampil}</b> pesanan
+            {terpotong && (
+              <span className="panel-terpotong">
+                tabel memuat {baris.length} teratas
+              </span>
+            )}
           </span>
-          <span className="panel-ringkas-nilai">− {rupiah(total)}</span>
+          <span className="panel-ringkas-nilai">− {rupiah(nilaiTampil)}</span>
           <button type="button" className="panel-aksi" onClick={salinNomor} disabled={tersaring.length === 0}>
             {disalin ? <Check size={14} /> : <Copy size={14} />}
             {disalin ? 'Tersalin' : 'Salin No. Pesanan'}

@@ -87,6 +87,11 @@ const TAHAP_SELESAI = {
   kunci: 'selesai', judul: 'SELESAI KE TANGAN PEMBELI', catatan: 'sudah diterima pembeli',
 };
 
+// Keempatnya untuk mencari judul panel. Sejak tahap terminal dipisah dari deret,
+// mencarinya di TAHAP_POSISI saja membuat panelnya berjudul "Posisi" — terlihat
+// di layar 15 September 2026.
+const SEMUA_TAHAP_POSISI = [...TAHAP_POSISI, TAHAP_SELESAI];
+
 // Tanggal hari ini menurut WIB, bukan menurut jam mesin pemakainya.
 // Backend membatasi harinya di WIB (lib/waktu/wib.ts); kalau sisi ini memakai
 // zona laptop, batas rentangnya bisa meleset satu hari untuk pemakai di luar WIB.
@@ -1428,9 +1433,10 @@ export default function MarketingDashboard() {
 
       {panelPosisi && (
         <PanelRetur
-          judul={TAHAP_POSISI.find((t) => t.kunci === panelPosisi)?.judul ?? 'Posisi'}
-          keterangan={TAHAP_POSISI.find((t) => t.kunci === panelPosisi)?.catatan ?? ''}
+          judul={SEMUA_TAHAP_POSISI.find((t) => t.kunci === panelPosisi)?.judul ?? 'Posisi'}
+          keterangan={SEMUA_TAHAP_POSISI.find((t) => t.kunci === panelPosisi)?.catatan ?? ''}
           baris={barisPosisi}
+          ringkasan={posisi?.[panelPosisi] ?? null}
           onTutup={() => setPanelPosisi(null)}
         />
       )}
@@ -1440,6 +1446,7 @@ export default function MarketingDashboard() {
           judul={TAHAP_RETUR.find((t) => t.kunci === panelTahap)?.judul ?? 'Retur'}
           keterangan={TAHAP_RETUR.find((t) => t.kunci === panelTahap)?.keterangan ?? ''}
           baris={barisPanel}
+          ringkasan={returTahap?.[panelTahap] ?? null}
           onTutup={() => setPanelTahap(null)}
         />
       )}
