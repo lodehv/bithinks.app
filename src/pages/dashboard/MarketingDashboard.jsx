@@ -65,12 +65,27 @@ const TAHAP_RETUR = [
 // EMPAT TAHAP PERJALANAN PESANAN — keputusan pemilik toko 14 September 2026.
 // Ditulis sekali di sini supaya urutan, nama, dan artinya tidak pernah berbeda
 // antara kartu dan panel rinciannya.
+// TIGA TAHAP TERBUKA — posisi hari ini, tanpa tanggal. Pesanan masuk lalu
+// keluar lagi, jadi angkanya bergerak naik-turun dan masuk akal tanpa periode.
 const TAHAP_POSISI = [
   { kunci: 'belumDikirim', judul: 'BELUM DIKIRIM', catatan: 'masih di gudang, masih bisa batal' },
   { kunci: 'diJalan', judul: 'UANG DI JALAN', catatan: 'sudah keluar gudang, belum sampai' },
   { kunci: 'berisikoBatal', judul: 'BERISIKO BATAL', catatan: 'ada permintaan batal, belum final', utama: true },
-  { kunci: 'selesai', judul: 'SELESAI KE TANGAN PEMBELI', catatan: 'sudah diterima pembeli' },
 ];
+
+// Tahap terminal, dipisah dari deret panah dan MENGIKUTI tanggal.
+//
+// Dua alasan, keduanya dari data. Tanpa batas tanggal ia cuma menumpuk
+// selamanya — terukur 14 September 2026: Rp 2.110.302.219 dari 28.510 pesanan,
+// angka yang tidak bisa dipakai memutuskan apa pun.
+//
+// Dan panah berarti "pesanan berpindah ke kotak sebelahnya". Begitu tiga kartu
+// kiri berisi semua bulan sementara kartu ini hanya bulan terpilih, panah itu
+// berbohong: pesanan yang di jalan sejak Agustus tidak akan pernah muncul di
+// kartu September.
+const TAHAP_SELESAI = {
+  kunci: 'selesai', judul: 'SELESAI KE TANGAN PEMBELI', catatan: 'sudah diterima pembeli',
+};
 
 const HARI_BAWAAN = 1;
 
@@ -673,8 +688,9 @@ export default function MarketingDashboard() {
           <div className="summary-card-header">
             <h4>Posisi Uang — sekarang</h4>
             <span className="summary-card-subtitle">
-              Setiap pesanan tepat di <b>satu</b> tahap · saldo, bukan periode ·{' '}
-              <b>tidak mengikuti saringan tanggal</b> · mengikuti pilihan platform &amp; toko
+              Setiap pesanan tepat di <b>satu</b> tahap · tiga tahap kiri adalah{' '}
+              <b>posisi hari ini</b>, tanpa tanggal · yang kanan{' '}
+              <b>mengikuti periode terpilih</b> · keduanya mengikuti pilihan platform &amp; toko
             </span>
           </div>
 
@@ -687,7 +703,7 @@ export default function MarketingDashboard() {
               itu yang paling merugikan — justru pesanan itulah yang masih bisa
               diselamatkan kalau dilihat hari ini.
 
-              Keempatnya TOMBOL: menekannya memunculkan nomor pesanannya. */}
+              Semuanya TOMBOL: menekannya memunculkan nomor pesanannya. */}
           <div className="tahap-uang">
             {TAHAP_POSISI.map(({ kunci, judul, catatan, utama }, urut) => {
               const isi = posisi[kunci] ?? { nilai: 0, pesanan: 0 };
@@ -715,6 +731,35 @@ export default function MarketingDashboard() {
               );
             })}
           </div>
+
+          {/* TAHAP TERMINAL — dipisah, dan sengaja tanpa panah dari tahap di
+              kiri. Lihat alasannya di TAHAP_SELESAI. */}
+          {(() => {
+            const isi = posisi[TAHAP_SELESAI.kunci] ?? { nilai: 0, pesanan: 0 };
+            const bisaDibuka = (isi.pesanan ?? 0) > 0;
+            return (
+              <div className="posisi-terminal">
+                <div className="posisi-terminal-garis" />
+                <button
+                  type="button"
+                  className="tahap tahap-selesai"
+                  onClick={() => bisaDibuka && setPanelPosisi(TAHAP_SELESAI.kunci)}
+                  disabled={!bisaDibuka}
+                >
+                  <span className="tahap-label">
+                    {TAHAP_SELESAI.judul}
+                    <span className="tahap-periode">periode ini</span>
+                  </span>
+                  <div className="block-value">{formatRupiah(isi.nilai ?? 0)}</div>
+                  <div className="tahap-note">
+                    {isi.pesanan ?? 0} pesanan · {TAHAP_SELESAI.catatan}
+                    <span className="tanda-dasar">KOTOR</span>
+                  </div>
+                  {bisaDibuka && <div className="retur-ajakan">Lihat nomor pesanan</div>}
+                </button>
+              </div>
+            );
+          })()}
 
           {/* DI LUAR ketiga tahap, dan sengaja begitu: pembeli belum membayar,
               jadi ini belum uang sama sekali. Tidak dibuang diam-diam —

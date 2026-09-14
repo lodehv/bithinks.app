@@ -77,7 +77,9 @@ export const statsTiruan = {
     belumDikirim: { nilai: 41250000, pesanan: 312, dasar: 'kotor' },
     diJalan: { nilai: 268400000, pesanan: 2140, dasar: 'kotor' },
     berisikoBatal: { nilai: 2_394_414, pesanan: 38, dasar: 'kotor' },
-    selesai: { nilai: 1_754_164_499, pesanan: 30_072, dasar: 'kotor' },
+    // Hanya periode terpilih, bukan seumur hidup toko.
+    selesai: { nilai: 214_806_118, pesanan: 3_412, dasar: 'kotor' },
+    selesaiIkutTanggal: true,
     // Nomor pesanan tiap tahap. Dua baris cukup untuk potret — yang perlu
     // terlihat bentuk tabelnya, bukan panjangnya.
     daftar: [
