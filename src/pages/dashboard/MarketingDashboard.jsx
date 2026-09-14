@@ -62,6 +62,16 @@ const TAHAP_RETUR = [
   },
 ];
 
+// EMPAT TAHAP PERJALANAN PESANAN — keputusan pemilik toko 14 September 2026.
+// Ditulis sekali di sini supaya urutan, nama, dan artinya tidak pernah berbeda
+// antara kartu dan panel rinciannya.
+const TAHAP_POSISI = [
+  { kunci: 'belumDikirim', judul: 'BELUM DIKIRIM', catatan: 'masih di gudang, masih bisa batal' },
+  { kunci: 'diJalan', judul: 'UANG DI JALAN', catatan: 'sudah keluar gudang, belum sampai' },
+  { kunci: 'berisikoBatal', judul: 'BERISIKO BATAL', catatan: 'ada permintaan batal, belum final', utama: true },
+  { kunci: 'selesai', judul: 'SELESAI KE TANGAN PEMBELI', catatan: 'sudah diterima pembeli' },
+];
+
 const HARI_BAWAAN = 1;
 
 // Tanggal hari ini menurut WIB, bukan menurut jam mesin pemakainya.
@@ -299,9 +309,36 @@ export default function MarketingDashboard() {
   // layar. Halaman laporan jadi terbaca bercecer justru oleh bagian yang paling
   // jarang dibutuhkan. Sekarang: ringkasan di halaman, rincian saat diminta.
   const [panelTahap, setPanelTahap] = useState(null);
+  // Panel yang sama dipakai zona Posisi Uang: pertanyaannya identik — "pesanan
+  // mana saja?" — jadi bentuk jawabannya tidak perlu dua macam.
+  const [panelPosisi, setPanelPosisi] = useState(null);
 
   const barisPanel = panelTahap
     ? daftarRetur.filter((r) => r.kartu === panelTahap)
+    : [];
+
+  // Baris posisi diubah ke bentuk yang sama dengan baris retur. Marketplace
+  // tidak memberi alasan, resi balik, maupun linimasa untuk pesanan yang masih
+  // berjalan — kolomnya dibiarkan kosong, dan panel menuliskannya sebagai garis
+  // pendek, bukan sel kosong yang terbaca seperti kerusakan tampilan.
+  const barisPosisi = panelPosisi
+    ? (posisi?.daftar ?? [])
+      .filter((o) => o.kartu === panelPosisi)
+      .map((o) => ({
+        id: o.id,
+        pesanan: o.pesanan,
+        channel: NAMA_PLATFORM[o.channel] ?? o.channel,
+        toko: o.toko,
+        item: '',
+        nominal: o.nominal,
+        alasan: null,
+        alasanAsli: null,
+        status: o.status,
+        resi: null,
+        diamHari: null,
+        uangSaja: false,
+        jejak: [],
+      }))
     : [];
 
 
@@ -641,44 +678,42 @@ export default function MarketingDashboard() {
             </span>
           </div>
 
+          {/* EMPAT TAHAP PERJALANAN PESANAN, keputusan pemilik toko 14 September
+              2026. Dua tahap terakhir dulu tentang kapan UANGNYA dilepas
+              marketplace ("menunggu / selesai rekonsiliasi"). Yang dia tanyakan
+              tiap hari berbeda: di mana PESANANNYA sekarang.
+
+              "Berisiko batal" sebelumnya dibuang dari zona ini sama sekali, dan
+              itu yang paling merugikan — justru pesanan itulah yang masih bisa
+              diselamatkan kalau dilihat hari ini.
+
+              Keempatnya TOMBOL: menekannya memunculkan nomor pesanannya. */}
           <div className="tahap-uang">
-            <div className="tahap">
-              <span className="tahap-label">BELUM DIKIRIM</span>
-              <div className="block-value">{formatRupiah(posisi.belumDikirim?.nilai ?? 0)}</div>
-              <div className="tahap-note">
-                {posisi.belumDikirim?.pesanan ?? 0} pesanan · masih bisa batal
-                <span className="tanda-dasar">KOTOR</span>
-              </div>
-            </div>
-            <div className="tahap-panah">→</div>
-            <div className="tahap">
-              <span className="tahap-label">UANG DI JALAN</span>
-              <div className="block-value">{formatRupiah(posisi.diJalan?.nilai ?? 0)}</div>
-              <div className="tahap-note">
-                {posisi.diJalan?.pesanan ?? 0} pesanan · sudah keluar gudang
-                <span className="tanda-dasar">KOTOR</span>
-              </div>
-            </div>
-            <div className="tahap-panah">→</div>
-            <div className="tahap tahap-utama">
-              <span className="tahap-label">MENUNGGU REKONSILIASI</span>
-              <div className="block-value text-purple">{formatRupiah(posisi.menungguCair?.nilai ?? 0)}</div>
-              <div className="tahap-note">
-                {posisi.menungguCair?.pesanan ?? 0} pesanan · sudah sampai, uang belum dilepas
-                <span className="tanda-dasar">KOTOR</span>
-              </div>
-            </div>
-            <div className="tahap-panah">→</div>
-            {/* Tahap terakhir: rekonsiliasi selesai, uang sudah di dompet.
-                NETO — beban platform sudah dipotong sebelum masuk. */}
-            <div className="tahap tahap-selesai">
-              <span className="tahap-label">SELESAI REKONSILIASI</span>
-              <div className="block-value">{formatRupiah(posisi.sudahCair?.nilai ?? 0)}</div>
-              <div className="tahap-note">
-                {posisi.sudahCair?.pesanan ?? 0} pesanan · uang sudah di dompet
-                <span className="tanda-dasar tanda-neto">NETO</span>
-              </div>
-            </div>
+            {TAHAP_POSISI.map(({ kunci, judul, catatan, utama }, urut) => {
+              const isi = posisi[kunci] ?? { nilai: 0, pesanan: 0 };
+              const bisaDibuka = (isi.pesanan ?? 0) > 0;
+              return (
+                <Fragment key={kunci}>
+                  {urut > 0 && <div className="tahap-panah">→</div>}
+                  <button
+                    type="button"
+                    className={`tahap${utama ? ' tahap-utama' : ''}`}
+                    onClick={() => bisaDibuka && setPanelPosisi(kunci)}
+                    disabled={!bisaDibuka}
+                  >
+                    <span className="tahap-label">{judul}</span>
+                    <div className={`block-value${utama ? ' text-purple' : ''}`}>
+                      {formatRupiah(isi.nilai ?? 0)}
+                    </div>
+                    <div className="tahap-note">
+                      {isi.pesanan ?? 0} pesanan · {catatan}
+                      <span className="tanda-dasar">KOTOR</span>
+                    </div>
+                    {bisaDibuka && <div className="retur-ajakan">Lihat nomor pesanan</div>}
+                  </button>
+                </Fragment>
+              );
+            })}
           </div>
 
           {/* DI LUAR ketiga tahap, dan sengaja begitu: pembeli belum membayar,
@@ -1322,6 +1357,15 @@ export default function MarketingDashboard() {
           </div>
         </div>
       </div>
+
+      {panelPosisi && (
+        <PanelRetur
+          judul={TAHAP_POSISI.find((t) => t.kunci === panelPosisi)?.judul ?? 'Posisi'}
+          keterangan={TAHAP_POSISI.find((t) => t.kunci === panelPosisi)?.catatan ?? ''}
+          baris={barisPosisi}
+          onTutup={() => setPanelPosisi(null)}
+        />
+      )}
 
       {panelTahap && (
         <PanelRetur

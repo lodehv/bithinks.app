@@ -1495,12 +1495,27 @@
   gap: 8px;
 }
 
+/* Tahap adalah TOMBOL sejak 14 September 2026: menekannya memunculkan nomor
+   pesanannya. Tampilannya tetap kartu — yang berubah cuma kursornya dan sedikit
+   hover, karena empat tombol bergaya tombol akan berteriak lebih keras daripada
+   angka yang dibawanya. */
 .tahap {
   border: 1px solid #eef0f4;
   border-radius: 10px;
   padding: 12px 14px;
   background: #fff;
+  text-align: left;
+  width: 100%;
+  font: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
+
+.tahap:hover:not(:disabled) { border-color: #ddd6fe; background: #FAFAFA; }
+.tahap:disabled { cursor: default; }
+
+/* Tahap yang tidak bisa dibuka tidak boleh menjanjikan apa pun. */
+.tahap:disabled .retur-ajakan { display: none; }
 
 /* Tahap terakhir yang paling berguna: hampir pasti jadi uang, tinggal menunggu. */
 .tahap-utama {
