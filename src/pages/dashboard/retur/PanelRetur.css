@@ -291,3 +291,42 @@
   .panel-retur { max-height: 100vh; border-radius: 0; }
   .panel-ringkas-nilai { margin-left: 0; }
 }
+
+/* ── DIAM & UANG SAJA ───────────────────────────────────────────────────────
+   Dua penanda yang mengubah tabel dari catatan jadi daftar kerja.
+
+   "Diam" = hari sejak marketplace terakhir memperbarui returnya. Diam 2 hari
+   itu normal; diam 32 hari berarti barangnya hampir pasti tidak akan datang.
+   Yang lewat 30 hari ditebalkan — bukan diberi warna sendiri, karena satu
+   warna aksen per layar sudah dipakai nilai returnya. */
+.panel-kolom-diam {
+  width: 74px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.panel-diam {
+  font-variant-numeric: tabular-nums;
+  color: #6b7280;
+}
+
+.panel-diam-lama {
+  font-weight: 700;
+  color: #b91c1c;
+}
+
+/* Uang kembali, barang tidak. Ditulis kecil di bawah nama platform karena ia
+   sifat baris itu, bukan kolom tersendiri — satu kolom lagi akan menambah
+   lebar tabel demi penanda yang hanya berlaku pada sebagian baris. */
+.panel-uang-saja {
+  margin-left: 6px;
+  padding: 1px 5px;
+  border: 1px solid #E5E7EB;
+  border-radius: 4px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #92400e;
+  background: #FFFBEB;
+  text-transform: uppercase;
+}

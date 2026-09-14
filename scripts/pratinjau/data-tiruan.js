@@ -113,9 +113,14 @@ export const statsTiruan = {
   // selalu mengirim keduanya, dan potret yang semua barisnya lengkap tidak
   // pernah memperlihatkan bagaimana baris yang tidak lengkap terbaca.
   retur: {
+    total: { nilai: 3_578_900, pesanan: 18 },
     diJalan: { nilai: 1_473_000, pesanan: 8 },
     sampai: { nilai: 2_105_900, pesanan: 10 },
-    ikutSaringanTanggal: false,
+    // Posisi HARI INI atas pesanan bulan lain. Angkanya meniru produksi
+    // 14 Sep 2026 — termasuk yang sudah diam sebulan, karena baris yang diam
+    // panjang itulah yang paling perlu terbaca di potret.
+    luarPeriode: { nilai: 2_576_597, pesanan: 10, diamTerlama: 32 },
+    ikutSaringanTanggal: true,
     // Sel rincian: tahap × platform × toko. Dua toko per platform supaya
     // pengelompokan benar-benar teruji — satu toko saja akan terlihat rapi
     // apa pun bentuk kodenya.
@@ -132,6 +137,7 @@ export const statsTiruan = {
         item: '[PAKET RESELLER KCL] Business Package KCL - Pupuk Dewa Dewi, Pupuk Manohara Merah - 100% Original × 1 +1 item lain', nominal: 189_000,
         alasan: 'Barang rusak saat diterima', alasanAsli: 'DAMAGED',
         resi: 'SPXID048812345678', status: 'ACCEPTED', tanggal: '11 Sep 09:12',
+        diamHari: 2, uangSaja: false,
         jejak: [
           { waktu: '11 Sep 09:12', teks: 'Pembeli mengajukan retur' },
           { waktu: '11 Sep 14:40', teks: 'Penjual menyetujui' },
@@ -144,6 +150,7 @@ export const statsTiruan = {
         item: 'Masker Wajah Charcoal × 1', nominal: 74_500,
         alasan: 'Barang tidak sesuai deskripsi', alasanAsli: 'ITEM_NOT_AS_DESCRIBED',
         resi: 'JX8827361192', status: 'BUYER_SHIPPED_ITEM', tanggal: '10 Sep 20:31',
+        diamHari: 3, uangSaja: false,
         jejak: [
           { waktu: '10 Sep 20:31', teks: 'Pembeli mengajukan retur' },
           { waktu: '11 Sep 07:15', teks: 'Disetujui otomatis' },
@@ -156,6 +163,7 @@ export const statsTiruan = {
         item: '[Paket Lebih murah 2Pcs] Pupuk Dewa Dewi 1 Liter -KCL- Original untuk Tanaman dalam masa Pembuahan Umbi dan Buah × 1', nominal: 410_000,
         alasan: 'Pembeli berubah pikiran', alasanAsli: 'CHANGE_OF_MIND',
         resi: 'JX8827361007', status: 'RETURN_OR_REFUND_REQUEST_COMPLETE', tanggal: '05 Sep 11:02',
+        diamHari: 5, uangSaja: false,
         jejak: [
           { waktu: '05 Sep 11:02', teks: 'Pembeli mengajukan retur' },
           { waktu: '06 Sep 09:44', teks: 'Pembeli mengirim barang' },
@@ -168,6 +176,7 @@ export const statsTiruan = {
         item: 'Sabun Batang Kemasan 6 pcs × 1', nominal: 58_000,
         alasan: 'Ukuran tidak sesuai', alasanAsli: 'WRONG_SIZE',
         resi: null, status: 'ACCEPTED', tanggal: '10 Sep 14:02',
+        diamHari: 32, uangSaja: true,
         jejak: [],
       },
     ],

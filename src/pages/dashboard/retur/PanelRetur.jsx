@@ -62,13 +62,14 @@ export default function PanelRetur({ judul, keterangan, baris, onTutup }) {
   // tersendiri; CSV dibuka Excel apa adanya dan tidak menambah apa pun ke
   // bundel yang sudah besar.
   const unduh = () => {
-    const kolom = ['No. Pesanan', 'Toko', 'Platform', 'Resi Retur', 'Status Marketplace', 'Alasan', 'Nominal', 'Tanggal']
+    const kolom = ['No. Pesanan', 'Toko', 'Platform', 'Resi Retur', 'Status Marketplace', 'Alasan', 'Nominal', 'Tanggal', 'Diam (hari)', 'Uang saja']
     const kutip = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`
     const isi = [
       kolom.join(','),
       ...tersaring.map((r) => [
         r.pesanan, r.toko, r.channel, r.resi ?? '', r.status ?? '',
         r.alasan ?? '', r.nominal ?? 0, r.tanggal ?? '',
+        typeof r.diamHari === 'number' ? r.diamHari : '', r.uangSaja ? 'ya' : '',
       ].map(kutip).join(',')),
     ].join('\n')
     // BOM supaya Excel membaca huruf beraksen dengan benar. Ditulis sebagai
@@ -179,6 +180,11 @@ export default function PanelRetur({ judul, keterangan, baris, onTutup }) {
                   <th>Status Marketplace</th>
                   <th>Alasan</th>
                   <th>Tanggal</th>
+                  {/* Diam = hari sejak marketplace terakhir memperbarui retur
+                      ini. Inilah yang mengubah "di jalan" dari status pasif jadi
+                      daftar kerja: diam 2 hari normal, diam 32 hari harus
+                      dikejar atau direlakan. */}
+                  <th className="panel-kolom-diam">Diam</th>
                 </tr>
               </thead>
               <tbody>
@@ -212,7 +218,13 @@ function BarisRetur({ nomor, r, buka, onKlik }) {
         <td className="panel-kolom-no">{nomor}</td>
         <td>
           <div className="panel-no-pesanan">{r.pesanan}</div>
-          <div className="panel-sub">{r.channel}</div>
+          <div className="panel-sub">
+            {r.channel}
+            {/* Uang kembali, barang tidak. Tanpa penanda ini, barang ditunggu
+                padahal tidak akan pernah datang — dan kelak mesin stok akan
+                mengaku barangnya masuk rak padahal hilang di jalan. */}
+            {r.uangSaja && <span className="panel-uang-saja">uang saja</span>}
+          </div>
         </td>
         <td className="panel-toko-sel">{r.toko}</td>
         {/* Garis pendek, bukan sel kosong: marketplace belum tentu mengirim
@@ -221,10 +233,15 @@ function BarisRetur({ nomor, r, buka, onKlik }) {
         <td><span className="panel-status">{r.status || '—'}</span></td>
         <td className="panel-alasan" title={r.alasan || undefined}>{r.alasan || '—'}</td>
         <td className="panel-tanggal">{tanggal || '—'}</td>
+        <td className="panel-kolom-diam">
+          {typeof r.diamHari === 'number'
+            ? <span className={`panel-diam${r.diamHari >= 30 ? ' panel-diam-lama' : ''}`}>{r.diamHari} hr</span>
+            : '—'}
+        </td>
       </tr>
       {buka && (
         <tr className="panel-detail-baris">
-          <td colSpan="7">
+          <td colSpan="8">
             <div className="panel-detail">
               <dl className="panel-fakta">
                 <div><dt>Barang</dt><dd>{r.item || '—'}</dd></div>
