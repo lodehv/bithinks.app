@@ -76,8 +76,16 @@ export const statsTiruan = {
   posisi: {
     belumDikirim: { nilai: 41250000, pesanan: 312, dasar: 'kotor' },
     diJalan: { nilai: 268400000, pesanan: 2140, dasar: 'kotor' },
-    menungguCair: { nilai: 726829096, pesanan: 12657, dasar: 'kotor' },
-    sudahCair: { nilai: 1027335403, pesanan: 17415, dasar: 'neto' },
+    berisikoBatal: { nilai: 2_394_414, pesanan: 38, dasar: 'kotor' },
+    selesai: { nilai: 1_754_164_499, pesanan: 30_072, dasar: 'kotor' },
+    // Nomor pesanan tiap tahap. Dua baris cukup untuk potret — yang perlu
+    // terlihat bentuk tabelnya, bukan panjangnya.
+    daftar: [
+      { id: 'P1', kartu: 'belumDikirim', pesanan: '250914AAA111', channel: 'shopee', toko: 'Bithinks Official Shop Jakarta', nominal: 132_000, status: 'READY_TO_SHIP' },
+      { id: 'P2', kartu: 'diJalan', pesanan: '576461234567890001', channel: 'tiktok', toko: 'Bithinks Store Indonesia', nominal: 98_000, status: 'IN_TRANSIT' },
+      { id: 'P3', kartu: 'berisikoBatal', pesanan: '250913BBB222', channel: 'shopee', toko: 'Bithinks Grosir Bandung', nominal: 77_000, status: 'IN_CANCEL' },
+      { id: 'P4', kartu: 'selesai', pesanan: '576461234567890002', channel: 'tiktok', toko: 'Bithinks Beauty Official', nominal: 410_000, status: 'COMPLETED' },
+    ],
     belumDibayar: { nilai: 190115, pesanan: 5, dasar: 'kotor' },
     ikutSaringanTanggal: false,
     // Sel rincian: tahap × platform × toko. Dua toko per platform supaya
