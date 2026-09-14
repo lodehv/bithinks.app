@@ -267,6 +267,12 @@ export default function MarketingDashboard() {
   // lain. null berarti server belum menghitungnya — berbeda dari nol, yang
   // berarti sudah dihitung dan memang tidak ada.
   const returLuar = returTahap?.luarPeriode ?? null;
+  // Pesanan yang dibatalkan SETELAH barangnya keluar gudang. Marketplace
+  // menamainya pembatalan, jadi ia tidak pernah masuk tabel retur — tapi
+  // barangnya berangkat lalu berbalik, dan harus kembali ke rak sama seperti
+  // retur. Terukur 14 September 2026: 123 pesanan senilai Rp 10.716.139,
+  // sementara retur yang terhitung hanya Rp 413.246.
+  const returBatalKirim = returTahap?.batalSesudahKirim ?? null;
 
   // ── PANEL RINCIAN ─────────────────────────────────────────────────────────
   // Kedua tahap adalah TOMBOL: menekannya membuka panel berisi saringan
@@ -793,7 +799,7 @@ export default function MarketingDashboard() {
               Rinciannya TIDAK lagi menempel di halaman. Pada data sungguhan itu
               22 baris sekaligus, dan halaman laporan terbaca bercecer justru
               oleh bagian yang paling jarang dibutuhkan. */}
-          <div className="retur-kolom">
+          <div className={`retur-kolom${returBatalKirim ? " retur-kolom-tiga" : ""}`}>
             {TAHAP_RETUR.map(({ kunci, judul, catatan }) => {
               const ringkas = kunci === 'diJalan' ? returDiJalan : returSampai;
               const bisaDibuka = adaTahapRetur && ringkas.pesanan > 0;
@@ -822,6 +828,28 @@ export default function MarketingDashboard() {
                 </button>
               );
             })}
+
+            {/* Blok ketiga, dan sengaja BUKAN tombol: marketplace tidak
+                memberi nomor retur untuk pembatalan, jadi tidak ada baris
+                rincian untuk dibuka.
+
+                Juga sengaja tidak dipaksakan ke salah satu tahap. Tidak ada
+                resi balik maupun status logistiknya, jadi kedatangannya tidak
+                punya sumber — menaruhnya di "di jalan" akan menumpuk selamanya,
+                di "selesai" akan mengaku barangnya sudah di rak tanpa dasar. */}
+            {returBatalKirim && (
+              <div className="retur-tahap retur-tahap-pasif">
+                <div className="retur-tahap-kepala">
+                  <span className="block-category">BATAL SETELAH DIKIRIM</span>
+                </div>
+                <div className="block-value blok-pengurang-nilai">
+                  - {formatRupiah(returBatalKirim.nilai)}
+                </div>
+                <div className="block-subtext">
+                  {returBatalKirim.pesanan} pesanan · barang sudah keluar gudang
+                </div>
+              </div>
+            )}
           </div>
 
           {/* JAM KEDUA. Kartu di atas menjawab pertanyaan akuntansi: dari omset

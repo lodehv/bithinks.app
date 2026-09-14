@@ -1807,8 +1807,17 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
 }
+/* Tiga blok sejajar saat pembatalan-sesudah-kirim ikut tampil. Dua kolom akan
+   melempar blok ketiga ke baris sendiri dan menyisakan separuh layar kosong —
+   keluhan tata letak yang sama yang membuat kartu "Breakdown status" dibuang. */
+.retur-kolom-tiga { grid-template-columns: repeat(3, 1fr); }
+
+@media (max-width: 1180px) {
+  .retur-kolom-tiga { grid-template-columns: repeat(2, 1fr); }
+}
 @media (max-width: 900px) {
-  .retur-kolom { grid-template-columns: 1fr; }
+  .retur-kolom,
+  .retur-kolom-tiga { grid-template-columns: 1fr; }
 }
 
 /* Tahap adalah TOMBOL, bukan kartu pajangan. Yang aktif ditandai garis bawah
@@ -1827,6 +1836,11 @@
   transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 .retur-tahap:hover { background: #FAFAFA; }
+
+/* Blok yang tidak bisa dibuka: tidak ada rincian di baliknya, jadi ia tidak
+   boleh terlihat seperti tombol. Kursornya biasa dan hover-nya diam. */
+.retur-tahap-pasif { cursor: default; }
+.retur-tahap-pasif:hover { background: #ffffff; }
 .retur-tahap-aktif {
   border-bottom-color: #4F46E5;
   background: #FAFAFA;
