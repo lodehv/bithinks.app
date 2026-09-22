@@ -41,7 +41,7 @@ function puncakRapi(v) {
   return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10) * p;
 }
 
-const GARIS = ["#F3F4F6", "#F3F4F6", "#F3F4F6", "#E5E7EB"]; // yang terbawah sedikit lebih tegas
+const GARIS = ["#F0F1F2", "#F0F1F2", "#F0F1F2", "#DDDEE1"]; // yang terbawah sedikit lebih tegas
 
 export default function GrafikBatang({
   data,            // [{ label, nilai }]
@@ -56,7 +56,7 @@ export default function GrafikBatang({
 
   if (!data.length) {
     return (
-      <div style={{ padding: "28px 0", textAlign: "center", color: "#9CA3AF", fontSize: 13 }}>
+      <div style={{ padding: "28px 0", textAlign: "center", color: "#8C8F97", fontSize: 13 }}>
         Belum ada pergerakan pada periode ini.
       </div>
     );
@@ -83,9 +83,9 @@ export default function GrafikBatang({
           legenda. Totalnya ditulis sekali di sini — bukan di setiap batang. */}
       <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 6 }}>
         <span style={{ width: 8, height: 8, borderRadius: 2, background: warna, flexShrink: 0 }} />
-        <span style={{ fontSize: 12, fontWeight: 600, color: "#374151" }}>{judul}</span>
-        <span style={{ fontSize: 11, color: "#9CA3AF" }}>{satuan}</span>
-        <span style={{ marginLeft: "auto", fontSize: 12, fontWeight: 600, color: "#111827" }}>
+        <span style={{ fontSize: 12, fontWeight: 600, color: "#505258" }}>{judul}</span>
+        <span style={{ fontSize: 11, color: "#8C8F97" }}>{satuan}</span>
+        <span style={{ marginLeft: "auto", fontSize: 12, fontWeight: 600, color: "#292A2E" }}>
           {format(total)}
         </span>
       </div>
@@ -94,7 +94,7 @@ export default function GrafikBatang({
         {/* Sumbu nilai. Empat tingkat saja — lebih dari itu jadi bising. */}
         <div style={{
           width: 44, height: tinggi, position: "relative", flexShrink: 0,
-          fontSize: 10, color: "#9CA3AF", fontWeight: 600,
+          fontSize: 10, color: "#8C8F97", fontWeight: 600,
         }}>
           {[0, 1, 2, 3].map((i) => (
             <span key={i} style={{
@@ -154,7 +154,7 @@ export default function GrafikBatang({
                 bottom: `${(data[iPuncak].nilai / puncak) * 100}%`,
                 left: `${((iPuncak + 0.5) / data.length) * 100}%`,
                 transform: "translate(-50%, -3px)",
-                fontSize: 10, fontWeight: 700, color: "#374151", whiteSpace: "nowrap",
+                fontSize: 10, fontWeight: 700, color: "#505258", whiteSpace: "nowrap",
                 pointerEvents: "none",
               }}>{format(data[iPuncak].nilai)}</div>
             )}
@@ -166,7 +166,7 @@ export default function GrafikBatang({
                 position: "absolute", bottom: "100%",
                 left: `${((aktif + 0.5) / data.length) * 100}%`,
                 transform: "translate(-50%, -6px)",
-                background: "#111827", color: "#fff", borderRadius: 6,
+                background: "#292A2E", color: "#fff", borderRadius: 6,
                 padding: "5px 9px", fontSize: 11, whiteSpace: "nowrap",
                 pointerEvents: "none", zIndex: 5,
                 boxShadow: "0 4px 12px rgba(0,0,0,.18)",
@@ -183,7 +183,7 @@ export default function GrafikBatang({
           {/* Sumbu tanggal */}
           <div style={{
             display: "flex", gap: 2, justifyContent: "space-between", marginTop: 6,
-            fontSize: 10, color: "#9CA3AF", fontWeight: 600,
+            fontSize: 10, color: "#8C8F97", fontWeight: 600,
           }}>
             {data.map((d, i) => (
               <span key={d.label} style={{

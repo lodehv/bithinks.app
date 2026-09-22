@@ -1,0 +1,41 @@
+/* Tabs: a two-pixel rule under the selected tab, no pills, no boxes. The rule
+ * is the only thing that moves, so the eye tracks one object.
+ */
+
+.ds-tabs {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-050);
+  border-bottom: 2px solid var(--ds-border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.ds-tabs::-webkit-scrollbar { display: none; }
+
+.ds-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-075);
+  padding: var(--ds-space-100) var(--ds-space-150);
+  margin-bottom: -2px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--ds-text-subtlest);
+  font-size: var(--ds-font-size-body);
+  font-weight: var(--ds-font-weight-medium);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--ds-duration-small) var(--ds-ease-out),
+    border-color var(--ds-duration-small) var(--ds-ease-out);
+}
+
+.ds-tab:hover { color: var(--ds-text); border-bottom-color: var(--ds-border-bold); }
+
+.ds-tab[aria-selected="true"],
+.ds-tab.active {
+  color: var(--ds-text-selected);
+  border-bottom-color: var(--ds-border-selected);
+  font-weight: var(--ds-font-weight-semibold);
+}

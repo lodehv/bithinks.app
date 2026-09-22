@@ -20,6 +20,13 @@ const LEBAR = [1440, 1280, 1024]
 const HALAMAN = [
   { berkas: 'index', nama: 'laporan' },
   { berkas: 'antrean', nama: 'antrean-cetak' },
+  // Pesanan dan Gudang ikut sejak redesain Atlassian: keduanya dipakai setiap
+  // hari, dan sebelum ini tidak ada satu pun potret yang membuktikan tata
+  // letaknya masih utuh setelah warna dan jarak diganti.
+  { berkas: 'pesanan', nama: 'pesanan' },
+  { berkas: 'gudang', nama: 'gudang' },
+  { berkas: 'beranda', nama: 'beranda' },
+  { berkas: 'produk', nama: 'kelola-produk' },
 ]
 
 let gagal = 0

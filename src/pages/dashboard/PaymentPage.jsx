@@ -75,7 +75,7 @@ export default function PaymentPage({ onBack, plan }) {
           <span>Pembayaran diproses oleh <strong>iPaymu</strong> (gateway berlisensi). Kami tidak menyimpan data kartu/e-wallet Anda.</span>
         </div>
 
-        {error && <div style={{ fontSize: 12, color: "#DC2626", margin: "10px 0" }}>{error}</div>}
+        {error && <div style={{ fontSize: 12, color: "#C9372C", margin: "10px 0" }}>{error}</div>}
 
         <button className="pay-submit" onClick={pay} disabled={busy}>
           {busy ? "Mengalihkan ke iPaymu…" : <>Bayar Sekarang <ExternalLink size={15} /></>}

@@ -130,11 +130,11 @@ export default function AntreanCetak({ locked = false, onRequirePayment }) {
           Layar kosong hanya untuk muatan PERTAMA, saat memang belum ada apa
           pun untuk ditampilkan. */}
       {memuat && !data ? (
-        <div style={{ color: "#9CA3AF", fontSize: 13, padding: "20px 2px" }}>Memuat antrean…</div>
+        <div style={{ color: "#8C8F97", fontSize: 13, padding: "20px 2px" }}>Memuat antrean…</div>
       ) : galat ? (
-        <div style={{ color: "#991B1B", fontSize: 13, padding: "20px 2px" }}>{galat}</div>
+        <div style={{ color: "#AE2E24", fontSize: 13, padding: "20px 2px" }}>{galat}</div>
       ) : !data || data.totalLabel === 0 ? (
-        <div style={{ color: "#6B7280", fontSize: 14, padding: "28px 2px", textAlign: "center" }}>
+        <div style={{ color: "#6B6E76", fontSize: 14, padding: "28px 2px", textAlign: "center" }}>
           {sisi === "sudah"
             ? "Belum ada resi yang tercetak untuk saringan ini."
             : "Tidak ada pesanan yang menunggu dicetak. 👍"}
@@ -152,7 +152,7 @@ export default function AntreanCetak({ locked = false, onRequirePayment }) {
               tercetak oleh tombol utama kalau memang tersedia. */}
 
           {data.selisihSisi ? (
-            <Catatan ikon={<Info size={16} />} warna="#991B1B" latar="#FEF2F2">
+            <Catatan ikon={<Info size={16} />} warna="#AE2E24" latar="#FFECEB">
               Ada <strong>{angka(Math.abs(data.selisihSisi))} pesanan</strong> yang tidak terhitung di
               sisi mana pun. Ini kekeliruan di sisi kami — tolong beri tahu, jangan dipakai sebagai
               acuan dulu.
@@ -172,12 +172,12 @@ export default function AntreanCetak({ locked = false, onRequirePayment }) {
               Shopee mengirim kabar 187-463 kali per jam, jadi sunyi satu jam
               penuh bukan hal biasa. */}
           {lamanya(data.menitSejakKabarMarketplace) === null ? (
-            <Catatan ikon={<AlertTriangle size={16} />} warna="#92400E" latar="#FFFBEB">
+            <Catatan ikon={<AlertTriangle size={16} />} warna="#9E4C00" latar="#FFF5DB">
               Belum ada kabar sama sekali dari {namaChannel(channel)}. Angka di
               halaman ini mungkin belum yang terbaru.
             </Catatan>
           ) : data.menitSejakKabarMarketplace >= (data.batasSunyiMenit ?? 60) && (
-            <Catatan ikon={<AlertTriangle size={16} />} warna="#92400E" latar="#FFFBEB">
+            <Catatan ikon={<AlertTriangle size={16} />} warna="#9E4C00" latar="#FFF5DB">
               Kabar terakhir dari {namaChannel(channel)} sudah{" "}
               {lamanya(data.menitSejakKabarMarketplace)} lalu. Angka di halaman
               ini mungkin belum yang terbaru.
@@ -206,7 +206,7 @@ export default function AntreanCetak({ locked = false, onRequirePayment }) {
           <CerminSellerCenter channel={channel} dari={dari} sampai={sampai} />
 
           {data.pesananLintasKelompok > 0 && (
-            <Catatan ikon={<Info size={16} />} warna="#1E40AF" latar="#EFF6FF">
+            <Catatan ikon={<Info size={16} />} warna="#1558BC" latar="#E9F2FE">
               {angka(data.pesananLintasKelompok)} pesanan berisi lebih dari satu SKU, jadi muncul
               di beberapa kelompok. Labelnya tetap <strong>satu</strong> per pesanan — karena itu
               jumlah tiap kelompok kalau dijumlahkan lebih besar dari {angka(data.totalLabel)}.
@@ -214,14 +214,14 @@ export default function AntreanCetak({ locked = false, onRequirePayment }) {
           )}
 
           {data.pesananPaketPecah > 0 && (
-            <Catatan ikon={<AlertTriangle size={16} />} warna="#991B1B" latar="#FEF2F2">
+            <Catatan ikon={<AlertTriangle size={16} />} warna="#AE2E24" latar="#FFECEB">
               {angka(data.pesananPaketPecah)} pesanan pecah jadi beberapa paket. Sistem baru
               menyimpan paket pertama, jadi labelnya belum lengkap — cetak sisanya lewat Seller Center.
             </Catatan>
           )}
 
           {data.terpotong && (
-            <Catatan ikon={<AlertTriangle size={16} />} warna="#991B1B" latar="#FEF2F2">
+            <Catatan ikon={<AlertTriangle size={16} />} warna="#AE2E24" latar="#FFECEB">
               Antrean melebihi {angka(data.batas)} pesanan dan ditampilkan sebagian.
               Beri tahu kami — batasnya perlu dinaikkan.
             </Catatan>
@@ -236,7 +236,7 @@ export default function AntreanCetak({ locked = false, onRequirePayment }) {
             />
           ))}
 
-          <div style={{ fontSize: 12, color: "#9CA3AF", padding: "10px 2px", textAlign: "center" }}>
+          <div style={{ fontSize: 12, color: "#8C8F97", padding: "10px 2px", textAlign: "center" }}>
             Resi tercetak keluar dari antrean dengan sendirinya. Yang gagal tetap di sini
             supaya tidak ada yang terlewat.
           </div>

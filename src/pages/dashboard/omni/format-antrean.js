@@ -5,19 +5,17 @@
 // ditulis dua gaya berbeda di satu layar membuat orang mengira itu dua
 // tanggal yang berbeda.
 
+import { formatDate, formatDateTime, toDateInput } from "../../../utils/datetime";
+
 export const angka = (n) => Number(n ?? 0).toLocaleString("id-ID");
 
 /** "23 Agu" — untuk baris pesanan yang ruangnya sempit. */
-export const tanggal = (iso) =>
-  new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "short" });
+export const tanggal = (nilai) => formatDate(nilai);
 
-const hari = (s) =>
-  new Date(`${s}T00:00:00`).toLocaleDateString("id-ID", {
-    day: "numeric", month: "short", year: "numeric",
-  });
+const hari = (s) => formatDate(s, { year: "always" });
 
 /** yyyy-mm-dd menurut jam di layar orangnya, bukan UTC. */
-const iso = (d) => d.toLocaleDateString("sv-SE");
+const iso = (d) => toDateInput(d);
 
 export const hariIni = () => iso(new Date());
 
@@ -38,10 +36,7 @@ export const mundur = (n) => {
  * Dipakai menyebut kapan resi terakhir tercetak. Tanggalnya ikut karena
  * cetakan terakhir bisa saja kemarin sore, dan jam saja akan menyesatkan.
  */
-export const jamSingkat = (iso) =>
-  new Date(iso).toLocaleString("id-ID", {
-    day: "numeric", month: "short", hour: "2-digit", minute: "2-digit",
-  }).replace(/\./g, ":").replace(", ", " ");
+export const jamSingkat = (nilai) => formatDateTime(nilai);
 
 /**
  * Nama periode yang sedang dilihat, dalam bahasa manusia.

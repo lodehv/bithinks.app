@@ -4,40 +4,6 @@
   <body>
     <div id="root"></div>
     <script type="module" src="./antrean.jsx"></script>
-    <script>
-      // Menaruh hasil ukur ke dalam DOM supaya bisa dibaca dari luar Chrome.
-      // Yang diperiksa: apakah halaman melebar melewati layar. Itu persis
-      // cacat yang lolos pada 20 Agustus 2026 dan cuma ketahuan dari mata.
-      setTimeout(() => {
-        const d = document.documentElement
-        const lebih = d.scrollWidth - d.clientWidth
-        // Sekadar tahu "halaman melebar 87px" tidak menolong siapa pun. Yang
-        // menolong: elemen MANA yang melewati tepi. Dicari yang terluar dan
-        // paling dangkal, karena biang keladinya hampir selalu induk, bukan
-        // anaknya.
-        const batas = d.clientWidth
-        const tersangka = []
-        for (const el of document.querySelectorAll('body *')) {
-          const r = el.getBoundingClientRect()
-          if (r.width === 0) continue
-          const lewat = Math.round(r.right - batas)
-          if (lewat > 1) {
-            const gaya = getComputedStyle(el)
-            if (gaya.overflowX === 'auto' || gaya.overflowX === 'scroll') continue
-            let dalam = 0
-            for (let n = el; n; n = n.parentElement) dalam++
-            tersangka.push({ dalam, lewat, jejak: el.tagName.toLowerCase() +
-              (el.className && typeof el.className === 'string' ? '.' + el.className.trim().split(/\s+/).join('.') : '') })
-          }
-        }
-        tersangka.sort((a, b) => a.dalam - b.dalam || b.lewat - a.lewat)
-        const p = document.createElement('div')
-        p.id = 'ukur-luber'
-        p.style.cssText = 'position:absolute;left:-9999px;top:0'
-        p.textContent = `LUBER=${lebih} BIANG=` +
-          JSON.stringify(tersangka.slice(0, 4).map((t) => `+${t.lewat}px ${t.jejak}`))
-        document.body.appendChild(p)
-      }, 3000)
-    </script>
+    <script type="module" src="./ukur.js"></script>
   </body>
 </html>

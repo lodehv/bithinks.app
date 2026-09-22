@@ -47,7 +47,7 @@ function Sesi({ channel, s }) {
   }
 
   return (
-    <div style={{ border: "1px solid #E5E7EB", borderRadius: 10, marginBottom: 8, background: "#fff" }}>
+    <div style={{ border: "1px solid #DDDEE1", borderRadius: 10, marginBottom: 8, background: "#fff" }}>
       <button
         onClick={bukaTutup}
         style={{
@@ -56,43 +56,43 @@ function Sesi({ channel, s }) {
         }}
       >
         {buka ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
-        <Printer size={16} style={{ color: "#6B7280", flexShrink: 0 }} />
+        <Printer size={16} style={{ color: "#6B6E76", flexShrink: 0 }} />
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontWeight: 600, fontSize: 14, color: "#111827" }}>{jamSingkat(s.waktu)}</div>
-          <div style={{ fontSize: 12, color: "#6B7280" }}>satu kali cetak</div>
+          <div style={{ fontWeight: 600, fontSize: 14, color: "#292A2E" }}>{jamSingkat(s.waktu)}</div>
+          <div style={{ fontSize: 12, color: "#6B6E76" }}>satu kali cetak</div>
         </div>
         <div style={{ textAlign: "right", flexShrink: 0, minWidth: 92 }}>
-          <div style={{ fontWeight: 700, fontSize: 18, color: "#166534", fontVariantNumeric: "tabular-nums" }}>
+          <div style={{ fontWeight: 700, fontSize: 18, color: "#4C6B1F", fontVariantNumeric: "tabular-nums" }}>
             {angka(s.tercetak)}
           </div>
-          <div style={{ fontSize: 12, color: "#6B7280" }}>resi tercetak</div>
+          <div style={{ fontSize: 12, color: "#6B6E76" }}>resi tercetak</div>
         </div>
         {s.gagal > 0 && (
           <div style={{ textAlign: "right", flexShrink: 0, minWidth: 72 }}>
-            <div style={{ fontWeight: 600, fontSize: 14, color: "#991B1B", fontVariantNumeric: "tabular-nums" }}>
+            <div style={{ fontWeight: 600, fontSize: 14, color: "#AE2E24", fontVariantNumeric: "tabular-nums" }}>
               {angka(s.gagal)}
             </div>
-            <div style={{ fontSize: 12, color: "#6B7280" }}>gagal</div>
+            <div style={{ fontSize: 12, color: "#6B6E76" }}>gagal</div>
           </div>
         )}
       </button>
 
       {buka && (
-        <div style={{ borderTop: "1px solid #F3F4F6", padding: "4px 16px 12px 46px" }}>
-          {memuat && <div style={{ fontSize: 13, color: "#9CA3AF", padding: "10px 0" }}>Memuat isinya…</div>}
+        <div style={{ borderTop: "1px solid #F0F1F2", padding: "4px 16px 12px 46px" }}>
+          {memuat && <div style={{ fontSize: 13, color: "#8C8F97", padding: "10px 0" }}>Memuat isinya…</div>}
           {isi?.isi?.map((b, i) => (
             <div key={`${b.nomorPesanan}-${i}`} style={{
               display: "flex", alignItems: "center", gap: 10, padding: "8px 0",
-              borderBottom: "1px solid #F9FAFB", fontSize: 13,
+              borderBottom: "1px solid #F8F8F8", fontSize: 13,
             }}>
-              <span style={{ color: "#111827", minWidth: 150, letterSpacing: ".02em", fontVariantNumeric: "tabular-nums" }}>
+              <span style={{ color: "#292A2E", minWidth: 150, letterSpacing: ".02em", fontVariantNumeric: "tabular-nums" }}>
                 {b.nomorPesanan ?? "—"}
               </span>
-              <span style={{ flex: 1, color: "#374151", minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              <span style={{ flex: 1, color: "#505258", minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                 {b.penerima ?? "—"}
               </span>
               {b.ulangKe > 1 && (
-                <span style={{ fontSize: 11, color: "#6B7280", flexShrink: 0 }}>cetakan ke-{b.ulangKe}</span>
+                <span style={{ fontSize: 11, color: "#6B6E76", flexShrink: 0 }}>cetakan ke-{b.ulangKe}</span>
               )}
               <span
                 // Kode dan kalimat marketplace dibawa apa adanya — alasan harus
@@ -101,14 +101,14 @@ function Sesi({ channel, s }) {
                 style={{
                   fontSize: 11, padding: "2px 8px", borderRadius: 99, flexShrink: 0,
                   cursor: b.kode ? "help" : undefined,
-                  background: b.hasil === "tercetak" ? "#F0FDF4" : "#FEF2F2",
-                  color: b.hasil === "tercetak" ? "#166534" : "#991B1B",
+                  background: b.hasil === "tercetak" ? "#EFFFD6" : "#FFECEB",
+                  color: b.hasil === "tercetak" ? "#4C6B1F" : "#AE2E24",
                 }}
               >{b.hasil === "tercetak" ? "Tercetak" : (b.kode || "Gagal")}</span>
             </div>
           ))}
           {isi?.terpotong && (
-            <div style={{ fontSize: 12, color: "#92400E", paddingTop: 8 }}>
+            <div style={{ fontSize: 12, color: "#9E4C00", paddingTop: 8 }}>
               Isinya terlalu banyak dan ditampilkan sebagian.
             </div>
           )}
@@ -151,7 +151,7 @@ function Terlewat({ channel }) {
   useEffect(() => { periksa(); }, [periksa]);
 
   if (memuat) {
-    return <div style={{ fontSize: 13, color: "#9CA3AF", marginBottom: 16 }}>Memeriksa yang terlewat…</div>;
+    return <div style={{ fontSize: 13, color: "#8C8F97", marginBottom: 16 }}>Memeriksa yang terlewat…</div>;
   }
   if (!d) return null;
 
@@ -161,11 +161,11 @@ function Terlewat({ channel }) {
     return (
       <div style={{
         display: "flex", alignItems: "center", gap: 8, marginBottom: 20,
-        padding: "10px 14px", borderRadius: 10, background: "#F0FDF4",
-        border: "1px solid #BBF7D0", color: "#166534", fontSize: 13,
+        padding: "10px 14px", borderRadius: 10, background: "#EFFFD6",
+        border: "1px solid #D3F1A7", color: "#4C6B1F", fontSize: 13,
       }}>
         <strong>Tidak ada resi yang terlewat</strong>
-        <span style={{ color: "#15803D" }}>· {d.hari} hari terakhir</span>
+        <span style={{ color: "#4C6B1F" }}>· {d.hari} hari terakhir</span>
       </div>
     );
   }
@@ -173,7 +173,7 @@ function Terlewat({ channel }) {
   return (
     <div style={{
       marginBottom: 20, padding: "12px 14px", borderRadius: 10,
-      background: "#FFFBEB", border: "1px solid #FDE68A", color: "#78350F",
+      background: "#FFF5DB", border: "1px solid #FCE4A6", color: "#9E4C00",
     }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13.5 }}>
         <AlertTriangle size={16} style={{ flexShrink: 0 }} />
@@ -188,7 +188,7 @@ function Terlewat({ channel }) {
           onClick={() => setBuka((b) => !b)}
           style={{
             marginLeft: "auto", padding: "3px 10px", borderRadius: 999, cursor: "pointer",
-            border: "1px solid #FDE68A", background: "#fff", color: "#78350F",
+            border: "1px solid #FCE4A6", background: "#fff", color: "#9E4C00",
             fontSize: 12.5, fontWeight: 600, fontFamily: "inherit", flexShrink: 0,
           }}
         >{buka ? "Sembunyikan" : "Lihat nomornya"}</button>
@@ -199,12 +199,12 @@ function Terlewat({ channel }) {
           {d.daftar.map((b) => (
             <div key={b.nomorPesanan} style={{ display: "flex", gap: 10, fontSize: 12.5, flexWrap: "wrap" }}>
               <span style={{ letterSpacing: ".02em", minWidth: 140 }}>{b.nomorPesanan}</span>
-              <span style={{ letterSpacing: ".02em", color: "#92400E", minWidth: 150 }}>{b.resi ?? "—"}</span>
-              <span style={{ color: "#92400E" }}>{b.toko}</span>
+              <span style={{ letterSpacing: ".02em", color: "#9E4C00", minWidth: 150 }}>{b.resi ?? "—"}</span>
+              <span style={{ color: "#9E4C00" }}>{b.toko}</span>
               {b.jendelaMenit !== null && (
-                <span style={{ color: "#A16207" }}>jendela {angka(b.jendelaMenit)} menit</span>
+                <span style={{ color: "#9E4C00" }}>jendela {angka(b.jendelaMenit)} menit</span>
               )}
-              {b.siapPada && <span style={{ color: "#A16207" }}>siap {tanggal(b.siapPada)}</span>}
+              {b.siapPada && <span style={{ color: "#9E4C00" }}>siap {tanggal(b.siapPada)}</span>}
             </div>
           ))}
           {d.terpotong && <div style={{ marginTop: 6 }}>Daftarnya lebih panjang dari yang ditampilkan.</div>}
@@ -236,9 +236,9 @@ export default function RiwayatCetak() {
     <div style={{ marginTop: 24 }}>
       <div style={{
         display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap",
-        paddingBottom: 20, borderBottom: "1px solid #F3F4F6", marginBottom: 24,
+        paddingBottom: 20, borderBottom: "1px solid #F0F1F2", marginBottom: 24,
       }}>
-        <div style={{ display: "inline-flex", border: "1px solid #E5E7EB", borderRadius: 8, overflow: "hidden" }}>
+        <div style={{ display: "inline-flex", border: "1px solid #DDDEE1", borderRadius: 8, overflow: "hidden" }}>
           {PLATFORM.map((p, i) => {
             const aktif = p.id === channel;
             return (
@@ -248,17 +248,17 @@ export default function RiwayatCetak() {
                 aria-pressed={aktif}
                 style={{
                   padding: "7px 12px", fontSize: 13, cursor: "pointer", border: "none",
-                  borderLeft: i ? "1px solid #E5E7EB" : "none",
+                  borderLeft: i ? "1px solid #DDDEE1" : "none",
                   fontWeight: aktif ? 600 : 500, fontFamily: "inherit",
-                  background: aktif ? "#fff" : "#F9FAFB",
-                  color: aktif ? "#111827" : "#6B7280",
-                  boxShadow: aktif ? "inset 0 -2px 0 #4F46E5" : "none",
+                  background: aktif ? "#fff" : "#F8F8F8",
+                  color: aktif ? "#292A2E" : "#6B6E76",
+                  boxShadow: aktif ? "inset 0 -2px 0 #1868DB" : "none",
                 }}
               >{p.label}</button>
             );
           })}
         </div>
-        <span style={{ fontSize: 13, color: "#6B7280" }}>
+        <span style={{ fontSize: 13, color: "#6B6E76" }}>
           Tiap baris satu kali tekan tombol cetak. Angkanya tidak berubah.
         </span>
       </div>
@@ -266,16 +266,16 @@ export default function RiwayatCetak() {
       <Terlewat channel={channel} />
 
       {memuat && !data ? (
-        <div style={{ color: "#9CA3AF", fontSize: 13, padding: "20px 2px" }}>Memuat riwayat…</div>
+        <div style={{ color: "#8C8F97", fontSize: 13, padding: "20px 2px" }}>Memuat riwayat…</div>
       ) : !data?.sesi?.length ? (
-        <div style={{ color: "#6B7280", fontSize: 14, padding: "28px 2px", textAlign: "center" }}>
+        <div style={{ color: "#6B6E76", fontSize: 14, padding: "28px 2px", textAlign: "center" }}>
           Belum ada riwayat cetak untuk platform ini.
         </div>
       ) : (
         <>
           {data.sesi.map((s) => <Sesi key={s.sesiId} channel={channel} s={s} />)}
           {data.terpotong && (
-            <div style={{ fontSize: 12, color: "#92400E", padding: "10px 2px", textAlign: "center" }}>
+            <div style={{ fontSize: 12, color: "#9E4C00", padding: "10px 2px", textAlign: "center" }}>
               Riwayatnya lebih panjang dari yang ditampilkan.
             </div>
           )}

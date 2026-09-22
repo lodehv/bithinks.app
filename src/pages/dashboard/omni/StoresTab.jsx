@@ -5,6 +5,7 @@ import { channelMeta } from "./channels";
 import "./OmniModule.css";
 import shopeeLogo from "../../../assets/logo_pilihan_fitur/shopee.png";
 import tiktokLogo from "../../../assets/logo_pilihan_fitur/logo_tiktok.jpg";
+import { formatDateTime } from "../../../utils/datetime";
 
 const LOGOS = { shopee: shopeeLogo, tiktok: tiktokLogo };
 
@@ -18,7 +19,7 @@ const MARKETPLACES = [
 ];
 
 const fmtDate = (d) =>
-  d ? new Date(d).toLocaleString("id-ID", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "—";
+  d ? formatDateTime(d, { year: "always" }) : "-";
 
 export default function StoresTab({ locked, onRequirePayment }) {
   const [stores, setStores]     = useState(null);
@@ -129,7 +130,7 @@ export default function StoresTab({ locked, onRequirePayment }) {
                         <span className="dot" />{s.status === "connected" ? "Terhubung" : s.status}
                       </span>
                     </td>
-                    <td style={{ color: "#6B7280" }}>{fmtDate(s.createdAt)}</td>
+                    <td style={{ color: "#6B6E76" }}>{fmtDate(s.createdAt)}</td>
                     <td>
                       <div className="int-actions" style={{ justifyContent: "flex-end" }}>
                         <button className="int-act-btn" title="Segarkan" onClick={reload}><RefreshCw size={15} /></button>

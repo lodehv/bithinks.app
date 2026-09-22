@@ -1,0 +1,88 @@
+/* Button, following the Atlassian button anatomy: 32px default height,
+ * 4px radius, 12px horizontal padding, subtle background for the default
+ * appearance, bold blue for the primary action.
+ */
+
+.ds-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-space-075);
+  height: 32px;
+  padding: 0 var(--ds-space-150);
+  border: none;
+  border-radius: var(--ds-radius-100);
+  background: var(--ds-background-neutral);
+  color: var(--ds-text);
+  font-size: var(--ds-font-size-body);
+  font-weight: var(--ds-font-weight-medium);
+  line-height: var(--ds-line-height-body);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background var(--ds-duration-small) var(--ds-ease-out),
+    color var(--ds-duration-small) var(--ds-ease-out);
+}
+
+.ds-btn:hover { background: var(--ds-background-neutral-hovered); }
+.ds-btn:active { background: var(--ds-background-neutral-pressed); }
+
+.ds-btn:disabled,
+.ds-btn[aria-disabled="true"] {
+  background: var(--ds-background-disabled);
+  color: var(--ds-text-disabled);
+  cursor: not-allowed;
+}
+
+.ds-btn-primary {
+  background: var(--ds-background-brand-bold);
+  color: var(--ds-text-inverse);
+}
+
+.ds-btn-primary:hover { background: var(--ds-background-brand-bold-hovered); }
+.ds-btn-primary:active { background: var(--ds-background-brand-bold-pressed); }
+
+.ds-btn-danger {
+  background: var(--ds-background-danger-bold);
+  color: var(--ds-text-inverse);
+}
+
+.ds-btn-danger:hover { background: var(--ds-background-danger-bold-hovered); }
+
+/* Subtle: no fill until the pointer arrives. Used for the second action in a
+ * pair, where a filled button would compete with the first. */
+.ds-btn-subtle {
+  background: transparent;
+  color: var(--ds-text-subtle);
+}
+
+.ds-btn-subtle:hover { background: var(--ds-background-neutral-subtle-hovered); }
+.ds-btn-subtle:active { background: var(--ds-background-neutral-subtle-pressed); }
+
+.ds-btn-outline {
+  background: var(--ds-surface);
+  color: var(--ds-text);
+  box-shadow: inset 0 0 0 1px var(--ds-border);
+}
+
+.ds-btn-outline:hover { background: var(--ds-surface-hovered); }
+
+.ds-btn-link {
+  height: auto;
+  padding: 0;
+  background: none;
+  color: var(--ds-link);
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.ds-btn-link:hover {
+  background: none;
+  text-decoration: underline;
+}
+
+.ds-btn-small { height: 24px; padding: 0 var(--ds-space-100); font-size: var(--ds-font-size-body-small); }
+.ds-btn-large { height: 40px; padding: 0 var(--ds-space-200); }
+.ds-btn-icon { width: 32px; padding: 0; }
+.ds-btn-block { width: 100%; }
+
+/* Buttons that carry an icon keep the icon optically centred with the label */
+.ds-btn svg { flex-shrink: 0; }
