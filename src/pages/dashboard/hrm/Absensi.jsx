@@ -6,6 +6,7 @@ import {
 import "./Absensi.css";
 import { useAppContext } from "../../../context/AppContext";
 import api from "../../../utils/api";
+import { formatTime, formatDateLong } from "../../../utils/datetime";
 
 // ─── Clock ────────────────────────────────────────────────────────────────────
 function LiveClock() {
@@ -15,8 +16,8 @@ function LiveClock() {
     return () => clearInterval(t);
   }, []);
 
-  const time = now.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
-  const date = now.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  const time = formatTime(now, { seconds: true });
+  const date = formatDateLong(now);
 
   return (
     <div className="absensi-clock-card">
@@ -246,7 +247,7 @@ export default function Absensi({ locked = false, onRequirePayment }) {
         lat:   gps.lat,
         lng:   gps.lng,
       });
-      const time = new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
+      const time = formatTime(new Date());
       setResult({ type: actionType, time });
       setPhoto(null);
       await fetchTodayLog();
@@ -306,8 +307,8 @@ export default function Absensi({ locked = false, onRequirePayment }) {
                 : "Belum Absen"}
             </div>
             <div className="absensi-status-sub">
-              {hasCheckedIn && `Masuk: ${new Date(todayLog.checkIn).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}`}
-              {hasCheckedOut && ` · Keluar: ${new Date(todayLog.checkOut).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}`}
+              {hasCheckedIn && `Masuk: ${formatTime(todayLog.checkIn)}`}
+              {hasCheckedOut && ` · Keluar: ${formatTime(todayLog.checkOut)}`}
               {!hasCheckedIn && `Halo, ${user?.name?.split(" ")[0]}! Silakan absen masuk.`}
             </div>
           </div>

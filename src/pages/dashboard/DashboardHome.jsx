@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { omniApi } from "../../utils/omniApi";
 import { channelMeta } from "./omni/channels";
+import { formatDate, formatDateLong } from "../../utils/datetime";
 
 const rupiah = (n) => "Rp " + Number(n || 0).toLocaleString("id-ID");
 
@@ -97,7 +98,7 @@ export default function DashboardHome({ onMenuClick, onBukaPesanan }) {
     const h = new Date().getHours();
     return h < 12 ? "Selamat pagi" : h < 17 ? "Selamat siang" : "Selamat malam";
   })();
-  const today = new Date().toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  const today = formatDateLong(new Date());
 
   // ─── Derivasi metrik dari data nyata ───
   const stores   = data?.stores   ?? [];
@@ -120,11 +121,7 @@ export default function DashboardHome({ onMenuClick, onBukaPesanan }) {
   const angka = (n) => Number(n || 0).toLocaleString("id-ID");
 
   // "2026-08-14" → "14 Agu". Dipakai menandai umur pesanan tertua di antrean.
-  const tanggalPendek = (iso) => {
-    if (!iso) return null;
-    const [y, m, d] = iso.split("-").map(Number);
-    return new Date(y, m - 1, d).toLocaleDateString("id-ID", { day: "numeric", month: "short" });
-  };
+  const tanggalPendek = (iso) => (iso ? formatDate(iso) : null);
   const tertua = tanggalPendek(antrian.tertuaWib);
   const menggantung = antrian.tertuaWib && antrian.tertuaWib < (ringkasan.tanggal ?? "");
 

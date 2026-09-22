@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { UserPlus, Search, MessageCircle, Mail, RefreshCw } from "lucide-react";
 import { adminApi } from "../../utils/omniApi";
+import { formatDateTime } from "../../utils/datetime";
 import "./AdminPanel.css";
 
 const waLink = (phone) => {
@@ -10,11 +11,7 @@ const waLink = (phone) => {
   return `https://wa.me/${intl}`;
 };
 
-const fmt = (d) => {
-  if (!d) return "—";
-  try { return new Date(d).toLocaleString("id-ID", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }); }
-  catch { return "—"; }
-};
+const fmt = (d) => (d ? formatDateTime(d) : "-");
 
 const FILTERS = [
   { id: "all", label: "Semua" },

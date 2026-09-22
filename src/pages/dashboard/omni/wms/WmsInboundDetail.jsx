@@ -3,6 +3,7 @@ import { ArrowLeft, Printer, PackageCheck } from "lucide-react";
 import { omniApi } from "../../../../utils/omniApi";
 import FulfillBar from "./WmsFulfillBar";
 import WmsInboundDoc from "./WmsInboundDoc";
+import { formatDate, WIB } from "../../../../utils/datetime";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Detail PO + pencatatan penerimaan.
@@ -15,9 +16,7 @@ import WmsInboundDoc from "./WmsInboundDoc";
 
 const num = (n) => (n ?? 0).toLocaleString("id-ID");
 const rupiah = (n) => "Rp " + Math.round(n || 0).toLocaleString("id-ID");
-const tgl = (d) => (d ? new Date(d).toLocaleDateString("id-ID", {
-  day: "2-digit", month: "long", year: "numeric", timeZone: "Asia/Jakarta",
-}) : "—");
+const tgl = (d) => (d ? formatDate(d, { month: "long", year: "always", timeZone: WIB }) : "-");
 
 export default function WmsInboundDetail({ inboundId, locked, onBack, onError }) {
   const [po, setPo] = useState(null);

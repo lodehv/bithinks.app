@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import JsBarcode from "jsbarcode";
 import { ArrowLeft, Printer } from "lucide-react";
+import { formatDateTime, WIB } from "../../../../utils/datetime";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Lembar Picking List — daftar ambil barang + barcode sesi.
@@ -35,9 +36,7 @@ export default function WmsPickingList({ session, onBack }) {
   if (!session) return null;
 
   const totalUnit = session.items.reduce((s, i) => s + i.qty, 0);
-  const tanggal = new Date(session.createdAt).toLocaleString("id-ID", {
-    dateStyle: "long", timeStyle: "short", timeZone: "Asia/Jakarta",
-  });
+  const tanggal = formatDateTime(session.createdAt, { month: "long", year: "always", timeZone: WIB });
 
   return (
     <div>
