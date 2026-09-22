@@ -239,7 +239,7 @@ export default function OrdersTab({ locked, onRequirePayment, tabAwal }) {
            sebagai kotak sudut bulat, tidak ada yang menuntun mata. */
         <div style={{
           display: "flex", gap: 20, margin: "16px 0 0", padding: "0 24px",
-          borderBottom: "1px solid #E5E7EB",
+          borderBottom: "1px solid #DCDFE4",
         }}>
           {[
             ["daftar", "Daftar Pesanan"],
@@ -253,8 +253,8 @@ export default function OrdersTab({ locked, onRequirePayment, tabAwal }) {
               padding: "0 0 12px", border: "none", background: "none", cursor: "pointer",
               fontSize: 14, fontFamily: "inherit",
               fontWeight: tampilan === id ? 600 : 500,
-              color: tampilan === id ? "#111827" : "#6B7280",
-              boxShadow: tampilan === id ? "inset 0 -2px 0 #4F46E5" : "none",
+              color: tampilan === id ? "#172B4D" : "#626F86",
+              boxShadow: tampilan === id ? "inset 0 -2px 0 #0C66E4" : "none",
             }}>{label}</button>
           ))}
         </div>

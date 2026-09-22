@@ -142,7 +142,7 @@ function SelfieCapture({ onCapture, onClear, captured }) {
           <div className="selfie-placeholder">
             <Camera size={36} strokeWidth={1.5} />
             <p>Klik "Buka Kamera" untuk mulai</p>
-            {error && <p style={{ color: "#DC2626" }}>{error}</p>}
+            {error && <p style={{ color: "#C9372C" }}>{error}</p>}
           </div>
         )}
 
@@ -170,7 +170,7 @@ function SelfieCapture({ onCapture, onClear, captured }) {
             <button className="btn-selfie secondary" onClick={clear}>
               <RotateCcw size={14} strokeWidth={2} /> Ulangi
             </button>
-            <button className="btn-selfie primary" style={{ background: "#F0FDF4", color: "#16A34A" }} disabled>
+            <button className="btn-selfie primary" style={{ background: "#DFFCF0", color: "#22A06B" }} disabled>
               <CheckCircle size={15} strokeWidth={2} /> Foto OK
             </button>
           </>
@@ -316,15 +316,15 @@ export default function Absensi({ locked = false, onRequirePayment }) {
 
       {/* Jika sudah checkout penuh */}
       {hasCheckedOut ? (
-        <div style={{ textAlign: "center", padding: "24px", background: "#fff", border: "1px solid #EBEBEB", borderRadius: 14, color: "#aaa", fontSize: 13 }}>
-          <CheckCircle size={28} strokeWidth={1.8} color="#16A34A" style={{ marginBottom: 10 }} />
+        <div style={{ textAlign: "center", padding: "24px", background: "#fff", border: "1px solid #DCDFE4", borderRadius: 14, color: "#aaa", fontSize: 13 }}>
+          <CheckCircle size={28} strokeWidth={1.8} color="#22A06B" style={{ marginBottom: 10 }} />
           <p style={{ margin: 0, fontWeight: 600, color: "#111" }}>Absensi hari ini selesai</p>
           <p style={{ marginTop: 4 }}>Sampai jumpa besok!</p>
         </div>
       ) : (
         <>
           {locked && (
-            <div style={{ padding: 14, marginBottom: 12, borderRadius: 10, background: "#FEF2F2", color: "#991B1B", fontSize: 13 }}>
+            <div style={{ padding: 14, marginBottom: 12, borderRadius: 10, background: "#FFECEB", color: "#AE2E24", fontSize: 13 }}>
               Mode hanya-baca aktif. Riwayat kehadiran tetap tersedia, tetapi check-in dan check-out berhenti sementara.
             </div>
           )}

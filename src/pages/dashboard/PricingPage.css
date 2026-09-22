@@ -3,7 +3,7 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 .pricing-wrap {
   font-family: "DM Sans", sans-serif;
-  background: #F6F7F9;
+  background: var(--ds-surface-sunken);
   border-radius: 24px;
   padding: 40px 32px 48px;
 }
@@ -11,49 +11,49 @@
 .pricing-back {
   display: inline-flex; align-items: center; gap: 6px;
   background: none; border: none; cursor: pointer;
-  color: #6B7280; font-size: 13px; font-weight: 600;
+  color: var(--ds-text-subtlest); font-size: 13px; font-weight: 600;
   font-family: inherit; margin-bottom: 20px; padding: 0;
 }
-.pricing-back:hover { color: #374151; }
+.pricing-back:hover { color: var(--ds-text-subtle); }
 
 /* ─── Header ─────────────────────────────────────────────────────────────── */
 .pricing-head { text-align: center; margin-bottom: 36px; }
 
 .pricing-title {
-  font-size: 40px; font-weight: 800; color: #1F2430;
+  font-size: 40px; font-weight: 800; color: var(--ds-text);
   letter-spacing: -0.02em; margin: 0 0 28px;
 }
 .pricing-chip {
   display: inline-block;
-  color: #4F46E5;
+  color: var(--ds-background-brand-bold);
   background: #fff;
   padding: 2px 16px;
   border-radius: 12px;
-  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.12);
+  box-shadow: 0 4px 14px rgba(12, 102, 228, 0.12);
 }
 
 /* ─── Toggle periode ─────────────────────────────────────────────────────── */
 .pricing-toggle {
   display: inline-flex; gap: 8px;
-  background: #EEF0FF; padding: 8px;
+  background: var(--ds-surface-sunken); padding: 8px;
   border-radius: 16px;
 }
 .pt-btn {
   position: relative;
   border: none; cursor: pointer;
   font-family: inherit; font-size: 15px; font-weight: 600;
-  color: #6B7280; background: #fff;
+  color: var(--ds-text-subtlest); background: #fff;
   padding: 14px 30px; border-radius: 12px;
   transition: all 0.15s ease;
 }
 .pt-btn.active {
   color: #fff;
-  background: linear-gradient(135deg, #6366F1, #4F46E5);
-  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.32);
+  background: linear-gradient(135deg, var(--ds-b400), var(--ds-background-brand-bold));
+  box-shadow: 0 6px 16px rgba(12, 102, 228, 0.32);
 }
 .pt-badge {
   position: absolute; top: -11px; right: 8px;
-  background: #16A34A; color: #fff;
+  background: var(--ds-background-success-bold); color: #fff;
   font-size: 10px; font-weight: 700;
   padding: 2px 8px; border-radius: 8px;
   white-space: nowrap;
@@ -78,8 +78,8 @@
 
 /* Kartu highlight (Medium — Best Deal) */
 .plan-card.pro {
-  background: linear-gradient(160deg, #8B8BF7 0%, #6366F1 55%, #4F46E5 100%);
-  box-shadow: 0 18px 40px rgba(79, 70, 229, 0.35);
+  background: linear-gradient(160deg, var(--ds-b200) 0%, var(--ds-b400) 55%, var(--ds-background-brand-bold) 100%);
+  box-shadow: 0 18px 40px rgba(12, 102, 228, 0.35);
   color: #fff;
   transform: translateY(-6px);
 }
@@ -87,7 +87,7 @@
 .plan-badge {
   position: absolute; top: 18px; right: 18px;
   display: inline-flex; align-items: center; gap: 4px;
-  background: #16A34A; color: #fff;
+  background: var(--ds-background-success-bold); color: #fff;
   font-size: 12px; font-weight: 700;
   padding: 5px 11px; border-radius: 10px;
 }
@@ -96,22 +96,22 @@
 .plan-icon {
   width: 60px; height: 60px; border-radius: 16px;
   display: flex; align-items: center; justify-content: center;
-  background: #EEF0FF; color: #4F46E5;
+  background: var(--ds-surface-sunken); color: var(--ds-background-brand-bold);
   margin-bottom: 18px;
 }
 .plan-card.pro .plan-icon { background: rgba(255, 255, 255, 0.22); color: #fff; }
-.plan-icon-free { font-size: 13px; font-weight: 800; color: #4F46E5; letter-spacing: 0.5px; }
+.plan-icon-free { font-size: 13px; font-weight: 800; color: var(--ds-background-brand-bold); letter-spacing: 0.5px; }
 
 /* ─── Teks kartu ─────────────────────────────────────────────────────────── */
-.plan-name { font-size: 22px; font-weight: 800; color: #1F2430; margin-bottom: 8px; }
-.plan-desc { font-size: 14px; line-height: 1.5; color: #8A93A2; min-height: 42px; margin-bottom: 20px; }
+.plan-name { font-size: 22px; font-weight: 800; color: var(--ds-text); margin-bottom: 8px; }
+.plan-desc { font-size: 14px; line-height: 1.5; color: var(--ds-n500); min-height: 42px; margin-bottom: 20px; }
 .plan-card.pro .plan-name { color: #fff; }
 .plan-card.pro .plan-desc { color: rgba(255, 255, 255, 0.92); }
 
 .plan-price-block { margin-bottom: 22px; min-height: 52px; }
-.plan-price { font-size: 26px; font-weight: 800; color: #1F2430; }
-.plan-price-per { font-size: 15px; font-weight: 500; color: #8A93A2; }
-.plan-price-note { font-size: 11px; color: #A0A8B5; margin-top: 2px; }
+.plan-price { font-size: 26px; font-weight: 800; color: var(--ds-text); }
+.plan-price-per { font-size: 15px; font-weight: 500; color: var(--ds-n500); }
+.plan-price-note { font-size: 11px; color: var(--ds-n400); margin-top: 2px; }
 .plan-card.pro .plan-price,
 .plan-card.pro .plan-price-per { color: #fff; }
 .plan-card.pro .plan-price-note { color: rgba(255, 255, 255, 0.85); }
@@ -120,36 +120,36 @@
 .plan-features { list-style: none; margin: 0 0 24px; padding: 0; flex: 1; }
 .plan-feat {
   display: flex; align-items: center; gap: 10px;
-  font-size: 14px; font-weight: 500; color: #3F4653;
+  font-size: 14px; font-weight: 500; color: var(--ds-n900);
   padding: 7px 0;
 }
 .plan-check {
   flex-shrink: 0;
   width: 18px; height: 18px; border-radius: 50%;
   display: inline-flex; align-items: center; justify-content: center;
-  background: #4F46E5; color: #fff;
+  background: var(--ds-background-brand-bold); color: #fff;
 }
 .plan-card.pro .plan-feat { color: #fff; }
-.plan-card.pro .plan-check { background: #fff; color: #4F46E5; }
+.plan-card.pro .plan-check { background: #fff; color: var(--ds-background-brand-bold); }
 
 /* ─── Tombol ─────────────────────────────────────────────────────────────── */
 .plan-btn {
   width: 100%; border: none; cursor: pointer;
   font-family: inherit; font-size: 15px; font-weight: 700;
   padding: 14px; border-radius: 14px;
-  background: linear-gradient(135deg, #6366F1, #4F46E5);
+  background: linear-gradient(135deg, var(--ds-b400), var(--ds-background-brand-bold));
   color: #fff;
   transition: filter 0.15s ease, opacity 0.15s ease;
 }
 .plan-btn:hover:not(:disabled) { filter: brightness(1.05); }
 .plan-btn:disabled { cursor: default; }
 .plan-card:not(.pro) .plan-btn:disabled {
-  background: #F1F3F6; color: #9AA2AF;
+  background: var(--ds-n200); color: var(--ds-n500);
 }
 .plan-card.pro .plan-btn {
-  background: #fff; color: #4F46E5;
+  background: #fff; color: var(--ds-background-brand-bold);
 }
-.plan-card.pro .plan-btn:hover:not(:disabled) { background: #F0F1FE; }
+.plan-card.pro .plan-btn:hover:not(:disabled) { background: var(--ds-surface-sunken); }
 
 /* ─── Responsif ──────────────────────────────────────────────────────────── */
 @media (max-width: 1080px) {

@@ -1,0 +1,55 @@
+/* Lozenge: the Atlassian status pill. It states what something IS, never what
+ * the user can do about it. Subtle by default, bold only when the state must
+ * stop the reader.
+ */
+
+.ds-lozenge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-050);
+  max-width: 200px;
+  padding: 0 var(--ds-space-075);
+  border-radius: var(--ds-radius-100);
+  background: var(--ds-background-neutral);
+  color: var(--ds-text-subtle);
+  font-size: 11px;
+  font-weight: var(--ds-font-weight-bold);
+  line-height: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ds-lozenge-inprogress { background: var(--ds-background-information); color: var(--ds-text-information); }
+.ds-lozenge-success { background: var(--ds-background-success); color: var(--ds-text-success); }
+.ds-lozenge-removed { background: var(--ds-background-danger); color: var(--ds-text-danger); }
+.ds-lozenge-moved { background: var(--ds-background-warning); color: var(--ds-text-warning); }
+.ds-lozenge-new { background: var(--ds-background-discovery); color: var(--ds-text-discovery); }
+
+.ds-lozenge-bold { color: var(--ds-text-inverse); }
+.ds-lozenge-bold.ds-lozenge-inprogress { background: var(--ds-background-selected-bold); }
+.ds-lozenge-bold.ds-lozenge-success { background: var(--ds-background-success-bold); }
+.ds-lozenge-bold.ds-lozenge-removed { background: var(--ds-background-danger-bold); }
+.ds-lozenge-bold.ds-lozenge-moved { background: var(--ds-background-warning-bold); color: var(--ds-text); }
+
+/* Badge: a count, not a state. Sits next to a label or a menu item. */
+.ds-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 16px;
+  padding: 0 var(--ds-space-075);
+  border-radius: var(--ds-radius-full);
+  background: var(--ds-background-neutral);
+  color: var(--ds-text-subtle);
+  font-size: var(--ds-font-size-body-small);
+  font-weight: var(--ds-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  line-height: 16px;
+}
+
+.ds-badge-primary { background: var(--ds-background-selected-bold); color: var(--ds-text-inverse); }
+.ds-badge-danger { background: var(--ds-background-danger-bold); color: var(--ds-text-inverse); }

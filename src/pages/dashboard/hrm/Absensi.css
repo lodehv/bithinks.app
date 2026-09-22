@@ -8,7 +8,7 @@
 /* ─── Status card ──────────────────────────────────────────────────────────── */
 .absensi-status-card {
   background: #fff;
-  border: 1px solid #EBEBEB;
+  border: 1px solid var(--ds-border-subtle);
   border-radius: 14px;
   padding: 24px;
   margin-bottom: 16px;
@@ -27,9 +27,9 @@
   flex-shrink: 0;
 }
 
-.absensi-status-icon.checkin  { background: #FFF7ED; color: #F97316; }
-.absensi-status-icon.checkout { background: #EFF6FF; color: #2563EB; }
-.absensi-status-icon.idle     { background: #F7F7F8; color: #bbb;    }
+.absensi-status-icon.checkin  { background: var(--ds-background-warning); color: var(--ds-o500); }
+.absensi-status-icon.checkout { background: var(--ds-b50); color: var(--ds-background-brand-bold); }
+.absensi-status-icon.idle     { background: var(--ds-surface-sunken); color: #bbb;    }
 
 .absensi-status-info { flex: 1; }
 
@@ -38,25 +38,25 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: #C4C4C4;
+  color: var(--ds-n500);
   margin-bottom: 4px;
 }
 
 .absensi-status-value {
   font-size: 18px;
   font-weight: 700;
-  color: #1E293B;
+  color: var(--ds-n900);
 }
 
 .absensi-status-sub {
   font-size: 12px;
-  color: #94A3B8;
+  color: var(--ds-n500);
   margin-top: 2px;
 }
 
 /* ─── Clock card ───────────────────────────────────────────────────────────── */
 .absensi-clock-card {
-  background: #2563EB;
+  background: var(--ds-background-brand-bold);
   border-radius: 14px;
   padding: 28px 24px;
   text-align: center;
@@ -81,7 +81,7 @@
 /* ─── Selfie area ──────────────────────────────────────────────────────────── */
 .selfie-card {
   background: #fff;
-  border: 1px solid #EBEBEB;
+  border: 1px solid var(--ds-border-subtle);
   border-radius: 14px;
   overflow: hidden;
   margin-bottom: 16px;
@@ -92,15 +92,15 @@
   align-items: center;
   gap: 8px;
   padding: 14px 18px;
-  border-bottom: 1px solid #F3F3F3;
+  border-bottom: 1px solid var(--ds-n200);
   font-size: 13px;
   font-weight: 600;
-  color: #1E293B;
+  color: var(--ds-n900);
 }
 
 .selfie-header-sub {
   font-size: 12px;
-  color: #94A3B8;
+  color: var(--ds-n500);
   font-weight: 400;
   margin-left: auto;
 }
@@ -109,7 +109,7 @@
   position: relative;
   width: 100%;
   aspect-ratio: 4/3;
-  background: #0f172a;
+  background: var(--ds-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -146,10 +146,10 @@
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  color: #94A3B8;
+  color: var(--ds-n500);
 }
 
-.selfie-placeholder p { font-size: 13px; color: #94A3B8; }
+.selfie-placeholder p { font-size: 13px; color: var(--ds-n500); }
 
 .selfie-actions {
   display: flex;
@@ -176,13 +176,13 @@
 .btn-selfie:active { transform: scale(0.97); }
 .btn-selfie:disabled { opacity: 0.4; cursor: not-allowed; }
 
-.btn-selfie.primary   { background: #2563EB; color: #fff; }
-.btn-selfie.secondary { background: #F1F5F9; color: #475569; }
+.btn-selfie.primary   { background: var(--ds-background-brand-bold); color: #fff; }
+.btn-selfie.secondary { background: var(--ds-n200); color: var(--ds-text-subtle); }
 
 /* ─── GPS card ─────────────────────────────────────────────────────────────── */
 .gps-card {
   background: #fff;
-  border: 1px solid #EBEBEB;
+  border: 1px solid var(--ds-border-subtle);
   border-radius: 14px;
   padding: 16px 18px;
   margin-bottom: 16px;
@@ -201,9 +201,9 @@
   flex-shrink: 0;
 }
 
-.gps-icon.ok      { background: #FFF7ED; color: #F97316; }
-.gps-icon.loading { background: #EFF6FF; color: #2563EB; }
-.gps-icon.error   { background: #FEF2F2; color: #EF4444; }
+.gps-icon.ok      { background: var(--ds-background-warning); color: var(--ds-o500); }
+.gps-icon.loading { background: var(--ds-b50); color: var(--ds-background-brand-bold); }
+.gps-icon.error   { background: var(--ds-background-danger); color: var(--ds-background-danger-bold); }
 
 .gps-info { flex: 1; min-width: 0; }
 
@@ -212,14 +212,14 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: #C4C4C4;
+  color: var(--ds-n500);
   margin-bottom: 3px;
 }
 
 .gps-value {
   font-size: 12.5px;
   font-weight: 500;
-  color: #475569;
+  color: var(--ds-text-subtle);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -246,15 +246,15 @@
 .btn-absensi:active { transform: scale(0.98); }
 .btn-absensi:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
-.btn-absensi.checkin  { background: #2563EB; color: #fff; }
-.btn-absensi.checkout { background: #F97316; color: #fff; }
+.btn-absensi.checkin  { background: var(--ds-background-brand-bold); color: #fff; }
+.btn-absensi.checkout { background: var(--ds-o500); color: #fff; }
 
 /* ─── Success overlay ──────────────────────────────────────────────────────── */
 .absensi-success {
   text-align: center;
   padding: 40px 20px;
   background: #fff;
-  border: 1px solid #EBEBEB;
+  border: 1px solid var(--ds-border-subtle);
   border-radius: 14px;
   margin-bottom: 16px;
 }
@@ -269,19 +269,19 @@
   margin: 0 auto 16px;
 }
 
-.absensi-success-icon.checkin  { background: #FFF7ED; color: #F97316; }
-.absensi-success-icon.checkout { background: #EFF6FF; color: #2563EB; }
+.absensi-success-icon.checkin  { background: var(--ds-background-warning); color: var(--ds-o500); }
+.absensi-success-icon.checkout { background: var(--ds-b50); color: var(--ds-background-brand-bold); }
 
 .absensi-success h3 {
   font-size: 17px;
   font-weight: 700;
-  color: #1E293B;
+  color: var(--ds-n900);
   margin: 0 0 6px;
 }
 
 .absensi-success p {
   font-size: 13px;
-  color: #94A3B8;
+  color: var(--ds-n500);
   margin: 0 0 20px;
 }
 
@@ -291,11 +291,11 @@
   gap: 6px;
   padding: 10px 20px;
   border-radius: 10px;
-  background: #F1F5F9;
+  background: var(--ds-n200);
   border: none;
   font-size: 13px;
   font-weight: 600;
-  color: #475569;
+  color: var(--ds-text-subtle);
   cursor: pointer;
   font-family: "DM Sans", sans-serif;
 }

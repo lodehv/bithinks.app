@@ -94,7 +94,7 @@ export default function AdminLeads() {
               <tr key={r.identifier} className={!r.completed ? "row-followup" : ""}>
                 <td className="adm-mono">
                   {r.identifier}
-                  {r.truncated && <span title="Data lama mungkin terpotong" style={{ color: "#d97706" }}> ⚠</span>}
+                  {r.truncated && <span title="Data lama mungkin terpotong" style={{ color: "#C25100" }}> ⚠</span>}
                 </td>
                 <td>{r.channel === "email" ? "Email" : "WhatsApp"}</td>
                 <td>{r.attempts}×</td>
@@ -107,7 +107,7 @@ export default function AdminLeads() {
                 </td>
                 <td>
                   {r.channel === "email" ? (
-                    <a className="adm-wa" href={`mailto:${r.identifier}`} style={{ color: "#4F46E5", background: "#EEF2FF", borderColor: "#C7D2FE" }}>
+                    <a className="adm-wa" href={`mailto:${r.identifier}`} style={{ color: "#0C66E4", background: "#E9F2FF", borderColor: "#CCE0FF" }}>
                       <Mail size={13} /> Email
                     </a>
                   ) : waLink(r.identifier) ? (

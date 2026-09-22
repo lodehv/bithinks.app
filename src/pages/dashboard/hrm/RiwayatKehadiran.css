@@ -15,7 +15,7 @@
 
 .riwayat-stat {
   background: #fff;
-  border: 1px solid #EBEBEB;
+  border: 1px solid var(--ds-border-subtle);
   border-radius: 12px;
   padding: 16px 18px;
 }
@@ -25,19 +25,19 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: #C4C4C4;
+  color: var(--ds-n500);
   margin-bottom: 8px;
 }
 
 .riwayat-stat-value {
   font-size: 22px;
   font-weight: 700;
-  color: #1E293B;
+  color: var(--ds-n900);
 }
 
-.riwayat-stat-value.green  { color: #F97316; }
-.riwayat-stat-value.orange { color: #F59E0B; }
-.riwayat-stat-value.red    { color: #EF4444; }
+.riwayat-stat-value.green  { color: var(--ds-o500); }
+.riwayat-stat-value.orange { color: var(--ds-y500); }
+.riwayat-stat-value.red    { color: var(--ds-background-danger-bold); }
 
 /* ─── Filter bar ───────────────────────────────────────────────────────────── */
 .riwayat-toolbar {
@@ -51,28 +51,28 @@
 .riwayat-toolbar-title {
   font-size: 13px;
   font-weight: 600;
-  color: #1E293B;
+  color: var(--ds-n900);
   flex: 1;
 }
 
 .riwayat-filter-input {
   padding: 8px 12px;
-  border: 1px solid #EBEBEB;
+  border: 1px solid var(--ds-border-subtle);
   border-radius: 8px;
   font-size: 13px;
   font-family: "DM Sans", sans-serif;
-  color: #1E293B;
+  color: var(--ds-n900);
   background: #fff;
   outline: none;
   transition: border-color 0.12s;
 }
 
-.riwayat-filter-input:focus { border-color: #F97316; }
+.riwayat-filter-input:focus { border-color: var(--ds-o500); }
 
 /* ─── Table ────────────────────────────────────────────────────────────────── */
 .riwayat-table-wrap {
   background: #fff;
-  border: 1px solid #EBEBEB;
+  border: 1px solid var(--ds-border-subtle);
   border-radius: 12px;
   overflow: hidden;
 }
@@ -87,41 +87,41 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: #C4C4C4;
+  color: var(--ds-n500);
   padding: 11px 18px;
   text-align: left;
-  background: #FAFAFA;
-  border-bottom: 1px solid #F3F3F3;
+  background: var(--ds-surface-sunken);
+  border-bottom: 1px solid var(--ds-n200);
   white-space: nowrap;
 }
 
 .riwayat-table td {
   font-size: 13px;
-  color: #475569;
+  color: var(--ds-text-subtle);
   padding: 13px 18px;
-  border-bottom: 1px solid #F9F9F9;
+  border-bottom: 1px solid var(--ds-surface-sunken);
   vertical-align: middle;
 }
 
 .riwayat-table tr:last-child td { border-bottom: none; }
-.riwayat-table tr:hover td { background: #FAFAFA; }
+.riwayat-table tr:hover td { background: var(--ds-surface-sunken); }
 
-.riwayat-date-cell { font-weight: 600; color: #1E293B; }
+.riwayat-date-cell { font-weight: 600; color: var(--ds-n900); }
 
 .riwayat-time {
   font-variant-numeric: tabular-nums;
   font-size: 13px;
 }
 
-.riwayat-time.checkin  { color: #F97316; font-weight: 600; }
-.riwayat-time.checkout { color: #2563EB; font-weight: 600; }
-.riwayat-time.empty    { color: #CBD5E1; }
+.riwayat-time.checkin  { color: var(--ds-o500); font-weight: 600; }
+.riwayat-time.checkout { color: var(--ds-background-brand-bold); font-weight: 600; }
+.riwayat-time.empty    { color: var(--ds-n400); }
 
 /* Duration */
 .riwayat-duration {
   font-size: 12px;
   font-weight: 600;
-  color: #64748B;
+  color: var(--ds-text-subtlest);
 }
 
 /* Status badge */
@@ -135,10 +135,10 @@
   border-radius: 20px;
 }
 
-.riwayat-badge.hadir   { background: #FFF7ED; color: #F97316; }
-.riwayat-badge.telat   { background: #FFFBEB; color: #F59E0B; }
-.riwayat-badge.alpha   { background: #FEF2F2; color: #EF4444; }
-.riwayat-badge.izin    { background: #EFF6FF; color: #2563EB; }
+.riwayat-badge.hadir   { background: var(--ds-background-warning); color: var(--ds-o500); }
+.riwayat-badge.telat   { background: var(--ds-background-warning); color: var(--ds-y500); }
+.riwayat-badge.alpha   { background: var(--ds-background-danger); color: var(--ds-background-danger-bold); }
+.riwayat-badge.izin    { background: var(--ds-b50); color: var(--ds-background-brand-bold); }
 
 /* Selfie thumb */
 .selfie-thumb {
@@ -146,7 +146,7 @@
   height: 32px;
   border-radius: 8px;
   object-fit: cover;
-  border: 1px solid #EBEBEB;
+  border: 1px solid var(--ds-border-subtle);
   cursor: pointer;
   transition: transform 0.12s;
 }
@@ -157,18 +157,18 @@
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: #F1F5F9;
+  background: var(--ds-n200);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #CBD5E1;
+  color: var(--ds-n400);
 }
 
 /* Empty state */
 .riwayat-empty {
   text-align: center;
   padding: 48px 20px;
-  color: #94A3B8;
+  color: var(--ds-n500);
 }
 
 .riwayat-empty p { margin: 8px 0 0; font-size: 13px; }
@@ -179,9 +179,9 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 18px;
-  border-top: 1px solid #F3F3F3;
+  border-top: 1px solid var(--ds-n200);
   font-size: 12px;
-  color: #94A3B8;
+  color: var(--ds-n500);
 }
 
 .riwayat-page-btns { display: flex; gap: 6px; }
@@ -189,18 +189,18 @@
 .page-btn {
   padding: 5px 12px;
   border-radius: 7px;
-  border: 1px solid #EBEBEB;
+  border: 1px solid var(--ds-border-subtle);
   background: #fff;
   font-size: 12px;
   font-weight: 600;
-  color: #64748B;
+  color: var(--ds-text-subtlest);
   cursor: pointer;
   transition: background 0.1s;
   font-family: "DM Sans", sans-serif;
 }
 
-.page-btn:hover  { background: #F1F5F9; }
-.page-btn.active { background: #F97316; color: #fff; border-color: #F97316; }
+.page-btn:hover  { background: var(--ds-n200); }
+.page-btn.active { background: var(--ds-o500); color: #fff; border-color: var(--ds-o500); }
 .page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
 /* Selfie modal */

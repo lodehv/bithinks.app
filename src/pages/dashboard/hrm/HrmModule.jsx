@@ -16,7 +16,7 @@ export default function HrmModule({ locked = false, onRequirePayment }) {
       {/* Sub-menu tabs */}
       <div style={{
         display: "flex", gap: 4, marginBottom: 24,
-        background: "#F7F7F8", borderRadius: 10,
+        background: "#F7F8F9", borderRadius: 10,
         padding: 4, width: "fit-content",
       }}>
         {SUB_MENUS.map(({ id, label, icon: Icon }) => (

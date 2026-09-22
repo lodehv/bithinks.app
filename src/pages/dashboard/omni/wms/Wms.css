@@ -2,11 +2,11 @@
    Palet & tipografi mengikuti sistem dashboard yang sudah ada
    (DashboardLayout.css & MarketingDashboard.css), BUKAN warisan OmniModule.css:
 
-     indigo   #4F46E5   aksi & angka jangkar      indigo wash  #EEF0FB
-     indigo   #C7C9F9   garis lembut               indigo mid   #818CF8
-     ink      #111827   teks utama & status terkuat
-     netral   #6B7280 · #9CA3AF · #E5E7EB · #EBEBEB · #F3F4F6
-     latar    #FFFFFF · #FAFAFA
+     indigo   var(--ds-background-brand-bold)   aksi & angka jangkar      indigo wash  var(--ds-b50)
+     indigo   var(--ds-b100)   garis lembut               indigo mid   var(--ds-b300)
+     ink      var(--ds-text)   teks utama & status terkuat
+     netral   var(--ds-text-subtlest) · var(--ds-n500) · var(--ds-border-subtle) · var(--ds-border-subtle) · var(--ds-n200)
+     latar    #FFFFFF · var(--ds-surface-sunken)
 
    Latar hanya putih, indigo, atau hitam. Tidak ada pastel hijau/oranye/merah.
    Tingkat perhatian dinaikkan lewat BOBOT, bukan lewat rona warna:
@@ -32,26 +32,26 @@
   font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   font-size: 13px;
 
-  --wms-indigo:      #4F46E5;
-  --wms-indigo-dark: #4338CA;
-  --wms-indigo-mid:  #818CF8;
-  --wms-indigo-soft: #C7C9F9;
-  --wms-indigo-wash: #EEF0FB;
+  --wms-indigo:      var(--ds-background-brand-bold);
+  --wms-indigo-dark: var(--ds-background-brand-bold-hovered);
+  --wms-indigo-mid:  var(--ds-b300);
+  --wms-indigo-soft: var(--ds-b100);
+  --wms-indigo-wash: var(--ds-b50);
 
-  --wms-ink:      #111827;
-  --wms-ink-2:    #374151;
-  --wms-muted:    #6B7280;
-  --wms-faint:    #9CA3AF;
+  --wms-ink:      var(--ds-text);
+  --wms-ink-2:    var(--ds-text-subtle);
+  --wms-muted:    var(--ds-text-subtlest);
+  --wms-faint:    var(--ds-n500);
 
   /* Jarak dari atas layar ke tabel — berbeda tiap layar (Produk & Stok punya
      kartu status di atasnya, Buku Besar tidak), jadi disetel per layar. */
   --wms-table-offset: 28rem;
 
-  --wms-rule:     #EBEBEB;
-  --wms-rule-2:   #E5E7EB;
+  --wms-rule:     var(--ds-border-subtle);
+  --wms-rule-2:   var(--ds-border-subtle);
   --wms-surface:  #FFFFFF;
-  --wms-surface-2:#FAFAFA;
-  --wms-surface-3:#F3F4F6;
+  --wms-surface-2:var(--ds-surface-sunken);
+  --wms-surface-3:var(--ds-n200);
 }
 
 /* ── Penimpaan kelas bersama, hanya di dalam WMS ───────────────────────────── */
@@ -476,7 +476,7 @@
 .wms-picker-row {
   display: flex; width: 100%; align-items: center; justify-content: space-between;
   gap: 12px; padding: 10px 14px; background: none; border: none;
-  border-bottom: 1px solid var(--wms-rule-soft, #F3F4F6);
+  border-bottom: 1px solid var(--wms-rule-soft, var(--ds-n200));
   font-family: inherit; text-align: left; cursor: pointer; color: var(--wms-muted);
 }
 .wms-picker-row:last-child { border-bottom: none; }
@@ -549,7 +549,7 @@
   text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .06em;
   color: var(--wms-muted); padding: 8px 10px; border-bottom: 1px solid var(--wms-rule-2);
 }
-.wms-sheet-table td { padding: 11px 10px; border-bottom: 1px solid var(--wms-rule-soft, #F3F4F6); }
+.wms-sheet-table td { padding: 11px 10px; border-bottom: 1px solid var(--wms-rule-soft, var(--ds-n200)); }
 .wms-sheet-box {
   display: inline-block; width: 18px; height: 18px;
   border: 1.5px solid var(--wms-ink); border-radius: 3px;

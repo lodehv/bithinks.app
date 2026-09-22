@@ -995,8 +995,8 @@ export default function MarketingDashboard() {
             <h3>Tren Penjualan Harian</h3>
           </div>
           <div className="trend-legend">
-            <span className="trend-legend-item"><span className="trend-dot" style={{ background: "#4f46e5" }}></span>Omset</span>
-            <span className="trend-legend-item"><span className="trend-dot" style={{ background: "#059669" }}></span>Diterima</span>
+            <span className="trend-legend-item"><span className="trend-dot" style={{ background: "#0C66E4" }}></span>Omset</span>
+            <span className="trend-legend-item"><span className="trend-dot" style={{ background: "#22A06B" }}></span>Diterima</span>
           </div>
         </div>
 
@@ -1023,8 +1023,8 @@ export default function MarketingDashboard() {
               <svg viewBox="0 0 1000 300" preserveAspectRatio="xMidYMid meet" className="trend-svg-v2" onMouseLeave={() => setHoverIdx(null)}>
                 <defs>
                   <linearGradient id="omsetFill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#4f46e5" stopOpacity="0.16" />
-                    <stop offset="100%" stopColor="#4f46e5" stopOpacity="0" />
+                    <stop offset="0%" stopColor="#0C66E4" stopOpacity="0.16" />
+                    <stop offset="100%" stopColor="#0C66E4" stopOpacity="0" />
                   </linearGradient>
                 </defs>
 
@@ -1032,34 +1032,34 @@ export default function MarketingDashboard() {
                   const y = py(v);
                   return (
                     <g key={i}>
-                      <line x1={V.l} y1={y} x2={V.w - V.r} y2={y} stroke="#ececeb" strokeWidth="1" />
-                      <text x={V.l - 12} y={y + 4} textAnchor="end" fontSize="12.5" fill="#9ca3af" className="trend-axis-num">{formatAxis(v)}</text>
+                      <line x1={V.l} y1={y} x2={V.w - V.r} y2={y} stroke="#DCDFE4" strokeWidth="1" />
+                      <text x={V.l - 12} y={y + 4} textAnchor="end" fontSize="12.5" fill="#8590A2" className="trend-axis-num">{formatAxis(v)}</text>
                     </g>
                   );
                 })}
 
                 <path d={areaPath()} fill="url(#omsetFill)" />
-                <path d={linePath("diterima")} fill="none" stroke="#059669" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
-                <path d={linePath("omset")} fill="none" stroke="#4f46e5" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+                <path d={linePath("diterima")} fill="none" stroke="#22A06B" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+                <path d={linePath("omset")} fill="none" stroke="#0C66E4" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
 
                 {trendData.length <= 14 && trendData.map((d, i) => (
                   <g key={i}>
-                    <circle cx={px(i)} cy={py(d.diterima)} r="3" fill="#fff" stroke="#059669" strokeWidth="2" />
-                    <circle cx={px(i)} cy={py(d.omset)} r="3" fill="#fff" stroke="#4f46e5" strokeWidth="2" />
+                    <circle cx={px(i)} cy={py(d.diterima)} r="3" fill="#fff" stroke="#22A06B" strokeWidth="2" />
+                    <circle cx={px(i)} cy={py(d.omset)} r="3" fill="#fff" stroke="#0C66E4" strokeWidth="2" />
                   </g>
                 ))}
 
                 {trendData.map((d, i) => (
                   (i % xLabelEvery === 0 || i === trendData.length - 1) && (
-                    <text key={i} x={px(i)} y={V.h - 18} textAnchor="middle" fontSize="12.5" fill="#6b7280">{fmtDate(d.date)}</text>
+                    <text key={i} x={px(i)} y={V.h - 18} textAnchor="middle" fontSize="12.5" fill="#626F86">{fmtDate(d.date)}</text>
                   )
                 ))}
 
                 {hoverIdx != null && trendData[hoverIdx] && (
                   <>
-                    <line x1={px(hoverIdx)} y1={V.t} x2={px(hoverIdx)} y2={py(0)} stroke="#c7c7c4" strokeWidth="1" strokeDasharray="4 4" />
-                    <circle cx={px(hoverIdx)} cy={py(trendData[hoverIdx].omset)} r="5" fill="#fff" stroke="#4f46e5" strokeWidth="2.5" />
-                    <circle cx={px(hoverIdx)} cy={py(trendData[hoverIdx].diterima)} r="5" fill="#fff" stroke="#059669" strokeWidth="2.5" />
+                    <line x1={px(hoverIdx)} y1={V.t} x2={px(hoverIdx)} y2={py(0)} stroke="#B3B9C4" strokeWidth="1" strokeDasharray="4 4" />
+                    <circle cx={px(hoverIdx)} cy={py(trendData[hoverIdx].omset)} r="5" fill="#fff" stroke="#0C66E4" strokeWidth="2.5" />
+                    <circle cx={px(hoverIdx)} cy={py(trendData[hoverIdx].diterima)} r="5" fill="#fff" stroke="#22A06B" strokeWidth="2.5" />
                   </>
                 )}
 
@@ -1072,8 +1072,8 @@ export default function MarketingDashboard() {
               {hoverIdx != null && (
                 <div className="trend-tooltip" style={{ left: `${(px(hoverIdx) / 1000) * 100}%` }}>
                   <div className="tt-date">{fmtDate(trendData[hoverIdx].date)}</div>
-                  <div className="tt-row"><span className="trend-dot" style={{ background: "#4f46e5" }}></span><span className="tt-name">Omset</span><b>{formatRupiah(trendData[hoverIdx].omset)}</b></div>
-                  <div className="tt-row"><span className="trend-dot" style={{ background: "#059669" }}></span><span className="tt-name">Diterima</span><b>{formatRupiah(trendData[hoverIdx].diterima)}</b></div>
+                  <div className="tt-row"><span className="trend-dot" style={{ background: "#0C66E4" }}></span><span className="tt-name">Omset</span><b>{formatRupiah(trendData[hoverIdx].omset)}</b></div>
+                  <div className="tt-row"><span className="trend-dot" style={{ background: "#22A06B" }}></span><span className="tt-name">Diterima</span><b>{formatRupiah(trendData[hoverIdx].diterima)}</b></div>
                 </div>
               )}
             </>
@@ -1106,7 +1106,7 @@ export default function MarketingDashboard() {
                   cy="50" 
                   r={radius} 
                   fill="transparent" 
-                  stroke="#F3F4F6" 
+                  stroke="#F1F2F4" 
                   strokeWidth={strokeWidth} 
                 />
                 
@@ -1118,7 +1118,7 @@ export default function MarketingDashboard() {
                       cy="50" 
                       r={radius} 
                       fill="transparent" 
-                      stroke="#111827"
+                      stroke="#172B4D"
                       strokeWidth={strokeWidth} 
                       strokeDasharray={`${cogsDash} ${circumference - cogsDash}`}
                       strokeDashoffset={cogsOffset}
@@ -1132,7 +1132,7 @@ export default function MarketingDashboard() {
                       cy="50" 
                       r={radius} 
                       fill="transparent" 
-                      stroke="#C7C9F9"
+                      stroke="#CCE0FF"
                       strokeWidth={strokeWidth} 
                       strokeDasharray={`${adSpendDash} ${circumference - adSpendDash}`}
                       strokeDashoffset={adSpendOffset}
@@ -1146,7 +1146,7 @@ export default function MarketingDashboard() {
                       cy="50" 
                       r={radius} 
                       fill="transparent" 
-                      stroke="#9CA3AF"
+                      stroke="#8590A2"
                       strokeWidth={strokeWidth} 
                       strokeDasharray={`${returDash} ${circumference - returDash}`}
                       strokeDashoffset={returOffset}
@@ -1160,7 +1160,7 @@ export default function MarketingDashboard() {
                       cy="50" 
                       r={radius} 
                       fill="transparent" 
-                      stroke="#818CF8"
+                      stroke="#579DFF"
                       strokeWidth={strokeWidth} 
                       strokeDasharray={`${feesDash} ${circumference - feesDash}`}
                       strokeDashoffset={feesOffset}
@@ -1174,7 +1174,7 @@ export default function MarketingDashboard() {
                       cy="50" 
                       r={radius} 
                       fill="transparent" 
-                      stroke="#4F46E5"
+                      stroke="#0C66E4"
                       strokeWidth={strokeWidth} 
                       strokeDasharray={`${profitDash} ${circumference - profitDash}`}
                       strokeDashoffset={profitOffset}
@@ -1201,7 +1201,7 @@ export default function MarketingDashboard() {
                     cy="50"
                     r={radius}
                     fill="transparent"
-                    stroke="#E5E7EB"
+                    stroke="#DCDFE4"
                     strokeWidth={strokeWidth}
                   />
                 )}
@@ -1226,7 +1226,7 @@ export default function MarketingDashboard() {
             {/* Donut Legend */}
             <div className="donut-legend-list">
               <div className="legend-item">
-                <div className="legend-color-dot" style={{ backgroundColor: "#4F46E5" }}></div>
+                <div className="legend-color-dot" style={{ backgroundColor: "#0C66E4" }}></div>
                 <div className="legend-text-group">
                   <span className="legend-label">Net Profit</span>
                   <span className="legend-value font-bold text-black">
@@ -1236,7 +1236,7 @@ export default function MarketingDashboard() {
               </div>
               
               <div className="legend-item">
-                <div className="legend-color-dot" style={{ backgroundColor: "#818CF8" }}></div>
+                <div className="legend-color-dot" style={{ backgroundColor: "#579DFF" }}></div>
                 <div className="legend-text-group">
                   <span className="legend-label">Beban Platform</span>
                   <span className="legend-value font-bold text-black">
@@ -1246,7 +1246,7 @@ export default function MarketingDashboard() {
               </div>
 
               <div className="legend-item">
-                <div className="legend-color-dot" style={{ backgroundColor: "#C7C9F9" }}></div>
+                <div className="legend-color-dot" style={{ backgroundColor: "#CCE0FF" }}></div>
                 <div className="legend-text-group">
                   <span className="legend-label">Biaya Iklan</span>
                   <span className="legend-value font-bold text-black">
@@ -1256,7 +1256,7 @@ export default function MarketingDashboard() {
               </div>
 
               <div className="legend-item">
-                <div className="legend-color-dot" style={{ backgroundColor: "#9CA3AF" }}></div>
+                <div className="legend-color-dot" style={{ backgroundColor: "#8590A2" }}></div>
                 <div className="legend-text-group">
                   <span className="legend-label">Beban Retur</span>
                   <span className="legend-value font-bold text-black">
@@ -1266,7 +1266,7 @@ export default function MarketingDashboard() {
               </div>
 
               <div className="legend-item">
-                <div className="legend-color-dot" style={{ backgroundColor: "#111827" }}></div>
+                <div className="legend-color-dot" style={{ backgroundColor: "#172B4D" }}></div>
                 <div className="legend-text-group">
                   <span className="legend-label">COGS (HPP)</span>
                   <span className="legend-value font-bold text-black">
@@ -1507,7 +1507,7 @@ export default function MarketingDashboard() {
               <tbody>
                 {costBreakdown.length === 0 && (
                   <tr>
-                    <td className="ledger-td-desc" colSpan={3} style={{ textAlign: "center", color: "#9ca3af", padding: "24px 0" }}>
+                    <td className="ledger-td-desc" colSpan={3} style={{ textAlign: "center", color: "#8590A2", padding: "24px 0" }}>
                       Belum ada data beban platform pada filter ini
                     </td>
                   </tr>
@@ -1529,10 +1529,10 @@ export default function MarketingDashboard() {
                       {/* Sudah settlement (riil) */}
                       {riilItems.length > 0 && (
                         <tr>
-                          <td className="ledger-td-desc" colSpan={2} style={{ fontStyle: "italic", color: "#16a34a" }}>
+                          <td className="ledger-td-desc" colSpan={2} style={{ fontStyle: "italic", color: "#22A06B" }}>
                             Sudah settlement (riil) — {g.final_orders + g.preliminary_orders} order
                           </td>
-                          <td className="text-right" style={{ color: "#16a34a" }}>{formatRupiah(riilTotal)}</td>
+                          <td className="text-right" style={{ color: "#22A06B" }}>{formatRupiah(riilTotal)}</td>
                         </tr>
                       )}
                       {riilItems.map((it, idx) => (
@@ -1546,10 +1546,10 @@ export default function MarketingDashboard() {
                       {/* Belum settlement (perkiraan) */}
                       {estItems.length > 0 && (
                         <tr>
-                          <td className="ledger-td-desc" colSpan={2} style={{ fontStyle: "italic", color: "#d97706" }}>
+                          <td className="ledger-td-desc" colSpan={2} style={{ fontStyle: "italic", color: "#C25100" }}>
                             Belum settlement (perkiraan) — {g.estimated_orders} order
                           </td>
-                          <td className="text-right" style={{ color: "#d97706" }}>{formatRupiah(estTotal)}</td>
+                          <td className="text-right" style={{ color: "#C25100" }}>{formatRupiah(estTotal)}</td>
                         </tr>
                       )}
                       {estItems.map((it, idx) => (

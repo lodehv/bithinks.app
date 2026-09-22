@@ -66,15 +66,15 @@ export default function CerminSellerCenter({ channel, dari, sampai }) {
         style={{
           display: "inline-flex", alignItems: "center", gap: 6,
           padding: "6px 12px", borderRadius: 7, fontSize: 13, fontWeight: 500,
-          border: "1px solid #E5E7EB", background: "#fff",
-          color: sibuk ? "#9CA3AF" : "#374151", cursor: sibuk ? "default" : "pointer",
+          border: "1px solid #DCDFE4", background: "#fff",
+          color: sibuk ? "#8590A2" : "#44546F", cursor: sibuk ? "default" : "pointer",
         }}
       >
         <RefreshCw size={14} style={sibuk ? { opacity: 0.5 } : undefined} />
         {sibuk ? `Menghitung di ${namaPasar}…` : `Cocokkan dengan ${namaPasar}`}
       </button>
 
-      {galat && <div style={{ marginTop: 8, fontSize: 13, color: "#991B1B" }}>{galat}</div>}
+      {galat && <div style={{ marginTop: 8, fontSize: 13, color: "#AE2E24" }}>{galat}</div>}
 
       {hasil && <Hasil hasil={hasil} namaPasar={namaPasar} />}
     </div>
@@ -83,14 +83,14 @@ export default function CerminSellerCenter({ channel, dari, sampai }) {
 
 function Hasil({ hasil, namaPasar }) {
   const cocok = hasil.cocok;
-  const warna = cocok ? "#166534" : "#92400E";
-  const latar = cocok ? "#F0FDF4" : "#FFFBEB";
+  const warna = cocok ? "#216E4E" : "#A54800";
+  const latar = cocok ? "#DFFCF0" : "#FFF7D6";
 
   return (
     <div style={{
       marginTop: 10, padding: "12px 14px", borderRadius: 9,
-      background: latar, border: `1px solid ${cocok ? "#BBF7D0" : "#FDE68A"}`,
-      fontSize: 13, color: "#374151", lineHeight: 1.6,
+      background: latar, border: `1px solid ${cocok ? "#BAF3DB" : "#F8E6A0"}`,
+      fontSize: 13, color: "#44546F", lineHeight: 1.6,
     }}>
       <div style={{ display: "flex", alignItems: "center", gap: 7, fontWeight: 600, color: warna }}>
         {cocok ? <ShieldCheck size={16} /> : <AlertTriangle size={16} />}
@@ -102,7 +102,7 @@ function Hasil({ hasil, namaPasar }) {
       <div style={{ marginTop: 6 }}>
         {namaPasar} <strong>{angka(hasil.diMarketplace)}</strong> · antrean kita{" "}
         <strong>{angka(hasil.diKita)}</strong>
-        <span style={{ color: "#6B7280" }}>
+        <span style={{ color: "#626F86" }}>
           {" · "}
           {hasil.hariDiperiksa
             ? `diperiksa ${hasil.hariDiperiksa} hari terakhir`
@@ -129,7 +129,7 @@ function Hasil({ hasil, namaPasar }) {
       )}
 
       {hasil.adaTokoYangGagalDitanya && (
-        <div style={{ marginTop: 6, color: "#991B1B" }}>
+        <div style={{ marginTop: 6, color: "#AE2E24" }}>
           Ada toko yang tidak bisa ditanya, jadi hasil ini <strong>belum lengkap</strong>.
           {(hasil.perToko ?? []).filter((t) => t.galat).map((t) => (
             <div key={t.storeId} style={{ fontSize: 12, marginTop: 2 }}>· {t.toko}</div>
@@ -144,7 +144,7 @@ function Hasil({ hasil, namaPasar }) {
 function Nomor({ daftar, jumlah }) {
   if (!daftar?.length) return null;
   return (
-    <div style={{ marginTop: 4, fontFamily: "monospace", fontSize: 12, color: "#6B7280", wordBreak: "break-all" }}>
+    <div style={{ marginTop: 4, fontFamily: "monospace", fontSize: 12, color: "#626F86", wordBreak: "break-all" }}>
       {daftar.join(", ")}
       {jumlah > daftar.length && ` … dan ${angka(jumlah - daftar.length)} lagi`}
     </div>

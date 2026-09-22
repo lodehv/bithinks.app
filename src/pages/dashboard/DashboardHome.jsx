@@ -154,7 +154,7 @@ export default function DashboardHome({ onMenuClick, onBukaPesanan }) {
                 <div className="marketplace-logos">
                   {connected.slice(0, 6).map((s) => {
                     const m = channelMeta(s.channel);
-                    return <span key={s.id} title={m.label} style={{ width: 26, height: 26, borderRadius: 7, background: "#1F2937", color: "#fff", fontSize: 11, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{m.short}</span>;
+                    return <span key={s.id} title={m.label} style={{ width: 26, height: 26, borderRadius: 7, background: "#172B4D", color: "#fff", fontSize: 11, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{m.short}</span>;
                   })}
                 </div>
               )}
@@ -250,10 +250,10 @@ export default function DashboardHome({ onMenuClick, onBukaPesanan }) {
                   return (
                     <div key={c.channel} style={{ display: "flex", alignItems: "center", gap: 12, padding: "8px 0" }}>
                       <span style={{ width: 90, fontSize: 12.5, fontWeight: 600, color: "#333", display: "flex", alignItems: "center", gap: 7 }}>
-                        <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#4F46E5" }} />{m.label}
+                        <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#0C66E4" }} />{m.label}
                       </span>
-                      <div style={{ flex: 1, height: 8, background: "#F1F1F1", borderRadius: 99, overflow: "hidden" }}>
-                        <div style={{ width: `${(c.total / maxChannel) * 100}%`, height: "100%", background: "#4F46E5", borderRadius: 99 }} />
+                      <div style={{ flex: 1, height: 8, background: "#F1F2F4", borderRadius: 99, overflow: "hidden" }}>
+                        <div style={{ width: `${(c.total / maxChannel) * 100}%`, height: "100%", background: "#0C66E4", borderRadius: 99 }} />
                       </div>
                       <span style={{ width: 110, textAlign: "right", fontSize: 12.5, fontWeight: 700, color: "#111" }}>{rupiah(c.total)}</span>
                     </div>
@@ -267,7 +267,7 @@ export default function DashboardHome({ onMenuClick, onBukaPesanan }) {
           <div className="stock-alert-box">
             <div className="stock-alert-header">
               <span className="stock-alert-title">
-                <AlertTriangle size={14} color="#DC2626" /> Stok Perlu Diperhatikan
+                <AlertTriangle size={14} color="#C9372C" /> Stok Perlu Diperhatikan
                 {lowStock.length > 0 && <span className="stock-alert-badge">{lowStock.length}</span>}
               </span>
               <span className="stock-alert-link" onClick={() => onMenuClick?.("kelola-produk")}>Kelola →</span>

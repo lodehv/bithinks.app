@@ -4,7 +4,7 @@
 .panel-retur-latar {
   position: fixed;
   inset: 0;
-  background: rgba(17, 24, 39, 0.45);
+  background: rgba(9, 30, 66, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -29,21 +29,21 @@
   justify-content: space-between;
   gap: 16px;
   padding: 20px 24px 16px;
-  border-bottom: 1px solid #EBEBEB;
+  border-bottom: 1px solid var(--ds-border-subtle);
 }
-.panel-retur-kepala h3 { margin: 0; font-size: 17px; font-weight: 700; color: #111827; }
-.panel-retur-kepala p { margin: 4px 0 0; font-size: 12px; color: #9CA3AF; }
+.panel-retur-kepala h3 { margin: 0; font-size: 17px; font-weight: 700; color: var(--ds-text); }
+.panel-retur-kepala p { margin: 4px 0 0; font-size: 12px; color: var(--ds-n500); }
 
 .panel-retur-tutup {
   border: none;
   background: none;
   cursor: pointer;
-  color: #6B7280;
+  color: var(--ds-text-subtlest);
   padding: 4px;
   border-radius: 6px;
   line-height: 0;
 }
-.panel-retur-tutup:hover { background: #F3F4F6; }
+.panel-retur-tutup:hover { background: var(--ds-n200); }
 
 .panel-retur-saringan {
   display: flex;
@@ -51,34 +51,34 @@
   flex-wrap: wrap;
   gap: 10px;
   padding: 14px 24px;
-  border-bottom: 1px solid #F3F4F6;
+  border-bottom: 1px solid var(--ds-n200);
 }
 
 .panel-retur-label {
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.06em;
-  color: #9CA3AF;
+  color: var(--ds-n500);
 }
 
 /* Tombol beruas untuk pilihan yang saling meniadakan — satu platform pada satu
    waktu. Digambar berbeda dari kotak centang toko, yang justru boleh banyak. */
 .panel-ruas { display: flex; gap: 6px; }
 .panel-ruas-tombol {
-  border: 1px solid #E5E7EB;
+  border: 1px solid var(--ds-border-subtle);
   background: #ffffff;
   border-radius: 999px;
   padding: 5px 14px;
   font-size: 12px;
   font-weight: 600;
-  color: #6B7280;
+  color: var(--ds-text-subtlest);
   cursor: pointer;
 }
-.panel-ruas-tombol:hover { background: #F9FAFB; }
+.panel-ruas-tombol:hover { background: var(--ds-surface-sunken); }
 .panel-ruas-aktif {
-  border-color: #4F46E5;
-  background: #EEF2FF;
-  color: #4338CA;
+  border-color: var(--ds-background-brand-bold);
+  background: var(--ds-b50);
+  color: var(--ds-background-brand-bold-hovered);
 }
 
 .panel-toko { position: relative; }
@@ -86,12 +86,12 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid #E5E7EB;
+  border: 1px solid var(--ds-border-subtle);
   background: #ffffff;
   border-radius: 8px;
   padding: 6px 12px;
   font-size: 12px;
-  color: #111827;
+  color: var(--ds-text);
   cursor: pointer;
   min-width: 160px;
   justify-content: space-between;
@@ -107,7 +107,7 @@
   max-height: 300px;
   overflow-y: auto;
   background: #ffffff;
-  border: 1px solid #E5E7EB;
+  border: 1px solid var(--ds-border-subtle);
   border-radius: 10px;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
   padding: 6px;
@@ -122,11 +122,11 @@
   padding: 8px 10px;
   font-size: 12px;
   font-weight: 700;
-  color: #111827;
+  color: var(--ds-text);
   cursor: pointer;
   border-radius: 6px;
 }
-.panel-toko-semua:hover { background: #F3F4F6; }
+.panel-toko-semua:hover { background: var(--ds-n200); }
 
 .panel-toko-baris {
   display: flex;
@@ -137,13 +137,13 @@
   cursor: pointer;
   font-size: 12px;
 }
-.panel-toko-baris:hover { background: #F9FAFB; }
-.panel-toko-nama { flex: 1; color: #111827; }
+.panel-toko-baris:hover { background: var(--ds-surface-sunken); }
+.panel-toko-nama { flex: 1; color: var(--ds-text); }
 .panel-toko-channel {
   font-size: 10px;
   font-weight: 700;
-  color: #6B7280;
-  background: #F3F4F6;
+  color: var(--ds-text-subtlest);
+  background: var(--ds-n200);
   border-radius: 999px;
   padding: 1px 8px;
 }
@@ -153,16 +153,16 @@
   align-items: center;
   gap: 12px;
   padding: 12px 24px;
-  background: #FFFBFB;
-  border-bottom: 1px solid #F3F4F6;
+  background: var(--ds-n0);
+  border-bottom: 1px solid var(--ds-n200);
 }
-.panel-ringkas-jumlah { font-size: 13px; color: #6B7280; }
-.panel-ringkas-jumlah b { font-size: 16px; color: #111827; }
+.panel-ringkas-jumlah { font-size: 13px; color: var(--ds-text-subtlest); }
+.panel-ringkas-jumlah b { font-size: 16px; color: var(--ds-text); }
 .panel-ringkas-nilai {
   margin-left: auto;
   font-size: 16px;
   font-weight: 700;
-  color: #B91C1C;
+  color: var(--ds-text-danger);
   font-variant-numeric: tabular-nums;
 }
 
@@ -170,24 +170,24 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid #E5E7EB;
+  border: 1px solid var(--ds-border-subtle);
   background: #ffffff;
   border-radius: 8px;
   padding: 7px 12px;
   font-size: 12px;
   font-weight: 600;
-  color: #374151;
+  color: var(--ds-text-subtle);
   cursor: pointer;
 }
-.panel-aksi:hover:not(:disabled) { background: #F9FAFB; }
+.panel-aksi:hover:not(:disabled) { background: var(--ds-surface-sunken); }
 .panel-aksi:disabled { opacity: 0.5; cursor: not-allowed; }
 /* Satu aksi utama saja per panel; sisanya netral. */
 .panel-aksi-utama {
-  background: #4F46E5;
-  border-color: #4F46E5;
+  background: var(--ds-background-brand-bold);
+  border-color: var(--ds-background-brand-bold);
   color: #ffffff;
 }
-.panel-aksi-utama:hover:not(:disabled) { background: #4338CA; }
+.panel-aksi-utama:hover:not(:disabled) { background: var(--ds-background-brand-bold-hovered); }
 
 .panel-retur-isi { overflow: auto; padding: 0 8px 16px; }
 
@@ -201,40 +201,40 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #9CA3AF;
+  color: var(--ds-n500);
   padding: 12px 12px 8px;
-  border-bottom: 1px solid #EBEBEB;
+  border-bottom: 1px solid var(--ds-border-subtle);
 }
-.panel-tabel td { padding: 10px 12px; border-bottom: 1px solid #F5F5F5; vertical-align: top; }
+.panel-tabel td { padding: 10px 12px; border-bottom: 1px solid var(--ds-n200); vertical-align: top; }
 
-.panel-kolom-no { width: 36px; color: #9CA3AF; font-variant-numeric: tabular-nums; }
+.panel-kolom-no { width: 36px; color: var(--ds-n500); font-variant-numeric: tabular-nums; }
 
 .panel-baris { cursor: pointer; }
-.panel-baris:hover { background: #FAFAFA; }
-.panel-baris-buka { background: #F9FAFB; }
+.panel-baris:hover { background: var(--ds-surface-sunken); }
+.panel-baris-buka { background: var(--ds-surface-sunken); }
 
-.panel-no-pesanan { font-weight: 600; color: #111827; font-variant-numeric: tabular-nums; }
-.panel-sub { font-size: 10.5px; color: #9CA3AF; margin-top: 2px; }
+.panel-no-pesanan { font-weight: 600; color: var(--ds-text); font-variant-numeric: tabular-nums; }
+.panel-sub { font-size: 10.5px; color: var(--ds-n500); margin-top: 2px; }
 
-.panel-toko-sel { color: #374151; }
+.panel-toko-sel { color: var(--ds-text-subtle); }
 
 .panel-resi, .panel-status {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 11px;
-  color: #6B7280;
+  color: var(--ds-text-subtlest);
 }
 .panel-status {
   display: inline-block;
-  background: #F3F4F6;
+  background: var(--ds-n200);
   border-radius: 6px;
   padding: 2px 7px;
-  color: #374151;
+  color: var(--ds-text-subtle);
 }
 
 /* Alasan boleh panjang; dipotong dua baris supaya barisnya tidak menuruni
    layar. Teks utuhnya tetap ada di `title` dan saat barisnya dibuka. */
 .panel-alasan {
-  color: #374151;
+  color: var(--ds-text-subtle);
   max-width: 240px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -242,9 +242,9 @@
   overflow: hidden;
 }
 
-.panel-tanggal { color: #374151; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.panel-tanggal { color: var(--ds-text-subtle); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-.panel-detail-baris td { background: #FAFAFA; }
+.panel-detail-baris td { background: var(--ds-surface-sunken); }
 .panel-detail { padding: 4px 0 8px; }
 
 .panel-fakta {
@@ -258,15 +258,15 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #9CA3AF;
+  color: var(--ds-n500);
   margin-bottom: 2px;
 }
-.panel-fakta dd { margin: 0; font-size: 12.5px; color: #111827; }
+.panel-fakta dd { margin: 0; font-size: 12.5px; color: var(--ds-text); }
 
 .panel-alasan-asli {
   display: block;
   font-size: 10.5px;
-  color: #9CA3AF;
+  color: var(--ds-n500);
   margin-top: 3px;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
@@ -277,14 +277,14 @@
   gap: 12px;
   padding: 5px 0 5px 14px;
   font-size: 12px;
-  color: #6B7280;
-  border-left: 2px solid #E5E7EB;
+  color: var(--ds-text-subtlest);
+  border-left: 2px solid var(--ds-border-subtle);
 }
-.panel-jejak-kini { color: #111827; font-weight: 600; border-left-color: #4F46E5; }
-.panel-jejak-waktu { min-width: 96px; color: #9CA3AF; font-variant-numeric: tabular-nums; }
+.panel-jejak-kini { color: var(--ds-text); font-weight: 600; border-left-color: var(--ds-background-brand-bold); }
+.panel-jejak-waktu { min-width: 96px; color: var(--ds-n500); font-variant-numeric: tabular-nums; }
 
-.panel-kosong { padding: 40px 16px; text-align: center; color: #9CA3AF; font-size: 13px; }
-.panel-kosong-kecil { font-size: 12px; color: #9CA3AF; }
+.panel-kosong { padding: 40px 16px; text-align: center; color: var(--ds-n500); font-size: 13px; }
+.panel-kosong-kecil { font-size: 12px; color: var(--ds-n500); }
 
 @media (max-width: 900px) {
   .panel-retur-latar { padding: 0; }
@@ -307,12 +307,12 @@
 
 .panel-diam {
   font-variant-numeric: tabular-nums;
-  color: #6b7280;
+  color: var(--ds-text-subtlest);
 }
 
 .panel-diam-lama {
   font-weight: 700;
-  color: #b91c1c;
+  color: var(--ds-text-danger);
 }
 
 /* Uang kembali, barang tidak. Ditulis kecil di bawah nama platform karena ia
@@ -321,13 +321,13 @@
 .panel-uang-saja {
   margin-left: 6px;
   padding: 1px 5px;
-  border: 1px solid #E5E7EB;
+  border: 1px solid var(--ds-border-subtle);
   border-radius: 4px;
   font-size: 9.5px;
   font-weight: 700;
   letter-spacing: 0.03em;
-  color: #92400e;
-  background: #FFFBEB;
+  color: var(--ds-text-warning);
+  background: var(--ds-background-warning);
   text-transform: uppercase;
 }
 
@@ -338,9 +338,9 @@
   margin-left: 8px;
   padding: 1px 6px;
   border-radius: 4px;
-  background: #FFFBEB;
-  border: 1px solid #FDE68A;
-  color: #92400e;
+  background: var(--ds-background-warning);
+  border: 1px solid var(--ds-y100);
+  color: var(--ds-text-warning);
   font-size: 10px;
   font-weight: 600;
 }

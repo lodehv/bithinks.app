@@ -30,8 +30,8 @@ function umurJam(iso) {
 const SOROTAN = {
   menunggu_lama: {
     teks: "Menunggu lebih dari batas",
-    warna: "#9A3412",
-    latar: "#FFF7ED",
+    warna: "#A54800",
+    latar: "#FFF7D6",
     // Ditandai server. Menghitung ulang di sini akan membuat angka di cip dan
     // jumlah baris di panel bisa berbeda, dan tidak ada yang tahu mana benar.
     cocok: (p) => Boolean(p.menungguLama),
@@ -41,8 +41,8 @@ const SOROTAN = {
   },
   pernah_gagal: {
     teks: "Pernah gagal dicetak",
-    warna: "#991B1B",
-    latar: "#FEF2F2",
+    warna: "#AE2E24",
+    latar: "#FFECEB",
     cocok: (p) => p.gagalBerulang > 0,
     alasan: () =>
       "Marketplace pernah menolak mencetak pesanan ini. Kode terakhirnya ada di tiap baris.",
@@ -99,31 +99,31 @@ export default function RincianTahap({ data, tahap, onTutup }) {
             padding: "5px 8px", borderRadius: 7, background: "#fff",
           }}>
             <span style={{
-              color: "#111827", minWidth: 150, letterSpacing: ".02em",
+              color: "#172B4D", minWidth: 150, letterSpacing: ".02em",
               fontVariantNumeric: "tabular-nums",
             }}>{p.nomorPesanan ?? "—"}</span>
             <span style={{
-              flex: 1, color: "#374151", minWidth: 0, overflow: "hidden",
+              flex: 1, color: "#44546F", minWidth: 0, overflow: "hidden",
               textOverflow: "ellipsis", whiteSpace: "nowrap",
             }}>{p.penerima ?? "—"}</span>
             {/* Kata asli marketplace. Satu-satunya keterangan yang bukan
                 terjemahan kami, jadi ia yang bisa dibawa saat bertanya ke
                 Seller Center. */}
             {tahap === "menunggu_lama" && p.orderedAt && (
-              <span style={{ color: "#9A3412", fontSize: 11, flexShrink: 0 }}>
+              <span style={{ color: "#A54800", fontSize: 11, flexShrink: 0 }}>
                 {umurJam(p.orderedAt)}
               </span>
             )}
             {p.statusMarketplace && (
-              <span style={{ color: "#6B7280", fontSize: 11, flexShrink: 0 }}>{p.statusMarketplace}</span>
+              <span style={{ color: "#626F86", fontSize: 11, flexShrink: 0 }}>{p.statusMarketplace}</span>
             )}
             {p.statusPaket && (
-              <span style={{ color: "#9CA3AF", fontSize: 11, flexShrink: 0 }}>{p.statusPaket}</span>
+              <span style={{ color: "#8590A2", fontSize: 11, flexShrink: 0 }}>{p.statusPaket}</span>
             )}
             {p.gagalBerulang > 0 && (
               <span
                 title={p.kodeGagal ? `Kode terakhir dari marketplace: ${p.kodeGagal}` : undefined}
-                style={{ color: "#991B1B", fontSize: 11, flexShrink: 0 }}
+                style={{ color: "#AE2E24", fontSize: 11, flexShrink: 0 }}
               >gagal {p.gagalBerulang}×</span>
             )}
           </div>

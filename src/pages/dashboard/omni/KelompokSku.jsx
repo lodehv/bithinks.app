@@ -33,7 +33,7 @@ export default function Kelompok({
   // paling sering salah.
   const [buka, setBuka] = useState(awalTerbuka);
   return (
-    <div style={{ border: "1px solid #E5E7EB", borderRadius: 10, marginBottom: 8, background: "#fff" }}>
+    <div style={{ border: "1px solid #DCDFE4", borderRadius: 10, marginBottom: 8, background: "#fff" }}>
       {/* Tombol cetak berada DI SEBELAH tombol buka-tutup, bukan di dalamnya.
           <button> bersarang bukan HTML yang sah, dan akibatnya nyata: sebagian
           peramban tidak meneruskan klik ke tombol bagian dalam sama sekali. */}
@@ -47,8 +47,8 @@ export default function Kelompok({
         >
           {buka ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontWeight: 600, fontSize: 14, color: "#111827" }}>{k.nama}</div>
-            <div style={{ fontSize: 12, color: "#6B7280", letterSpacing: ".02em" }}>{k.sku}</div>
+            <div style={{ fontWeight: 600, fontSize: 14, color: "#172B4D" }}>{k.nama}</div>
+            <div style={{ fontSize: 12, color: "#626F86", letterSpacing: ".02em" }}>{k.sku}</div>
           </div>
           {/* Angka besar = yang akan tercetak, sama persis dengan angka di
               tombol dan dengan jumlah halaman PDF.
@@ -57,7 +57,7 @@ export default function Kelompok({
               yang belum tersimpan di sistem kami bukan urusan yang memakai —
               ia diambil sendiri saat tombol ditekan. */}
           <div style={{ textAlign: "right", flexShrink: 0, minWidth: 92 }}>
-            <div style={{ fontWeight: 700, fontSize: 18, color: "#111827", fontVariantNumeric: "tabular-nums" }}>
+            <div style={{ fontWeight: 700, fontSize: 18, color: "#172B4D", fontVariantNumeric: "tabular-nums" }}>
               {angka(sisi === "sudah" ? k.jumlahPesanan : k.siapCetak)}
               {/* "7 dari 8" hanya saat keduanya BERBEDA.
                   Aturan pemilik toko: kalau dari 8 pesanan 1 tidak bisa
@@ -65,18 +65,18 @@ export default function Kelompok({
                   orang menghitung sendiri baris yang ada. Saat semuanya bisa,
                   angka kedua cuma derau. */}
               {sisi !== "sudah" && k.siapCetak < k.jumlahPesanan && (
-                <span style={{ fontSize: 13, fontWeight: 500, color: "#9CA3AF" }}>
+                <span style={{ fontSize: 13, fontWeight: 500, color: "#8590A2" }}>
                   {" "}dari {angka(k.jumlahPesanan)}
                 </span>
               )}
             </div>
-            <div style={{ fontSize: 12, color: "#6B7280" }}>
+            <div style={{ fontSize: 12, color: "#626F86" }}>
               {sisi === "sudah" ? "sudah tercetak" : "siap dicetak"}
             </div>
           </div>
           <div style={{ textAlign: "right", flexShrink: 0, minWidth: 96 }}>
-            <div style={{ fontWeight: 600, fontSize: 14, color: "#374151", fontVariantNumeric: "tabular-nums" }}>{angka(k.totalQty)}</div>
-            <div style={{ fontSize: 12, color: "#6B7280" }}>barang diambil</div>
+            <div style={{ fontWeight: 600, fontSize: 14, color: "#44546F", fontVariantNumeric: "tabular-nums" }}>{angka(k.totalQty)}</div>
+            <div style={{ fontSize: 12, color: "#626F86" }}>barang diambil</div>
           </div>
         </button>
 
@@ -92,22 +92,22 @@ export default function Kelompok({
       </div>
 
       {buka && (
-        <div style={{ borderTop: "1px solid #F3F4F6", padding: "4px 16px 12px 46px" }}>
+        <div style={{ borderTop: "1px solid #F1F2F4", padding: "4px 16px 12px 46px" }}>
           {k.pesanan.map((p) => {
             const t = TAHAP[p.tahap] ?? TAHAP.perlu_diperiksa;
             return (
               <div key={p.id} style={{
                 display: "flex", alignItems: "center", gap: 10, padding: "8px 0",
-                borderBottom: "1px solid #F9FAFB", fontSize: 13,
+                borderBottom: "1px solid #F7F8F9", fontSize: 13,
               }}>
-                <span style={{ color: "#111827", minWidth: 150, letterSpacing: ".02em", fontVariantNumeric: "tabular-nums" }}>
+                <span style={{ color: "#172B4D", minWidth: 150, letterSpacing: ".02em", fontVariantNumeric: "tabular-nums" }}>
                   {p.nomorPesanan ?? "—"}
                 </span>
-                <span style={{ flex: 1, color: "#374151", minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                <span style={{ flex: 1, color: "#44546F", minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                   {p.penerima ?? "—"}
                 </span>
-                <span style={{ color: "#6B7280", flexShrink: 0 }}>{p.qty}×</span>
-                <span style={{ color: "#9CA3AF", flexShrink: 0, minWidth: 52 }}>{tanggal(p.orderedAt)}</span>
+                <span style={{ color: "#626F86", flexShrink: 0 }}>{p.qty}×</span>
+                <span style={{ color: "#8590A2", flexShrink: 0, minWidth: 52 }}>{tanggal(p.orderedAt)}</span>
                 {/* KATA-KATA ASLI SHOPEE ADA DI BALIK LABELNYA.
                     Aturan pemilik toko 26 Agustus 2026: alasan sebuah pesanan
                     belum punya resi harus benar-benar dari marketplace, bukan
@@ -134,7 +134,7 @@ export default function Kelompok({
                 {p.tahap !== "siap_cetak" && p.statusMarketplace && (
                   <span
                     style={{
-                      fontSize: 10.5, color: "#6B7280", flexShrink: 0,
+                      fontSize: 10.5, color: "#626F86", flexShrink: 0,
                       letterSpacing: ".02em", fontVariantNumeric: "tabular-nums",
                     }}
                   >{p.statusMarketplace}</span>
@@ -150,7 +150,7 @@ export default function Kelompok({
                     title={p.kodeGagal ? `Kode terakhir dari marketplace: ${p.kodeGagal}` : undefined}
                     style={{
                       fontSize: 11, padding: "2px 8px", borderRadius: 99, flexShrink: 0,
-                      background: "#FEF2F2", color: "#991B1B",
+                      background: "#FFECEB", color: "#AE2E24",
                       cursor: p.kodeGagal ? "help" : undefined,
                     }}
                   >gagal {p.gagalBerulang}×</span>
@@ -163,13 +163,13 @@ export default function Kelompok({
                     pertanyaannya hilang: barisnya menunjuk ke kembarannya. */}
                 {p.skuLain?.length > 0 && (
                   <span title="Satu pesanan, satu label — barisnya muncul di tiap SKU supaya tidak terlewat saat mengambil barang"
-                        style={{ fontSize: 11, color: "#6B7280", flexShrink: 0 }}>
+                        style={{ fontSize: 11, color: "#626F86", flexShrink: 0 }}>
                     juga di {p.skuLain.join(", ")}
                   </span>
                 )}
                 {p.packageCount > 1 && (
                   <span title="Pesanan ini pecah jadi beberapa paket — label belum lengkap"
-                        style={{ fontSize: 11, color: "#991B1B", flexShrink: 0 }}>{p.packageCount} paket</span>
+                        style={{ fontSize: 11, color: "#AE2E24", flexShrink: 0 }}>{p.packageCount} paket</span>
                 )}
               </div>
             );

@@ -27,8 +27,8 @@ const PINTASAN = [
 ];
 
 const kotak = {
-  padding: "6px 8px", borderRadius: 7, border: "1px solid #E5E7EB",
-  fontSize: 13, fontFamily: "inherit", color: "#111827", width: "100%",
+  padding: "6px 8px", borderRadius: 7, border: "1px solid #DCDFE4",
+  fontSize: 13, fontFamily: "inherit", color: "#172B4D", width: "100%",
 };
 
 export default function PilihTanggal({ dari, sampai, onUbah }) {
@@ -61,9 +61,9 @@ export default function PilihTanggal({ dari, sampai, onUbah }) {
         style={{
           display: "inline-flex", alignItems: "center", gap: 7, padding: "7px 12px",
           borderRadius: 8, cursor: "pointer", fontSize: 13, fontFamily: "inherit",
-          border: `1px solid ${disaring ? "#C7D2FE" : "#E5E7EB"}`,
-          background: disaring ? "#EEF2FF" : "#fff",
-          color: disaring ? "#4F46E5" : "#374151",
+          border: `1px solid ${disaring ? "#CCE0FF" : "#DCDFE4"}`,
+          background: disaring ? "#E9F2FF" : "#fff",
+          color: disaring ? "#0C66E4" : "#44546F",
           fontWeight: 500, fontVariantNumeric: "tabular-nums",
         }}
       >
@@ -75,8 +75,8 @@ export default function PilihTanggal({ dari, sampai, onUbah }) {
       {buka && (
         <div style={{
           position: "absolute", top: "calc(100% + 6px)", right: 0, zIndex: 20,
-          background: "#fff", border: "1px solid #E5E7EB", borderRadius: 10,
-          boxShadow: "0 10px 30px -10px rgba(17,24,39,.25)", padding: 14, width: 268,
+          background: "#fff", border: "1px solid #DCDFE4", borderRadius: 10,
+          boxShadow: "0 10px 30px -10px rgba(9, 30, 66,.25)", padding: 14, width: 268,
           display: "flex", flexDirection: "column", gap: 12,
         }}>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
@@ -86,7 +86,7 @@ export default function PilihTanggal({ dari, sampai, onUbah }) {
                 onClick={() => { const [a, b] = p.nilai(); onUbah(a, b); setBuka(false); }}
                 style={{
                   padding: "5px 10px", borderRadius: 999, cursor: "pointer",
-                  border: "1px solid #E5E7EB", background: "#F9FAFB", color: "#374151",
+                  border: "1px solid #DCDFE4", background: "#F7F8F9", color: "#44546F",
                   fontSize: 12.5, fontFamily: "inherit", fontWeight: 500,
                 }}
               >{p.teks}</button>
@@ -94,19 +94,19 @@ export default function PilihTanggal({ dari, sampai, onUbah }) {
           </div>
 
           <div style={{ display: "grid", gap: 8 }}>
-            <label style={{ fontSize: 12, color: "#6B7280", display: "grid", gap: 4 }}>
+            <label style={{ fontSize: 12, color: "#626F86", display: "grid", gap: 4 }}>
               Tanggal pesanan dari
               <input type="date" value={dari} style={kotak}
                      onChange={(e) => onUbah(e.target.value, sampai)} />
             </label>
-            <label style={{ fontSize: 12, color: "#6B7280", display: "grid", gap: 4 }}>
+            <label style={{ fontSize: 12, color: "#626F86", display: "grid", gap: 4 }}>
               sampai
               <input type="date" value={sampai} style={kotak}
                      onChange={(e) => onUbah(dari, e.target.value)} />
             </label>
           </div>
 
-          <p style={{ margin: 0, fontSize: 11.5, color: "#9CA3AF", lineHeight: 1.45 }}>
+          <p style={{ margin: 0, fontSize: 11.5, color: "#8590A2", lineHeight: 1.45 }}>
             Yang disaring tanggal <strong>pesanan masuk</strong>, bukan tanggal resi dicetak —
             supaya totalnya tetap jadi penanda dan tidak berubah sendiri.
           </p>
