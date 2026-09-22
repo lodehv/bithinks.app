@@ -130,7 +130,7 @@ export default function StoresTab({ locked, onRequirePayment }) {
                         <span className="dot" />{s.status === "connected" ? "Terhubung" : s.status}
                       </span>
                     </td>
-                    <td style={{ color: "#626F86" }}>{fmtDate(s.createdAt)}</td>
+                    <td style={{ color: "#6B6E76" }}>{fmtDate(s.createdAt)}</td>
                     <td>
                       <div className="int-actions" style={{ justifyContent: "flex-end" }}>
                         <button className="int-act-btn" title="Segarkan" onClick={reload}><RefreshCw size={15} /></button>

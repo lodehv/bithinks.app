@@ -62,12 +62,12 @@ export default function TombolAturKirim({ jumlah, dari, sampai, onSelesai }) {
     <div style={{
       display: "flex", flexDirection: "column", gap: 10,
       padding: "12px 14px", marginBottom: 12,
-      border: "1px solid #DCDFE4", borderRadius: 10, background: "#fff",
+      border: "1px solid #DDDEE1", borderRadius: 10, background: "#fff",
     }}>
       <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
         {/* Angka disebut SEKALI, di sini. Tombolnya tidak mengulanginya —
             chip di bilah alat pun sudah menyebutnya. */}
-        <span style={{ fontSize: 13.5, color: "#172B4D" }}>
+        <span style={{ fontSize: 13.5, color: "#292A2E" }}>
           <strong style={{ fontWeight: 600 }}>{angka(jumlah)} pesanan</strong> belum diatur pengirimannya
         </span>
 
@@ -83,7 +83,7 @@ export default function TombolAturKirim({ jumlah, dari, sampai, onSelesai }) {
                 display: "inline-flex", alignItems: "center", gap: 7,
                 padding: "7px 13px", borderRadius: 8, fontSize: 13, fontWeight: 500,
                 fontFamily: "inherit", cursor: sibuk ? "not-allowed" : "pointer",
-                border: "1px solid #DCDFE4", background: "#fff", color: "#44546F",
+                border: "1px solid #DDDEE1", background: "#fff", color: "#505258",
                 opacity: sibuk && sibuk !== id ? 0.45 : 1,
               }}
             >
@@ -97,7 +97,7 @@ export default function TombolAturKirim({ jumlah, dari, sampai, onSelesai }) {
       {galat && <div style={{ fontSize: 13, color: "#AE2E24" }}>{galat}</div>}
 
       {hasil && (
-        <div style={{ fontSize: 13, color: "#44546F", display: "flex", flexDirection: "column", gap: 6, borderTop: "1px solid #F1F2F4", paddingTop: 10 }}>
+        <div style={{ fontSize: 13, color: "#505258", display: "flex", flexDirection: "column", gap: 6, borderTop: "1px solid #F0F1F2", paddingTop: 10 }}>
           <div>
             <strong>{angka(hasil.diatur)}</strong> diatur pengirimannya.
             {hasil.sudahSejakTadi > 0 && ` ${angka(hasil.sudahSejakTadi)} memang sudah diatur sebelumnya.`}
@@ -112,9 +112,9 @@ export default function TombolAturKirim({ jumlah, dari, sampai, onSelesai }) {
               menunggu dijemput padahal harus diantar ke gerai adalah kerugian
               nyata, dan pemilik toko baru tahu setelah kurirnya tidak datang. */}
           {kelompokAlasan.map(({ alasan, nomor, jadi }) => (
-            <div key={alasan} style={{ color: jadi ? "#A54800" : "#AE2E24" }}>
+            <div key={alasan} style={{ color: jadi ? "#9E4C00" : "#AE2E24" }}>
               <div>{alasan}</div>
-              <div style={{ color: "#626F86", fontSize: 12.5, letterSpacing: ".02em", marginTop: 2 }}>
+              <div style={{ color: "#6B6E76", fontSize: 12.5, letterSpacing: ".02em", marginTop: 2 }}>
                 {nomor.join(" \u00b7 ")}
               </div>
             </div>
@@ -123,7 +123,7 @@ export default function TombolAturKirim({ jumlah, dari, sampai, onSelesai }) {
           {/* Hanya kalau memang ada yang berhasil. Menyuruh orang memuat ulang
               untuk mencetak sesuatu yang tidak jadi dibuat itu menyesatkan. */}
           {hasil.diatur > 0 && (
-            <div style={{ color: "#626F86" }}>
+            <div style={{ color: "#6B6E76" }}>
               Resinya terbit beberapa saat lagi. Muat ulang antrean, lalu cetak.
             </div>
           )}

@@ -90,7 +90,7 @@
     position: fixed;
     inset: 0;
     z-index: 199;
-    background: #091E427D;
+    background: var(--ds-blanket);
   }
   .sidebar-collapse-btn { display: none; }
   .dashboard-main { width: 100%; }

@@ -160,13 +160,13 @@ function halamanResi(d, urlPdf, judul) {
   return `<!doctype html><html lang="id"><head><meta charset="utf-8">
 <title>${lolos(judul)}</title>
 <style>
-  *{box-sizing:border-box} body{margin:0;font:14px/1.6 system-ui,sans-serif;color:#172B4D;height:100vh;display:flex;flex-direction:column}
-  header{padding:12px 18px;border-bottom:1px solid #DCDFE4;background:#fff;flex:0 0 auto}
+  *{box-sizing:border-box} body{margin:0;font:14px/1.6 system-ui,sans-serif;color:#292A2E;height:100vh;display:flex;flex-direction:column}
+  header{padding:12px 18px;border-bottom:1px solid #DDDEE1;background:#fff;flex:0 0 auto}
   .judul{font-weight:600;font-size:15px}
-  .angka{color:#44546F;margin-top:2px}
-  .masalah{margin-top:8px;padding:10px 12px;border-radius:8px;background:#FFF7D6;border:1px solid #F8E6A0;color:#A54800}
+  .angka{color:#505258;margin-top:2px}
+  .masalah{margin-top:8px;padding:10px 12px;border-radius:8px;background:#FFF5DB;border:1px solid #FCE4A6;color:#9E4C00}
   .masalah ul{margin:6px 0 0;padding-left:18px}
-  .aman{margin-top:8px;color:#216E4E}
+  .aman{margin-top:8px;color:#4C6B1F}
   iframe{flex:1 1 auto;width:100%;border:0}
 </style></head><body>
 <header>
@@ -186,8 +186,8 @@ function halamanKosong(d, judul) {
     : `<p>Marketplace masih menyiapkan dokumennya. Coba lagi sebentar lagi — pesanannya tetap di antrean.</p>`;
 
   return `<!doctype html><html lang="id"><head><meta charset="utf-8"><title>${lolos(judul)}</title>
-<style>body{margin:0;font:15px/1.7 system-ui,sans-serif;color:#172B4D;padding:32px;max-width:720px}
-h1{font-size:17px;margin:0 0 4px} p,ul{color:#44546F} ul{padding-left:20px}</style></head><body>
+<style>body{margin:0;font:15px/1.7 system-ui,sans-serif;color:#292A2E;padding:32px;max-width:720px}
+h1{font-size:17px;margin:0 0 4px} p,ul{color:#505258} ul{padding-left:20px}</style></head><body>
 <h1>Tidak ada resi yang tercetak</h1>
 <p>Pesanannya <b>tetap di antrean</b> — tidak ada yang hilang.</p>
 ${isi}
@@ -236,12 +236,12 @@ function Hasil({ h, channel, onUlang }) {
 
   return (
     <div style={{
-      border: "1px solid #DCDFE4", borderRadius: 10, padding: "12px 14px",
+      border: "1px solid #DDDEE1", borderRadius: 10, padding: "12px 14px",
       marginBottom: 10, background: "#fff",
     }}>
       {h.jumlahTercetak > 0 ? (
         <Baris
-          ikon={<CheckCircle2 size={16} />} warna="#216E4E" latar="#DFFCF0"
+          ikon={<CheckCircle2 size={16} />} warna="#4C6B1F" latar="#EFFFD6"
           judul={`${angka(h.jumlahTercetak)} resi tercetak`}
           isi={
             // Jumlah halaman disebut apa adanya, dihitung dari berkasnya
@@ -255,21 +255,21 @@ function Hasil({ h, channel, onUlang }) {
         />
       ) : (
         <Baris
-          ikon={<AlertTriangle size={16} />} warna="#A54800" latar="#FFF7D6"
+          ikon={<AlertTriangle size={16} />} warna="#9E4C00" latar="#FFF5DB"
           judul="Tidak ada resi yang tercetak" isi={null}
         />
       )}
 
       {h.tertunda > 0 && (
         <Baris
-          ikon={<Clock size={16} />} warna="#0055CC" latar="#E9F2FF"
+          ikon={<Clock size={16} />} warna="#1558BC" latar="#E9F2FE"
           judul={`${angka(h.tertunda)} masih disiapkan ${channel === "shopee" ? "Shopee" : "TikTok"}`}
           isi="tidak perlu apa-apa, tetap di antrean — coba lagi sebentar lagi"
         />
       )}
 
       {alasanDilewati.map(([alasan, n]) => (
-        <Baris key={alasan} ikon={<AlertTriangle size={16} />} warna="#A54800" latar="#FFF7D6"
+        <Baris key={alasan} ikon={<AlertTriangle size={16} />} warna="#9E4C00" latar="#FFF5DB"
                judul={`${angka(n)} dilewati`} isi={alasan} />
       ))}
 
@@ -280,7 +280,7 @@ function Hasil({ h, channel, onUlang }) {
 
       <button onClick={onUlang} style={{
         marginTop: 10, background: "none", border: "none", padding: 0,
-        color: "#0C66E4", fontSize: 13, cursor: "pointer", fontWeight: 600,
+        color: "#1868DB", fontSize: 13, cursor: "pointer", fontWeight: 600,
       }}>
         Tutup
       </button>
@@ -391,9 +391,9 @@ export default function TombolCetak({
           // membuat label kedua untuk pesanan yang labelnya sudah pernah
           // keluar — itu keputusan yang berbeda, dan tombolnya harus terlihat
           // berbeda supaya tidak ditekan karena refleks.
-          background: locked || jumlah === 0 ? "#F1F2F4" : ulangi ? "#fff" : "#0C66E4",
-          color: locked || jumlah === 0 ? "#8590A2" : ulangi ? "#0C66E4" : "#fff",
-          boxShadow: ulangi && jumlah > 0 ? "inset 0 0 0 1px #CCE0FF" : undefined,
+          background: locked || jumlah === 0 ? "#F0F1F2" : ulangi ? "#fff" : "#1868DB",
+          color: locked || jumlah === 0 ? "#8C8F97" : ulangi ? "#1868DB" : "#fff",
+          boxShadow: ulangi && jumlah > 0 ? "inset 0 0 0 1px #CFE1FD" : undefined,
           opacity: sibuk ? 0.7 : 1,
           flexShrink: 0,
         }}

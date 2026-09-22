@@ -30,8 +30,8 @@ function umurJam(iso) {
 const SOROTAN = {
   menunggu_lama: {
     teks: "Menunggu lebih dari batas",
-    warna: "#A54800",
-    latar: "#FFF7D6",
+    warna: "#9E4C00",
+    latar: "#FFF5DB",
     // Ditandai server. Menghitung ulang di sini akan membuat angka di cip dan
     // jumlah baris di panel bisa berbeda, dan tidak ada yang tahu mana benar.
     cocok: (p) => Boolean(p.menungguLama),
@@ -99,26 +99,26 @@ export default function RincianTahap({ data, tahap, onTutup }) {
             padding: "5px 8px", borderRadius: 7, background: "#fff",
           }}>
             <span style={{
-              color: "#172B4D", minWidth: 150, letterSpacing: ".02em",
+              color: "#292A2E", minWidth: 150, letterSpacing: ".02em",
               fontVariantNumeric: "tabular-nums",
             }}>{p.nomorPesanan ?? "—"}</span>
             <span style={{
-              flex: 1, color: "#44546F", minWidth: 0, overflow: "hidden",
+              flex: 1, color: "#505258", minWidth: 0, overflow: "hidden",
               textOverflow: "ellipsis", whiteSpace: "nowrap",
             }}>{p.penerima ?? "—"}</span>
             {/* Kata asli marketplace. Satu-satunya keterangan yang bukan
                 terjemahan kami, jadi ia yang bisa dibawa saat bertanya ke
                 Seller Center. */}
             {tahap === "menunggu_lama" && p.orderedAt && (
-              <span style={{ color: "#A54800", fontSize: 11, flexShrink: 0 }}>
+              <span style={{ color: "#9E4C00", fontSize: 11, flexShrink: 0 }}>
                 {umurJam(p.orderedAt)}
               </span>
             )}
             {p.statusMarketplace && (
-              <span style={{ color: "#626F86", fontSize: 11, flexShrink: 0 }}>{p.statusMarketplace}</span>
+              <span style={{ color: "#6B6E76", fontSize: 11, flexShrink: 0 }}>{p.statusMarketplace}</span>
             )}
             {p.statusPaket && (
-              <span style={{ color: "#8590A2", fontSize: 11, flexShrink: 0 }}>{p.statusPaket}</span>
+              <span style={{ color: "#8C8F97", fontSize: 11, flexShrink: 0 }}>{p.statusPaket}</span>
             )}
             {p.gagalBerulang > 0 && (
               <span

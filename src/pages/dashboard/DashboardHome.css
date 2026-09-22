@@ -5,14 +5,14 @@
 
 .dash-header h1 {
   font-size: var(--ds-font-size-small);
-  font-weight: 700;
-  color: #111;
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-text);
   margin-bottom: var(--ds-space-025);
 }
 
 .dash-header p {
   font-size: var(--ds-font-size-body-small);
-  color: #999;
+  color: var(--ds-n500);
   line-height: 1.5;
 }
 
@@ -37,7 +37,7 @@
 .trial-banner-action {
   margin-left: auto;
   font-size: var(--ds-font-size-body-small);
-  font-weight: 600;
+  font-weight: var(--ds-font-weight-semibold);
   color: var(--ds-background-brand-bold);
   background: none;
   border: 1px solid var(--ds-b100);
@@ -53,7 +53,7 @@
 /* ─── Section ──────────────────────────────────────────────────────────────── */
 .dash-section-label {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: var(--ds-font-weight-semibold);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ds-n500);
@@ -89,8 +89,8 @@
 
 .stat-card-label {
   font-size: var(--ds-font-size-body-small);
-  font-weight: 600;
-  color: #888;
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-text-subtlest);
 }
 
 .stat-card-icon {
@@ -113,8 +113,8 @@
 
 .stat-card-value {
   font-size: var(--ds-font-size-large);
-  font-weight: 700;
-  color: #111;
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-text);
   line-height: 1;
   margin-top: var(--ds-space-050);
 }
@@ -123,7 +123,7 @@
 .stat-card-value.orange,
 .stat-card-value.green,
 .stat-card-value.red,
-.stat-card-value.blue   { color: #111; }
+.stat-card-value.blue   { color: var(--ds-text); }
 
 .stat-card-sub {
   font-size: var(--ds-font-size-body-small);
@@ -131,7 +131,7 @@
   margin-top: var(--ds-space-025);
 }
 
-.stat-card-sub.warn { color: var(--ds-background-brand-bold); font-weight: 600; }
+.stat-card-sub.warn { color: var(--ds-background-brand-bold); font-weight: var(--ds-font-weight-semibold); }
 .stat-card-sub.ok   { color: var(--ds-n500); }
 
 /* ─── Marketplace logos ────────────────────────────────────────────────────── */
@@ -218,8 +218,8 @@
 
 .stock-alert-title {
   font-size: var(--ds-font-size-body-small);
-  font-weight: 600;
-  color: #111;
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-text);
   display: flex;
   align-items: center;
   gap: var(--ds-space-075);
@@ -229,7 +229,7 @@
   background: var(--ds-background-danger);
   color: var(--ds-background-danger-bold);
   font-size: 10px;
-  font-weight: 700;
+  font-weight: var(--ds-font-weight-semibold);
   padding: var(--ds-space-025) var(--ds-space-075);
   border-radius: var(--ds-radius-200);
 }
@@ -237,7 +237,7 @@
 .stock-alert-link {
   font-size: var(--ds-font-size-body-small);
   color: var(--ds-background-brand-bold);
-  font-weight: 500;
+  font-weight: var(--ds-font-weight-medium);
   cursor: pointer;
 }
 
@@ -245,7 +245,7 @@
 
 .stock-table th {
   font-size: 10.5px;
-  font-weight: 600;
+  font-weight: var(--ds-font-weight-semibold);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--ds-n500);
@@ -257,7 +257,7 @@
 
 .stock-table td {
   font-size: var(--ds-font-size-body-small);
-  color: #333;
+  color: var(--ds-text-subtle);
   padding: var(--ds-space-150) var(--ds-space-200);
   border-bottom: 1px solid var(--ds-surface-sunken);
 }
@@ -267,7 +267,7 @@
 .stock-pill {
   display: inline-block;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: var(--ds-font-weight-semibold);
   padding: var(--ds-space-025) var(--ds-space-100);
   border-radius: var(--ds-radius-200);
 }
@@ -304,14 +304,14 @@
 .antrian-baris:hover  { background: var(--ds-surface-sunken); }
 .antrian-baris:focus-visible { outline: 2px solid var(--ds-background-brand-bold); outline-offset: -2px; }
 
-.antrian-baris-label { font-size: var(--ds-font-size-body-small); color: #555; }
-.antrian-baris-nilai { font-size: var(--ds-font-size-body-small); font-weight: 700; color: var(--ds-text); font-variant-numeric: tabular-nums; }
+.antrian-baris-label { font-size: var(--ds-font-size-body-small); color: var(--ds-text-subtle); }
+.antrian-baris-nilai { font-size: var(--ds-font-size-body-small); font-weight: var(--ds-font-weight-semibold); color: var(--ds-text); font-variant-numeric: tabular-nums; }
 
 /* Menunggu pembayaran: bukan pekerjaan penjual, jadi sengaja tidak menarik
    perhatian. Tetap ditampilkan supaya tidak hilang — begitu pembeli membayar,
    pesanannya pindah sendiri ke antrean di atasnya. */
 .antrian-baris.redup .antrian-baris-label,
-.antrian-baris.redup .antrian-baris-nilai { color: var(--ds-n500); font-weight: 600; }
+.antrian-baris.redup .antrian-baris-nilai { color: var(--ds-n500); font-weight: var(--ds-font-weight-semibold); }
 
 /* Status marketplace yang tidak dikenali. Muncul hanya kalau memang ada. */
 .antrian-baris.peringatan .antrian-baris-label,

@@ -11,7 +11,7 @@
   align-items: flex-start;
   justify-content: center;
   padding: var(--ds-space-600) var(--ds-space-200);
-  background: #091E427D;
+  background: var(--ds-blanket);
   overflow-y: auto;
 }
 

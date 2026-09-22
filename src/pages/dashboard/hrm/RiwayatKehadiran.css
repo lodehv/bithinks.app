@@ -22,7 +22,7 @@
 
 .riwayat-stat-label {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: var(--ds-font-weight-semibold);
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--ds-n500);
@@ -31,11 +31,11 @@
 
 .riwayat-stat-value {
   font-size: var(--ds-font-size-medium);
-  font-weight: 700;
+  font-weight: var(--ds-font-weight-semibold);
   color: var(--ds-n900);
 }
 
-.riwayat-stat-value.green  { color: var(--ds-o500); }
+.riwayat-stat-value.green  { color: var(--ds-text-success); }
 .riwayat-stat-value.orange { color: var(--ds-y500); }
 .riwayat-stat-value.red    { color: var(--ds-background-danger-bold); }
 
@@ -50,7 +50,7 @@
 
 .riwayat-toolbar-title {
   font-size: var(--ds-font-size-body-small);
-  font-weight: 600;
+  font-weight: var(--ds-font-weight-semibold);
   color: var(--ds-n900);
   flex: 1;
 }
@@ -67,7 +67,7 @@
   transition: border-color 0.12s;
 }
 
-.riwayat-filter-input:focus { border-color: var(--ds-o500); }
+.riwayat-filter-input:focus { border-color: var(--ds-border-focused); box-shadow: inset 0 0 0 1px var(--ds-border-focused); }
 
 /* ─── Table ────────────────────────────────────────────────────────────────── */
 .riwayat-table-wrap {
@@ -84,7 +84,7 @@
 
 .riwayat-table th {
   font-size: 10.5px;
-  font-weight: 700;
+  font-weight: var(--ds-font-weight-semibold);
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--ds-n500);
@@ -106,21 +106,21 @@
 .riwayat-table tr:last-child td { border-bottom: none; }
 .riwayat-table tr:hover td { background: var(--ds-surface-sunken); }
 
-.riwayat-date-cell { font-weight: 600; color: var(--ds-n900); }
+.riwayat-date-cell { font-weight: var(--ds-font-weight-semibold); color: var(--ds-n900); }
 
 .riwayat-time {
   font-variant-numeric: tabular-nums;
   font-size: var(--ds-font-size-body-small);
 }
 
-.riwayat-time.checkin  { color: var(--ds-o500); font-weight: 600; }
-.riwayat-time.checkout { color: var(--ds-background-brand-bold); font-weight: 600; }
+.riwayat-time.checkin  { color: var(--ds-text-success); font-weight: var(--ds-font-weight-semibold); }
+.riwayat-time.checkout { color: var(--ds-background-brand-bold); font-weight: var(--ds-font-weight-semibold); }
 .riwayat-time.empty    { color: var(--ds-n400); }
 
 /* Duration */
 .riwayat-duration {
   font-size: var(--ds-font-size-body-small);
-  font-weight: 600;
+  font-weight: var(--ds-font-weight-semibold);
   color: var(--ds-text-subtlest);
 }
 
@@ -130,12 +130,12 @@
   align-items: center;
   gap: var(--ds-space-050);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: var(--ds-font-weight-semibold);
   padding: var(--ds-space-025) var(--ds-space-100);
   border-radius: var(--ds-radius-full);
 }
 
-.riwayat-badge.hadir   { background: var(--ds-background-warning); color: var(--ds-o500); }
+.riwayat-badge.hadir   { background: var(--ds-background-success); color: var(--ds-text-success); }
 .riwayat-badge.telat   { background: var(--ds-background-warning); color: var(--ds-y500); }
 .riwayat-badge.alpha   { background: var(--ds-background-danger); color: var(--ds-background-danger-bold); }
 .riwayat-badge.izin    { background: var(--ds-b50); color: var(--ds-background-brand-bold); }
@@ -192,7 +192,7 @@
   border: 1px solid var(--ds-border-subtle);
   background: #fff;
   font-size: var(--ds-font-size-body-small);
-  font-weight: 600;
+  font-weight: var(--ds-font-weight-semibold);
   color: var(--ds-text-subtlest);
   cursor: pointer;
   transition: background 0.1s;
@@ -200,7 +200,7 @@
 }
 
 .page-btn:hover  { background: var(--ds-n200); }
-.page-btn.active { background: var(--ds-o500); color: #fff; border-color: var(--ds-o500); }
+.page-btn.active { background: var(--ds-background-brand-bold); color: var(--ds-text-inverse); border-color: var(--ds-background-brand-bold); }
 .page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
 /* Selfie modal */

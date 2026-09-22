@@ -171,7 +171,7 @@ function SelfieCapture({ onCapture, onClear, captured }) {
             <button className="btn-selfie secondary" onClick={clear}>
               <RotateCcw size={14} strokeWidth={2} /> Ulangi
             </button>
-            <button className="btn-selfie primary" style={{ background: "#DFFCF0", color: "#22A06B" }} disabled>
+            <button className="btn-selfie primary" style={{ background: "#EFFFD6", color: "#5B7F24" }} disabled>
               <CheckCircle size={15} strokeWidth={2} /> Foto OK
             </button>
           </>
@@ -196,7 +196,7 @@ function GpsCard({ gps }) {
         <div className="gps-value">{gps.label || "–"}</div>
       </div>
       {gps.status !== "loading" && (
-        <button onClick={gps.refetch} style={{ background: "none", border: "none", cursor: "pointer", color: "#aaa", padding: 4 }} title="Refresh lokasi">
+        <button onClick={gps.refetch} style={{ background: "none", border: "none", cursor: "pointer", color: "#8C8F97", padding: 4 }} title="Refresh lokasi">
           <RefreshCw size={14} strokeWidth={2} />
         </button>
       )}
@@ -317,9 +317,9 @@ export default function Absensi({ locked = false, onRequirePayment }) {
 
       {/* Jika sudah checkout penuh */}
       {hasCheckedOut ? (
-        <div style={{ textAlign: "center", padding: "24px", background: "#fff", border: "1px solid #DCDFE4", borderRadius: 14, color: "#aaa", fontSize: 13 }}>
-          <CheckCircle size={28} strokeWidth={1.8} color="#22A06B" style={{ marginBottom: 10 }} />
-          <p style={{ margin: 0, fontWeight: 600, color: "#111" }}>Absensi hari ini selesai</p>
+        <div style={{ textAlign: "center", padding: "24px", background: "#fff", border: "1px solid #DDDEE1", borderRadius: 14, color: "#8C8F97", fontSize: 13 }}>
+          <CheckCircle size={28} strokeWidth={1.8} color="#5B7F24" style={{ marginBottom: 10 }} />
+          <p style={{ margin: 0, fontWeight: 600, color: "#292A2E" }}>Absensi hari ini selesai</p>
           <p style={{ marginTop: 4 }}>Sampai jumpa besok!</p>
         </div>
       ) : (
@@ -357,7 +357,7 @@ export default function Absensi({ locked = false, onRequirePayment }) {
               </button>
 
               {!photo && (
-                <p style={{ textAlign: "center", fontSize: 12, color: "#bbb", marginTop: -8 }}>
+                <p style={{ textAlign: "center", fontSize: 12, color: "#B7B9BE", marginTop: -8 }}>
                   Ambil foto selfie terlebih dahulu untuk melanjutkan
                 </p>
               )}

@@ -289,7 +289,7 @@ export default function ProductsTab({ locked, onRequirePayment }) {
   const dataCogs   = chartBuckets.map((b) => ({ label: fmtBucketLabel(b.bucket), nilai: b.cogs }));
 
   // Donut kategori real
-  const donutColors = ["#0C66E4", "#579DFF", "#579DFF", "#85B8FF", "#CCE0FF"];
+  const donutColors = ["#1868DB", "#8FB8F6", "#8FB8F6", "#ADCBFB", "#CFE1FD"];
   const catList = (stats?.byCategory ?? []).filter((c) => c.cogs > 0);
   const catTotal = catList.reduce((a, c) => a + c.cogs, 0);
   const DONUT_CIRC = 2 * Math.PI * 38;
@@ -416,9 +416,9 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                   <button key={teks} onClick={() => { setDari(d); setSampai(s2); }} style={{
                     padding: "5px 9px", borderRadius: 6, cursor: "pointer", fontSize: 12,
                     fontWeight: aktif ? 600 : 500,
-                    border: `1px solid ${aktif ? "#0C66E4" : "#DCDFE4"}`,
-                    background: aktif ? "#E9F2FF" : "#fff",
-                    color: aktif ? "#0C66E4" : "#626F86",
+                    border: `1px solid ${aktif ? "#1868DB" : "#DDDEE1"}`,
+                    background: aktif ? "#E9F2FE" : "#fff",
+                    color: aktif ? "#1868DB" : "#6B6E76",
                   }}>{teks}</button>
                 );
               })}
@@ -536,13 +536,13 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                 mahal yang laku — jadi terlihat, bukan tenggelam. */}
             <div style={{ padding: "4px 2px 0" }}>
               <GrafikBatang
-                data={dataKeluar} warna="#0C66E4"
+                data={dataKeluar} warna="#1868DB"
                 judul="Total Keluar" satuan="pcs" format={fmtAxisQty}
                 labelSetiap={labelSetiap} tinggi={120}
               />
               <div style={{ height: 18 }} />
               <GrafikBatang
-                data={dataCogs} warna="#85B8FF"
+                data={dataCogs} warna="#ADCBFB"
                 judul="COGS" satuan="Rp" format={fmtAxisRp}
                 labelSetiap={labelSetiap} tinggi={120}
               />
@@ -559,7 +559,7 @@ export default function ProductsTab({ locked, onRequirePayment }) {
           <div className="card-item-body vertical-stack-layout">
             <div className="donut-chart-wrapper centered-donut">
               <svg width="100" height="100" viewBox="0 0 100 100" className="donut-svg">
-                <circle cx="50" cy="50" r="38" fill="transparent" stroke="#F1F2F4" strokeWidth="8" />
+                <circle cx="50" cy="50" r="38" fill="transparent" stroke="#F0F1F2" strokeWidth="8" />
                 {donutSegs.map((seg) => (
                   <circle key={seg.category} cx="50" cy="50" r="38" fill="transparent" stroke={seg.color} strokeWidth="8"
                     strokeDasharray={`${seg.dash} ${DONUT_CIRC - seg.dash}`} strokeDashoffset={seg.offset} transform="rotate(-90 50 50)" />
@@ -868,7 +868,7 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                   ) : (
                     selectedProduct.mappedSkus.map((skuName) => (
                       <div className="channel-connection-row" key={skuName}>
-                        <div className="channel-logo-placeholder" style={{ background: "#0C66E4" }}>{skuName[0]?.toUpperCase() || "S"}</div>
+                        <div className="channel-logo-placeholder" style={{ background: "#1868DB" }}>{skuName[0]?.toUpperCase() || "S"}</div>
                         <div className="channel-desc">
                           <span className="channel-name">Resep SKU marketplace</span>
                           <span className="connected-sku-tag">{skuName}</span>

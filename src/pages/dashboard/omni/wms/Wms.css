@@ -2,13 +2,12 @@
    Palet & tipografi mengikuti sistem dashboard yang sudah ada
    (DashboardLayout.css & MarketingDashboard.css), BUKAN warisan OmniModule.css:
 
-     indigo   var(--ds-background-brand-bold)   aksi & angka jangkar      indigo wash  var(--ds-b50)
-     indigo   var(--ds-b100)   garis lembut               indigo mid   var(--ds-b300)
-     ink      var(--ds-text)   teks utama & status terkuat
-     netral   var(--ds-text-subtlest) · var(--ds-n500) · var(--ds-border-subtle) · var(--ds-border-subtle) · var(--ds-n200)
-     latar    #FFFFFF · var(--ds-surface-sunken)
+     Warna diambil dari token Atlassian (src/styles/ads/). Nama lokal
+     --wms-indigo-* dipertahankan supaya riwayat berkas ini tetap terbaca,
+     tetapi isinya sekarang biru Atlassian: --ds-background-brand-bold untuk
+     aksi, --ds-b50 untuk latar lembut, --ds-text untuk teks terkuat.
 
-   Latar hanya putih, indigo, atau hitam. Tidak ada pastel hijau/oranye/merah.
+   Latar hanya putih, biru, atau tinta pekat. Tidak ada pastel hijau/oranye/merah.
    Tingkat perhatian dinaikkan lewat BOBOT, bukan lewat rona warna:
 
      Aman    → putih, garis abu, teks abu     (tak perlu dilihat)
@@ -18,11 +17,8 @@
    Konsekuensi bagusnya: urutan gawatnya tetap terbaca oleh mata yang sulit
    membedakan merah-hijau, karena yang membedakan kontras — bukan warnanya.
 
-   TIPOGRAFI — Plus Jakarta Sans, memakai skala MarketingDashboard.css:
-     angka besar 24-26px · judul panel 15px · badan & tabel 13px
-     meta 12px · label kapital 11.5px
-   Kelas omni-* bawaan memakai skala lama yang lebih kecil (10.5-12.5px),
-   jadi ukurannya ikut ditimpa di sini.
+   TIPOGRAFI — skala Atlassian: badan 14px, meta & label 12px, angka besar
+   memakai langkah heading. Semua ukuran memakai token, bukan angka lepas.
 
    Semua penimpaan dikunci di dalam `.wms` agar tab Pesanan, Kelola Produk,
    dan Toko Terhubung tidak ikut berubah.
@@ -83,25 +79,35 @@
 
 /* ── Sub-navigasi ─────────────────────────────────────────────────────────── */
 .wms-sub { display: flex; gap: var(--ds-space-075); margin-bottom: var(--ds-space-250); flex-wrap: wrap; }
+.wms-sub { border-bottom: 2px solid var(--ds-border); gap: var(--ds-space-050); }
 .wms-sub button {
-  display: inline-flex; align-items: center; gap: var(--ds-space-100);
-  font-family: inherit; font-size: var(--ds-font-size-body); font-weight: 600;
-  padding: var(--ds-space-100) var(--ds-space-200); border-radius: var(--ds-radius-200); cursor: pointer;
-  border: 1px solid var(--wms-rule); background: #fff; color: var(--wms-muted);
-  transition: all .12s;
+  display: inline-flex; align-items: center; gap: var(--ds-space-075);
+  font-family: inherit; font-size: var(--ds-font-size-body); font-weight: var(--ds-font-weight-medium);
+  padding: var(--ds-space-100) var(--ds-space-150); margin-bottom: -2px; cursor: pointer;
+  border: none; border-bottom: 2px solid transparent; background: none; color: var(--wms-muted);
+  transition: color var(--ds-duration-small) var(--ds-ease-out), border-color var(--ds-duration-small) var(--ds-ease-out);
 }
-.wms-sub button:hover  { color: var(--wms-ink); border-color: var(--wms-indigo-soft); }
+.wms-sub button:hover  { color: var(--wms-ink); border-bottom-color: var(--ds-border-bold); }
 .wms-sub button.active {
-  background: var(--wms-indigo-wash);
-  border-color: var(--wms-indigo-soft);
-  color: var(--wms-indigo);
+  color: var(--ds-text-selected);
+  border-bottom-color: var(--ds-border-selected);
+  font-weight: var(--ds-font-weight-semibold);
 }
 
 /* Navigasi bertingkat: makin dalam makin kecil & tenang, supaya kedalamannya
    terbaca dari bentuknya — bukan hanya dari posisi. */
-.wms-sub.level2 { margin-bottom: var(--ds-space-150); }
-.wms-sub.level2 button { font-size: var(--ds-font-size-body-small); padding: var(--ds-space-075) var(--ds-space-150); }
-.wms-sub.level3 { margin-bottom: var(--ds-space-150); gap: var(--ds-space-050); }
+.wms-sub.level2 { margin-bottom: var(--ds-space-150); border-bottom: none; }
+.wms-sub.level2 button,
+.wms-sub.level3 button {
+  border-bottom: none; margin-bottom: 0; border-radius: var(--ds-radius-100);
+  font-size: var(--ds-font-size-body-small); padding: var(--ds-space-050) var(--ds-space-100);
+  background: var(--ds-background-neutral); color: var(--ds-text-subtle);
+}
+.wms-sub.level2 button.active,
+.wms-sub.level3 button.active {
+  background: var(--ds-background-selected); color: var(--ds-text-selected);
+}
+.wms-sub.level3 { margin-bottom: var(--ds-space-150); gap: var(--ds-space-050); border-bottom: none; }
 .wms-sub.level3 button {
   font-size: var(--ds-font-size-body-small); padding: var(--ds-space-075) var(--ds-space-150); border-radius: var(--ds-radius-200);
   background: var(--wms-surface-2);
@@ -129,7 +135,7 @@
 
 .wms-kpi { background: #fff; border: 1px solid var(--wms-rule); border-radius: var(--ds-radius-300); padding: var(--ds-space-200) var(--ds-space-200); }
 .wms-kpi-label {
-  font-size: var(--ds-font-size-body-small); font-weight: 600; text-transform: uppercase;
+  font-size: var(--ds-font-size-body-small); font-weight: var(--ds-font-weight-semibold); text-transform: uppercase;
   letter-spacing: .04em; color: var(--wms-faint);
 }
 /* 24px adalah ukuran angka HERO (satu angka tunggal) di MarketingDashboard.
@@ -137,14 +143,14 @@
    menyisakan ~136px untuk teks, jadi ukuran hero terbaca berteriak DAN membuat
    nilai rupiah panjang patah dua baris. 18px muat dengan tenang. */
 .wms-kpi-value {
-  font-size: var(--ds-font-size-small); font-weight: 700; color: var(--wms-ink);
+  font-size: var(--ds-font-size-small); font-weight: var(--ds-font-weight-semibold); color: var(--wms-ink);
   margin-top: var(--ds-space-075); letter-spacing: -.02em; font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 /* "Rp 647.596.800" = 14 karakter; pada 18px butuh ~143px sehingga tetap mepet.
    Nilai sepanjang itu turun sekali lagi agar pasti satu baris. */
 .wms-kpi-value.long  { font-size: var(--ds-font-size-body); letter-spacing: -.01em; }
-.wms-kpi-value.empty { font-size: var(--ds-font-size-body-small); font-weight: 600; color: var(--wms-faint); white-space: normal; }
+.wms-kpi-value.empty { font-size: var(--ds-font-size-body-small); font-weight: var(--ds-font-weight-semibold); color: var(--wms-faint); white-space: normal; }
 /* Minus = oversell terlanjur terjadi. Ditandai garis bawah pekat, bukan indigo:
    indigo di layar ini berarti "normal & aktif", justru kebalikan maksudnya. */
 .wms-kpi-value.neg {
@@ -165,10 +171,10 @@
 }
 .wms-alert .ico { flex-shrink: 0; margin-top: 0; color: var(--wms-muted); }
 .wms-alert-body { flex: 1; min-width: 0; }
-.wms-alert-title { font-size: var(--ds-font-size-body); font-weight: 700; color: var(--wms-ink); }
+.wms-alert-title { font-size: var(--ds-font-size-body); font-weight: var(--ds-font-weight-semibold); color: var(--wms-ink); }
 .wms-alert-samples { font-size: var(--ds-font-size-body-small); color: var(--wms-muted); margin-top: var(--ds-space-050); line-height: 1.55; word-break: break-word; }
 .wms-alert-count {
-  font-size: var(--ds-font-size-body-small); font-weight: 700; padding: var(--ds-space-050) var(--ds-space-150); border-radius: var(--ds-radius-full);
+  font-size: var(--ds-font-size-body-small); font-weight: var(--ds-font-weight-semibold); padding: var(--ds-space-050) var(--ds-space-150); border-radius: var(--ds-radius-full);
   white-space: nowrap; background: var(--wms-surface-3); color: var(--wms-muted);
   font-variant-numeric: tabular-nums;
 }
@@ -187,7 +193,7 @@
 .wms-alert.info .wms-alert-count { background: var(--wms-indigo-wash); color: var(--wms-indigo); }
 
 .wms-ok {
-  display: flex; align-items: center; gap: var(--ds-space-100); font-size: var(--ds-font-size-body); font-weight: 500;
+  display: flex; align-items: center; gap: var(--ds-space-100); font-size: var(--ds-font-size-body); font-weight: var(--ds-font-weight-medium);
   color: var(--wms-indigo); background: var(--wms-indigo-wash);
   border: 1px solid var(--wms-indigo-soft); border-radius: var(--ds-radius-300);
   padding: var(--ds-space-150) var(--ds-space-200); margin-bottom: var(--ds-space-250);
@@ -196,7 +202,7 @@
 /* ── Chip status stok ─────────────────────────────────────────────────────── */
 .wms-chip {
   display: inline-flex; align-items: center; gap: var(--ds-space-050);
-  font-size: var(--ds-font-size-body-small); font-weight: 700; letter-spacing: .01em;
+  font-size: var(--ds-font-size-body-small); font-weight: var(--ds-font-weight-semibold); letter-spacing: .01em;
   padding: var(--ds-space-050) var(--ds-space-150); border-radius: var(--ds-radius-full); white-space: nowrap;
   border: 1px solid transparent;
 }
@@ -211,7 +217,7 @@
   padding: var(--ds-space-200) var(--ds-space-250); margin-bottom: var(--ds-space-200);
 }
 .wms-panel-head { display: flex; align-items: center; justify-content: space-between; gap: var(--ds-space-150); margin-bottom: var(--ds-space-200); flex-wrap: wrap; }
-.wms-panel-title { font-size: var(--ds-font-size-body); font-weight: 700; color: var(--wms-ink); letter-spacing: -.01em; }
+.wms-panel-title { font-size: var(--ds-font-size-body); font-weight: var(--ds-font-weight-semibold); color: var(--wms-ink); letter-spacing: -.01em; }
 .wms-panel-sub { font-size: var(--ds-font-size-body-small); color: var(--wms-faint); margin-top: var(--ds-space-025); line-height: 1.5; }
 .wms-legend { display: flex; gap: var(--ds-space-200); font-size: var(--ds-font-size-body-small); color: var(--wms-muted); }
 .wms-legend span { display: inline-flex; align-items: center; gap: var(--ds-space-075); }
@@ -260,14 +266,14 @@
 
 /* ── Tabel stok ───────────────────────────────────────────────────────────── */
 .wms-num { font-variant-numeric: tabular-nums; text-align: right; font-size: var(--ds-font-size-body); }
-.wms-num.strong { font-weight: 700; color: var(--wms-ink); font-size: var(--ds-font-size-body); }
+.wms-num.strong { font-weight: var(--ds-font-weight-semibold); color: var(--wms-ink); font-size: var(--ds-font-size-body); }
 /* Lihat catatan di .wms-kpi-value.neg — minus ditandai bobot, bukan rona. */
-.wms-num.neg { color: var(--wms-ink); font-weight: 700; text-decoration: underline 2px var(--wms-ink); text-underline-offset: 3px; }
+.wms-num.neg { color: var(--wms-ink); font-weight: var(--ds-font-weight-semibold); text-decoration: underline 2px var(--wms-ink); text-underline-offset: 3px; }
 /* Nominal rupiah di bawah angka unit. Sengaja lebih kecil dan tidak tebal
    walau induknya tebal: jumlah unit yang dipakai kerja gudang tetap yang
    dibaca lebih dulu, rupiahnya keterangan pendamping. */
 .wms-num-sub {
-  font-size: var(--ds-font-size-body-small); font-weight: 500; color: var(--wms-faint);
+  font-size: var(--ds-font-size-body-small); font-weight: var(--ds-font-weight-medium); color: var(--wms-faint);
   margin-top: var(--ds-space-025); white-space: nowrap;
 }
 .wms-prod { display: flex; align-items: center; gap: var(--ds-space-150); min-width: 0; }
@@ -276,7 +282,7 @@
   background: var(--wms-surface-3); display: flex; align-items: center;
   justify-content: center; color: var(--wms-faint);
 }
-.wms-prod-name { font-size: var(--ds-font-size-body); font-weight: 600; color: var(--wms-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wms-prod-name { font-size: var(--ds-font-size-body); font-weight: var(--ds-font-weight-semibold); color: var(--wms-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .wms-prod-sku { font-size: var(--ds-font-size-body-small); color: var(--wms-faint); margin-top: var(--ds-space-025); }
 .wms-row-clickable { cursor: pointer; }
 
@@ -321,17 +327,17 @@
   border-radius: var(--ds-radius-200); padding: var(--ds-space-150) var(--ds-space-200);
   font-variant-numeric: tabular-nums;
 }
-.wms-formula b { color: var(--wms-ink); font-weight: 700; font-size: var(--ds-font-size-body); }
+.wms-formula b { color: var(--wms-ink); font-weight: var(--ds-font-weight-semibold); font-size: var(--ds-font-size-body); }
 .wms-formula .eq { color: var(--wms-faint); }
-.wms-formula .res { color: var(--wms-indigo); font-weight: 700; font-size: var(--ds-font-size-body); }
+.wms-formula .res { color: var(--wms-indigo); font-weight: var(--ds-font-weight-semibold); font-size: var(--ds-font-size-body); }
 
 /* ── Kartu lima saldo ─────────────────────────────────────────────────────── */
 .wms-balance-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--ds-space-100); margin-bottom: var(--ds-space-200); }
 @media (max-width: 900px) { .wms-balance-grid { grid-template-columns: repeat(2, 1fr); } }
 .wms-balance { border: 1px solid var(--wms-rule); border-radius: var(--ds-radius-300); padding: var(--ds-space-200) var(--ds-space-200); background: #fff; }
-.wms-balance-label { font-size: var(--ds-font-size-body-small); font-weight: 600; color: var(--wms-faint); text-transform: uppercase; letter-spacing: .04em; }
+.wms-balance-label { font-size: var(--ds-font-size-body-small); font-weight: var(--ds-font-weight-semibold); color: var(--wms-faint); text-transform: uppercase; letter-spacing: .04em; }
 .wms-balance-value {
-  font-size: var(--ds-font-size-large); font-weight: 700; color: var(--wms-ink);
+  font-size: var(--ds-font-size-large); font-weight: var(--ds-font-weight-semibold); color: var(--wms-ink);
   margin-top: var(--ds-space-075); letter-spacing: -.03em; font-variant-numeric: tabular-nums;
 }
 /* Siap Jual adalah angka jangkarnya — satu-satunya kartu yang diberi warna. */
@@ -348,7 +354,7 @@
 /* ── Sebaran channel ──────────────────────────────────────────────────────── */
 .wms-chan { display: flex; align-items: center; justify-content: space-between; gap: var(--ds-space-150); padding: var(--ds-space-150) 0; border-bottom: 1px solid var(--wms-rule); flex-wrap: wrap; }
 .wms-chan:last-child { border-bottom: none; }
-.wms-chan-name { font-size: var(--ds-font-size-body); font-weight: 600; color: var(--wms-ink); font-variant-numeric: tabular-nums; }
+.wms-chan-name { font-size: var(--ds-font-size-body); font-weight: var(--ds-font-weight-semibold); color: var(--wms-ink); font-variant-numeric: tabular-nums; }
 .wms-chan-meta { font-size: var(--ds-font-size-body-small); color: var(--wms-faint); margin-top: var(--ds-space-025); }
 .wms-chan-right { display: flex; align-items: center; gap: var(--ds-space-150); }
 
@@ -389,11 +395,11 @@
 .wms-status-card:focus-visible { outline: 2px solid var(--wms-indigo); outline-offset: 2px; }
 
 .wms-status-card-label {
-  font-size: var(--ds-font-size-body-small); font-weight: 600; letter-spacing: .04em;
+  font-size: var(--ds-font-size-body-small); font-weight: var(--ds-font-weight-semibold); letter-spacing: .04em;
   text-transform: uppercase; color: var(--wms-faint);
 }
 .wms-status-card-count {
-  font-size: var(--ds-font-size-large); font-weight: 700; letter-spacing: -.03em;
+  font-size: var(--ds-font-size-large); font-weight: var(--ds-font-weight-semibold); letter-spacing: -.03em;
   color: var(--wms-ink); font-variant-numeric: tabular-nums; margin-top: var(--ds-space-050);
 }
 .wms-status-card-hint { font-size: var(--ds-font-size-body-small); color: var(--wms-faint); line-height: 1.45; }
@@ -423,7 +429,7 @@
   font-size: var(--ds-font-size-body-small); color: var(--wms-muted); margin-bottom: var(--ds-space-150);
 }
 .wms-status-active button {
-  font-family: inherit; font-size: var(--ds-font-size-body-small); font-weight: 600;
+  font-family: inherit; font-size: var(--ds-font-size-body-small); font-weight: var(--ds-font-weight-semibold);
   color: var(--wms-indigo); background: none; border: none;
   padding: 0; cursor: pointer; text-decoration: underline;
 }
@@ -439,7 +445,7 @@
 }
 .wms-bar-fill { height: 100%; background: var(--wms-indigo); border-radius: var(--ds-radius-full); transition: width .2s ease; }
 .wms-bar-track.penuh .wms-bar-fill { background: var(--wms-ink); }
-.wms-bar-text { font-size: var(--ds-font-size-body-small); font-weight: 600; color: var(--wms-muted); white-space: nowrap; }
+.wms-bar-text { font-size: var(--ds-font-size-body-small); font-weight: var(--ds-font-weight-semibold); color: var(--wms-muted); white-space: nowrap; }
 @media (prefers-reduced-motion: reduce) { .wms-bar-fill { transition: none; } }
 
 /* Sel "Stok Akan Datang": angka + bar kecil, bisa diklik untuk melihat asalnya. */
@@ -451,7 +457,7 @@
 .wms-incoming:hover { background: var(--wms-indigo-wash); }
 .wms-incoming:focus-visible { outline: 2px solid var(--wms-indigo); outline-offset: 1px; }
 .wms-incoming-qty {
-  font-size: var(--ds-font-size-body); font-weight: 700; color: var(--wms-indigo);
+  font-size: var(--ds-font-size-body); font-weight: var(--ds-font-weight-semibold); color: var(--wms-indigo);
   font-variant-numeric: tabular-nums; white-space: nowrap;
 }
 .wms-incoming .wms-bar-track { min-width: 44px; }
@@ -496,7 +502,7 @@
 
 /* Dokumen PO */
 .wms-sheet-logo { max-height: 52px; max-width: 170px; object-fit: contain; }
-.wms-sheet-company { font-size: var(--ds-font-size-small); font-weight: 700; letter-spacing: -.01em; color: var(--wms-ink); }
+.wms-sheet-company { font-size: var(--ds-font-size-small); font-weight: var(--ds-font-weight-semibold); letter-spacing: -.01em; color: var(--wms-ink); }
 .wms-doc-grid {
   display: flex; flex-wrap: wrap; gap: var(--ds-space-150) var(--ds-space-400);
   padding-bottom: var(--ds-space-200); margin-bottom: var(--ds-space-050);
@@ -526,7 +532,7 @@
 .wms-feed-row.ok .ico { color: var(--wms-indigo); }
 .wms-feed-row.err { border-left: 3px solid var(--wms-ink); background: var(--wms-surface-2); }
 .wms-feed-row.err .ico { color: var(--wms-ink); }
-.wms-feed-resi { font-size: var(--ds-font-size-body-small); font-weight: 700; color: var(--wms-ink); font-variant-numeric: tabular-nums; }
+.wms-feed-resi { font-size: var(--ds-font-size-body-small); font-weight: var(--ds-font-weight-semibold); color: var(--wms-ink); font-variant-numeric: tabular-nums; }
 .wms-feed-msg { font-size: var(--ds-font-size-body-small); color: var(--wms-muted); margin-top: var(--ds-space-025); line-height: 1.5; }
 .wms-feed-items { font-size: var(--ds-font-size-body-small); color: var(--wms-indigo); margin-top: var(--ds-space-050); line-height: 1.5; }
 
@@ -540,7 +546,7 @@
   gap: var(--ds-space-300); flex-wrap: wrap; padding-bottom: var(--ds-space-200); margin-bottom: var(--ds-space-200);
   border-bottom: 2px solid var(--wms-ink);
 }
-.wms-sheet-title { font-size: var(--ds-font-size-medium); font-weight: 700; letter-spacing: -.02em; }
+.wms-sheet-title { font-size: var(--ds-font-size-medium); font-weight: var(--ds-font-weight-semibold); letter-spacing: -.02em; }
 .wms-sheet-meta { font-size: var(--ds-font-size-body-small); color: var(--wms-muted); margin-top: var(--ds-space-025); font-variant-numeric: tabular-nums; }
 .wms-sheet-barcode svg { display: block; }
 
@@ -583,7 +589,7 @@
    orang pendek). Grid dengan lebar seragam menyisakan lubang besar di kanan. */
 .wms-ledger-detail-grid { display: flex; flex-wrap: wrap; gap: var(--ds-space-150) var(--ds-space-400); }
 .wms-ledger-detail-label {
-  font-size: 10.5px; font-weight: 600; letter-spacing: .05em;
+  font-size: 10.5px; font-weight: var(--ds-font-weight-semibold); letter-spacing: .05em;
   text-transform: uppercase; color: var(--wms-faint);
 }
 .wms-ledger-detail-value { font-size: var(--ds-font-size-body-small); color: var(--wms-ink); margin-top: var(--ds-space-025); line-height: 1.5; }
@@ -594,11 +600,11 @@
 /* ── Buku Besar ───────────────────────────────────────────────────────────── */
 .wms-filters { display: flex; gap: var(--ds-space-150); flex-wrap: wrap; margin-bottom: var(--ds-space-200); align-items: flex-end; }
 .wms-delta { font-variant-numeric: tabular-nums; font-size: var(--ds-font-size-body); }
-.wms-delta.plus  { color: var(--wms-indigo); font-weight: 700; }
-.wms-delta.minus { color: var(--wms-ink); font-weight: 700; }
+.wms-delta.plus  { color: var(--wms-indigo); font-weight: var(--ds-font-weight-semibold); }
+.wms-delta.minus { color: var(--wms-ink); font-weight: var(--ds-font-weight-semibold); }
 
 .wms-type {
-  font-size: var(--ds-font-size-body-small); font-weight: 700; padding: var(--ds-space-050) var(--ds-space-100); border-radius: var(--ds-radius-full);
+  font-size: var(--ds-font-size-body-small); font-weight: var(--ds-font-weight-semibold); padding: var(--ds-space-050) var(--ds-space-100); border-radius: var(--ds-radius-full);
   white-space: nowrap; background: var(--wms-surface-3); color: var(--wms-muted);
   border: 1px solid transparent;
 }

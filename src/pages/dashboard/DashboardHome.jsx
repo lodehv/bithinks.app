@@ -135,7 +135,7 @@ export default function DashboardHome({ onMenuClick, onBukaPesanan }) {
       <TrialBanner tenant={tenant} />
 
       {data === null ? (
-        <div style={{ color: "#999", fontSize: 13, padding: "24px 2px" }}>Memuat ringkasan…</div>
+        <div style={{ color: "#8C8F97", fontSize: 13, padding: "24px 2px" }}>Memuat ringkasan…</div>
       ) : (
         <>
           {/* ─── Kartu ringkasan selaras menu ─── */}
@@ -151,7 +151,7 @@ export default function DashboardHome({ onMenuClick, onBukaPesanan }) {
                 <div className="marketplace-logos">
                   {connected.slice(0, 6).map((s) => {
                     const m = channelMeta(s.channel);
-                    return <span key={s.id} title={m.label} style={{ width: 26, height: 26, borderRadius: 7, background: "#172B4D", color: "#fff", fontSize: 11, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{m.short}</span>;
+                    return <span key={s.id} title={m.label} style={{ width: 26, height: 26, borderRadius: 7, background: "#292A2E", color: "#fff", fontSize: 11, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{m.short}</span>;
                   })}
                 </div>
               )}
@@ -246,13 +246,13 @@ export default function DashboardHome({ onMenuClick, onBukaPesanan }) {
                   const m = channelMeta(c.channel);
                   return (
                     <div key={c.channel} style={{ display: "flex", alignItems: "center", gap: 12, padding: "8px 0" }}>
-                      <span style={{ width: 90, fontSize: 12.5, fontWeight: 600, color: "#333", display: "flex", alignItems: "center", gap: 7 }}>
-                        <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#0C66E4" }} />{m.label}
+                      <span style={{ width: 90, fontSize: 12.5, fontWeight: 600, color: "#505258", display: "flex", alignItems: "center", gap: 7 }}>
+                        <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#1868DB" }} />{m.label}
                       </span>
-                      <div style={{ flex: 1, height: 8, background: "#F1F2F4", borderRadius: 99, overflow: "hidden" }}>
-                        <div style={{ width: `${(c.total / maxChannel) * 100}%`, height: "100%", background: "#0C66E4", borderRadius: 99 }} />
+                      <div style={{ flex: 1, height: 8, background: "#F0F1F2", borderRadius: 99, overflow: "hidden" }}>
+                        <div style={{ width: `${(c.total / maxChannel) * 100}%`, height: "100%", background: "#1868DB", borderRadius: 99 }} />
                       </div>
-                      <span style={{ width: 110, textAlign: "right", fontSize: 12.5, fontWeight: 700, color: "#111" }}>{rupiah(c.total)}</span>
+                      <span style={{ width: 110, textAlign: "right", fontSize: 12.5, fontWeight: 700, color: "#292A2E" }}>{rupiah(c.total)}</span>
                     </div>
                   );
                 })}
@@ -270,7 +270,7 @@ export default function DashboardHome({ onMenuClick, onBukaPesanan }) {
               <span className="stock-alert-link" onClick={() => onMenuClick?.("kelola-produk")}>Kelola →</span>
             </div>
             {lowStock.length === 0 ? (
-              <div style={{ padding: "18px", fontSize: 12.5, color: "#aaa" }}>Tidak ada stok yang menipis. 👍</div>
+              <div style={{ padding: "18px", fontSize: 12.5, color: "#8C8F97" }}>Tidak ada stok yang menipis. 👍</div>
             ) : (
               <table className="stock-table">
                 <thead><tr><th>Produk</th><th>SKU</th><th>Stok</th><th>Status</th></tr></thead>
@@ -278,7 +278,7 @@ export default function DashboardHome({ onMenuClick, onBukaPesanan }) {
                   {lowStock.map((p) => (
                     <tr key={p.id}>
                       <td>{p.name}</td>
-                      <td style={{ color: "#aaa" }}>{p.sku}</td>
+                      <td style={{ color: "#8C8F97" }}>{p.sku}</td>
                       <td style={{ fontWeight: 600 }}>{p.masterStock}</td>
                       <td><span className={`stock-pill ${p.level}`}>{p.level}</span></td>
                     </tr>

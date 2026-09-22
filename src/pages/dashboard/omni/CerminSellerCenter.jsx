@@ -66,8 +66,8 @@ export default function CerminSellerCenter({ channel, dari, sampai }) {
         style={{
           display: "inline-flex", alignItems: "center", gap: 6,
           padding: "6px 12px", borderRadius: 7, fontSize: 13, fontWeight: 500,
-          border: "1px solid #DCDFE4", background: "#fff",
-          color: sibuk ? "#8590A2" : "#44546F", cursor: sibuk ? "default" : "pointer",
+          border: "1px solid #DDDEE1", background: "#fff",
+          color: sibuk ? "#8C8F97" : "#505258", cursor: sibuk ? "default" : "pointer",
         }}
       >
         <RefreshCw size={14} style={sibuk ? { opacity: 0.5 } : undefined} />
@@ -83,14 +83,14 @@ export default function CerminSellerCenter({ channel, dari, sampai }) {
 
 function Hasil({ hasil, namaPasar }) {
   const cocok = hasil.cocok;
-  const warna = cocok ? "#216E4E" : "#A54800";
-  const latar = cocok ? "#DFFCF0" : "#FFF7D6";
+  const warna = cocok ? "#4C6B1F" : "#9E4C00";
+  const latar = cocok ? "#EFFFD6" : "#FFF5DB";
 
   return (
     <div style={{
       marginTop: 10, padding: "12px 14px", borderRadius: 9,
-      background: latar, border: `1px solid ${cocok ? "#BAF3DB" : "#F8E6A0"}`,
-      fontSize: 13, color: "#44546F", lineHeight: 1.6,
+      background: latar, border: `1px solid ${cocok ? "#D3F1A7" : "#FCE4A6"}`,
+      fontSize: 13, color: "#505258", lineHeight: 1.6,
     }}>
       <div style={{ display: "flex", alignItems: "center", gap: 7, fontWeight: 600, color: warna }}>
         {cocok ? <ShieldCheck size={16} /> : <AlertTriangle size={16} />}
@@ -102,7 +102,7 @@ function Hasil({ hasil, namaPasar }) {
       <div style={{ marginTop: 6 }}>
         {namaPasar} <strong>{angka(hasil.diMarketplace)}</strong> · antrean kita{" "}
         <strong>{angka(hasil.diKita)}</strong>
-        <span style={{ color: "#626F86" }}>
+        <span style={{ color: "#6B6E76" }}>
           {" · "}
           {hasil.hariDiperiksa
             ? `diperiksa ${hasil.hariDiperiksa} hari terakhir`
@@ -144,7 +144,7 @@ function Hasil({ hasil, namaPasar }) {
 function Nomor({ daftar, jumlah }) {
   if (!daftar?.length) return null;
   return (
-    <div style={{ marginTop: 4, fontFamily: "monospace", fontSize: 12, color: "#626F86", wordBreak: "break-all" }}>
+    <div style={{ marginTop: 4, fontFamily: "monospace", fontSize: 12, color: "#6B6E76", wordBreak: "break-all" }}>
       {daftar.join(", ")}
       {jumlah > daftar.length && ` … dan ${angka(jumlah - daftar.length)} lagi`}
     </div>
