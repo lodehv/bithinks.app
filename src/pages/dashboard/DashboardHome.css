@@ -1,17 +1,17 @@
 /* ─── Page header ──────────────────────────────────────────────────────────── */
 .dash-header {
-  margin-bottom: 20px;
+  margin-bottom: var(--ds-space-250);
 }
 
 .dash-header h1 {
-  font-size: 17px;
+  font-size: var(--ds-font-size-small);
   font-weight: 700;
   color: #111;
-  margin-bottom: 3px;
+  margin-bottom: var(--ds-space-025);
 }
 
 .dash-header p {
-  font-size: 12.5px;
+  font-size: var(--ds-font-size-body-small);
   color: #999;
   line-height: 1.5;
 }
@@ -20,13 +20,13 @@
 .trial-banner {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--ds-space-100);
   background: var(--ds-b50);
   border: 1px solid var(--ds-b100);
-  border-radius: 10px;
-  padding: 12px 16px;
-  margin-bottom: 24px;
-  font-size: 13px;
+  border-radius: var(--ds-radius-200);
+  padding: var(--ds-space-150) var(--ds-space-200);
+  margin-bottom: var(--ds-space-300);
+  font-size: var(--ds-font-size-body-small);
   color: var(--ds-text-warning);
 }
 
@@ -36,13 +36,13 @@
 
 .trial-banner-action {
   margin-left: auto;
-  font-size: 12px;
+  font-size: var(--ds-font-size-body-small);
   font-weight: 600;
   color: var(--ds-background-brand-bold);
   background: none;
   border: 1px solid var(--ds-b100);
-  border-radius: 6px;
-  padding: 5px 12px;
+  border-radius: var(--ds-radius-100);
+  padding: var(--ds-space-050) var(--ds-space-150);
   cursor: pointer;
   white-space: nowrap;
   transition: background 0.12s;
@@ -57,15 +57,15 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ds-n500);
-  margin-bottom: 10px;
+  margin-bottom: var(--ds-space-100);
 }
 
 /* ─── Stat cards ───────────────────────────────────────────────────────────── */
 .stat-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 28px;
+  gap: var(--ds-space-150);
+  margin-bottom: var(--ds-space-300);
 }
 
 @media (max-width: 900px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
@@ -74,11 +74,11 @@
 .stat-card {
   background: #fff;
   border: 1px solid var(--ds-border-subtle);
-  border-radius: 12px;
-  padding: 20px 20px 16px;
+  border-radius: var(--ds-radius-300);
+  padding: var(--ds-space-250) var(--ds-space-250) var(--ds-space-200);
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--ds-space-075);
 }
 
 .stat-card-top {
@@ -88,7 +88,7 @@
 }
 
 .stat-card-label {
-  font-size: 12.5px;
+  font-size: var(--ds-font-size-body-small);
   font-weight: 600;
   color: #888;
 }
@@ -96,7 +96,7 @@
 .stat-card-icon {
   width: 32px;
   height: 32px;
-  border-radius: 8px;
+  border-radius: var(--ds-radius-200);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -112,11 +112,11 @@
 .stat-card-icon.yellow  { background: var(--ds-b50); color: var(--ds-background-brand-bold); }
 
 .stat-card-value {
-  font-size: 26px;
+  font-size: var(--ds-font-size-large);
   font-weight: 700;
   color: #111;
   line-height: 1;
-  margin-top: 4px;
+  margin-top: var(--ds-space-050);
 }
 
 /* Angka metrik → hitam (konsisten) */
@@ -126,9 +126,9 @@
 .stat-card-value.blue   { color: #111; }
 
 .stat-card-sub {
-  font-size: 11.5px;
+  font-size: var(--ds-font-size-body-small);
   color: var(--ds-n500);
-  margin-top: 2px;
+  margin-top: var(--ds-space-025);
 }
 
 .stat-card-sub.warn { color: var(--ds-background-brand-bold); font-weight: 600; }
@@ -138,14 +138,14 @@
 .marketplace-logos {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 12px;
+  gap: var(--ds-space-075);
+  margin-top: var(--ds-space-150);
 }
 
 .marketplace-logo-item {
   width: 32px;
   height: 32px;
-  border-radius: 8px;
+  border-radius: var(--ds-radius-200);
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -161,14 +161,14 @@
 .attendance-bar-wrap {
   height: 8px;
   background: var(--ds-n200);
-  border-radius: 99px;
+  border-radius: var(--ds-radius-full);
   overflow: hidden;
-  margin-top: 10px;
+  margin-top: var(--ds-space-100);
 }
 
 .attendance-bar-fill {
   height: 100%;
-  border-radius: 99px;
+  border-radius: var(--ds-radius-full);
   transition: width 0.5s ease;
   min-width: 0;
 }
@@ -177,21 +177,21 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 6px;
+  margin-top: var(--ds-space-075);
 }
 
 /* Mini bar chart */
 .mini-chart {
   display: flex;
   align-items: flex-end;
-  gap: 3px;
+  gap: var(--ds-space-025);
   height: 36px;
-  margin-top: 8px;
+  margin-top: var(--ds-space-100);
 }
 
 .mini-bar {
   flex: 1;
-  border-radius: 3px 3px 0 0;
+  border-radius: var(--ds-radius-050) var(--ds-radius-050) 0 0;
   min-width: 6px;
   opacity: 0.25;
   transition: opacity 0.1s;
@@ -203,26 +203,26 @@
 .stock-alert-box {
   background: #fff;
   border: 1px solid var(--ds-border-subtle);
-  border-radius: 12px;
+  border-radius: var(--ds-radius-300);
   overflow: hidden;
-  margin-bottom: 28px;
+  margin-bottom: var(--ds-space-300);
 }
 
 .stock-alert-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 18px;
+  padding: var(--ds-space-150) var(--ds-space-200);
   border-bottom: 1px solid var(--ds-n200);
 }
 
 .stock-alert-title {
-  font-size: 13px;
+  font-size: var(--ds-font-size-body-small);
   font-weight: 600;
   color: #111;
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: var(--ds-space-075);
 }
 
 .stock-alert-badge {
@@ -230,12 +230,12 @@
   color: var(--ds-background-danger-bold);
   font-size: 10px;
   font-weight: 700;
-  padding: 2px 7px;
-  border-radius: 10px;
+  padding: var(--ds-space-025) var(--ds-space-075);
+  border-radius: var(--ds-radius-200);
 }
 
 .stock-alert-link {
-  font-size: 12px;
+  font-size: var(--ds-font-size-body-small);
   color: var(--ds-background-brand-bold);
   font-weight: 500;
   cursor: pointer;
@@ -249,16 +249,16 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--ds-n500);
-  padding: 8px 18px;
+  padding: var(--ds-space-100) var(--ds-space-200);
   text-align: left;
   background: var(--ds-surface-sunken);
   border-bottom: 1px solid var(--ds-n200);
 }
 
 .stock-table td {
-  font-size: 12.5px;
+  font-size: var(--ds-font-size-body-small);
   color: #333;
-  padding: 11px 18px;
+  padding: var(--ds-space-150) var(--ds-space-200);
   border-bottom: 1px solid var(--ds-surface-sunken);
 }
 
@@ -268,8 +268,8 @@
   display: inline-block;
   font-size: 10px;
   font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 10px;
+  padding: var(--ds-space-025) var(--ds-space-100);
+  border-radius: var(--ds-radius-200);
 }
 
 .stock-pill.kritis  { background: var(--ds-background-danger); color: var(--ds-background-danger-bold); }
@@ -280,9 +280,9 @@
    Dibuat <button> supaya bisa dijangkau keyboard, bukan <div> yang diberi
    onClick — pemilik gudang sering bekerja tanpa melepas tangan dari keyboard. */
 .antrian-rincian {
-  margin-top: 12px;
+  margin-top: var(--ds-space-150);
   border-top: 1px solid var(--ds-n200);
-  padding-top: 6px;
+  padding-top: var(--ds-space-075);
 }
 
 .antrian-baris {
@@ -290,10 +290,10 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 5px 6px;
-  margin: 1px 0;
+  padding: var(--ds-space-050) var(--ds-space-075);
+  margin: 0 0;
   border: 0;
-  border-radius: 7px;
+  border-radius: var(--ds-radius-200);
   background: transparent;
   cursor: pointer;
   font-family: inherit;
@@ -304,8 +304,8 @@
 .antrian-baris:hover  { background: var(--ds-surface-sunken); }
 .antrian-baris:focus-visible { outline: 2px solid var(--ds-background-brand-bold); outline-offset: -2px; }
 
-.antrian-baris-label { font-size: 12px; color: #555; }
-.antrian-baris-nilai { font-size: 12.5px; font-weight: 700; color: var(--ds-text); font-variant-numeric: tabular-nums; }
+.antrian-baris-label { font-size: var(--ds-font-size-body-small); color: #555; }
+.antrian-baris-nilai { font-size: var(--ds-font-size-body-small); font-weight: 700; color: var(--ds-text); font-variant-numeric: tabular-nums; }
 
 /* Menunggu pembayaran: bukan pekerjaan penjual, jadi sengaja tidak menarik
    perhatian. Tetap ditampilkan supaya tidak hilang — begitu pembeli membayar,

@@ -1,14 +1,14 @@
 /* ─── Layout ───────────────────────────────────────────────────────────────── */
 .riwayat-wrap {
-  font-family: "DM Sans", ui-sans-serif, sans-serif;
+  font-family: var(--ds-font-family-body);
 }
 
 /* ─── Summary row ──────────────────────────────────────────────────────────── */
 .riwayat-summary {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-bottom: 24px;
+  gap: var(--ds-space-150);
+  margin-bottom: var(--ds-space-300);
 }
 
 @media (max-width: 700px) { .riwayat-summary { grid-template-columns: repeat(2, 1fr); } }
@@ -16,8 +16,8 @@
 .riwayat-stat {
   background: #fff;
   border: 1px solid var(--ds-border-subtle);
-  border-radius: 12px;
-  padding: 16px 18px;
+  border-radius: var(--ds-radius-300);
+  padding: var(--ds-space-200) var(--ds-space-200);
 }
 
 .riwayat-stat-label {
@@ -26,11 +26,11 @@
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--ds-n500);
-  margin-bottom: 8px;
+  margin-bottom: var(--ds-space-100);
 }
 
 .riwayat-stat-value {
-  font-size: 22px;
+  font-size: var(--ds-font-size-medium);
   font-weight: 700;
   color: var(--ds-n900);
 }
@@ -43,24 +43,24 @@
 .riwayat-toolbar {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
+  gap: var(--ds-space-100);
+  margin-bottom: var(--ds-space-150);
   flex-wrap: wrap;
 }
 
 .riwayat-toolbar-title {
-  font-size: 13px;
+  font-size: var(--ds-font-size-body-small);
   font-weight: 600;
   color: var(--ds-n900);
   flex: 1;
 }
 
 .riwayat-filter-input {
-  padding: 8px 12px;
+  padding: var(--ds-space-100) var(--ds-space-150);
   border: 1px solid var(--ds-border-subtle);
-  border-radius: 8px;
-  font-size: 13px;
-  font-family: "DM Sans", sans-serif;
+  border-radius: var(--ds-radius-200);
+  font-size: var(--ds-font-size-body-small);
+  font-family: var(--ds-font-family-body);
   color: var(--ds-n900);
   background: #fff;
   outline: none;
@@ -73,7 +73,7 @@
 .riwayat-table-wrap {
   background: #fff;
   border: 1px solid var(--ds-border-subtle);
-  border-radius: 12px;
+  border-radius: var(--ds-radius-300);
   overflow: hidden;
 }
 
@@ -88,7 +88,7 @@
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--ds-n500);
-  padding: 11px 18px;
+  padding: var(--ds-space-150) var(--ds-space-200);
   text-align: left;
   background: var(--ds-surface-sunken);
   border-bottom: 1px solid var(--ds-n200);
@@ -96,9 +96,9 @@
 }
 
 .riwayat-table td {
-  font-size: 13px;
+  font-size: var(--ds-font-size-body-small);
   color: var(--ds-text-subtle);
-  padding: 13px 18px;
+  padding: var(--ds-space-150) var(--ds-space-200);
   border-bottom: 1px solid var(--ds-surface-sunken);
   vertical-align: middle;
 }
@@ -110,7 +110,7 @@
 
 .riwayat-time {
   font-variant-numeric: tabular-nums;
-  font-size: 13px;
+  font-size: var(--ds-font-size-body-small);
 }
 
 .riwayat-time.checkin  { color: var(--ds-o500); font-weight: 600; }
@@ -119,7 +119,7 @@
 
 /* Duration */
 .riwayat-duration {
-  font-size: 12px;
+  font-size: var(--ds-font-size-body-small);
   font-weight: 600;
   color: var(--ds-text-subtlest);
 }
@@ -128,11 +128,11 @@
 .riwayat-badge {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: var(--ds-space-050);
   font-size: 11px;
   font-weight: 700;
-  padding: 3px 10px;
-  border-radius: 20px;
+  padding: var(--ds-space-025) var(--ds-space-100);
+  border-radius: var(--ds-radius-full);
 }
 
 .riwayat-badge.hadir   { background: var(--ds-background-warning); color: var(--ds-o500); }
@@ -144,7 +144,7 @@
 .selfie-thumb {
   width: 32px;
   height: 32px;
-  border-radius: 8px;
+  border-radius: var(--ds-radius-200);
   object-fit: cover;
   border: 1px solid var(--ds-border-subtle);
   cursor: pointer;
@@ -156,7 +156,7 @@
 .no-selfie {
   width: 32px;
   height: 32px;
-  border-radius: 8px;
+  border-radius: var(--ds-radius-200);
   background: var(--ds-n200);
   display: flex;
   align-items: center;
@@ -167,36 +167,36 @@
 /* Empty state */
 .riwayat-empty {
   text-align: center;
-  padding: 48px 20px;
+  padding: var(--ds-space-600) var(--ds-space-250);
   color: var(--ds-n500);
 }
 
-.riwayat-empty p { margin: 8px 0 0; font-size: 13px; }
+.riwayat-empty p { margin: var(--ds-space-100) 0 0; font-size: var(--ds-font-size-body-small); }
 
 /* Pagination */
 .riwayat-pagination {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 18px;
+  padding: var(--ds-space-150) var(--ds-space-200);
   border-top: 1px solid var(--ds-n200);
-  font-size: 12px;
+  font-size: var(--ds-font-size-body-small);
   color: var(--ds-n500);
 }
 
-.riwayat-page-btns { display: flex; gap: 6px; }
+.riwayat-page-btns { display: flex; gap: var(--ds-space-075); }
 
 .page-btn {
-  padding: 5px 12px;
-  border-radius: 7px;
+  padding: var(--ds-space-050) var(--ds-space-150);
+  border-radius: var(--ds-radius-200);
   border: 1px solid var(--ds-border-subtle);
   background: #fff;
-  font-size: 12px;
+  font-size: var(--ds-font-size-body-small);
   font-weight: 600;
   color: var(--ds-text-subtlest);
   cursor: pointer;
   transition: background 0.1s;
-  font-family: "DM Sans", sans-serif;
+  font-family: var(--ds-font-family-body);
 }
 
 .page-btn:hover  { background: var(--ds-n200); }
@@ -212,12 +212,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: var(--ds-space-250);
 }
 
 .selfie-modal-img {
   max-width: 360px;
   width: 100%;
-  border-radius: 16px;
+  border-radius: var(--ds-radius-300);
   box-shadow: 0 20px 60px rgba(0,0,0,0.4);
 }

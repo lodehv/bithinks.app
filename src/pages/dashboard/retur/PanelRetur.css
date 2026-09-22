@@ -8,13 +8,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: var(--ds-space-300);
   z-index: 1000;
 }
 
 .panel-retur {
   background: #ffffff;
-  border-radius: 14px;
+  border-radius: var(--ds-radius-300);
   width: min(1100px, 100%);
   max-height: 88vh;
   display: flex;
@@ -27,20 +27,20 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
-  padding: 20px 24px 16px;
+  gap: var(--ds-space-200);
+  padding: var(--ds-space-250) var(--ds-space-300) var(--ds-space-200);
   border-bottom: 1px solid var(--ds-border-subtle);
 }
-.panel-retur-kepala h3 { margin: 0; font-size: 17px; font-weight: 700; color: var(--ds-text); }
-.panel-retur-kepala p { margin: 4px 0 0; font-size: 12px; color: var(--ds-n500); }
+.panel-retur-kepala h3 { margin: 0; font-size: var(--ds-font-size-small); font-weight: 700; color: var(--ds-text); }
+.panel-retur-kepala p { margin: var(--ds-space-050) 0 0; font-size: var(--ds-font-size-body-small); color: var(--ds-n500); }
 
 .panel-retur-tutup {
   border: none;
   background: none;
   cursor: pointer;
   color: var(--ds-text-subtlest);
-  padding: 4px;
-  border-radius: 6px;
+  padding: var(--ds-space-050);
+  border-radius: var(--ds-radius-100);
   line-height: 0;
 }
 .panel-retur-tutup:hover { background: var(--ds-n200); }
@@ -49,8 +49,8 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px;
-  padding: 14px 24px;
+  gap: var(--ds-space-100);
+  padding: var(--ds-space-150) var(--ds-space-300);
   border-bottom: 1px solid var(--ds-n200);
 }
 
@@ -63,13 +63,13 @@
 
 /* Tombol beruas untuk pilihan yang saling meniadakan — satu platform pada satu
    waktu. Digambar berbeda dari kotak centang toko, yang justru boleh banyak. */
-.panel-ruas { display: flex; gap: 6px; }
+.panel-ruas { display: flex; gap: var(--ds-space-075); }
 .panel-ruas-tombol {
   border: 1px solid var(--ds-border-subtle);
   background: #ffffff;
   border-radius: 999px;
-  padding: 5px 14px;
-  font-size: 12px;
+  padding: var(--ds-space-050) var(--ds-space-150);
+  font-size: var(--ds-font-size-body-small);
   font-weight: 600;
   color: var(--ds-text-subtlest);
   cursor: pointer;
@@ -85,12 +85,12 @@
 .panel-toko-tombol {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--ds-space-100);
   border: 1px solid var(--ds-border-subtle);
   background: #ffffff;
-  border-radius: 8px;
-  padding: 6px 12px;
-  font-size: 12px;
+  border-radius: var(--ds-radius-200);
+  padding: var(--ds-space-075) var(--ds-space-150);
+  font-size: var(--ds-font-size-body-small);
   color: var(--ds-text);
   cursor: pointer;
   min-width: 160px;
@@ -108,9 +108,9 @@
   overflow-y: auto;
   background: #ffffff;
   border: 1px solid var(--ds-border-subtle);
-  border-radius: 10px;
+  border-radius: var(--ds-radius-200);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
-  padding: 6px;
+  padding: var(--ds-space-075);
 }
 
 .panel-toko-semua {
@@ -119,23 +119,23 @@
   text-align: left;
   border: none;
   background: none;
-  padding: 8px 10px;
-  font-size: 12px;
+  padding: var(--ds-space-100) var(--ds-space-100);
+  font-size: var(--ds-font-size-body-small);
   font-weight: 700;
   color: var(--ds-text);
   cursor: pointer;
-  border-radius: 6px;
+  border-radius: var(--ds-radius-100);
 }
 .panel-toko-semua:hover { background: var(--ds-n200); }
 
 .panel-toko-baris {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 7px 10px;
-  border-radius: 6px;
+  gap: var(--ds-space-100);
+  padding: var(--ds-space-075) var(--ds-space-100);
+  border-radius: var(--ds-radius-100);
   cursor: pointer;
-  font-size: 12px;
+  font-size: var(--ds-font-size-body-small);
 }
 .panel-toko-baris:hover { background: var(--ds-surface-sunken); }
 .panel-toko-nama { flex: 1; color: var(--ds-text); }
@@ -145,22 +145,22 @@
   color: var(--ds-text-subtlest);
   background: var(--ds-n200);
   border-radius: 999px;
-  padding: 1px 8px;
+  padding: 0 var(--ds-space-100);
 }
 
 .panel-retur-ringkas {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 24px;
+  gap: var(--ds-space-150);
+  padding: var(--ds-space-150) var(--ds-space-300);
   background: var(--ds-n0);
   border-bottom: 1px solid var(--ds-n200);
 }
-.panel-ringkas-jumlah { font-size: 13px; color: var(--ds-text-subtlest); }
-.panel-ringkas-jumlah b { font-size: 16px; color: var(--ds-text); }
+.panel-ringkas-jumlah { font-size: var(--ds-font-size-body-small); color: var(--ds-text-subtlest); }
+.panel-ringkas-jumlah b { font-size: var(--ds-font-size-small); color: var(--ds-text); }
 .panel-ringkas-nilai {
   margin-left: auto;
-  font-size: 16px;
+  font-size: var(--ds-font-size-small);
   font-weight: 700;
   color: var(--ds-text-danger);
   font-variant-numeric: tabular-nums;
@@ -169,12 +169,12 @@
 .panel-aksi {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--ds-space-075);
   border: 1px solid var(--ds-border-subtle);
   background: #ffffff;
-  border-radius: 8px;
-  padding: 7px 12px;
-  font-size: 12px;
+  border-radius: var(--ds-radius-200);
+  padding: var(--ds-space-075) var(--ds-space-150);
+  font-size: var(--ds-font-size-body-small);
   font-weight: 600;
   color: var(--ds-text-subtle);
   cursor: pointer;
@@ -189,9 +189,9 @@
 }
 .panel-aksi-utama:hover:not(:disabled) { background: var(--ds-background-brand-bold-hovered); }
 
-.panel-retur-isi { overflow: auto; padding: 0 8px 16px; }
+.panel-retur-isi { overflow: auto; padding: 0 var(--ds-space-100) var(--ds-space-200); }
 
-.panel-tabel { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.panel-tabel { width: 100%; border-collapse: collapse; font-size: var(--ds-font-size-body-small); }
 .panel-tabel th {
   position: sticky;
   top: 0;
@@ -202,10 +202,10 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--ds-n500);
-  padding: 12px 12px 8px;
+  padding: var(--ds-space-150) var(--ds-space-150) var(--ds-space-100);
   border-bottom: 1px solid var(--ds-border-subtle);
 }
-.panel-tabel td { padding: 10px 12px; border-bottom: 1px solid var(--ds-n200); vertical-align: top; }
+.panel-tabel td { padding: var(--ds-space-100) var(--ds-space-150); border-bottom: 1px solid var(--ds-n200); vertical-align: top; }
 
 .panel-kolom-no { width: 36px; color: var(--ds-n500); font-variant-numeric: tabular-nums; }
 
@@ -214,7 +214,7 @@
 .panel-baris-buka { background: var(--ds-surface-sunken); }
 
 .panel-no-pesanan { font-weight: 600; color: var(--ds-text); font-variant-numeric: tabular-nums; }
-.panel-sub { font-size: 10.5px; color: var(--ds-n500); margin-top: 2px; }
+.panel-sub { font-size: 10.5px; color: var(--ds-n500); margin-top: var(--ds-space-025); }
 
 .panel-toko-sel { color: var(--ds-text-subtle); }
 
@@ -226,8 +226,8 @@
 .panel-status {
   display: inline-block;
   background: var(--ds-n200);
-  border-radius: 6px;
-  padding: 2px 7px;
+  border-radius: var(--ds-radius-100);
+  padding: var(--ds-space-025) var(--ds-space-075);
   color: var(--ds-text-subtle);
 }
 
@@ -245,13 +245,13 @@
 .panel-tanggal { color: var(--ds-text-subtle); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 .panel-detail-baris td { background: var(--ds-surface-sunken); }
-.panel-detail { padding: 4px 0 8px; }
+.panel-detail { padding: var(--ds-space-050) 0 var(--ds-space-100); }
 
 .panel-fakta {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 10px 20px;
-  margin: 0 0 12px;
+  gap: var(--ds-space-100) var(--ds-space-250);
+  margin: 0 0 var(--ds-space-150);
 }
 .panel-fakta dt {
   font-size: 10px;
@@ -259,32 +259,32 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ds-n500);
-  margin-bottom: 2px;
+  margin-bottom: var(--ds-space-025);
 }
-.panel-fakta dd { margin: 0; font-size: 12.5px; color: var(--ds-text); }
+.panel-fakta dd { margin: 0; font-size: var(--ds-font-size-body-small); color: var(--ds-text); }
 
 .panel-alasan-asli {
   display: block;
   font-size: 10.5px;
   color: var(--ds-n500);
-  margin-top: 3px;
+  margin-top: var(--ds-space-025);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 .panel-jejak { list-style: none; margin: 0; padding: 0; }
 .panel-jejak li {
   display: flex;
-  gap: 12px;
-  padding: 5px 0 5px 14px;
-  font-size: 12px;
+  gap: var(--ds-space-150);
+  padding: var(--ds-space-050) 0 var(--ds-space-050) var(--ds-space-150);
+  font-size: var(--ds-font-size-body-small);
   color: var(--ds-text-subtlest);
   border-left: 2px solid var(--ds-border-subtle);
 }
 .panel-jejak-kini { color: var(--ds-text); font-weight: 600; border-left-color: var(--ds-background-brand-bold); }
 .panel-jejak-waktu { min-width: 96px; color: var(--ds-n500); font-variant-numeric: tabular-nums; }
 
-.panel-kosong { padding: 40px 16px; text-align: center; color: var(--ds-n500); font-size: 13px; }
-.panel-kosong-kecil { font-size: 12px; color: var(--ds-n500); }
+.panel-kosong { padding: var(--ds-space-500) var(--ds-space-200); text-align: center; color: var(--ds-n500); font-size: var(--ds-font-size-body-small); }
+.panel-kosong-kecil { font-size: var(--ds-font-size-body-small); color: var(--ds-n500); }
 
 @media (max-width: 900px) {
   .panel-retur-latar { padding: 0; }
@@ -319,10 +319,10 @@
    sifat baris itu, bukan kolom tersendiri — satu kolom lagi akan menambah
    lebar tabel demi penanda yang hanya berlaku pada sebagian baris. */
 .panel-uang-saja {
-  margin-left: 6px;
-  padding: 1px 5px;
+  margin-left: var(--ds-space-075);
+  padding: 0 var(--ds-space-050);
   border: 1px solid var(--ds-border-subtle);
-  border-radius: 4px;
+  border-radius: var(--ds-radius-100);
   font-size: 9.5px;
   font-weight: 700;
   letter-spacing: 0.03em;
@@ -335,9 +335,9 @@
    bukan memotong — melainkan memotong diam-diam, karena angka yang dijumlahkan
    dari potongan akan selalu lebih kecil daripada kenyataannya. */
 .panel-terpotong {
-  margin-left: 8px;
-  padding: 1px 6px;
-  border-radius: 4px;
+  margin-left: var(--ds-space-100);
+  padding: 0 var(--ds-space-075);
+  border-radius: var(--ds-radius-100);
   background: var(--ds-background-warning);
   border: 1px solid var(--ds-y100);
   color: var(--ds-text-warning);

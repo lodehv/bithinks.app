@@ -2,48 +2,48 @@
    Pricing / Tier Pembayaran — palet indigo / periwinkle
    ═══════════════════════════════════════════════════════════════════════════ */
 .pricing-wrap {
-  font-family: "DM Sans", sans-serif;
+  font-family: var(--ds-font-family-body);
   background: var(--ds-surface-sunken);
-  border-radius: 24px;
-  padding: 40px 32px 48px;
+  border-radius: var(--ds-radius-full);
+  padding: var(--ds-space-500) var(--ds-space-400) var(--ds-space-600);
 }
 
 .pricing-back {
-  display: inline-flex; align-items: center; gap: 6px;
+  display: inline-flex; align-items: center; gap: var(--ds-space-075);
   background: none; border: none; cursor: pointer;
-  color: var(--ds-text-subtlest); font-size: 13px; font-weight: 600;
-  font-family: inherit; margin-bottom: 20px; padding: 0;
+  color: var(--ds-text-subtlest); font-size: var(--ds-font-size-body-small); font-weight: 600;
+  font-family: inherit; margin-bottom: var(--ds-space-250); padding: 0;
 }
 .pricing-back:hover { color: var(--ds-text-subtle); }
 
 /* ─── Header ─────────────────────────────────────────────────────────────── */
-.pricing-head { text-align: center; margin-bottom: 36px; }
+.pricing-head { text-align: center; margin-bottom: var(--ds-space-400); }
 
 .pricing-title {
-  font-size: 40px; font-weight: 800; color: var(--ds-text);
-  letter-spacing: -0.02em; margin: 0 0 28px;
+  font-size: var(--ds-font-size-xxlarge); font-weight: 700; color: var(--ds-text);
+  letter-spacing: -0.02em; margin: 0 0 var(--ds-space-300);
 }
 .pricing-chip {
   display: inline-block;
   color: var(--ds-background-brand-bold);
   background: #fff;
-  padding: 2px 16px;
-  border-radius: 12px;
+  padding: var(--ds-space-025) var(--ds-space-200);
+  border-radius: var(--ds-radius-300);
   box-shadow: 0 4px 14px rgba(12, 102, 228, 0.12);
 }
 
 /* ─── Toggle periode ─────────────────────────────────────────────────────── */
 .pricing-toggle {
-  display: inline-flex; gap: 8px;
-  background: var(--ds-surface-sunken); padding: 8px;
-  border-radius: 16px;
+  display: inline-flex; gap: var(--ds-space-100);
+  background: var(--ds-surface-sunken); padding: var(--ds-space-100);
+  border-radius: var(--ds-radius-300);
 }
 .pt-btn {
   position: relative;
   border: none; cursor: pointer;
-  font-family: inherit; font-size: 15px; font-weight: 600;
+  font-family: inherit; font-size: var(--ds-font-size-body); font-weight: 600;
   color: var(--ds-text-subtlest); background: #fff;
-  padding: 14px 30px; border-radius: 12px;
+  padding: var(--ds-space-150) var(--ds-space-400); border-radius: var(--ds-radius-300);
   transition: all 0.15s ease;
 }
 .pt-btn.active {
@@ -55,7 +55,7 @@
   position: absolute; top: -11px; right: 8px;
   background: var(--ds-background-success-bold); color: #fff;
   font-size: 10px; font-weight: 700;
-  padding: 2px 8px; border-radius: 8px;
+  padding: var(--ds-space-025) var(--ds-space-100); border-radius: var(--ds-radius-200);
   white-space: nowrap;
 }
 
@@ -63,15 +63,15 @@
 .pricing-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: var(--ds-space-250);
   align-items: start;
 }
 
 .plan-card {
   position: relative;
   background: #fff;
-  border-radius: 22px;
-  padding: 28px 24px;
+  border-radius: var(--ds-radius-full);
+  padding: var(--ds-space-300) var(--ds-space-300);
   box-shadow: 0 2px 10px rgba(16, 24, 40, 0.04);
   display: flex; flex-direction: column;
 }
@@ -86,42 +86,42 @@
 
 .plan-badge {
   position: absolute; top: 18px; right: 18px;
-  display: inline-flex; align-items: center; gap: 4px;
+  display: inline-flex; align-items: center; gap: var(--ds-space-050);
   background: var(--ds-background-success-bold); color: #fff;
-  font-size: 12px; font-weight: 700;
-  padding: 5px 11px; border-radius: 10px;
+  font-size: var(--ds-font-size-body-small); font-weight: 700;
+  padding: var(--ds-space-050) var(--ds-space-150); border-radius: var(--ds-radius-200);
 }
 
 /* ─── Ikon ───────────────────────────────────────────────────────────────── */
 .plan-icon {
-  width: 60px; height: 60px; border-radius: 16px;
+  width: 60px; height: 60px; border-radius: var(--ds-radius-300);
   display: flex; align-items: center; justify-content: center;
   background: var(--ds-surface-sunken); color: var(--ds-background-brand-bold);
-  margin-bottom: 18px;
+  margin-bottom: var(--ds-space-200);
 }
 .plan-card.pro .plan-icon { background: rgba(255, 255, 255, 0.22); color: #fff; }
-.plan-icon-free { font-size: 13px; font-weight: 800; color: var(--ds-background-brand-bold); letter-spacing: 0.5px; }
+.plan-icon-free { font-size: var(--ds-font-size-body-small); font-weight: 700; color: var(--ds-background-brand-bold); letter-spacing: 0.5px; }
 
 /* ─── Teks kartu ─────────────────────────────────────────────────────────── */
-.plan-name { font-size: 22px; font-weight: 800; color: var(--ds-text); margin-bottom: 8px; }
-.plan-desc { font-size: 14px; line-height: 1.5; color: var(--ds-n500); min-height: 42px; margin-bottom: 20px; }
+.plan-name { font-size: var(--ds-font-size-medium); font-weight: 700; color: var(--ds-text); margin-bottom: var(--ds-space-100); }
+.plan-desc { font-size: var(--ds-font-size-body); line-height: 1.5; color: var(--ds-n500); min-height: 42px; margin-bottom: var(--ds-space-250); }
 .plan-card.pro .plan-name { color: #fff; }
 .plan-card.pro .plan-desc { color: rgba(255, 255, 255, 0.92); }
 
-.plan-price-block { margin-bottom: 22px; min-height: 52px; }
-.plan-price { font-size: 26px; font-weight: 800; color: var(--ds-text); }
-.plan-price-per { font-size: 15px; font-weight: 500; color: var(--ds-n500); }
-.plan-price-note { font-size: 11px; color: var(--ds-n400); margin-top: 2px; }
+.plan-price-block { margin-bottom: var(--ds-space-250); min-height: 52px; }
+.plan-price { font-size: var(--ds-font-size-large); font-weight: 700; color: var(--ds-text); }
+.plan-price-per { font-size: var(--ds-font-size-body); font-weight: 500; color: var(--ds-n500); }
+.plan-price-note { font-size: 11px; color: var(--ds-n400); margin-top: var(--ds-space-025); }
 .plan-card.pro .plan-price,
 .plan-card.pro .plan-price-per { color: #fff; }
 .plan-card.pro .plan-price-note { color: rgba(255, 255, 255, 0.85); }
 
 /* ─── Fitur ──────────────────────────────────────────────────────────────── */
-.plan-features { list-style: none; margin: 0 0 24px; padding: 0; flex: 1; }
+.plan-features { list-style: none; margin: 0 0 var(--ds-space-300); padding: 0; flex: 1; }
 .plan-feat {
-  display: flex; align-items: center; gap: 10px;
-  font-size: 14px; font-weight: 500; color: var(--ds-n900);
-  padding: 7px 0;
+  display: flex; align-items: center; gap: var(--ds-space-100);
+  font-size: var(--ds-font-size-body); font-weight: 500; color: var(--ds-n900);
+  padding: var(--ds-space-075) 0;
 }
 .plan-check {
   flex-shrink: 0;
@@ -135,8 +135,8 @@
 /* ─── Tombol ─────────────────────────────────────────────────────────────── */
 .plan-btn {
   width: 100%; border: none; cursor: pointer;
-  font-family: inherit; font-size: 15px; font-weight: 700;
-  padding: 14px; border-radius: 14px;
+  font-family: inherit; font-size: var(--ds-font-size-body); font-weight: 700;
+  padding: var(--ds-space-150); border-radius: var(--ds-radius-300);
   background: linear-gradient(135deg, var(--ds-b400), var(--ds-background-brand-bold));
   color: #fff;
   transition: filter 0.15s ease, opacity 0.15s ease;
@@ -157,8 +157,8 @@
   .plan-card.pro { transform: none; }
 }
 @media (max-width: 620px) {
-  .pricing-wrap { padding: 28px 16px 32px; }
-  .pricing-title { font-size: 28px; }
+  .pricing-wrap { padding: var(--ds-space-300) var(--ds-space-200) var(--ds-space-400); }
+  .pricing-title { font-size: var(--ds-font-size-xlarge); }
   .pricing-grid { grid-template-columns: 1fr; }
-  .pt-btn { padding: 12px 20px; font-size: 14px; }
+  .pt-btn { padding: var(--ds-space-150) var(--ds-space-250); font-size: var(--ds-font-size-body); }
 }
