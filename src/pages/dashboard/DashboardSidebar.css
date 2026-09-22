@@ -126,7 +126,7 @@
   padding: var(--ds-space-075) var(--ds-space-100);
   margin-bottom: var(--ds-space-025);
   border-radius: var(--ds-radius-100);
-  color: var(--ds-text-subtle);
+  color: var(--ds-text);
   cursor: pointer;
   user-select: none;
   white-space: nowrap;
@@ -156,7 +156,7 @@
 .nav-item-label {
   flex: 1;
   font-size: var(--ds-font-size-body);
-  font-weight: inherit;
+  font-weight: var(--ds-font-weight-medium);
   line-height: var(--ds-line-height-body);
 }
 
