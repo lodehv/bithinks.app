@@ -1,6 +1,8 @@
 // Pengganti utils/omniApi.js saat pratinjau. Dipasang lewat alias Vite, jadi
 // halaman aslinya tidak diubah sedikit pun untuk bisa dilihat.
 import { statsTiruan, tokoTiruan, antreanTiruan } from './data-tiruan.js'
+import { pesananTiruan } from './data-pesanan.js'
+import { ringkasanGudangTiruan, stokGudangTiruan } from './data-gudang.js'
 
 // Dengan VITE_POTRET_MEMUAT=1, jawaban sengaja TIDAK PERNAH datang.
 //
@@ -16,6 +18,15 @@ export const omniApi = {
   getMarketingStats: tahanJawaban ? takPernahDatang : async () => statsTiruan,
   antreanCetak: tahanJawaban ? takPernahDatang : async () => antreanTiruan,
   riwayatCetak: async () => ({ sesi: [], total: 0 }),
+  listOrders: tahanJawaban ? takPernahDatang : async () => pesananTiruan,
+  updateOrderStatus: async () => ({}),
+  wmsSummary: tahanJawaban ? takPernahDatang : async () => ringkasanGudangTiruan,
+  wmsStock: tahanJawaban ? takPernahDatang : async () => stokGudangTiruan,
+  wmsLedger: async () => ({ rows: [], total: 0 }),
+  wmsInbound: async () => ({ rows: [], total: 0 }),
+  wmsOutbound: async () => ({ rows: [], total: 0 }),
+  listProducts: async () => [],
+  productDashboardStats: async () => ({}),
   lewatTanpaCetak: async () => ({ pesanan: [], total: 0 }),
   aturKirim: async () => ({ berhasil: 0, gagal: 0 }),
   cetakLabel: async () => ({}),
