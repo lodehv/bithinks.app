@@ -25,6 +25,8 @@ const HALAMAN = [
   // letaknya masih utuh setelah warna dan jarak diganti.
   { berkas: 'pesanan', nama: 'pesanan' },
   { berkas: 'gudang', nama: 'gudang' },
+  { berkas: 'beranda', nama: 'beranda' },
+  { berkas: 'produk', nama: 'kelola-produk' },
 ]
 
 let gagal = 0

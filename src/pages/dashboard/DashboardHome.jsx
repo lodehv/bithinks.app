@@ -222,7 +222,7 @@ export default function DashboardHome({ onMenuClick, onBukaPesanan }) {
             />
 
             <StatCard
-              label="Total Stok (WMS)" value={`${totalStok}`}
+              label="Total Stok (WMS)" value={angka(totalStok)}
               sub={lowStock.length ? `${lowStock.length} produk stok menipis` : "Stok aman"}
               subClass={lowStock.length ? "warn" : "ok"}
               icon={Package} iconClass="yellow"

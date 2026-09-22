@@ -742,7 +742,7 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                           </span>
                         </td>
                         <td>{p.unit || "pcs"}</td>
-                        <td className="text-right font-bold text-black">{p.masterStock}</td>
+                        <td className="text-right font-bold text-black">{(p.masterStock || 0).toLocaleString("id-ID")}</td>
                         <td className="text-right">{(p.totalKeluar || 0).toLocaleString("id-ID")}</td>
                         <td className="text-right font-semibold text-black">{rupiah(p.cogsTotal || 0)}</td>
                         <td className="text-right text-gray">{p.avgCogs != null ? rupiah(p.avgCogs) : "—"}</td>
@@ -841,7 +841,7 @@ export default function ProductsTab({ locked, onRequirePayment }) {
                   </div>
                   <div className="ledger-row">
                     <span className="ledger-label">Stok Fisik</span>
-                    <span className="ledger-val font-bold text-black">{selectedProduct.masterStock || 0}</span>
+                    <span className="ledger-val font-bold text-black">{(selectedProduct.masterStock || 0).toLocaleString("id-ID")}</span>
                   </div>
                   <div className="ledger-row">
                     <span className="ledger-label">Harga Pokok Terakhir</span>
