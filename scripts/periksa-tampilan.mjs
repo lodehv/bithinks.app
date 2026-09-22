@@ -27,6 +27,9 @@ const HALAMAN = [
   { berkas: 'gudang', nama: 'gudang' },
   { berkas: 'beranda', nama: 'beranda' },
   { berkas: 'produk', nama: 'kelola-produk' },
+  // Cangkang: menu samping dan bilah atas tidak ikut terpotret di halaman mana
+  // pun sebelum ini, padahal menu itulah yang dilihat sepanjang hari.
+  { berkas: 'cangkang', nama: 'cangkang' },
 ]
 
 let gagal = 0

@@ -5,6 +5,7 @@
  * than raw colour and pixel values.
  */
 
+@import "@fontsource-variable/inter";
 @import "./tokens-color.css";
 @import "./tokens-color-dark.css";
 @import "./tokens-shape.css";
