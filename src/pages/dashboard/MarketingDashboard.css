@@ -2161,3 +2161,120 @@
   font-weight: var(--ds-font-weight-semibold);
   letter-spacing: 0.04em;
 }
+
+
+/* ─── ARUS PER PERIODE: KERANJANG ANGKA ──────────────────────────────────────
+   Tata letak diminta pemilik toko 23 September 2026 mengikuti satu referensi
+   yang dia berikan. Yang diambil hanya SUSUNANNYA; warna, tipografi, dan jarak
+   tetap token Atlassian seperti seluruh layar setelah login.
+
+   Kolom pertama berdiri sendiri karena ia satu-satunya angka yang punya
+   asal-usul (kotor − retur). Enam ubin di kanannya angka tunggal, jadi mereka
+   berbaris rata. */
+.arus-kisi {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) 3fr;
+  gap: var(--ds-space-300);
+  align-items: start;
+}
+
+.arus-utama {
+  padding-right: var(--ds-space-300);
+  border-right: 1px solid var(--ds-n200);
+}
+
+.arus-ubin-kisi {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--ds-space-250) var(--ds-space-300);
+}
+
+.arus-label {
+  display: block;
+  font-size: var(--ds-font-size-body-small);
+  font-weight: var(--ds-font-weight-semibold);
+  letter-spacing: 0.02em;
+  color: var(--ds-text-subtlest);
+  text-transform: uppercase;
+}
+
+.arus-nilai {
+  margin-top: var(--ds-space-075);
+  font-size: var(--ds-font-size-large);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: 1.2;
+  color: var(--ds-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.arus-nilai-ubin { font-size: var(--ds-font-size-medium); }
+
+/* Hasil dan beban dibedakan dengan token SEMANTIK, bukan dengan palet
+   referensinya. Referensi memberi HPP warna keempat; di sini HPP tetap beban,
+   dan warna keempat cuma menambah kosakata tanpa menambah arti. */
+.arus-nada-hasil { color: var(--ds-text-success); }
+.arus-nada-beban { color: var(--ds-text-danger); }
+
+.arus-catatan,
+.arus-beda {
+  margin-top: var(--ds-space-050);
+  font-size: var(--ds-font-size-body-small);
+  color: var(--ds-text-subtlest);
+}
+
+.arus-beda-baik { color: var(--ds-text-success); }
+.arus-beda-buruk { color: var(--ds-text-danger); }
+
+/* Kalimat pembandingnya tetap netral: yang berwarna cuma angkanya, supaya
+   satu baris tidak berteriak seluruhnya. */
+.arus-beda-kata {
+  margin-left: var(--ds-space-075);
+  color: var(--ds-text-subtlest);
+}
+
+.arus-asal {
+  margin-top: var(--ds-space-200);
+  padding-top: var(--ds-space-150);
+  border-top: 1px solid var(--ds-n200);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-075);
+}
+
+.arus-asal-baris {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--ds-space-150);
+  font-size: var(--ds-font-size-body-small);
+  color: var(--ds-text-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+.arus-asal-baris b { color: var(--ds-text); font-weight: var(--ds-font-weight-semibold); }
+.arus-asal-kurang,
+.arus-asal-kurang b { color: var(--ds-text-danger); }
+
+.arus-tautan {
+  margin-top: var(--ds-space-050);
+  align-self: flex-start;
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-size: var(--ds-font-size-body-small);
+  color: var(--ds-text-brand);
+  cursor: pointer;
+}
+
+.arus-tautan:hover:not(:disabled) { text-decoration: underline; }
+.arus-tautan:disabled { color: var(--ds-text-subtlest); cursor: default; }
+
+@media (max-width: 1180px) {
+  .arus-kisi { grid-template-columns: 1fr; }
+  .arus-utama { border-right: 0; padding-right: 0; padding-bottom: var(--ds-space-250); border-bottom: 1px solid var(--ds-n200); }
+  .arus-ubin-kisi { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 720px) {
+  .arus-ubin-kisi { grid-template-columns: 1fr; }
+}

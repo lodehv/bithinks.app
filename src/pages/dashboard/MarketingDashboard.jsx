@@ -124,6 +124,44 @@ function awalBulanWib() {
   return `${tanggalWib(0).slice(0, 7)}-01`;
 }
 
+/**
+ * Perubahan terhadap periode sebelumnya.
+ *
+ * Arahnya dibaca berbeda tergantung angkanya: omset naik itu kabar baik, beban
+ * naik tidak. `naikBaik` yang menentukan warnanya, bukan tanda angkanya.
+ *
+ * null berarti periode sebelumnya bernilai nol — kenaikan "dari nol" tidak
+ * punya persentase yang bermakna, jadi barisnya tidak ditulis sama sekali
+ * alih-alih menulis 100% yang menyesatkan.
+ */
+/** Persen dalam penulisan Indonesia: koma, dua angka di belakang. */
+function persen(nilai) {
+  return `${nilai.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
+}
+
+function Beda({ nilai, naikBaik = false }) {
+  if (nilai === null || nilai === undefined) return null;
+  const naik = nilai > 0;
+  const baik = naikBaik ? naik : !naik;
+  return (
+    <div className={`arus-beda${nilai === 0 ? '' : baik ? ' arus-beda-baik' : ' arus-beda-buruk'}`}>
+      {nilai === 0 ? '—' : `${naik ? '↑' : '↓'} ${persen(Math.abs(nilai))}`}
+      <span className="arus-beda-kata">vs periode sebelumnya</span>
+    </div>
+  );
+}
+
+/** Satu ubin angka. Label di atas, angka besar, lalu satu baris keterangan. */
+function Ubin({ label, nilai, catatan, beda, naikBaik, nada }) {
+  return (
+    <div className="arus-ubin">
+      <span className="arus-label">{label}</span>
+      <div className={`arus-nilai arus-nilai-ubin${nada ? ` arus-nada-${nada}` : ''}`}>{nilai}</div>
+      {catatan ? <div className="arus-catatan">{catatan}</div> : <Beda nilai={beda} naikBaik={naikBaik} />}
+    </div>
+  );
+}
+
 export default function MarketingDashboard() {
   // ─── Filter States ────────────────────────────────────────────────────────
   const [startDate, setStartDate] = useState(() => awalBulanWib());
@@ -395,6 +433,16 @@ export default function MarketingDashboard() {
   // datanya sudah ada tanpa perlu menyentuh backend.
 
   const povOmset = pov?.omset?.nilai ?? 0;
+
+  /**
+   * Porsi sebuah beban terhadap omset periode yang sama.
+   *
+   * Ditulis dengan koma seperti seluruh angka lain di halaman ini. Titik dan
+   * koma bercampur dalam satu zona membuat pembacanya berhenti sejenak tiap
+   * kali — dan di zona berisi tujuh angka, berhenti tujuh kali.
+   */
+  const persenDariOmset = (nilai) =>
+    povOmset > 0 ? `${persen((nilai / povOmset) * 100)}` : '—';
 
   // Persentase terhadap omset periode yang SAMA. Tanpa ini, Rp 413.246 tidak
   // berarti apa-apa; dengan 0,07% pemilik toko langsung tahu retur bukan
@@ -812,58 +860,89 @@ export default function MarketingDashboard() {
           <div className="summary-card-header">
             <h4>Arus per periode</h4>
             <span className="summary-card-subtitle">
-              Dibaca berurutan: <b>omset − beban = laba</b> · ketiganya bersandar pada
-              sumbu yang sama, tanggal pesanan dibuat
+              Seluruhnya bersandar pada sumbu yang sama, <b>tanggal pesanan dibuat</b> ·
+              pembandingnya jendela sama panjang tepat sebelum rentang ini
             </span>
           </div>
 
-          {/* Baris laba-rugi: dibaca berurutan, dengan tanda − dan = di antaranya
-              supaya pembaca tahu ketiganya SATU hitungan, bukan tiga angka lepas.
-              Ketiganya berdiri di sumbu yang sama (tanggal pesanan) — itulah
-              yang membuat pengurangan ini sah. */}
-          <div className="laba-rugi-baris">
-            <div className="summary-block block-highlighted">
-              <div className="block-meta-row">
-                <span className="block-category">OMSET</span>
-                <DollarSign size={13} className="text-purple" />
-              </div>
-              <div className="block-value text-purple">{formatRupiah(povOmset)}</div>
-              <div className="block-subtext">Penjualan periode ini</div>
-              <div className="pov-note">
-                Tanpa yang batal sebelum dikirim &amp; belum dibayar
-                {(pov.omset?.dikeluarkan?.pesanan ?? 0) > 0 && (
-                  <> — <b>{formatRupiah(pov.omset.dikeluarkan.nilai)}</b> dari{' '}
-                  {pov.omset.dikeluarkan.pesanan} pesanan dikeluarkan</>
-                )}
-                {' '}· <span className="tanda-dasar">KOTOR</span>
+          {/* KERANJANG ANGKA PERIODE — tata letak diminta pemilik toko
+              23 September 2026, mengikuti satu referensi yang dia berikan.
+
+              Kolom pertama berdiri sendiri karena ia satu-satunya angka yang
+              punya ASAL-USUL: omset kotor dikurangi retur. Enam ubin di
+              kanannya adalah angka tunggal, jadi mereka berbaris rata.
+
+              Warna memakai token semantik Atlassian, bukan palet referensinya:
+              hasil memakai `success`, beban memakai `danger`, sisanya netral.
+              Referensinya memberi warna berbeda pada HPP — di sini HPP tetap
+              beban, dan memberinya warna keempat cuma menambah kosakata tanpa
+              menambah arti. */}
+          <div className="arus-kisi">
+            <div className="arus-utama">
+              <span className="arus-label">TOTAL OMSET</span>
+              <div className="arus-nilai">{formatRupiah(povOmset)}</div>
+              <Beda nilai={pov.sebelumnya?.bedaOmset ?? null} naikBaik />
+
+              <div className="arus-asal">
+                <div className="arus-asal-baris">
+                  <span>Omset Kotor</span>
+                  <b>{formatRupiah(t.omsetKotor ?? 0)}</b>
+                </div>
+                <div className="arus-asal-baris arus-asal-kurang">
+                  <span>Retur</span>
+                  <b>− {formatRupiah(returTotal.nilai)}</b>
+                </div>
+                {/* Pintu ke rinciannya, bukan angka baru: retur sudah punya
+                    zonanya sendiri di bawah, dan mengulang isinya di sini
+                    berarti menulis angka yang sama dua kali. */}
+                <button
+                  type="button"
+                  className="arus-tautan"
+                  onClick={() => setPanelTahap('diJalan')}
+                  disabled={returTotal.pesanan === 0}
+                >
+                  Lihat detail retur →
+                </button>
               </div>
             </div>
 
-            <div className="laba-rugi-tanda">−</div>
-
-            <div className="summary-block">
-              <div className="block-meta-row">
-                <span className="block-category">BEBAN</span>
-                <Percent size={13} className="text-purple" />
-              </div>
-              <div className="block-value">{formatRupiah(pov.beban?.nilai ?? 0)}</div>
-              <div className="block-subtext">Platform + modal barang + iklan</div>
-              <div className="pov-note">
-                Platform {formatRupiah(pov.beban?.platform ?? 0)} · COGS{' '}
-                {formatRupiah(pov.beban?.cogs ?? 0)} · Iklan {formatRupiah(pov.beban?.iklan ?? 0)}
-              </div>
-            </div>
-
-            <div className="laba-rugi-tanda">=</div>
-
-            <div className="summary-block blok-laba">
-              <div className="block-meta-row">
-                <span className="block-category">LABA</span>
-                <TrendingUp size={13} className="text-purple" />
-              </div>
-              <div className="block-value">{formatRupiah(pov.laba?.nilai ?? 0)}</div>
-              <div className="block-subtext">Margin {pov.laba?.margin ?? 0}%</div>
-              <div className="pov-note">Omset dikurangi beban di sebelah kiri</div>
+            <div className="arus-ubin-kisi">
+              <Ubin
+                label="TOTAL PROFIT"
+                nilai={formatRupiah(pov.laba?.nilai ?? 0)}
+                nada="hasil"
+                catatan={`${persen(pov.laba?.margin ?? 0)} dari omset`}
+              />
+              <Ubin
+                label="TOTAL PESANAN"
+                nilai={(pov.omset?.pesanan ?? 0).toLocaleString('id-ID')}
+                beda={pov.sebelumnya?.bedaPesanan ?? null}
+                naikBaik
+              />
+              <Ubin
+                label="TOTAL PRODUK"
+                nilai={`${(pov.omset?.produk ?? 0).toLocaleString('id-ID')} pcs`}
+                beda={pov.sebelumnya?.bedaProduk ?? null}
+                naikBaik
+              />
+              <Ubin
+                label="TOTAL BIAYA IKLAN"
+                nilai={formatRupiah(pov.beban?.iklan ?? 0)}
+                nada="beban"
+                catatan={`${persenDariOmset(pov.beban?.iklan ?? 0)} dari omset`}
+              />
+              <Ubin
+                label="TOTAL BIAYA PLATFORM"
+                nilai={formatRupiah(pov.beban?.platform ?? 0)}
+                nada="beban"
+                catatan={`${persenDariOmset(pov.beban?.platform ?? 0)} dari omset`}
+              />
+              <Ubin
+                label="TOTAL HPP"
+                nilai={formatRupiah(pov.beban?.cogs ?? 0)}
+                nada="beban"
+                catatan={`${persenDariOmset(pov.beban?.cogs ?? 0)} dari omset`}
+              />
             </div>
           </div>
 
