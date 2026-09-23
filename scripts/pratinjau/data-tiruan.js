@@ -51,7 +51,17 @@ export const statsTiruan = {
   // produksi sungguhan per 29 Agu 2026 (0 dari 1.473), dan justru keadaan
   // itulah yang paling perlu terlihat di potret.
   pov: {
-    omset: { nilai: 1414149566, pesanan: 5231, dikeluarkan: { nilai: 936929, pesanan: 13 } },
+    omset: {
+      nilai: 1414149566, pesanan: 5231, produk: 12_884,
+      dikeluarkan: { nilai: 936929, pesanan: 13 },
+    },
+    // Satu naik dan dua turun, supaya potretnya memperlihatkan kedua warna
+    // pembanding sekaligus — potret yang semuanya naik tidak pernah
+    // memperlihatkan bagaimana penurunan terbaca.
+    sebelumnya: {
+      omset: 1_415_282_110, pesanan: 5_755, produk: 11_957,
+      bedaOmset: -0.08, bedaPesanan: -9.09, bedaProduk: 7.75,
+    },
     beban: { nilai: 726366963 + j('iklan'), platform: 290044639, cogs: 436322324, iklan: j('iklan') },
     laba: { nilai: 687782603, margin: 48.6 },
     tuntas: {
