@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Truck, Store, Loader2 } from "lucide-react";
 import { omniApi } from "../../../utils/omniApi";
-import { angka } from "./format-antrean";
+import { angka, namaChannel } from "./format-antrean";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ATUR PENGIRIMAN — satu klik untuk seluruh tumpukan.
@@ -25,7 +25,7 @@ const CARA = [
   { id: "dropoff", teks: "Diantar ke gerai", ikon: <Store size={15} /> },
 ];
 
-export default function TombolAturKirim({ jumlah, dari, sampai, onSelesai }) {
+export default function TombolAturKirim({ channel = "shopee", jumlah, dari, sampai, onSelesai }) {
   const [sibuk, setSibuk] = useState(null);
   const [hasil, setHasil] = useState(null);
   const [galat, setGalat] = useState(null);
@@ -37,6 +37,7 @@ export default function TombolAturKirim({ jumlah, dari, sampai, onSelesai }) {
     try {
       const d = await omniApi.aturKirim({
         metode,
+        channel,
         ...(dari ? { dari } : {}),
         ...(sampai ? { sampai } : {}),
       });
@@ -52,7 +53,7 @@ export default function TombolAturKirim({ jumlah, dari, sampai, onSelesai }) {
   // Dikelompokkan menurut alasannya, urutan kemunculan dipertahankan.
   const kelompokAlasan = [];
   for (const r of hasil?.rincian ?? []) {
-    const teks = r.alasan || "Tidak ada keterangan dari Shopee.";
+    const teks = r.alasan || `Tidak ada keterangan dari ${namaChannel(channel)}.`;
     const ada = kelompokAlasan.find((k) => k.alasan === teks);
     if (ada) ada.nomor.push(r.nomorPesanan);
     else kelompokAlasan.push({ alasan: teks, nomor: [r.nomorPesanan], jadi: r.jadi });
