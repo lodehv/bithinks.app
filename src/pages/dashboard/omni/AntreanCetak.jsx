@@ -194,8 +194,14 @@ export default function AntreanCetak({ locked = false, onRequirePayment }) {
               Akibatnya dua minggu: layar berhenti di kalimat "perlu atur
               pengiriman" tanpa satu pun cara mengerjakannya, dan importnya
               tertinggal sebagai satu-satunya bekas. */}
-          {channel === "shopee" && data.totalPerluAtur > 0 && (
+          {/* Kedua marketplace sejak 25 September 2026. Sebelumnya Shopee saja,
+              dan tidak satu pun toko TikTok pernah punya pengaturan kirim —
+              51 pesanan TikTok bertahan tanpa resi dan tombol cetak melewati
+              semuanya. Pilihan di sini tersimpan per toko, jadi tombol cetak
+              berikutnya mengatur pengirimannya sendiri. */}
+          {data.totalPerluAtur > 0 && (
             <TombolAturKirim
+              channel={channel}
               jumlah={data.totalPerluAtur}
               dari={dari || undefined}
               sampai={sampai || undefined}
