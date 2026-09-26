@@ -41,23 +41,22 @@ import "./MarketingDashboard.css";
 //
 // Pembatalan SEBELUM dikirim tidak pernah ikut: barangnya tidak berangkat, jadi
 // tidak ada yang harus kembali.
+// Hanya judul + keterangan panel yang dipakai kini; kartu ringkasnya dihapus
+// 26 September 2026 atas permintaan pemilik toko.
 const TAHAP_RETUR = [
   {
     kunci: 'diJalan',
     judul: 'RETUR DI JALAN',
-    catatan: 'sudah keluar gudang, belum kembali',
     keterangan: 'Retur pembeli dan pembatalan sesudah dikirim — barangnya belum tercatat kembali',
   },
   {
     kunci: 'sampai',
     judul: 'RETUR SELESAI',
-    catatan: 'sudah kembali ke gudang',
     keterangan: 'Muara dari kartu pertama: barang sudah sampai di gudang, stok naik',
   },
   {
     kunci: 'periodeLalu',
     judul: 'BELUM SELESAI DARI PERIODE LALU',
-    catatan: 'pesanan bulan lain, masih menggantung',
     keterangan: 'Retur dan pembatalan atas pesanan periode sebelumnya yang sampai kini belum kembali',
   },
 ];
@@ -369,17 +368,10 @@ export default function MarketingDashboard() {
   // Nama platform ditulis sekali di sini. Server mengirim kunci mentahnya
   // (`shopee`), layar menampilkan nama resminya.
   const NAMA_PLATFORM = { shopee: 'Shopee', tiktok: 'TikTok' };
-  const returDiJalan = returTahap?.diJalan ?? { nilai: 0, pesanan: 0 };
-  const returSampai = returTahap?.sampai ?? { nilai: 0, pesanan: 0 };
-  // Server belum tentu mengirimnya. Selama belum, kartu lama dipertahankan —
-  // dua kartu bernilai nol akan terbaca sebagai "tidak ada retur", padahal
-  // yang benar "belum diketahui", dan keduanya bukan hal yang sama.
-  const adaTahapRetur = returTahap !== null;
+  // Daftar baris retur — dibaca panel "Lihat detail retur" di zona TOTAL OMSET.
   const daftarRetur = Array.isArray(returTahap?.daftar) ? returTahap.daftar : [];
+  // Total retur periode ini, ditampilkan sebagai pengurang di zona TOTAL OMSET.
   const returTotal = returTahap?.total ?? { nilai: 0, pesanan: 0 };
-  // Kartu ketiga: pesanan periode SEBELUMNYA yang barangnya belum kembali.
-  // Menggeser periode tidak boleh membuat barang yang menggantung lenyap.
-  const returPeriodeLalu = returTahap?.periodeLalu ?? { nilai: 0, pesanan: 0 };
 
   // ── PANEL RINCIAN ─────────────────────────────────────────────────────────
   // Kedua tahap adalah TOMBOL: menekannya membuka panel berisi saringan
@@ -443,13 +435,6 @@ export default function MarketingDashboard() {
    */
   const persenDariOmset = (nilai) =>
     povOmset > 0 ? `${persen((nilai / povOmset) * 100)}` : '—';
-
-  // Persentase terhadap omset periode yang SAMA. Tanpa ini, Rp 413.246 tidak
-  // berarti apa-apa; dengan 0,07% pemilik toko langsung tahu retur bukan
-  // masalah bulan ini. Pembaginya POV omset, bukan omset perkiraan — sumbu
-  // keduanya sama, tanggal pesanan dibuat.
-  const returPersen = povOmset > 0 ? (returTotal.nilai / povOmset) * 100 : null;
-  const omsetSetelahRetur = povOmset - returTotal.nilai;
 
   // Turunan untuk kartu TUNTAS dan PENERIMAAN ikut dibuang bersama kartunya.
   // Keputusan pemilik toko 29 Agu 2026: zona arus cukup memuat satu hitungan
@@ -949,100 +934,10 @@ export default function MarketingDashboard() {
         </div>
       )}
 
-      {/* ─── Zona Retur ─── */}
+      {/* ─── Zona Beban Platform ─── */}
       <div className="marketing-summary-wrapper satu-kartu">
-        
-        {/* Card 1: RETUR — dipecah jadi dua tahap.
 
-            Kartu lama berisi `retur + dibatalkan` dijumlahkan jadi satu. Diukur
-            di produksi 11 September 2026: 1.232 pembatalan berbanding 42 retur,
-            jadi kartu bernama RETUR sebenarnya menampilkan pembatalan dan retur
-            yang dinamainya tenggelam di dalamnya. Pembatalan sebelum barang
-            dikirim bukan retur dan tidak lagi ikut di sini.
-
-            OMSET KOTOR ikut pindah keluar: zona ini tentang barang yang
-            dikembalikan, bukan tentang asal-usul omset. */}
-        <div className="summary-card">
-          <div className="summary-card-header">
-            <h4>Retur</h4>
-            <span className="summary-card-subtitle">
-              Barang yang dikembalikan pembeli · dihitung atas{' '}
-              <b>pesanan pada periode ini</b> · mengikuti pilihan platform &amp; toko
-            </span>
-          </div>
-
-          {/* ANGKA UTAMA — pertanyaan pemilik toko, dijawab satu baris:
-              "omset bulan ini sekian, dari situ yang diretur berapa".
-
-              Persentasenya yang membuat rupiahnya berarti. Rp 413.246 sendirian
-              tidak bisa dinilai; 0,07% dari omset langsung menjawab "besar atau
-              tidak". Dan "omset setelah retur" ditulis di sini, di tempat ia
-              lahir — bukan diulang di zona Arus, karena angka ditulis sekali. */}
-          {adaTahapRetur && (
-            <div className="retur-utama">
-              <div className="retur-utama-angka blok-pengurang-nilai">
-                - {formatRupiah(returTotal.nilai)}
-              </div>
-              <div className="retur-utama-catatan">
-                {returTotal.pesanan} pesanan
-                {returPersen !== null && <> · <b>{returPersen.toFixed(2)}%</b> dari omset</>}
-              </div>
-              {returPersen !== null && (
-                <div className="retur-utama-sisa">
-                  Omset setelah retur <b>{formatRupiah(omsetSetelahRetur)}</b>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Kedua tahap adalah TOMBOL. Menekannya membuka panel rincian:
-              saringan platform & toko, ringkasan, lalu tabel pesanannya —
-              bentuk yang diminta pemilik toko 11 September 2026.
-
-              Rinciannya TIDAK lagi menempel di halaman. Pada data sungguhan itu
-              22 baris sekaligus, dan halaman laporan terbaca bercecer justru
-              oleh bagian yang paling jarang dibutuhkan. */}
-          <div className="retur-kolom retur-kolom-tiga">
-            {TAHAP_RETUR.map(({ kunci, judul, catatan, keterangan }) => {
-              const ringkas = kunci === 'diJalan' ? returDiJalan
-                : kunci === 'sampai' ? returSampai
-                  : returPeriodeLalu;
-              const bisaDibuka = adaTahapRetur && ringkas.pesanan > 0;
-              return (
-                <button
-                  type="button"
-                  key={kunci}
-                  className="retur-tahap"
-                  onClick={() => bisaDibuka && setPanelTahap(kunci)}
-                  disabled={!bisaDibuka}
-                  title={keterangan}
-                >
-                  <div className="retur-tahap-kepala">
-                    <span className="block-category">{judul}</span>
-                    <ChevronDown size={14} className="retur-panah retur-panah-kanan" />
-                  </div>
-                  {/* Garis pendek, bukan Rp 0. Nol berarti "tidak ada retur";
-                      yang benar saat server belum mengirim datanya adalah
-                      "belum diketahui", dan keduanya bukan hal yang sama. */}
-                  <div className="block-value blok-pengurang-nilai">
-                    {adaTahapRetur ? `- ${formatRupiah(ringkas.nilai)}` : '—'}
-                  </div>
-                  <div className="block-subtext">
-                    {adaTahapRetur ? `${ringkas.pesanan} pesanan · ${catatan}` : 'Menunggu data dari server'}
-                  </div>
-                  {/* Keterangan ditulis di kartunya, bukan disembunyikan di
-                      tooltip: tiga kartu yang bunyinya mirip harus bisa
-                      dibedakan tanpa mengarahkan kursor ke masing-masing. */}
-                  <div className="retur-tahap-arti">{keterangan}</div>
-                  {bisaDibuka && <div className="retur-ajakan">Lihat nomor pesanan</div>}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Card 1b: BEBAN PLATFORM — zona sendiri.
-            Bukan pengurang omset, jadi tidak boleh sebaris dengan pengurang. */}
+        {/* Bukan pengurang omset, jadi berdiri di zonanya sendiri. */}
         <div className="summary-card">
           <div className="summary-card-header">
             <h4>Beban Platform</h4>

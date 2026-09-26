@@ -1785,100 +1785,6 @@
    dan pertanyaan "toko mana yang returnya menumpuk" cuma bisa dijawab dengan
    membaca seluruh daftar baris demi baris. */
 
-/* ANGKA UTAMA RETUR — satu angka besar, dua baris keterangan.
-   Ditaruh DI ATAS kedua tahap karena keduanya adalah pecahannya; membaca
-   pecahan sebelum keseluruhannya memaksa mata menjumlah sendiri. */
-.retur-utama {
-  margin-bottom: var(--ds-space-200);
-  padding-bottom: var(--ds-space-200);
-  border-bottom: 1px solid var(--ds-n200);
-}
-
-.retur-utama-angka {
-  font-size: var(--ds-font-size-xlarge);
-  font-weight: var(--ds-font-weight-semibold);
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-}
-
-.retur-utama-catatan {
-  margin-top: var(--ds-space-050);
-  font-size: var(--ds-font-size-body-small);
-  color: var(--ds-text-subtlest);
-}
-
-/* Omset setelah retur: angka hasil, bukan angka retur. Warnanya netral —
-   satu warna pengurang per zona sudah dipakai angka di atasnya. */
-.retur-utama-sisa {
-  margin-top: var(--ds-space-025);
-  font-size: var(--ds-font-size-body-small);
-  color: var(--ds-n500);
-}
-
-.retur-utama-sisa b { color: var(--ds-text-subtle); font-weight: var(--ds-font-weight-semibold); }
-
-.retur-kolom {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--ds-space-200);
-}
-/* Tiga blok sejajar saat pembatalan-sesudah-kirim ikut tampil. Dua kolom akan
-   melempar blok ketiga ke baris sendiri dan menyisakan separuh layar kosong —
-   keluhan tata letak yang sama yang membuat kartu "Breakdown status" dibuang. */
-.retur-kolom-tiga { grid-template-columns: repeat(3, 1fr); }
-
-@media (max-width: 1180px) {
-  .retur-kolom-tiga { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 900px) {
-  .retur-kolom,
-  .retur-kolom-tiga { grid-template-columns: 1fr; }
-}
-
-/* Tahap adalah TOMBOL, bukan kartu pajangan. Yang aktif ditandai garis bawah
-   tebal dan latar netral, bukan warna merek — aksen merek dipakai sekali per
-   layar untuk aksi utama, dan dua aksen berhenti menunjuk apa pun. */
-.retur-tahap {
-  border: 1px solid var(--ds-border-subtle);
-  border-bottom: 3px solid var(--ds-border-subtle);
-  border-radius: var(--ds-radius-200);
-  padding: var(--ds-space-200);
-  background: #ffffff;
-  text-align: left;
-  width: 100%;
-  cursor: pointer;
-  font: inherit;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
-}
-.retur-tahap:hover { background: var(--ds-surface-sunken); }
-
-/* Arti kartu ditulis di kartunya. Tiga kartu yang bunyinya mirip harus bisa
-   dibedakan tanpa mengarahkan kursor ke masing-masing. */
-.retur-tahap-arti {
-  margin-top: var(--ds-space-100);
-  font-size: 10.5px;
-  line-height: 1.45;
-  color: var(--ds-n500);
-}
-.retur-tahap-aktif {
-  border-bottom-color: var(--ds-background-brand-bold);
-  background: var(--ds-surface-sunken);
-}
-
-.retur-tahap-kepala {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: var(--ds-space-075);
-}
-
-/* Merah hanya pada ANGKANYA, bukan pada latar kartunya. Retur adalah kejadian
-   normal di marketplace; kotak merah yang muncul tiap hari melatih orang
-   mengabaikan warna itu, padahal merah masih dibutuhkan untuk yang benar-benar
-   salah. */
-.blok-pengurang-nilai { color: var(--ds-text-danger); }
-.blok-pengurang .block-value { color: var(--ds-text-danger); }
-
 /* Platform bersebelahan di dalam tahapnya. Membungkus saat sempit, bukan
    menyusut sampai nama tokonya tidak terbaca. */
 .retur-platform-baris {
@@ -2015,8 +1921,6 @@
 }
 .retur-item-baris:hover { background: var(--ds-surface-sunken); }
 
-.retur-panah { color: var(--ds-n500); transition: transform 0.15s ease; }
-.retur-panah-buka { transform: rotate(180deg); }
 
 .retur-item-no {
   font-size: var(--ds-font-size-body-small);
@@ -2121,10 +2025,7 @@
 
 /* Tahap adalah tombol yang MEMBUKA panel, jadi panahnya menunjuk ke samping —
    ke tempat lain — bukan ke bawah seperti sesuatu yang mengembang di tempat. */
-.retur-panah-kanan { transform: rotate(-90deg); }
 
-.retur-tahap:disabled { cursor: default; opacity: 0.75; }
-.retur-tahap:disabled:hover { background: #ffffff; }
 
 /* Ajakan dituliskan, bukan diserahkan pada tebakan. Kartu yang bisa diklik dan
    yang tidak harus terbaca berbeda tanpa perlu dicoba dulu. */
