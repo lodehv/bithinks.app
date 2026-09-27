@@ -1,6 +1,6 @@
 import { CreditCard, QrCode, ShieldCheck } from 'lucide-react'
 import {
-  TOPUP_PRESETS, amountAllowed, methodCapability, rupiah,
+  TOPUP_PRESETS, amountAllowed, bit, bitsToRupiah, methodCapability, rupiah, RUPIAH_PER_BIT,
 } from './walletTopupModel'
 
 export default function PaymentForm({
@@ -16,18 +16,19 @@ export default function PaymentForm({
 
   return (
     <form className="pay-card pay-form" onSubmit={onSubmit}>
-      <h2>Pilih nominal</h2>
-      <div className="pay-presets" aria-label="Pilih cepat nominal isi saldo">
+      <h2>Pilih jumlah bit</h2>
+      <div className="pay-presets" aria-label="Pilih cepat jumlah bit">
         {TOPUP_PRESETS.map((value) => {
           const allowed = amountAllowed(value, activeCapability)
-          return <button type="button" key={value} disabled={!allowed} className={Number(amount) === value ? 'active' : ''} aria-pressed={Number(amount) === value} onClick={() => onAmountChange(String(value))}>{rupiah(value)}</button>
+          return <button type="button" key={value} disabled={!allowed} className={Number(amount) === value ? 'active' : ''} aria-pressed={Number(amount) === value} onClick={() => onAmountChange(String(value))}>{bit(value)}</button>
         })}
       </div>
-      <label className="pay-field" htmlFor="topup-amount">Nominal isi saldo</label>
-      <div className="pay-input-wrap"><span>Rp</span><input id="topup-amount" name="topupAmount" inputMode="numeric" autoComplete="off" value={amount} onChange={(event) => onAmountChange(event.target.value.replace(/\D/g, ''))} /></div>
+      <label className="pay-field" htmlFor="topup-amount">Jumlah bit</label>
+      <div className="pay-input-wrap"><span>bit</span><input id="topup-amount" name="topupBits" inputMode="numeric" autoComplete="off" value={amount} onChange={(event) => onAmountChange(event.target.value.replace(/\D/g, ''))} /></div>
+      <p className="pay-constraint">Tagihan: {rupiah(bitsToRupiah(amount))} · {bit(amount)} × Rp{RUPIAH_PER_BIT}</p>
       {activeCapability && (activeCapability.minAmount !== null || activeCapability.maxAmount !== null) && (
         <p className="pay-constraint">
-          Batas {activeCapability.label}: {activeCapability.minAmount !== null ? rupiah(activeCapability.minAmount) : 'tanpa minimum'}–{activeCapability.maxAmount !== null ? rupiah(activeCapability.maxAmount) : 'tanpa maksimum'}.
+          Batas {activeCapability.label}: {activeCapability.minAmount !== null ? `${Math.ceil(activeCapability.minAmount / RUPIAH_PER_BIT)} bit` : 'tanpa minimum'}–{activeCapability.maxAmount !== null ? `${Math.floor(activeCapability.maxAmount / RUPIAH_PER_BIT)} bit` : 'tanpa maksimum'}.
         </p>
       )}
       <fieldset className={`pay-methods ${methods.length === 1 ? 'single' : ''}`}><legend>Pilih cara bayar</legend>

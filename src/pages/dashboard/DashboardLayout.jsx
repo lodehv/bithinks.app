@@ -6,6 +6,7 @@ import {
   ChevronLeft, ChevronRight, LayoutDashboard, Lock, Settings, ShieldCheck, Wallet
 } from "lucide-react";
 import NotificationBell from "./NotificationBell";
+import { bit } from "./walletTopupModel";
 
 const ADMIN_SECTION = {
   label: "Admin",
@@ -129,27 +130,20 @@ function Sidebar({ activeMenu, onMenuClick, collapsed, onToggleCollapse, mobileO
   );
 }
 
-const fullRupiah = new Intl.NumberFormat("id-ID", {
-  style: "currency", currency: "IDR", maximumFractionDigits: 0,
-});
-const compactRupiah = new Intl.NumberFormat("id-ID", {
-  style: "currency", currency: "IDR", notation: "compact", maximumFractionDigits: 0,
-});
-
-function wholeRupiah(value) {
-  const digits = String(value ?? "").match(/^\d+/)?.[0];
-  return digits ? BigInt(digits) : null;
+function bitValue(value) {
+  const amount = Number(value);
+  return Number.isFinite(amount) ? amount : null;
 }
 
 function WalletIndicator({ walletState, onClick }) {
   if (!walletState) return null;
-  const amount = walletState.status === "ready" ? wholeRupiah(walletState.balance) : null;
-  const threshold = wholeRupiah(walletState.lowBalanceThreshold ?? "25000") ?? 25000n;
+  const amount = walletState.status === "ready" ? bitValue(walletState.balance) : null;
+  const threshold = bitValue(walletState.lowBalanceThreshold ?? "100") ?? 100;
   const low = amount !== null && amount <= threshold;
   const unavailable = walletState.status === "error" || (walletState.status === "ready" && amount === null);
   const spokenValue = walletState.status === "loading"
     ? "sedang dimuat"
-    : unavailable ? "belum dapat dimuat" : fullRupiah.format(amount);
+    : unavailable ? "belum dapat dimuat" : bit(amount);
 
   return (
     <button
@@ -165,10 +159,10 @@ function WalletIndicator({ walletState, onClick }) {
         <>
           <span className="topbar-wallet-label">{low ? "Isi saldo" : "Saldo"}</span>
           <strong className="topbar-wallet-amount topbar-wallet-full">
-            {unavailable ? "—" : fullRupiah.format(amount)}
+            {unavailable ? "—" : bit(amount)}
           </strong>
           <strong className="topbar-wallet-amount topbar-wallet-compact">
-            {unavailable ? "—" : compactRupiah.format(amount)}
+            {unavailable ? "—" : bit(amount)}
           </strong>
         </>
       )}

@@ -335,10 +335,10 @@ const BitOmniTopUpCalculator = ({ product }) => {
             <Coins size={15} /> SKEMA TOP-UP SESUKAMU
           </div>
           <h3 className="topup-calc-title">
-            Hanya <span className="highlight-price">Rp 250</span> / Pesanan
+            Hanya <span className="highlight-price">1 bit</span> / Pesanan
           </h3>
           <p className="topup-calc-sub">
-            Tanpa bayar langganan bulanan yang mengikat! Cukup atur target pesanan Anda. Saldo <strong>tidak pernah hangus</strong> &amp; sudah mencakup fitur cetak resi instan, rekonsiliasi beban komplit, tracking COGS, hingga net profit per 1 pesanan.
+            1 bit bernilai Rp250. Tanpa langganan bulanan yang mengikat! Cukup atur target pesanan Anda. Saldo bit <strong>tidak pernah hangus</strong> &amp; sudah mencakup fitur cetak resi instan, rekonsiliasi beban komplit, tracking COGS, hingga net profit per 1 pesanan.
           </p>
         </div>
 
@@ -463,7 +463,7 @@ const BitOmniTopUpCalculator = ({ product }) => {
             <div className="topup-result-card">
               <div className="res-icon"><Tag size={22} /></div>
               <div className="res-label">Biaya Per Pesanan</div>
-              <div className="res-value">Rp 250 <span className="res-unit">/ pesanan</span></div>
+              <div className="res-value">1 bit <span className="res-unit">/ pesanan</span></div>
               <div className="res-sub">Flat rate tanpa biaya tersembunyi &amp; tanpa kadaluwarsa</div>
             </div>
           </div>
@@ -497,8 +497,8 @@ const BitOmniTopUpCalculator = ({ product }) => {
             <div className="topup-feature-item">
               <div className="feat-check"><Check size={16} strokeWidth={3} /></div>
               <div>
-                <strong>Masa Aktif Saldo Tanpa Kadaluwarsa</strong>
-                <p>Saldo top-up tersimpan aman di akun Anda dan tidak pernah hangus sampai kuota pesanan terpakai habis.</p>
+                <strong>Masa Aktif Bit Tanpa Kadaluwarsa</strong>
+                <p>Saldo bit tersimpan aman di akun Anda dan tidak pernah hangus sampai terpakai untuk pesanan.</p>
               </div>
             </div>
           </div>
@@ -1047,7 +1047,7 @@ module.exports = async function customWorkflow(ctx) {
                 <span className="p-pretitle" style={{ color: product.color }}>SKEMA HARGA TRANSPARAN</span>
                 <h2 className="p-section-title">Top-up Sesukamu, Bayar Sesuai Pesanan</h2>
                 <p className="p-section-subtitle">
-                  Hanya Rp 250 per pesanan. Bebas atur nominal top-up tanpa biaya langganan bulanan mengikat. Saldo tidak pernah hangus!
+                  Hanya 1 bit per pesanan (1 bit = Rp250). Bebas atur nominal top-up tanpa biaya langganan bulanan mengikat. Saldo bit tidak pernah hangus!
                 </p>
               </div>
 

@@ -1,9 +1,13 @@
-export const TOPUP_PRESETS = [50000, 100000, 250000, 500000]
+export const TOPUP_PRESETS = [200, 400, 1000, 2000]
+export const RUPIAH_PER_BIT = 250
 
 const METHOD_IDS = new Set(['qris', 'va'])
 const POLLING_STATES = new Set(['pending', 'expiry_check', 'credit_pending', 'credit_processing', 'credit_failed', 'refund_pending', 'refund_processing'])
 
 export const rupiah = (value) => `Rp${Number(value || 0).toLocaleString('id-ID')}`
+export const bit = (value) => `${Number(value || 0).toLocaleString('id-ID', { maximumFractionDigits: 3 })} bit`
+export const rupiahToBits = (value) => Number(value || 0) / RUPIAH_PER_BIT
+export const bitsToRupiah = (value) => Number(value || 0) * RUPIAH_PER_BIT
 
 export function normalizeTopupState(state) {
   if (!state?.capabilities || !Array.isArray(state.capabilities.methods)) return null
@@ -35,16 +39,17 @@ export function methodCapability(capabilities, method) {
   return capabilities?.methods.find((item) => item.id === method && item.enabled) ?? null
 }
 
-export function validateTopup(amount, method, bankCode, capabilities) {
-  const nominal = Number(amount)
+export function validateTopup(bits, method, bankCode, capabilities) {
+  const selectedBits = Number(bits)
+  const nominal = bitsToRupiah(selectedBits)
   const option = methodCapability(capabilities, method)
   if (!option) return 'Pilih cara bayar yang tersedia.'
-  if (!Number.isSafeInteger(nominal) || nominal <= 0) return 'Masukkan nominal rupiah bulat yang valid.'
+  if (!Number.isSafeInteger(selectedBits) || selectedBits <= 0 || !Number.isSafeInteger(nominal)) return 'Masukkan jumlah bit bulat yang valid.'
   if (option.minAmount !== null && nominal < option.minAmount) {
-    return `Nominal minimum untuk ${option.label} adalah ${rupiah(option.minAmount)}.`
+    return `Jumlah minimum untuk ${option.label} adalah ${Math.ceil(option.minAmount / RUPIAH_PER_BIT)} bit.`
   }
   if (option.maxAmount !== null && nominal > option.maxAmount) {
-    return `Nominal maksimum untuk ${option.label} adalah ${rupiah(option.maxAmount)}.`
+    return `Jumlah maksimum untuk ${option.label} adalah ${Math.floor(option.maxAmount / RUPIAH_PER_BIT)} bit.`
   }
   if (method === 'va' && !option.banks.some((bank) => bank.code === bankCode)) {
     return 'Pilih bank Virtual Account yang tersedia.'
@@ -52,8 +57,9 @@ export function validateTopup(amount, method, bankCode, capabilities) {
   return null
 }
 
-export function amountAllowed(amount, capability) {
-  return Number.isSafeInteger(amount)
+export function amountAllowed(bits, capability) {
+  const amount = bitsToRupiah(bits)
+  return Number.isSafeInteger(bits) && bits > 0 && Number.isSafeInteger(amount)
     && capability?.enabled === true
     && (capability.minAmount === null || amount >= capability.minAmount)
     && (capability.maxAmount === null || amount <= capability.maxAmount)
