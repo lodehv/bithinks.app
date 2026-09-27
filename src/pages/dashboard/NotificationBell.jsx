@@ -4,12 +4,15 @@ import { notificationApi } from '../../utils/omniApi'
 import './NotificationBell.css'
 
 const rupiah = (value) => `Rp${String(value ?? '0').replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`
+const bits = (value) => `${Number(value ?? 0).toLocaleString('id-ID', { maximumFractionDigits: 3 })} bit`
 const time = (value) => new Intl.DateTimeFormat('id-ID', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(value))
 
 function copy(row) {
   const data = row.data ?? {}
-  if (row.type === 'TOPUP_CREDITED') return { title: 'Saldo berhasil ditambahkan', body: `${rupiah(data.amount)} masuk dari ${data.reference}. Saldo sekarang ${rupiah(data.balance)}.` }
-  return { title: 'Saldo hampir habis', body: `Saldo ${rupiah(data.balance)} melewati ambang ${rupiah(data.threshold)}. Isi saldo sebelum pekerjaan berhenti.` }
+  if (row.type === 'TOPUP_CREDITED') return { title: 'Bit berhasil ditambahkan', body: `${bits(data.creditedBits ?? Number(data.amount || 0) / 250)} masuk dari pembayaran ${rupiah(data.paidAmountIdr ?? data.amount)}. Saldo sekarang ${bits(data.balanceBits ?? Number(data.balance || 0) / 250)}.` }
+  if (row.type === 'SETTLEMENT_DEDUCTED') return { title: 'Bit dikurangi', body: `${bits(data.bits)} dari ${data.reference} ditarik kembali setelah refund settlement. Saldo sekarang ${bits(data.balanceBits)} dan dapat bernilai minus.` }
+  if (row.type === 'SETTLEMENT_RESTORED') return { title: 'Bit dikembalikan', body: `${bits(data.bits)} dari ${data.reference} dikembalikan karena refund settlement dibatalkan. Saldo sekarang ${bits(data.balanceBits)}.` }
+  return { title: 'Saldo bit hampir habis', body: `Saldo ${bits(data.balanceBits ?? Number(data.balance || 0) / 250)} melewati ambang ${bits(data.thresholdBits ?? Number(data.threshold || 0) / 250)}. Isi saldo sebelum pekerjaan berhenti.` }
 }
 
 export default function NotificationBell({ onOpenTopup, onOpenPayment }) {

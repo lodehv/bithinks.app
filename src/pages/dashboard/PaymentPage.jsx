@@ -5,18 +5,22 @@ import { loadPaymentPageData } from './loadPaymentPageData'
 import PaymentForm from './PaymentForm'
 import PaymentStatus from './PaymentStatus'
 import {
-  effectivePaymentStatus, firstEnabledMethod, methodCapability, normalizeTopupState,
-  paymentErrorCode, paymentFromError, rupiah, shouldPollPayment, validateTopup,
+  bit, effectivePaymentStatus, firstEnabledMethod, methodCapability, normalizeTopupState,
+  paymentErrorCode, paymentFromError, rupiahToBits, shouldPollPayment, validateTopup,
 } from './walletTopupModel'
 import './PaymentPage.css'
 
-function paymentPayload(amount, method, bankCode) {
-  return { amount: Number(amount), method, ...(method === 'va' ? { bankCode } : {}) }
+function paymentPayload(bits, method, bankCode) {
+  return { bits: Number(bits), method, ...(method === 'va' ? { bankCode } : {}) }
+}
+
+function selectableBits(payment) {
+  return Math.ceil(Number(payment?.creditedBits ?? rupiahToBits(payment?.amount ?? 50000)))
 }
 
 export default function PaymentPage({ onBack, onWalletChanged, onPaymentComplete }) {
   const [wallet, setWallet] = useState(null)
-  const [amount, setAmount] = useState('50000')
+  const [amount, setAmount] = useState('200')
   const [method, setMethod] = useState('')
   const [bankCode, setBankCode] = useState('')
   const [capabilities, setCapabilities] = useState(null)
@@ -49,7 +53,7 @@ export default function PaymentPage({ onBack, onWalletChanged, onPaymentComplete
     const option = methodCapability(nextCapabilities, nextMethod)
     setCapabilities(nextCapabilities); setPayment(nextPayment); setMethod(nextMethod)
     setBankCode(nextPayment?.selectedBankCode || option?.banks?.[0]?.code || '')
-    if (nextPayment) setAmount(String(nextPayment.amount))
+    if (nextPayment) setAmount(String(selectableBits(nextPayment)))
     setUncertain(false)
   }, [])
 
@@ -126,7 +130,7 @@ export default function PaymentPage({ onBack, onWalletChanged, onPaymentComplete
     setBusy(true); setError(''); setDisposition(null)
     try {
       const result = await walletApi.topup(paymentPayload(amount, method, bankCode))
-      setPayment(result); setAmount(String(result.amount))
+      setPayment(result); setAmount(String(selectableBits(result)))
       setDisposition(result.disposition ?? 'created'); setClock(Date.now())
     } catch (requestError) {
       const code = paymentErrorCode(requestError)
@@ -134,7 +138,7 @@ export default function PaymentPage({ onBack, onWalletChanged, onPaymentComplete
         try {
           const activePayment = await recoverBlockedPayment(requestError)
           if (!activePayment) throw new Error('ACTIVE_PAYMENT_NOT_FOUND')
-          setPayment(activePayment); setAmount(String(activePayment.amount))
+          setPayment(activePayment); setAmount(String(selectableBits(activePayment)))
           setDisposition('replacement_blocked')
           setError('Permintaan baru tidak dibuat karena pembayaran sebelumnya masih aktif.')
         } catch {
@@ -161,7 +165,7 @@ export default function PaymentPage({ onBack, onWalletChanged, onPaymentComplete
   }
 
   const prepareNewPayment = () => {
-    setAmount(String(payment?.amount ?? '50000'))
+    setAmount(String(selectableBits(payment)))
     if (payment?.method !== 'mock' && methodCapability(capabilities, payment?.method)) setMethod(payment.method)
     if (payment?.selectedBankCode) setBankCode(payment.selectedBankCode)
     setPayment(null); setDisposition(null); setError(''); setClock(Date.now())
@@ -191,9 +195,9 @@ export default function PaymentPage({ onBack, onWalletChanged, onPaymentComplete
   return (
     <div className="pay">
       <button className="pay-back" type="button" onClick={onBack}><ArrowLeft size={18} /> Kembali</button>
-      <div className="pay-head"><h1>Isi saldo prabayar</h1><p>Saldo dipakai otomatis sebesar Rp250 untuk setiap pesanan yang selesai dan terkonfirmasi.</p></div>
+      <div className="pay-head"><h1>Isi saldo bit</h1><p>1 bit bernilai Rp250 dan dipakai otomatis untuk setiap pesanan yang selesai dan terkonfirmasi.</p></div>
       <div className="pay-grid">
-        <section className="pay-card pay-balance" aria-live="polite"><span className="pay-kicker">Saldo tersedia</span><strong>{wallet ? rupiah(wallet.balance) : loading ? 'Memuat…' : 'Tidak tersedia'}</strong><span>Setara {wallet ? Math.floor(Number(wallet.balance) / 250).toLocaleString('id-ID') : '–'} pesanan berikutnya</span></section>
+        <section className="pay-card pay-balance" aria-live="polite"><span className="pay-kicker">Saldo tersedia</span><strong>{wallet ? bit(wallet.balance) : loading ? 'Memuat…' : 'Tidak tersedia'}</strong><span>Setara {wallet ? Math.max(0, Math.floor(Number(wallet.balance))).toLocaleString('id-ID') : '–'} pesanan berikutnya · 1 bit = Rp250</span></section>
         {loading ? <section className="pay-card pay-loading" aria-live="polite"><LoaderCircle size={22} /> Menyiapkan pembayaran…</section>
           : uncertain ? <section className="pay-card pay-result pay-warning" role="alert"><h2>Status pembayaran belum pasti</h2><p>{error}</p><button type="button" className="pay-copy" onClick={load}><RotateCw size={16} /> Periksa kembali</button></section>
             : !capabilities?.methods.some((item) => item.enabled) ? <section className="pay-card pay-result pay-warning" role="alert"><h2>Metode pembayaran belum tersedia</h2><p>Penyedia pembayaran belum menawarkan metode yang dapat digunakan.</p></section>
