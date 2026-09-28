@@ -6,6 +6,8 @@ alwaysApply: false
 
 # Frontend UI Quality
 
+- Follow the mandatory UI skill workflow in `AGENTS.md` before UI implementation, including its availability fallback and render verification requirements.
+
 - Start with semantic HTML. Use real buttons and links for actions and navigation; preserve native keyboard behavior.
 - Give every form control a visible label, every meaningful image useful alternative text, and every icon-only control an accessible name.
 - Keep visible focus styles and logical tab order. Dialogs and overlays must manage focus and close with the keyboard where appropriate.
