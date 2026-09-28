@@ -15,6 +15,7 @@ const api = `export const adminApi = { approveRefund: async (...args) => {
 const fixture = `
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import '/src/index.css';
 import RefundApprovalDialog from '/src/pages/dashboard/RefundApprovalDialog.jsx';
 window.approvalCalls = [];
 const root = createRoot(document.getElementById('app'));
@@ -26,8 +27,13 @@ const wait = () => new Promise((resolve) => setTimeout(resolve, 30));
 async function until(check) { for (let i = 0; i < 80; i++) { if (check()) return; await wait(); } throw Error('UI timed out'); }
 (async () => {
   await until(() => document.querySelector('dialog[open]'));
+  if (location.search.includes('preview')) return;
   const area = document.querySelector('textarea');
   const submit = document.querySelector('[type=submit]');
+  const modal = document.querySelector('dialog');
+  const rect = modal.getBoundingClientRect();
+  if (Math.abs(rect.x + rect.width / 2 - innerWidth / 2) > 2 || Math.abs(rect.y + rect.height / 2 - innerHeight / 2) > 2) throw Error('Dialog is not centered under global reset');
+  if (parseFloat(getComputedStyle(modal.querySelector('h2')).fontSize) > 24 || submit.getBoundingClientRect().height < 44) throw Error('Dialog typography/touch target guard missing');
   if (!area.required || !submit.disabled || document.activeElement !== area) throw Error('Reason/focus guard missing');
   Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value').set.call(area, 'Verified late payment');
   area.dispatchEvent(new Event('input', { bubbles: true }));
@@ -53,7 +59,7 @@ const vite = await createServer({
     },
     load(id) { if (id === '\0approval-api') return api; if (id === '\0approval-fixture') return fixture },
     configureServer(server) { server.middlewares.use(async (req, res, next) => {
-      if (req.url !== '/') return next()
+      if (req.url.split('?')[0] !== '/') return next()
       res.setHeader('Content-Type', 'text/html')
       res.end(await server.transformIndexHtml('/', '<html><body><div id="app"></div><script type="module" src="/approval-fixture.js"></script></body></html>'))
     }) },
@@ -63,8 +69,13 @@ const vite = await createServer({
 try {
   await vite.listen()
   const address = vite.httpServer.address()
+  if (process.argv.includes('--preview')) {
+    console.log('Preview: http://127.0.0.1:' + address.port + '/?preview=1')
+    await new Promise((resolve) => process.once('SIGINT', resolve))
+    process.exitCode = 0
+  } else {
   const chrome = process.env.CHROME ?? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-  const child = spawn(chrome, ['--headless', '--disable-gpu', '--no-first-run', '--remote-debugging-port=0', `--user-data-dir=${profile}`])
+  const child = spawn(chrome, ['--headless', '--disable-gpu', '--no-first-run', '--window-size=1280,1000', '--remote-debugging-port=0', `--user-data-dir=${profile}`])
   let socket
   try {
     const debugUrl = await new Promise((resolve, reject) => {
@@ -95,5 +106,6 @@ try {
     })
     assert.equal(result.result?.value, 'PASS', JSON.stringify(result))
   } finally { socket?.close(); child.kill(); await new Promise((resolve) => child.once('close', resolve)) }
-  console.log('PASS: native dialog focus, required reason, double-click guard, stable retry key, and no-transfer copy')
+  console.log('PASS: centered layout, typography, native focus, required reason, stable retry key, and no-transfer copy')
+  }
 } finally { await vite.close(); await rm(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 }) }
