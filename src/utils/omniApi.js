@@ -197,6 +197,7 @@ export const adminApi = {
   walletRecovery: () => api.get('/api/admin/wallet-recovery').then(unwrap),
   retryCredit: (paymentId, reason, key = crypto.randomUUID()) => api.post(`/api/admin/wallet-recovery/${paymentId}/retry-credit`, { reason }, { headers: { 'Idempotency-Key': key } }).then(unwrap),
   retryRefund: (refundId, reason, key = crypto.randomUUID()) => api.post(`/api/admin/wallet-recovery/${refundId}/retry-refund`, { reason }, { headers: { 'Idempotency-Key': key } }).then(unwrap),
+  approveRefund: (refundId, reason, key) => api.post(`/api/admin/wallet-recovery/${refundId}/approve-refund`, { reason }, { headers: { 'Idempotency-Key': key } }).then(unwrap),
 }
 
 /** True bila error berasal dari gate langganan (trial/langganan habis). */
