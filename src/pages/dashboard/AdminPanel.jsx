@@ -27,7 +27,7 @@ const FILTERS = [
 ];
 
 export default function AdminPanel() {
-  const [tab, setTab]     = useState("subscribers");
+  const [tab, setTab]     = useState(() => new URLSearchParams(window.location.search).get("admin") === "recovery" ? "recovery" : "subscribers");
   const [data, setData]   = useState(null);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");

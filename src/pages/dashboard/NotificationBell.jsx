@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { Bell, CheckCheck, Wallet, AlertTriangle, X } from 'lucide-react'
 import { notificationApi } from '../../utils/omniApi'
 import './NotificationBell.css'
+import { refundNotificationCopy, refundRecoveryUrl } from './refundNotification'
 
 const rupiah = (value) => `Rp${String(value ?? '0').replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`
 const bits = (value) => `${Number(value ?? 0).toLocaleString('id-ID', { maximumFractionDigits: 3 })} bit`
@@ -9,13 +10,14 @@ const time = (value) => new Intl.DateTimeFormat('id-ID', { dateStyle: 'short', t
 
 function copy(row) {
   const data = row.data ?? {}
+  if (row.type === 'REFUND_ESCALATION') return refundNotificationCopy(data)
   if (row.type === 'TOPUP_CREDITED') return { title: 'Bit berhasil ditambahkan', body: `${bits(data.creditedBits ?? Number(data.amount || 0) / 250)} masuk dari pembayaran ${rupiah(data.paidAmountIdr ?? data.amount)}. Saldo sekarang ${bits(data.balanceBits ?? Number(data.balance || 0) / 250)}.` }
   if (row.type === 'SETTLEMENT_DEDUCTED') return { title: 'Bit dikurangi', body: `${bits(data.bits)} dari ${data.reference} ditarik kembali setelah refund settlement. Saldo sekarang ${bits(data.balanceBits)} dan dapat bernilai minus.` }
   if (row.type === 'SETTLEMENT_RESTORED') return { title: 'Bit dikembalikan', body: `${bits(data.bits)} dari ${data.reference} dikembalikan karena refund settlement dibatalkan. Saldo sekarang ${bits(data.balanceBits)}.` }
   return { title: 'Saldo bit hampir habis', body: `Saldo ${bits(data.balanceBits ?? Number(data.balance || 0) / 250)} melewati ambang ${bits(data.thresholdBits ?? Number(data.threshold || 0) / 250)}. Isi saldo sebelum pekerjaan berhenti.` }
 }
 
-export default function NotificationBell({ onOpenTopup, onOpenPayment }) {
+export default function NotificationBell({ onOpenTopup, onOpenPayment, isPlatformAdmin }) {
   const [open, setOpen] = useState(false)
   const [rows, setRows] = useState([])
   const [unread, setUnread] = useState(0)
@@ -52,7 +54,10 @@ export default function NotificationBell({ onOpenTopup, onOpenPayment }) {
       await notificationApi.markRead(row.id).catch(() => {})
     }
     setOpen(false)
-    if (row.type === 'TOPUP_CREDITED') onOpenPayment?.(row.entityId)
+    if (row.type === 'REFUND_ESCALATION') {
+      const url = refundRecoveryUrl(isPlatformAdmin)
+      if (url) window.location.assign(url)
+    } else if (row.type === 'TOPUP_CREDITED') onOpenPayment?.(row.entityId)
     else onOpenTopup?.()
   }
 
