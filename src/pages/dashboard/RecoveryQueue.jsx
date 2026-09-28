@@ -7,7 +7,7 @@ import RefundDisbursementActions from './RefundDisbursementActions'
 
 const labels = {
   PAID: 'Dibayar', CREDIT_PENDING: 'Kredit diproses', CREDIT_FAILED: 'Kredit gagal',
-  REFUND_PENDING: 'Refund menunggu', REFUND_PROCESSING: 'Refund diproses', REFUND_FAILED: 'Refund gagal',
+  REFUND_PENDING: 'Refund menunggu', REFUND_PROCESSING: 'Refund diproses', REFUND_FAILED: 'Refund gagal', REFUNDED: 'Refund berhasil',
 }
 
 export default function RecoveryQueue() {
@@ -48,8 +48,7 @@ export default function RecoveryQueue() {
       {rows.map((row) => <tr key={row.id}>
         <td className="adm-mono">{row.reference}</td><td>{row.tenant?.name ?? row.tenant?.slug ?? '—'}</td>
         <td>Rp{String(row.amount).replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</td>
-        <td><span className="adm-badge st-trial">{labels[row.walletState] ?? labels[row.refund?.status] ?? row.walletState ?? '—'}</span>
-          {row.refund && <div className="adm-sub">{labels[row.refund.status] ?? row.refund.status}</div>}
+        <td><span className={`adm-badge ${row.refund?.status === 'REFUNDED' ? 'st-active' : row.refund?.status === 'REFUND_FAILED' ? 'refund-state-failed' : 'st-trial'}`}>{labels[row.refund?.status] ?? labels[row.walletState] ?? row.walletState ?? '—'}</span>
           {row.refund?.approval && <div className="adm-sub">Disetujui oleh {row.refund.approval.actorUserId} pada {new Date(row.refund.approval.approvedAt).toLocaleString('id-ID')}. Alasan: {row.refund.approval.reason}.</div>}
         </td>
         <td>{row.creditAttempts}×{row.refund ? ` / ${row.refund.retryCount}×` : ''}</td>
@@ -57,7 +56,16 @@ export default function RecoveryQueue() {
           {row.walletState !== 'CREDITED' && !row.refund && <button className="adm-wa" disabled={busy} onClick={() => retry('credit', row.id)}><RotateCw size={13} /> Kredit</button>}
           {row.refund && !row.refund.approval && row.refund.status !== 'REFUNDED' && <button className="adm-wa" disabled={busy} onClick={() => retry('refund', row.refund.id)}><RotateCw size={13} /> Retry refund</button>}
           {row.refund && !row.refund.approval && <button className="adm-wa" disabled={busy || !row.refund.canApprove} onClick={() => setApprovalRow(row)}>Setujui refund</button>}
-          <RefundDisbursementActions refund={row.refund} busy={busy} onAction={(action) => setTransferAction({ row, action })} />
+          <RefundDisbursementActions refund={row.refund} busy={busy} onAction={(action) => setTransferAction({ row, action })}
+            onChecked={(result) => {
+              setRows((current) => current.map((entry) => entry.id !== row.id ? entry : { ...entry, refund: {
+                ...entry.refund, disbursement: result, status: result.state === 'SUCCEEDED' ? 'REFUNDED'
+                  : result.state === 'FAILED' ? 'REFUND_FAILED' : entry.refund.status,
+              } }))
+              setNotice(result.state === 'SUCCEEDED' ? 'Refund berhasil.' : result.state === 'FAILED'
+                ? 'Transfer gagal. Hubungi admin/support; jangan transfer ulang.' : 'Transfer masih diproses. Tidak ada transfer baru yang dikirim.')
+              void load()
+            }} />
         </td>
       </tr>)}
       {!busy && rows.length === 0 && <tr><td colSpan={6} className="adm-empty">Tidak ada pembayaran yang memerlukan pemulihan.</td></tr>}
