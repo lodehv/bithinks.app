@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { adminApi } from '../../utils/omniApi'
+import { refundActionError } from './refundActionError'
+import './RefundDialog.css'
 
 const banks = [['002', 'BRI'], ['008', 'Mandiri'], ['009', 'BNI'], ['013', 'Permata'], ['011', 'Danamon'], ['016', 'Maybank'], ['014', 'BCA']]
 const titles = { prepare: 'Verifikasi rekening refund', send: 'Kirim refund?', inquire: 'Cek status transfer' }
@@ -24,37 +26,37 @@ export default function RefundDisbursementDialog({ row, action, onClose, onCompl
     try {
       const result = await adminApi.refundDisbursement(row.refund.id, submitted.current, requestKey.current)
       onCompleted(result)
-    } catch {
-      setError('Hasil belum dapat dipastikan. Coba permintaan yang sama atau tutup dan muat ulang. Transfer yang sudah dikirim tidak akan dikirim ulang; server hanya mengecek status.')
+    } catch (error) {
+      setError(refundActionError(error, 'Hasil belum dapat dipastikan. Coba permintaan yang sama atau tutup dan muat ulang. Transfer yang sudah dikirim tidak akan dikirim ulang; server hanya mengecek status.'))
     } finally { submitting.current = false; setBusy(false) }
   }
   return <dialog ref={dialog} aria-labelledby="refund-disbursement-title" onCancel={(event) => {
     if (submitting.current) event.preventDefault(); else onClose()
-  }} style={{ maxWidth: 460, width: 'calc(100% - 32px)', border: '1px solid #E5E7EB', borderRadius: 12, padding: 24 }}>
+  }} className="refund-dialog">
     <form onSubmit={submit}>
       <h2 id="refund-disbursement-title">{titles[action]}</h2>
-      <p>{row.reference} · Pengguna menerima {rupiah(row.amount)} utuh.</p>
-      <p>Sandbox saja. Biaya transfer ditanggung platform.</p>
+      <p className="refund-summary">{row.reference}<strong>{rupiah(row.amount)}</strong>Pengguna menerima nominal utuh.</p>
+      <p className="refund-note">Sandbox saja. Biaya transfer ditanggung platform.</p>
       {transfer && <p>{transfer.accountName} · Bank {transfer.bankCode} · ••••{transfer.accountLast4}<br />
         Fee {rupiah(transfer.feeIdr)} · Total debit {rupiah(transfer.grossAmountIdr)}</p>}
       {action === 'prepare' && <>
         <label htmlFor="refund-bank">Bank tujuan</label>
-        <select id="refund-bank" value={bankCode} disabled={locked} onChange={(e) => setBankCode(e.target.value)} style={{ display: 'block', minHeight: 44, width: '100%' }}>
+        <select id="refund-bank" value={bankCode} disabled={locked} onChange={(e) => setBankCode(e.target.value)}>
           {banks.map(([code, name]) => <option key={code} value={code}>{name}</option>)}
         </select>
         <label htmlFor="refund-account">Nomor rekening</label>
         <input id="refund-account" required inputMode="numeric" autoComplete="off" pattern="[0-9]{6,30}" minLength={6} maxLength={30}
-          value={accountNumber} disabled={locked} onChange={(e) => setAccountNumber(e.target.value)} style={{ display: 'block', minHeight: 44, width: '100%' }} />
+          value={accountNumber} disabled={locked} onChange={(e) => setAccountNumber(e.target.value)} />
         <p>Verifikasi belum mengirim uang. Periksa nama pemilik yang dikembalikan Singapay sebelum mengirim.</p>
       </>}
       {action === 'send' && <p>Pastikan nama pemilik dan rekening benar. Setelah dikirim, transfer tidak bisa diulang dari tombol ini.</p>}
       <label htmlFor="refund-transfer-reason">Alasan tindakan (wajib)</label>
       <textarea id="refund-transfer-reason" autoFocus required maxLength={500} value={reason} disabled={locked}
-        onChange={(e) => setReason(e.target.value)} style={{ display: 'block', width: '100%', minHeight: 90, margin: '8px 0 16px' }} />
-      {error && <p role="alert">{error}</p>}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
-        <button type="button" disabled={busy} onClick={onClose} style={{ minHeight: 44 }}>Batal</button>
-        <button type="submit" disabled={busy || !reason.trim() || (action === 'prepare' && !/^\d{6,30}$/.test(accountNumber))} style={{ minHeight: 44 }}>
+        onChange={(e) => setReason(e.target.value)} />
+      {error && <p className="refund-error" role="alert">{error}</p>}
+      <div className="refund-actions">
+        <button type="button" disabled={busy} onClick={onClose}>{error ? 'Tutup' : 'Batal'}</button>
+        <button type="submit" disabled={busy || !reason.trim() || (action === 'prepare' && !/^\d{6,30}$/.test(accountNumber))}>
           {busy ? 'Memproses…' : action === 'prepare' ? 'Verifikasi rekening' : action === 'send' ? 'Kirim refund' : 'Cek status'}
         </button>
       </div>
