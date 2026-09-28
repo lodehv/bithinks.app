@@ -201,7 +201,7 @@ export default function DashboardLayout({ activeMenu, onMenuClick, children, pag
           </button>
           <span className="topbar-title">{pageTitle}</span>
           <WalletIndicator walletState={walletState} onClick={onWalletClick} />
-          <NotificationBell onOpenTopup={onOpenTopup} onOpenPayment={onOpenPayment} />
+          <NotificationBell onOpenTopup={onOpenTopup} onOpenPayment={onOpenPayment} isPlatformAdmin={isPlatformAdmin} />
           {tenant?.name && (
             <span className="topbar-tenant-badge">{tenant.name}</span>
           )}
