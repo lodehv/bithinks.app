@@ -1,0 +1,170 @@
+/* Atlassian Design System colour tokens, dark theme.
+ *
+ * Values read from the published token artifact (@atlaskit/tokens,
+ * atlassian-dark). Opt-in, not automatic: the theme applies only under
+ * [data-ds-theme="dark"]. Screens still carry hard-coded white in places the
+ * redesign has not reached, and a half-converted dark mode reads as a broken
+ * screen rather than a dark one. Switch it on once no screen sets its own
+ * colours.
+ */
+
+[data-ds-theme="dark"] {
+  --ds-n0: #1F1F21;
+  --ds-n100: #242528;
+  --ds-n200: #2B2C2F;
+  --ds-n300: #3B3D42;
+  --ds-n400: #56585E;
+  --ds-n500: #7E8188;
+  --ds-n600: #96999E;
+  --ds-n700: #A9ABAF;
+  --ds-n800: #BFC1C4;
+  --ds-n900: #CECFD2;
+  --ds-n1000: #E4E5E7;
+
+  --ds-b50: #1C2B42;
+  --ds-b100: #123263;
+  --ds-b200: #144794;
+  --ds-b300: #1558BC;
+  --ds-b400: #1868DB;
+  --ds-b500: #669DF1;
+  --ds-b700: #8FB8F6;
+  --ds-b800: #ADCBFB;
+
+  --ds-g50: #262B18;
+  --ds-g100: #37471F;
+  --ds-g300: #6A9A23;
+  --ds-g500: #94C748;
+  --ds-g700: #B3DF72;
+  --ds-green-50: #1C3329;
+  --ds-green-100: #164B35;
+  --ds-green-300: #23A06B;
+  --ds-green-500: #4BCE97;
+  --ds-green-700: #7EE2B8;
+
+  --ds-r50: #42221F;
+  --ds-r100: #5D1F1A;
+  --ds-r300: #C9372C;
+  --ds-r500: #F87168;
+  --ds-r700: #FD9891;
+
+  --ds-y50: #332E1B;
+  --ds-y100: #533F04;
+  --ds-y300: #B38600;
+  --ds-y500: #F5CD47;
+  --ds-y700: #F8E6A0;
+
+  --ds-o50: #38291E;
+  --ds-o100: #693200;
+  --ds-o300: #BD5B00;
+  --ds-o500: #FCA700;
+  --ds-o700: #FEC195;
+
+  --ds-p50: #2B273F;
+  --ds-p100: #48245D;
+  --ds-p300: #803FA5;
+  --ds-p500: #D8A0F7;
+  --ds-p700: #EED7FC;
+
+  --ds-t50: #1E3137;
+  --ds-t100: #164555;
+  --ds-t300: #227D9B;
+  --ds-t500: #6CC3E0;
+  --ds-t700: #9DD9EE;
+
+  --ds-m50: #3D2232;
+  --ds-m100: #50253F;
+  --ds-m500: #E774BB;
+  --ds-m700: #F797D2;
+
+  --ds-surface: #1F1F21;
+  --ds-surface-hovered: #242528;
+  --ds-surface-pressed: #2B2C2F;
+  --ds-surface-sunken: #18191A;
+  --ds-surface-raised: #242528;
+  --ds-surface-overlay: #2B2C2F;
+
+  --ds-text: #CECFD2;
+  --ds-text-subtle: #A9ABAF;
+  --ds-text-subtlest: #96999E;
+  --ds-text-disabled: #E5E9F640;
+  --ds-text-inverse: #1F1F21;
+  --ds-text-brand: #669DF1;
+  --ds-text-selected: #669DF1;
+  --ds-text-danger: #FD9891;
+  --ds-text-warning: #FEC195;
+  --ds-text-success: #B3DF72;
+  --ds-text-information: #8FB8F6;
+  --ds-text-discovery: #D8A0F7;
+  --ds-link: #669DF1;
+  --ds-link-pressed: #8FB8F6;
+
+  --ds-icon: #CECFD2;
+  --ds-icon-subtle: #A9ABAF;
+  --ds-icon-subtlest: #96999E;
+  --ds-icon-inverse: #1F1F21;
+  --ds-icon-brand: #669DF1;
+  --ds-icon-danger: #F87168;
+  --ds-icon-warning: #FCA700;
+  --ds-icon-success: #94C748;
+  --ds-icon-discovery: #D8A0F7;
+
+  --ds-border: #E3E4F21F;
+  --ds-border-subtle: #3B3D42;
+  --ds-border-bold: #7E8188;
+  --ds-border-input: #7E8188;
+  --ds-border-focused: #8FB8F6;
+  --ds-border-selected: #669DF1;
+  --ds-border-brand: #669DF1;
+  --ds-border-danger: #F87168;
+  --ds-border-warning: #FCA700;
+  --ds-border-success: #94C748;
+  --ds-border-disabled: #CECED912;
+
+  --ds-background-neutral: #CECED912;
+  --ds-background-neutral-hovered: #E3E4F21F;
+  --ds-background-neutral-pressed: #E5E9F640;
+  --ds-background-neutral-subtle-hovered: #CECED912;
+  --ds-background-neutral-subtle-pressed: #E3E4F21F;
+  --ds-background-neutral-bold: #CECFD2;
+  --ds-background-neutral-bold-hovered: #BFC1C4;
+  --ds-background-disabled: #E3E4F21F;
+  --ds-background-input: #242528;
+  --ds-background-input-hovered: #2B2C2F;
+
+  --ds-background-selected: #1C2B42;
+  --ds-background-selected-hovered: #123263;
+  --ds-background-selected-bold: #669DF1;
+  --ds-background-brand-subtlest: #1C2B42;
+  --ds-background-brand-bold: #669DF1;
+  --ds-background-brand-bold-hovered: #8FB8F6;
+  --ds-background-brand-bold-pressed: #ADCBFB;
+
+  --ds-background-danger: #42221F;
+  --ds-background-danger-hovered: #5D1F1A;
+  --ds-background-danger-bold: #F87168;
+  --ds-background-danger-bold-hovered: #FD9891;
+  --ds-background-warning: #332E1B;
+  --ds-background-warning-hovered: #533F04;
+  --ds-background-warning-bold: #F5CD47;
+  --ds-background-success: #262B18;
+  --ds-background-success-hovered: #37471F;
+  --ds-background-success-bold: #94C748;
+  --ds-background-information: #1C2B42;
+  --ds-background-information-hovered: #123263;
+  --ds-background-discovery: #2B273F;
+  --ds-background-discovery-hovered: #48245D;
+
+  --ds-blanket: #10121499;
+
+  --ds-chart-brand: #669DF1;
+  --ds-chart-success: #4BCE97;
+  --ds-chart-danger: #F87168;
+  --ds-chart-warning: #FCA700;
+  --ds-chart-discovery: #D8A0F7;
+  --ds-chart-teal: #6CC3E0;
+  --ds-chart-neutral: #7E8188;
+
+  --ds-shadow-raised: 0 1px 1px #03040480, 0 0 1px #03040480;
+  --ds-shadow-overflow: 0 0 8px #0304048F, 0 0 1px #03040480;
+  --ds-shadow-overlay: 0 8px 12px #03040480, 0 0 1px #03040480;
+}

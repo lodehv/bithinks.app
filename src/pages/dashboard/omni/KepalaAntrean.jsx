@@ -45,7 +45,7 @@ function Merek({ logo }) {
 /** Tombol beruas: beberapa pilihan disatukan dalam satu bingkai bersambung. */
 function Ruas({ pilihan, nilai, onPilih }) {
   return (
-    <div style={{ display: "inline-flex", border: "1px solid #E5E7EB", borderRadius: 8, overflow: "hidden" }}>
+    <div style={{ display: "inline-flex", border: "1px solid #DDDEE1", borderRadius: 8, overflow: "hidden" }}>
       {pilihan.map((p, i) => {
         const aktif = p.id === nilai;
         return (
@@ -56,11 +56,11 @@ function Ruas({ pilihan, nilai, onPilih }) {
             style={{
               display: "inline-flex", alignItems: "center", gap: 7, padding: "7px 12px",
               fontSize: 13, fontFamily: "inherit", cursor: "pointer", border: "none",
-              borderLeft: i ? "1px solid #E5E7EB" : "none",
+              borderLeft: i ? "1px solid #DDDEE1" : "none",
               fontWeight: aktif ? 600 : 500,
-              background: aktif ? "#fff" : "#F9FAFB",
-              color: aktif ? "#111827" : "#6B7280",
-              boxShadow: aktif ? "inset 0 -2px 0 #4F46E5" : "none",
+              background: aktif ? "#fff" : "#F8F8F8",
+              color: aktif ? "#292A2E" : "#6B6E76",
+              boxShadow: aktif ? "inset 0 -2px 0 #1868DB" : "none",
               fontVariantNumeric: "tabular-nums",
             }}
           >{p.isi}</button>
@@ -126,16 +126,16 @@ export default function KepalaAntrean({
         <div>
           <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
             <span style={{
-              fontSize: 30, fontWeight: 700, color: "#111827",
+              fontSize: 30, fontWeight: 700, color: "#292A2E",
               lineHeight: 1.1, fontVariantNumeric: "tabular-nums",
             }}>{total}</span>
-            <span style={{ fontSize: 16, fontWeight: 600, color: "#111827" }}>total resi</span>
+            <span style={{ fontSize: 16, fontWeight: 600, color: "#292A2E" }}>total resi</span>
           </div>
           {/* LAYAR MENYEBUT ISINYA, BUKAN NAMANYA.
               "Semua tanggal" tidak memberi tahu apa pun; "2 hari terakhir ·
               cetak terakhir 27 Agu 09:10" langsung menjawab tumpukan ini sejak
               kapan, tanpa pemakainya menghitung sendiri. */}
-          <div style={{ fontSize: 12, color: "#6B7280", marginTop: 3 }}>
+          <div style={{ fontSize: 12, color: "#6B6E76", marginTop: 3 }}>
             {platform?.label} · {labelRentang(dari, sampai)}
             {data?.cetakTerakhir ? ` · cetak terakhir ${jamSingkat(data.cetakTerakhir)}` : ""}
           </div>
@@ -158,7 +158,7 @@ export default function KepalaAntrean({
       {/* ZONA 2 — bilah alat. Satu baris, semuanya setinggi sama. */}
       <div style={{
         display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap",
-        paddingBottom: 20, borderBottom: "1px solid #F3F4F6", marginBottom: 24,
+        paddingBottom: 20, borderBottom: "1px solid #F0F1F2", marginBottom: 24,
       }}>
         <Ruas
           nilai={channel}
@@ -175,38 +175,38 @@ export default function KepalaAntrean({
           nilai={sisi}
           onPilih={setSisi}
           pilihan={[
-            { id: "belum", isi: <>Belum cetak{typeof data?.totalBelum === "number" && <b style={{ color: "#B45309", marginLeft: 5 }}>{angka(data.totalBelum)}</b>}</> },
-            { id: "sudah", isi: <>Sudah cetak{typeof data?.totalSudah === "number" && <b style={{ color: "#166534", marginLeft: 5 }}>{angka(data.totalSudah)}</b>}</> },
+            { id: "belum", isi: <>Belum cetak{typeof data?.totalBelum === "number" && <b style={{ color: "#9E4C00", marginLeft: 5 }}>{angka(data.totalBelum)}</b>}</> },
+            { id: "sudah", isi: <>Sudah cetak{typeof data?.totalSudah === "number" && <b style={{ color: "#4C6B1F", marginLeft: 5 }}>{angka(data.totalSudah)}</b>}</> },
           ]}
         />
 
         {data?.totalDimintaBatal > 0 && (
-          <Cip tahap="diminta_batal" aktif={tahapDipilih === "diminta_batal"} onPilih={setTahapDipilih} warna="#9A3412" latar="#FFF7ED" garis="#FED7AA">
+          <Cip tahap="diminta_batal" aktif={tahapDipilih === "diminta_batal"} onPilih={setTahapDipilih} warna="#9E4C00" latar="#FFF5DB" garis="#FCE4A6">
             {angka(data.totalDimintaBatal)} di antaranya diminta batal
           </Cip>
         )}
         {data?.totalDitinjauShopee > 0 && (
-          <Cip tahap="ditinjau_shopee" aktif={tahapDipilih === "ditinjau_shopee"} onPilih={setTahapDipilih} warna="#3730A3" latar="#EEF2FF" garis="#C7D2FE">
+          <Cip tahap="ditinjau_shopee" aktif={tahapDipilih === "ditinjau_shopee"} onPilih={setTahapDipilih} warna="#123263" latar="#E9F2FE" garis="#CFE1FD">
             {angka(data.totalDitinjauShopee)} ditinjau Tim Shopee
           </Cip>
         )}
         {data?.totalBelumDiketahui > 0 && (
-          <Cip tahap="belum_diketahui" aktif={tahapDipilih === "belum_diketahui"} onPilih={setTahapDipilih} warna="#3F3F46" latar="#FAFAFA" garis="#E4E4E7">
+          <Cip tahap="belum_diketahui" aktif={tahapDipilih === "belum_diketahui"} onPilih={setTahapDipilih} warna="#3B3D42" latar="#F8F8F8" garis="#DDDEE1">
             {angka(data.totalBelumDiketahui)} menunggu keterangan Shopee
           </Cip>
         )}
         {data?.totalPerluAtur > 0 && (
-          <Cip tahap="perlu_atur" aktif={tahapDipilih === "perlu_atur"} onPilih={setTahapDipilih} warna="#92400E" latar="#FFFBEB" garis="#FDE68A">
+          <Cip tahap="perlu_atur" aktif={tahapDipilih === "perlu_atur"} onPilih={setTahapDipilih} warna="#9E4C00" latar="#FFF5DB" garis="#FCE4A6">
             {angka(data.totalPerluAtur)} perlu atur pengiriman
           </Cip>
         )}
         {data?.totalBukanUntukDicetak > 0 && (
-          <Cip tahap="bukan_untuk_dicetak" aktif={tahapDipilih === "bukan_untuk_dicetak"} onPilih={setTahapDipilih} warna="#3F3F46" latar="#FAFAFA" garis="#E4E4E7">
+          <Cip tahap="bukan_untuk_dicetak" aktif={tahapDipilih === "bukan_untuk_dicetak"} onPilih={setTahapDipilih} warna="#3B3D42" latar="#F8F8F8" garis="#DDDEE1">
             {angka(data.totalBukanUntukDicetak)} pesanan tidak untuk dicetak
           </Cip>
         )}
         {data?.totalPerluDiperiksa > 0 && (
-          <Cip tahap="perlu_diperiksa" aktif={tahapDipilih === "perlu_diperiksa"} onPilih={setTahapDipilih} warna="#991B1B" latar="#FEF2F2" garis="#FECACA">
+          <Cip tahap="perlu_diperiksa" aktif={tahapDipilih === "perlu_diperiksa"} onPilih={setTahapDipilih} warna="#AE2E24" latar="#FFECEB" garis="#FFD5D2">
             {angka(data.totalPerluDiperiksa)} pesanan perlu diperiksa
           </Cip>
         )}
@@ -215,12 +215,12 @@ export default function KepalaAntrean({
             menit lalu atau ada yang sudah menunggu tiga hari. Sebelum ini,
             pesanan yang lewat tanpa dicetak baru ketahuan sesudah kejadian. */}
         {data?.totalPernahGagal > 0 && (
-          <Cip warna="#991B1B" latar="#FEF2F2" garis="#FECACA">
+          <Cip tahap="pernah_gagal" aktif={tahapDipilih === "pernah_gagal"} onPilih={setTahapDipilih} warna="#AE2E24" latar="#FFECEB" garis="#FFD5D2">
             {angka(data.totalPernahGagal)} pernah gagal dicetak
           </Cip>
         )}
         {data?.menungguLama > 0 && (
-          <Cip warna="#9A3412" latar="#FFF7ED" garis="#FED7AA">
+          <Cip tahap="menunggu_lama" aktif={tahapDipilih === "menunggu_lama"} onPilih={setTahapDipilih} warna="#9E4C00" latar="#FFF5DB" garis="#FCE4A6">
             {angka(data.menungguLama)} pesanan menunggu lebih dari {data.batasLamaJam ?? 24} jam
           </Cip>
         )}

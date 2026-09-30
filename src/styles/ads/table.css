@@ -1,0 +1,44 @@
+/* Table: one hairline under the header, one under each row, no vertical rules.
+ * Numbers sit right and tabular so the eye can compare down the column.
+ */
+
+.ds-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--ds-font-size-body);
+}
+
+.ds-table th {
+  padding: var(--ds-space-100) var(--ds-space-150);
+  border-bottom: 2px solid var(--ds-border);
+  text-align: left;
+  font-size: var(--ds-font-size-body-small);
+  font-weight: var(--ds-font-weight-bold);
+  line-height: var(--ds-line-height-body-small);
+  color: var(--ds-text-subtlest);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.ds-table td {
+  padding: var(--ds-space-100) var(--ds-space-150);
+  border-bottom: 1px solid var(--ds-border);
+  color: var(--ds-text);
+  vertical-align: middle;
+}
+
+.ds-table tbody tr:hover { background: var(--ds-background-neutral-subtle-hovered); }
+.ds-table tbody tr[aria-selected="true"] { background: var(--ds-background-selected); }
+
+.ds-table-numeric { text-align: right; font-variant-numeric: tabular-nums; }
+
+.ds-table-sticky thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--ds-surface);
+}
+
+.ds-table-compact th,
+.ds-table-compact td { padding: var(--ds-space-075) var(--ds-space-100); }

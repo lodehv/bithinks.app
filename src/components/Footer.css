@@ -1,89 +1,260 @@
-.footer {
-  background-color: var(--color-text);
-  color: white;
-  padding: 80px 0 40px;
+/* ==========================================================================
+   White Theme Footer Styling (Jubelio Layout Model)
+   ========================================================================== */
+
+.footer-white {
+  background-color: #FFFFFF;
+  color: #334155;
+  padding: 64px 0 32px;
+  border-top: 1px solid #E2E8F0;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, -apple-system, sans-serif;
 }
 
-.footer-top {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 40px;
-  margin-bottom: 60px;
+.footer-white .container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
 }
 
-.footer-brand {
-  max-width: 320px;
+/* Brand Header */
+.footer-brand-header {
+  margin-bottom: 40px;
 }
 
-.footer-logo-text {
-  font-size: 2rem;
+.footer-brand-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer-logo-img {
+  height: 38px;
+  width: auto;
+  object-fit: contain;
+}
+
+.footer-brand-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.4rem;
   font-weight: 800;
-  color: var(--color-primary);
-  margin-bottom: 20px;
-  display: inline-block;
+  color: #0F172A;
+  letter-spacing: -0.5px;
 }
 
-.footer-brand p {
-  color: var(--color-text-light);
-  font-size: 1rem;
-}
-
-.footer-links-grid {
+/* Main Grid Layout */
+.footer-main-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 40px;
-  flex: 1;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 48px;
+  align-items: start;
 }
 
-.footer-col h4 {
-  font-size: 1.125rem;
-  margin-bottom: 24px;
-  color: white;
+/* Column 1: Company Info & Regulators */
+.footer-col-company {
+  display: flex;
+  flex-direction: column;
 }
 
-.footer-col ul {
-  list-style: none;
+.footer-company-name {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin: 0 0 20px 0;
+  letter-spacing: -0.2px;
 }
 
-.footer-col ul li {
+.footer-office-block {
   margin-bottom: 16px;
 }
 
-.footer-col ul a {
-  color: var(--color-text-light);
-  transition: var(--transition);
+.footer-office-block .office-city {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0 0 4px 0;
+}
+
+.footer-office-block .office-address {
+  font-size: 0.85rem;
+  color: #475569;
+  line-height: 1.55;
+  margin: 0;
+  max-width: 360px;
+}
+
+.footer-info-section {
+  margin-top: 16px;
+}
+
+.footer-info-section .info-section-header {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0 0 4px 0;
+  line-height: 1.4;
+  max-width: 360px;
+}
+
+.footer-info-section .info-section-text {
+  font-size: 0.85rem;
+  color: #475569;
+  margin: 0;
+}
+
+.footer-social-links {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.footer-social-links a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #F1F5F9;
+  color: #475569;
+  transition: all 0.2s ease;
   text-decoration: none;
 }
 
-.footer-col ul a:hover {
-  color: var(--color-primary);
-  text-decoration: none;
+.footer-social-links a:hover {
+  background: #4F46E5;
+  color: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
 }
 
-.footer-bottom {
-  padding-top: 40px;
-  border-top: 1px solid rgba(255,255,255,0.1);
+/* Nav Columns */
+.footer-col-nav h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0 0 20px 0;
+  letter-spacing: -0.2px;
+}
+
+.footer-link-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-link-list li {
+  margin-bottom: 14px;
+}
+
+.footer-link-list a {
+  color: #475569;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-link-list a:hover {
+  color: #4F46E5;
+  text-decoration: underline;
+}
+
+/* Kemenkumham Logo Badge Styling */
+.kemenkumham-logo-slot {
+  margin-top: 24px;
+}
+
+.kemenkumham-badge-box {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #F8FAFC;
+  border: 1.5px dashed #CBD5E1;
+  border-radius: 18px;
+  padding: 14px 18px;
+  max-width: 340px;
+}
+
+.kemenkumham-logo-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.kemenkumham-img {
+  height: 54px;
+  width: auto;
+  object-fit: contain;
+}
+
+.kemenkumham-badge-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.kemenkumham-badge-text .gov-tag {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #10B981;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.kemenkumham-badge-text .gov-name {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1.25;
+}
+
+.kemenkumham-badge-text .gov-sub {
+  font-size: 0.78rem;
+  color: #64748B;
+  margin-top: 2px;
+  line-height: 1.35;
+}
+
+/* Bottom Copyright Bar */
+.footer-bottom-bar {
+  margin-top: 56px;
+  padding-top: 24px;
+  border-top: 1px solid #F1F5F9;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: var(--color-text-light);
-  font-size: 0.875rem;
 }
 
-@media (max-width: 1024px) {
-  .footer-links-grid {
-    grid-template-columns: repeat(2, 1fr);
+.footer-bottom-bar p {
+  color: #64748B;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+  .footer-main-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
   }
 }
 
-@media (max-width: 768px) {
-  .footer-links-grid {
+@media (max-width: 640px) {
+  .footer-main-grid {
     grid-template-columns: 1fr;
+    gap: 36px;
   }
-  .footer-bottom {
+
+  .footer-white {
+    padding: 48px 0 28px;
+  }
+
+  .footer-bottom-bar {
+    margin-top: 40px;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
     text-align: center;
   }
 }

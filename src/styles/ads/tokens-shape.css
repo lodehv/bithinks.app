@@ -1,0 +1,96 @@
+/* Atlassian Design System tokens for space, type, radius and motion.
+ *
+ * Space follows the Atlassian scale, which is a multiple of 4px with 8px as the
+ * working unit: space.100 is 8px, and every larger step is a multiple of it.
+ * Use the tokens rather than raw pixels so one screen cannot drift from another.
+ */
+
+:root {
+  /* Space */
+  --ds-space-0: 0;
+  --ds-space-025: 2px;
+  --ds-space-050: 4px;
+  --ds-space-075: 6px;
+  --ds-space-100: 8px;
+  --ds-space-150: 12px;
+  --ds-space-200: 16px;
+  --ds-space-250: 20px;
+  --ds-space-300: 24px;
+  --ds-space-400: 32px;
+  --ds-space-500: 40px;
+  --ds-space-600: 48px;
+  --ds-space-800: 64px;
+  --ds-space-1000: 80px;
+
+  /* Type families. Atlassian ships a brand typeface that is not public, so the
+   * product surface reads in Inter, which is the closest public face to it and
+   * holds its shape at 14px.
+   *
+   * The face is the variable build, served from this app's own origin through
+   * @fontsource-variable/inter and imported by index.css. Self-hosting keeps
+   * every dashboard visit off a third-party server, and one variable file
+   * carries every weight the screens use. The system stack stays behind it, so
+   * a screen still renders before the font arrives. */
+  --ds-font-family-body: "Inter Variable", Inter, ui-sans-serif, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ds-font-family-code: ui-monospace, SFMono-Regular, "SF Mono", Menlo,
+    Consolas, "Liberation Mono", monospace;
+
+  /* Type scale: heading sizes and their line heights */
+  --ds-font-size-xxlarge: 35px;
+  --ds-font-size-xlarge: 29px;
+  --ds-font-size-large: 24px;
+  --ds-font-size-medium: 20px;
+  --ds-font-size-small: 16px;
+  --ds-font-size-xsmall: 14px;
+  --ds-font-size-xxsmall: 12px;
+
+  --ds-line-height-xxlarge: 40px;
+  --ds-line-height-xlarge: 32px;
+  --ds-line-height-large: 28px;
+  --ds-line-height-medium: 24px;
+  --ds-line-height-small: 20px;
+  --ds-line-height-xsmall: 20px;
+  --ds-line-height-xxsmall: 16px;
+
+  /* Body scale. 14px is the Atlassian product default, not 16px: a dense
+   * screen with 16px body text pushes the third column off the laptop. */
+  --ds-font-size-body-large: 16px;
+  --ds-font-size-body: 14px;
+  --ds-font-size-body-small: 12px;
+  --ds-line-height-body-large: 24px;
+  --ds-line-height-body: 20px;
+  --ds-line-height-body-small: 16px;
+
+  --ds-font-weight-regular: 400;
+  --ds-font-weight-medium: 500;
+  --ds-font-weight-semibold: 600;
+  --ds-font-weight-bold: 700;
+
+  --ds-letter-spacing-heading: -0.008em;
+  --ds-letter-spacing-heading-large: -0.01em;
+
+  /* Radius. One scale, used everywhere: 4px for controls, 8px for containers,
+   * 12px for large panels, full only for pills and avatars. */
+  --ds-radius-050: 2px;
+  --ds-radius-100: 4px;
+  --ds-radius-200: 8px;
+  --ds-radius-300: 12px;
+  --ds-radius-full: 9999px;
+
+  /* Motion. Short and linear-out: product UI acknowledges a click, it does not
+   * perform. Every transition below stays on transform, opacity and colour. */
+  --ds-duration-small: 100ms;
+  --ds-duration-medium: 175ms;
+  --ds-duration-large: 350ms;
+  --ds-ease-out: cubic-bezier(0.15, 1, 0.3, 1);
+  --ds-ease-in-out: cubic-bezier(0.15, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --ds-duration-small: 1ms;
+    --ds-duration-medium: 1ms;
+    --ds-duration-large: 1ms;
+  }
+}

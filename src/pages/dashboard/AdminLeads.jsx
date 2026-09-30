@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { UserPlus, Search, MessageCircle, Mail, RefreshCw } from "lucide-react";
 import { adminApi } from "../../utils/omniApi";
+import { formatDateTime } from "../../utils/datetime";
 import "./AdminPanel.css";
 
 const waLink = (phone) => {
@@ -10,11 +11,7 @@ const waLink = (phone) => {
   return `https://wa.me/${intl}`;
 };
 
-const fmt = (d) => {
-  if (!d) return "—";
-  try { return new Date(d).toLocaleString("id-ID", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }); }
-  catch { return "—"; }
-};
+const fmt = (d) => (d ? formatDateTime(d) : "-");
 
 const FILTERS = [
   { id: "all", label: "Semua" },
@@ -94,7 +91,7 @@ export default function AdminLeads() {
               <tr key={r.identifier} className={!r.completed ? "row-followup" : ""}>
                 <td className="adm-mono">
                   {r.identifier}
-                  {r.truncated && <span title="Data lama mungkin terpotong" style={{ color: "#d97706" }}> ⚠</span>}
+                  {r.truncated && <span title="Data lama mungkin terpotong" style={{ color: "#BD5B00" }}> ⚠</span>}
                 </td>
                 <td>{r.channel === "email" ? "Email" : "WhatsApp"}</td>
                 <td>{r.attempts}×</td>
@@ -107,7 +104,7 @@ export default function AdminLeads() {
                 </td>
                 <td>
                   {r.channel === "email" ? (
-                    <a className="adm-wa" href={`mailto:${r.identifier}`} style={{ color: "#4F46E5", background: "#EEF2FF", borderColor: "#C7D2FE" }}>
+                    <a className="adm-wa" href={`mailto:${r.identifier}`} style={{ color: "#1868DB", background: "#E9F2FE", borderColor: "#CFE1FD" }}>
                       <Mail size={13} /> Email
                     </a>
                   ) : waLink(r.identifier) ? (

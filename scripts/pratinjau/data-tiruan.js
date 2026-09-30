@@ -14,9 +14,16 @@ const toko = [
   ['tiktok', 'Bithinks Cabang Palembang', 940000, 300000, 184300, 5500],
 ]
 
+// Biaya iklan SENGAJA tidak seragam. Dua toko dibiarkan nol supaya potretnya
+// memperlihatkan kolom kosong dan kolom terisi bersebelahan — dan toko terakhir
+// beriklan lebih besar daripada labanya, keadaan yang justru paling perlu
+// terbaca di layar.
+const iklanTiruan = [12500000, 9800000, 6250000, 1750000, 880000, 0, 145000, 0, 62000, 1200000]
+
 const per_toko = toko.map(([channel, storeName, omset, cogs, fees, retur], i) => {
-  const netProfit = omset - cogs - fees
-  return { storeId: `t${i}`, storeName, channel, omset, cogs, fees, retur,
+  const iklan = iklanTiruan[i] ?? 0
+  const netProfit = omset - cogs - fees - iklan
+  return { storeId: `t${i}`, storeName, channel, omset, cogs, fees, retur, iklan,
            netProfit, margin: omset > 0 ? (netProfit / omset) * 100 : 0 }
 })
 
@@ -44,8 +51,18 @@ export const statsTiruan = {
   // produksi sungguhan per 29 Agu 2026 (0 dari 1.473), dan justru keadaan
   // itulah yang paling perlu terlihat di potret.
   pov: {
-    omset: { nilai: 1414149566, pesanan: 5231, dikeluarkan: { nilai: 936929, pesanan: 13 } },
-    beban: { nilai: 726366963, platform: 290044639, cogs: 436322324, iklan: 0 },
+    omset: {
+      nilai: 1414149566, pesanan: 5231, produk: 12_884,
+      dikeluarkan: { nilai: 936929, pesanan: 13 },
+    },
+    // Satu naik dan dua turun, supaya potretnya memperlihatkan kedua warna
+    // pembanding sekaligus — potret yang semuanya naik tidak pernah
+    // memperlihatkan bagaimana penurunan terbaca.
+    sebelumnya: {
+      omset: 1_415_282_110, pesanan: 5_755, produk: 11_957,
+      bedaOmset: -0.08, bedaPesanan: -9.09, bedaProduk: 7.75,
+    },
+    beban: { nilai: 726366963 + j('iklan'), platform: 290044639, cogs: 436322324, iklan: j('iklan') },
     laba: { nilai: 687782603, margin: 48.6 },
     tuntas: {
       nilai: 38295057, pesanan: 575,
@@ -69,10 +86,29 @@ export const statsTiruan = {
   posisi: {
     belumDikirim: { nilai: 41250000, pesanan: 312, dasar: 'kotor' },
     diJalan: { nilai: 268400000, pesanan: 2140, dasar: 'kotor' },
-    menungguCair: { nilai: 726829096, pesanan: 12657, dasar: 'kotor' },
-    sudahCair: { nilai: 1027335403, pesanan: 17415, dasar: 'neto' },
+    berisikoBatal: { nilai: 2_394_414, pesanan: 38, dasar: 'kotor' },
+    // Hanya periode terpilih, bukan seumur hidup toko.
+    selesai: { nilai: 214_806_118, pesanan: 3_412, dasar: 'kotor' },
+    selesaiIkutTanggal: true,
+    // Nomor pesanan tiap tahap. Dua baris cukup untuk potret — yang perlu
+    // terlihat bentuk tabelnya, bukan panjangnya.
+    daftar: [
+      { id: 'P1', kartu: 'belumDikirim', pesanan: '250914AAA111', channel: 'shopee', toko: 'Bithinks Official Shop Jakarta', nominal: 132_000, status: 'READY_TO_SHIP' },
+      { id: 'P2', kartu: 'diJalan', pesanan: '576461234567890001', channel: 'tiktok', toko: 'Bithinks Store Indonesia', nominal: 98_000, status: 'IN_TRANSIT' },
+      { id: 'P3', kartu: 'berisikoBatal', pesanan: '250913BBB222', channel: 'shopee', toko: 'Bithinks Grosir Bandung', nominal: 77_000, status: 'IN_CANCEL' },
+      { id: 'P4', kartu: 'selesai', pesanan: '576461234567890002', channel: 'tiktok', toko: 'Bithinks Beauty Official', nominal: 410_000, status: 'COMPLETED' },
+    ],
     belumDibayar: { nilai: 190115, pesanan: 5, dasar: 'kotor' },
     ikutSaringanTanggal: false,
+    // Sel rincian: tahap × platform × toko. Dua toko per platform supaya
+    // pengelompokan benar-benar teruji — satu toko saja akan terlihat rapi
+    // apa pun bentuk kodenya.
+    perToko: [
+      { tahap: 'diJalan', channel: 'shopee', storeId: 't0', toko: 'Bithinks Official Shop Jakarta', pesanan: 5, nilai: 903_000 },
+      { tahap: 'diJalan', channel: 'shopee', storeId: 't3', toko: 'Bithinks Grosir Bandung', pesanan: 1, nilai: 58_000 },
+      { tahap: 'diJalan', channel: 'tiktok', storeId: 't1', toko: 'Bithinks Store Indonesia', pesanan: 2, nilai: 512_000 },
+      { tahap: 'sampai', channel: 'tiktok', storeId: 't2', toko: 'Bithinks Beauty Official', pesanan: 10, nilai: 2_105_900 },
+    ],
   },
   // Cakupan beban sengaja TIDAK lengkap di pratinjau — justru keadaan itulah
   // yang perlu terlihat di potret. Angkanya meniru produksi 29 Agu 2026.
@@ -84,11 +120,84 @@ export const statsTiruan = {
   },
   biaya_api: j('fees'),
   cost_breakdown: [],
-  biaya_iklan: 0,
+  biaya_iklan: j('iklan'),
   cogs_total: j('cogs'),
-  total_biaya_beban: j('fees') + j('cogs'),
-  profit: omsetPerkiraan - j('fees') - j('cogs'),
-  profit_margin: (omsetPerkiraan - j('fees') - j('cogs')) / omsetPerkiraan * 100,
+  total_biaya_beban: j('fees') + j('cogs') + j('iklan'),
+  profit: omsetPerkiraan - j('fees') - j('cogs') - j('iklan'),
+  profit_margin: (omsetPerkiraan - j('fees') - j('cogs') - j('iklan')) / omsetPerkiraan * 100,
+  // ── RETUR ────────────────────────────────────────────────────────────────
+  // Jumlah pesanan diambil dari sensus produksi 11 Sep 2026 supaya bentuk
+  // nyatanya ikut terpotret: retur kecil, dan Shopee menumpuk di tahap awal.
+  //
+  // Satu baris SENGAJA tanpa resi dan tanpa titik perjalanan. Marketplace tidak
+  // selalu mengirim keduanya, dan potret yang semua barisnya lengkap tidak
+  // pernah memperlihatkan bagaimana baris yang tidak lengkap terbaca.
+  retur: {
+    total: { nilai: 14_295_039, pesanan: 141 },
+    periodeLalu: { nilai: 2_576_597, pesanan: 10 },
+    diJalan: { nilai: 11_713_442, pesanan: 130 },
+    sampai: { nilai: 2_105_900, pesanan: 10 },
+    ikutSaringanTanggal: true,
+    // Sel rincian: tahap × platform × toko. Dua toko per platform supaya
+    // pengelompokan benar-benar teruji — satu toko saja akan terlihat rapi
+    // apa pun bentuk kodenya.
+    perToko: [
+      { tahap: 'diJalan', channel: 'shopee', storeId: 't0', toko: 'Bithinks Official Shop Jakarta', pesanan: 5, nilai: 903_000 },
+      { tahap: 'diJalan', channel: 'shopee', storeId: 't3', toko: 'Bithinks Grosir Bandung', pesanan: 1, nilai: 58_000 },
+      { tahap: 'diJalan', channel: 'tiktok', storeId: 't1', toko: 'Bithinks Store Indonesia', pesanan: 2, nilai: 512_000 },
+      { tahap: 'sampai', channel: 'tiktok', storeId: 't2', toko: 'Bithinks Beauty Official', pesanan: 10, nilai: 2_105_900 },
+    ],
+    daftar: [
+      {
+        id: 'R1', kartu: 'diJalan', tahap: 'diJalan', pesanan: '250911ABCD1234',
+        channel: 'Shopee', toko: 'Bithinks Official Shop Jakarta',
+        item: '[PAKET RESELLER KCL] Business Package KCL - Pupuk Dewa Dewi, Pupuk Manohara Merah - 100% Original × 1 +1 item lain', nominal: 189_000,
+        alasan: 'Barang rusak saat diterima', alasanAsli: 'DAMAGED',
+        resi: 'SPXID048812345678', status: 'ACCEPTED', tanggal: '11 Sep 09:12',
+        diamHari: 2, uangSaja: false,
+        jejak: [
+          { waktu: '11 Sep 09:12', teks: 'Pembeli mengajukan retur' },
+          { waktu: '11 Sep 14:40', teks: 'Penjual menyetujui' },
+          { waktu: '12 Sep 08:05', teks: 'Paket diserahkan ke kurir' },
+        ],
+      },
+      {
+        id: 'R2', kartu: 'diJalan', tahap: 'diJalan', pesanan: '576461234567890123',
+        channel: 'TikTok', toko: 'Bithinks Store Indonesia',
+        item: 'Masker Wajah Charcoal × 1', nominal: 74_500,
+        alasan: 'Barang tidak sesuai deskripsi', alasanAsli: 'ITEM_NOT_AS_DESCRIBED',
+        resi: 'JX8827361192', status: 'BUYER_SHIPPED_ITEM', tanggal: '10 Sep 20:31',
+        diamHari: 3, uangSaja: false,
+        jejak: [
+          { waktu: '10 Sep 20:31', teks: 'Pembeli mengajukan retur' },
+          { waktu: '11 Sep 07:15', teks: 'Disetujui otomatis' },
+          { waktu: '11 Sep 16:48', teks: 'Pembeli mengirim barang' },
+        ],
+      },
+      {
+        id: 'R3', kartu: 'sampai', tahap: 'sampai', pesanan: '576461234567890999',
+        channel: 'TikTok', toko: 'Bithinks Beauty Official',
+        item: '[Paket Lebih murah 2Pcs] Pupuk Dewa Dewi 1 Liter -KCL- Original untuk Tanaman dalam masa Pembuahan Umbi dan Buah × 1', nominal: 410_000,
+        alasan: 'Pembeli berubah pikiran', alasanAsli: 'CHANGE_OF_MIND',
+        resi: 'JX8827361007', status: 'RETURN_OR_REFUND_REQUEST_COMPLETE', tanggal: '05 Sep 11:02',
+        diamHari: 5, uangSaja: false,
+        jejak: [
+          { waktu: '05 Sep 11:02', teks: 'Pembeli mengajukan retur' },
+          { waktu: '06 Sep 09:44', teks: 'Pembeli mengirim barang' },
+          { waktu: '09 Sep 13:20', teks: 'Barang sampai di gudang · stok naik' },
+        ],
+      },
+      {
+        id: 'R4', kartu: 'periodeLalu', tahap: 'diJalan', pesanan: '250910WXYZ9876',
+        channel: 'Shopee', toko: 'Bithinks Grosir Bandung',
+        item: 'Sabun Batang Kemasan 6 pcs × 1', nominal: 58_000,
+        alasan: 'Ukuran tidak sesuai', alasanAsli: 'WRONG_SIZE',
+        resi: null, status: 'ACCEPTED', tanggal: '10 Sep 14:02',
+        diamHari: 32, uangSaja: true,
+        jejak: [],
+      },
+    ],
+  },
   meta: { granularity: 'day', asOf: null, startDate: null, endDate: null },
 }
 
@@ -101,9 +210,10 @@ export const tokoTiruan = per_toko.map((t) => ({ id: t.storeId, name: t.storeNam
 // nama dan warnanya sendiri — bukan satu warna yang menampung apa saja.
 const pesanan = (n, tahap, extra = {}) => ({
   id: `p-${n}`, nomorPesanan: `2608${31}RK${n}Q9N3J`, penerima: `Penerima ${n}`,
-  qty: 1 + (n % 3), orderedAt: '2026-08-31T02:00:00.000Z', tahap,
+  qty: 1 + (n % 3), orderedAt: extra.orderedAt ?? '2026-08-31T02:00:00.000Z', tahap,
   statusMarketplace: extra.sm ?? 'READY_TO_SHIP', statusPaket: extra.sp ?? null,
   adaDiKelompokLain: Boolean(extra.skuLain), skuLain: extra.skuLain ?? [], packageCount: 1,
+  menungguLama: Boolean(extra.lama),
   gagalBerulang: extra.gagal ?? 0, kodeGagal: extra.kode ?? null,
 });
 
@@ -115,8 +225,8 @@ export const antreanTiruan = {
       jumlahPesanan: 6, siapCetak: 4, totalQty: 9,
       dimintaBatal: 0, perluAtur: 1, ditinjauShopee: 0, belumDiketahui: 1, perluDiperiksa: 0,
       pesanan: [
-        pesanan(1, 'siap_cetak', { sm: 'PROCESSED', sp: 'LOGISTICS_REQUEST_CREATED' }),
-        pesanan(2, 'siap_cetak', { sm: 'PROCESSED', sp: 'LOGISTICS_REQUEST_CREATED' }),
+        pesanan(1, 'siap_cetak', { sm: 'PROCESSED', sp: 'LOGISTICS_REQUEST_CREATED', lama: true }),
+        pesanan(2, 'siap_cetak', { sm: 'PROCESSED', sp: 'LOGISTICS_REQUEST_CREATED', lama: true }),
         pesanan(3, 'siap_cetak', { sm: 'PROCESSED', sp: 'LOGISTICS_PICKUP_DONE' }),
         pesanan(4, 'siap_cetak', { sm: 'PROCESSED', sp: 'LOGISTICS_REQUEST_CREATED' }),
         pesanan(5, 'perlu_atur', { sm: 'READY_TO_SHIP', sp: 'LOGISTICS_READY', gagal: 5, kode: '21042105' }),
@@ -147,7 +257,7 @@ export const antreanTiruan = {
   pratinjauTerbuka: true,
   // Panel "kenapa tidak bisa dicetak" hanya muncul setelah cip diklik, jadi
   // pratinjau membukanya sendiri supaya ia ikut terpotret.
-  pratinjauTahap: 'bukan_untuk_dicetak',
+  pratinjauTahap: 'menunggu_lama',
   alasanTahap: {
     perlu_atur: 'Pengirimannya belum diatur, jadi resinya belum terbit.',
     ditinjau_shopee: 'Sedang ditinjau Tim Shopee. Pengirimannya belum bisa diatur — biasanya selesai dalam 24 jam.',

@@ -1,0 +1,189 @@
+/* Atlassian Design System colour tokens, light theme.
+ *
+ * Values are the current Atlassian palette, read from the published token
+ * artifact (@atlaskit/tokens, atlassian-light). They are written here as plain
+ * CSS custom properties instead of installing the runtime package, because
+ * this app renders its own markup with hand-written CSS. Pulling @atlaskit
+ * would mean rewriting every screen as Atlaskit components at once, which is a
+ * rewrite rather than a redesign.
+ *
+ * Names follow the Atlassian token names, so a reader can look each one up:
+ * --ds-text maps to color.text, --ds-surface-sunken to elevation.surface.sunken.
+ */
+
+:root {
+  /* Neutral ramp. The product surface is almost entirely built from these. */
+  --ds-n0: #FFFFFF;
+  --ds-n100: #F8F8F8;
+  --ds-n200: #F0F1F2;
+  --ds-n300: #DDDEE1;
+  --ds-n400: #B7B9BE;
+  --ds-n500: #8C8F97;
+  --ds-n600: #7D818A;
+  --ds-n700: #6B6E76;
+  --ds-n800: #505258;
+  --ds-n900: #3B3D42;
+  --ds-n1000: #292A2E;
+
+  /* Blue: the product accent */
+  --ds-b50: #E9F2FE;
+  --ds-b100: #CFE1FD;
+  --ds-b200: #ADCBFB;
+  --ds-b300: #8FB8F6;
+  --ds-b400: #669DF1;
+  --ds-b500: #1868DB;
+  --ds-b700: #1558BC;
+  --ds-b800: #123263;
+
+  /* Lime carries success in the current palette; green stays for charts. */
+  --ds-g50: #EFFFD6;
+  --ds-g100: #D3F1A7;
+  --ds-g300: #94C748;
+  --ds-g500: #5B7F24;
+  --ds-g700: #4C6B1F;
+  --ds-green-50: #DCFFF1;
+  --ds-green-100: #BAF3DB;
+  --ds-green-300: #4BCE97;
+  --ds-green-500: #1F845A;
+  --ds-green-700: #216E4E;
+
+  --ds-r50: #FFECEB;
+  --ds-r100: #FFD5D2;
+  --ds-r300: #FD9891;
+  --ds-r500: #C9372C;
+  --ds-r700: #AE2E24;
+
+  --ds-y50: #FFF5DB;
+  --ds-y100: #FCE4A6;
+  --ds-y300: #FBC828;
+  --ds-y500: #B38600;
+  --ds-y700: #7F5F01;
+
+  --ds-o50: #FFF5DB;
+  --ds-o100: #FCE4A6;
+  --ds-o300: #FCA700;
+  --ds-o500: #BD5B00;
+  --ds-o700: #9E4C00;
+
+  --ds-p50: #F8EEFE;
+  --ds-p100: #EED7FC;
+  --ds-p300: #D8A0F7;
+  --ds-p500: #964AC0;
+  --ds-p700: #803FA5;
+
+  --ds-t50: #E7F9FF;
+  --ds-t100: #C6EDFB;
+  --ds-t300: #6CC3E0;
+  --ds-t500: #227D9B;
+  --ds-t700: #206A83;
+
+  --ds-m50: #FFECF8;
+  --ds-m100: #FDD0EC;
+  --ds-m500: #AE4787;
+  --ds-m700: #943D73;
+
+  /* Surfaces */
+  --ds-surface: #FFFFFF;
+  --ds-surface-hovered: #F0F1F2;
+  --ds-surface-pressed: #DDDEE1;
+  --ds-surface-sunken: #F8F8F8;
+  --ds-surface-raised: #FFFFFF;
+  --ds-surface-overlay: #FFFFFF;
+
+  /* Text */
+  --ds-text: #292A2E;
+  --ds-text-subtle: #505258;
+  --ds-text-subtlest: #6B6E76;
+  --ds-text-disabled: #080F214A;
+  --ds-text-inverse: #FFFFFF;
+  --ds-text-brand: #1868DB;
+  --ds-text-selected: #1868DB;
+  --ds-text-danger: #AE2E24;
+  --ds-text-warning: #9E4C00;
+  --ds-text-success: #4C6B1F;
+  --ds-text-information: #1558BC;
+  --ds-text-discovery: #803FA5;
+  --ds-link: #1868DB;
+  --ds-link-pressed: #1558BC;
+
+  /* Icons follow text, with their own names so intent stays readable */
+  --ds-icon: #292A2E;
+  --ds-icon-subtle: #505258;
+  --ds-icon-subtlest: #6B6E76;
+  --ds-icon-inverse: #FFFFFF;
+  --ds-icon-brand: #1868DB;
+  --ds-icon-danger: #C9372C;
+  --ds-icon-warning: #E06C00;
+  --ds-icon-success: #6A9A23;
+  --ds-icon-discovery: #AF59E1;
+
+  /* Borders */
+  --ds-border: #0B120E24;
+  --ds-border-subtle: #DDDEE1;
+  --ds-border-bold: #7D818A;
+  --ds-border-input: #8C8F97;
+  --ds-border-focused: #4688EC;
+  --ds-border-selected: #1868DB;
+  --ds-border-brand: #1868DB;
+  --ds-border-danger: #E2483D;
+  --ds-border-warning: #E06C00;
+  --ds-border-success: #6A9A23;
+  --ds-border-disabled: #0515240F;
+
+  /* Backgrounds: neutral */
+  --ds-background-neutral: #0515240F;
+  --ds-background-neutral-hovered: #0B120E24;
+  --ds-background-neutral-pressed: #080F214A;
+  --ds-background-neutral-subtle-hovered: #0515240F;
+  --ds-background-neutral-subtle-pressed: #0B120E24;
+  --ds-background-neutral-bold: #292A2E;
+  --ds-background-neutral-bold-hovered: #3B3D42;
+  --ds-background-disabled: #0515240F;
+  --ds-background-input: #FFFFFF;
+  --ds-background-input-hovered: #F8F8F8;
+
+  /* Backgrounds: selected and brand */
+  --ds-background-selected: #E9F2FE;
+  --ds-background-selected-hovered: #CFE1FD;
+  --ds-background-selected-bold: #1868DB;
+  --ds-background-brand-subtlest: #E9F2FE;
+  --ds-background-brand-bold: #1868DB;
+  --ds-background-brand-bold-hovered: #1558BC;
+  --ds-background-brand-bold-pressed: #144794;
+
+  /* Backgrounds: status */
+  --ds-background-danger: #FFECEB;
+  --ds-background-danger-hovered: #FFD5D2;
+  --ds-background-danger-bold: #C9372C;
+  --ds-background-danger-bold-hovered: #AE2E24;
+  --ds-background-warning: #FFF5DB;
+  --ds-background-warning-hovered: #FCE4A6;
+  --ds-background-warning-bold: #FBC828;
+  --ds-background-success: #EFFFD6;
+  --ds-background-success-hovered: #D3F1A7;
+  --ds-background-success-bold: #5B7F24;
+  --ds-background-information: #E9F2FE;
+  --ds-background-information-hovered: #CFE1FD;
+  --ds-background-discovery: #F8EEFE;
+  --ds-background-discovery-hovered: #EED7FC;
+
+  /* Blanket behind a modal */
+  --ds-blanket: #050C1F75;
+
+  /* Chart and data colours, used by the sales report */
+  --ds-chart-brand: #1868DB;
+  --ds-chart-success: #1F845A;
+  --ds-chart-danger: #C9372C;
+  --ds-chart-warning: #FCA700;
+  --ds-chart-discovery: #964AC0;
+  --ds-chart-teal: #227D9B;
+  --ds-chart-neutral: #8C8F97;
+
+  /* Elevation */
+  --ds-shadow-raised: 0 1px 1px #1E1F2140, 0 0 1px #1E1F214F;
+  --ds-shadow-overflow: 0 0 8px #1E1F2129, 0 0 1px #1E1F211F;
+  --ds-shadow-overlay: 0 8px 12px #1E1F2126, 0 0 1px #1E1F214F;
+
+  /* Focus ring, applied by base.css to every interactive element */
+  --ds-focus-ring: 0 0 0 2px var(--ds-border-focused);
+}

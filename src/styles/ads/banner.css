@@ -1,0 +1,30 @@
+/* Section message: the Atlassian in-page banner. It explains a state and,
+ * when the reader can do something about it, carries exactly one action.
+ */
+
+.ds-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ds-space-150);
+  padding: var(--ds-space-150) var(--ds-space-200);
+  border-radius: var(--ds-radius-200);
+  background: var(--ds-background-information);
+  color: var(--ds-text);
+  font-size: var(--ds-font-size-body);
+  line-height: var(--ds-line-height-body);
+}
+
+.ds-banner svg { flex-shrink: 0; margin-top: 2px; }
+.ds-banner-title { font-weight: var(--ds-font-weight-semibold); }
+.ds-banner-body { color: var(--ds-text-subtle); }
+.ds-banner-actions { margin-left: auto; display: flex; gap: var(--ds-space-100); }
+
+.ds-banner-warning { background: var(--ds-background-warning); }
+.ds-banner-danger { background: var(--ds-background-danger); }
+.ds-banner-success { background: var(--ds-background-success); }
+.ds-banner-discovery { background: var(--ds-background-discovery); }
+
+.ds-banner-information svg { color: var(--ds-icon-brand); }
+.ds-banner-warning svg { color: var(--ds-icon-warning); }
+.ds-banner-danger svg { color: var(--ds-icon-danger); }
+.ds-banner-success svg { color: var(--ds-icon-success); }

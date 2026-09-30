@@ -16,7 +16,7 @@ export default function HrmModule({ locked = false, onRequirePayment }) {
       {/* Sub-menu tabs */}
       <div style={{
         display: "flex", gap: 4, marginBottom: 24,
-        background: "#F7F7F8", borderRadius: 10,
+        background: "#F8F8F8", borderRadius: 10,
         padding: 4, width: "fit-content",
       }}>
         {SUB_MENUS.map(({ id, label, icon: Icon }) => (
@@ -30,7 +30,7 @@ export default function HrmModule({ locked = false, onRequirePayment }) {
               fontSize: 13, fontWeight: 600, cursor: "pointer",
               transition: "all 0.12s",
               background: active === id ? "#fff" : "transparent",
-              color: active === id ? "#111" : "#aaa",
+              color: active === id ? "#292A2E" : "#8C8F97",
               boxShadow: active === id ? "0 1px 4px rgba(0,0,0,0.08)" : "none",
             }}
           >

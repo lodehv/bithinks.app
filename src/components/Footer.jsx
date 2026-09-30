@@ -1,81 +1,148 @@
 import React from 'react';
 import './Footer.css';
-import { useAppContext } from '../context/AppContext';
+import logoPengayoman from '../assets/logo_pilihan_fitur/logo_pengayoman_new.png';
+import { navigateTo } from '../utils/navigation';
 
 const Footer = () => {
-  const { t } = useAppContext();
   return (
-    <footer className="footer" id="about">
+    <footer className="footer-white" id="about">
       <div className="container">
-        <div className="footer-top">
-          <div className="footer-brand">
-            <div className="brand-logo-container" style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', lineHeight: 1, marginBottom: '16px' }}>
-              <img src="/bithinks.png" alt="Bithinks Logo" style={{ height: '42px', width: 'auto' }} />
-              <span style={{ fontFamily: 'Montserrat, sans-serif', fontSize: '13px', fontWeight: 800, color: '#FFFFFF', letterSpacing: '0.5px', marginTop: '4px', textTransform: 'lowercase' }}>bithinks</span>
+        
+        {/* Top Header Logo */}
+        <div className="footer-brand-header">
+          <div className="footer-brand-logo">
+            <img src="/bithinks.png" alt="Bithinks Logo" className="footer-logo-img" />
+            <span className="footer-brand-name">bithinks</span>
+          </div>
+        </div>
+
+        {/* Main Grid Columns Layout */}
+        <div className="footer-main-grid">
+          
+          {/* Column 1: Company Info & Customer Complaint Service */}
+          <div className="footer-col-company">
+            <h3 className="footer-company-name">PT. Bithinks Digital Teknologi</h3>
+            
+            <div className="footer-office-block">
+              <p className="office-city">Solo</p>
+              <p className="office-address">
+                JL Pleret, Desa/Kelurahan Malangjiwan, Kec. Colomadu, Kab. Karanganyar, Provinsi Jawa Tengah, 57177
+              </p>
             </div>
-            <p>{t.footer.desc}</p>
-            <div style={{ marginTop: '24px', display: 'flex', gap: '16px' }}>
-              <a href="https://www.instagram.com/bithinks/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-text-light)', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = 'var(--color-primary)'} onMouseOut={(e) => e.currentTarget.style.color = 'var(--color-text-light)'}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+
+            <div className="footer-info-section">
+              <h4 className="info-section-header">Layanan Pengaduan Konsumen BITHINKS</h4>
+              <p className="info-section-text">Email : bithinksdigital@gmail.com</p>
+            </div>
+
+            {/* Social Media Icons */}
+            <div className="footer-social-links">
+              <a href="https://www.instagram.com/bithinks.id/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                   <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                   <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
                 </svg>
               </a>
+              <a href="https://www.linkedin.com/company/bithinks/posts/?feedView=all" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                  <rect x="2" y="9" width="4" height="12"></rect>
+                  <circle cx="4" cy="4" r="2"></circle>
+                </svg>
+              </a>
             </div>
           </div>
-          
-          <div className="footer-links-grid">
-            <div className="footer-col">
-              <h4>{t.footer.col1}</h4>
-              <ul>
-                <li><a href="#">{t.footer.prod1}</a></li>
-                <li><a href="#">{t.footer.prod2}</a></li>
-                <li><a href="#">{t.footer.prod3}</a></li>
-                <li><a href="#">{t.footer.prod4}</a></li>
-                <li><a href="#">{t.footer.prod5}</a></li>
-              </ul>
-            </div>
-            <div className="footer-col">
-              <h4>{t.footer.col2}</h4>
-              <ul>
-                <li><a href="#">{t.footer.sol1}</a></li>
-                <li><a href="#">{t.footer.sol2}</a></li>
-                <li><a href="#">{t.footer.sol3}</a></li>
-                <li><a href="#">{t.footer.sol4}</a></li>
-                <li><a href="#">{t.footer.sol5}</a></li>
-                <li><a href="#">{t.footer.sol6}</a></li>
-                <li><a href="#">{t.footer.sol7}</a></li>
-                <li><a href="#">{t.footer.sol8}</a></li>
-                <li><a href="#">{t.footer.sol9}</a></li>
-              </ul>
-            </div>
-            <div className="footer-col">
-              <h4>{t.footer.col3}</h4>
-              <ul>
-                <li><a href="#">{t.footer.c2l1}</a></li>
-                <li><a href="#">{t.footer.c2l2}</a></li>
-                <li><a href="#">{t.footer.c2l3}</a></li>
-                <li><a href="#">{t.footer.c2l4}</a></li>
-              </ul>
-            </div>
-            <div className="footer-col">
-              <h4>{t.footer.col4}</h4>
-              <ul>
-                <li><a href="#">{t.footer.c3l1}</a></li>
-                <li><a href="#">{t.footer.c3l2}</a></li>
-                <li><a href="#">{t.footer.c3l3}</a></li>
-              </ul>
+
+          {/* Column 2: Kebijakan Kami & Kemenkumham Badge */}
+          <div className="footer-col-nav">
+            <h4>Kebijakan Kami</h4>
+            <ul className="footer-link-list">
+              <li>
+                <a 
+                  href="/terms" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigateTo('/terms');
+                  }}
+                >
+                  Syarat &amp; Ketentuan
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="/privacy" 
+                  onClick={(e) => { 
+                    e.preventDefault(); 
+                    navigateTo('/privacy'); 
+                  }}
+                >
+                  Privasi &amp; Keamanan Data
+                </a>
+              </li>
+            </ul>
+
+            {/* Kemenkumham Verified Badge */}
+            <div className="kemenkumham-logo-slot">
+              <div className="kemenkumham-badge-box">
+                <div className="kemenkumham-logo-wrapper">
+                  <img src={logoPengayoman} alt="Logo Pengayoman Kemenkumham RI" className="kemenkumham-img" />
+                </div>
+                <div className="kemenkumham-badge-text">
+                  <span className="gov-tag">TERDAFTAR &amp; TERVERIFIKASI</span>
+                  <strong className="gov-name">KEMENKUMHAM RI</strong>
+                  <span className="gov-sub">Kementerian Hukum dan Hak Asasi Manusia</span>
+                </div>
+              </div>
             </div>
           </div>
+
+          {/* Column 3: Perusahaan */}
+          <div className="footer-col-nav">
+            <h4>Perusahaan</h4>
+            <ul className="footer-link-list">
+              <li>
+                <a 
+                  href="/bitomni" 
+                  onClick={(e) => { 
+                    e.preventDefault(); 
+                    navigateTo('/bitomni'); 
+                  }}
+                  style={{ fontWeight: 700, color: '#4F46E5' }}
+                >
+                  ← Beranda BitOmni
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="/about" 
+                  onClick={(e) => { 
+                    e.preventDefault(); 
+                    navigateTo('/about'); 
+                  }}
+                >
+                  Tentang Bithinks
+                </a>
+              </li>
+              <li><a href="https://wa.me/6285156297948" target="_blank" rel="noopener noreferrer">Hubungi Kami</a></li>
+            </ul>
+          </div>
+
+          {/* Column 4: Resources */}
+          <div className="footer-col-nav">
+            <h4>Resources</h4>
+            <ul className="footer-link-list">
+              <li><a href="https://wa.me/6285156297948" target="_blank" rel="noopener noreferrer">Bantuan</a></li>
+            </ul>
+          </div>
+
         </div>
-        
-        <div className="footer-bottom">
-          <p>{t.footer.copyright}</p>
-          <div className="footer-socials">
-            <span>{t.footer.madeWith}</span>
-          </div>
+
+        {/* Footer Bottom Bar */}
+        <div className="footer-bottom-bar">
+          <p>© 2026 PT. Bithinks Digital Teknologi. Hak Cipta Dilindungi Undang-Undang.</p>
         </div>
+
       </div>
     </footer>
   );

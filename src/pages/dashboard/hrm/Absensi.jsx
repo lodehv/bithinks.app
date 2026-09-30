@@ -6,6 +6,7 @@ import {
 import "./Absensi.css";
 import { useAppContext } from "../../../context/AppContext";
 import api from "../../../utils/api";
+import { formatTime, formatDateLong } from "../../../utils/datetime";
 
 // ─── Clock ────────────────────────────────────────────────────────────────────
 function LiveClock() {
@@ -15,8 +16,8 @@ function LiveClock() {
     return () => clearInterval(t);
   }, []);
 
-  const time = now.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
-  const date = now.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  const time = formatTime(now, { seconds: true });
+  const date = formatDateLong(now);
 
   return (
     <div className="absensi-clock-card">
@@ -142,7 +143,7 @@ function SelfieCapture({ onCapture, onClear, captured }) {
           <div className="selfie-placeholder">
             <Camera size={36} strokeWidth={1.5} />
             <p>Klik "Buka Kamera" untuk mulai</p>
-            {error && <p style={{ color: "#DC2626" }}>{error}</p>}
+            {error && <p style={{ color: "#C9372C" }}>{error}</p>}
           </div>
         )}
 
@@ -170,7 +171,7 @@ function SelfieCapture({ onCapture, onClear, captured }) {
             <button className="btn-selfie secondary" onClick={clear}>
               <RotateCcw size={14} strokeWidth={2} /> Ulangi
             </button>
-            <button className="btn-selfie primary" style={{ background: "#F0FDF4", color: "#16A34A" }} disabled>
+            <button className="btn-selfie primary" style={{ background: "#EFFFD6", color: "#5B7F24" }} disabled>
               <CheckCircle size={15} strokeWidth={2} /> Foto OK
             </button>
           </>
@@ -195,7 +196,7 @@ function GpsCard({ gps }) {
         <div className="gps-value">{gps.label || "–"}</div>
       </div>
       {gps.status !== "loading" && (
-        <button onClick={gps.refetch} style={{ background: "none", border: "none", cursor: "pointer", color: "#aaa", padding: 4 }} title="Refresh lokasi">
+        <button onClick={gps.refetch} style={{ background: "none", border: "none", cursor: "pointer", color: "#8C8F97", padding: 4 }} title="Refresh lokasi">
           <RefreshCw size={14} strokeWidth={2} />
         </button>
       )}
@@ -246,7 +247,7 @@ export default function Absensi({ locked = false, onRequirePayment }) {
         lat:   gps.lat,
         lng:   gps.lng,
       });
-      const time = new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
+      const time = formatTime(new Date());
       setResult({ type: actionType, time });
       setPhoto(null);
       await fetchTodayLog();
@@ -306,8 +307,8 @@ export default function Absensi({ locked = false, onRequirePayment }) {
                 : "Belum Absen"}
             </div>
             <div className="absensi-status-sub">
-              {hasCheckedIn && `Masuk: ${new Date(todayLog.checkIn).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}`}
-              {hasCheckedOut && ` · Keluar: ${new Date(todayLog.checkOut).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}`}
+              {hasCheckedIn && `Masuk: ${formatTime(todayLog.checkIn)}`}
+              {hasCheckedOut && ` · Keluar: ${formatTime(todayLog.checkOut)}`}
               {!hasCheckedIn && `Halo, ${user?.name?.split(" ")[0]}! Silakan absen masuk.`}
             </div>
           </div>
@@ -316,15 +317,15 @@ export default function Absensi({ locked = false, onRequirePayment }) {
 
       {/* Jika sudah checkout penuh */}
       {hasCheckedOut ? (
-        <div style={{ textAlign: "center", padding: "24px", background: "#fff", border: "1px solid #EBEBEB", borderRadius: 14, color: "#aaa", fontSize: 13 }}>
-          <CheckCircle size={28} strokeWidth={1.8} color="#16A34A" style={{ marginBottom: 10 }} />
-          <p style={{ margin: 0, fontWeight: 600, color: "#111" }}>Absensi hari ini selesai</p>
+        <div style={{ textAlign: "center", padding: "24px", background: "#fff", border: "1px solid #DDDEE1", borderRadius: 14, color: "#8C8F97", fontSize: 13 }}>
+          <CheckCircle size={28} strokeWidth={1.8} color="#5B7F24" style={{ marginBottom: 10 }} />
+          <p style={{ margin: 0, fontWeight: 600, color: "#292A2E" }}>Absensi hari ini selesai</p>
           <p style={{ marginTop: 4 }}>Sampai jumpa besok!</p>
         </div>
       ) : (
         <>
           {locked && (
-            <div style={{ padding: 14, marginBottom: 12, borderRadius: 10, background: "#FEF2F2", color: "#991B1B", fontSize: 13 }}>
+            <div style={{ padding: 14, marginBottom: 12, borderRadius: 10, background: "#FFECEB", color: "#AE2E24", fontSize: 13 }}>
               Mode hanya-baca aktif. Riwayat kehadiran tetap tersedia, tetapi check-in dan check-out berhenti sementara.
             </div>
           )}
@@ -356,7 +357,7 @@ export default function Absensi({ locked = false, onRequirePayment }) {
               </button>
 
               {!photo && (
-                <p style={{ textAlign: "center", fontSize: 12, color: "#bbb", marginTop: -8 }}>
+                <p style={{ textAlign: "center", fontSize: 12, color: "#B7B9BE", marginTop: -8 }}>
                   Ambil foto selfie terlebih dahulu untuk melanjutkan
                 </p>
               )}

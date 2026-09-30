@@ -1,0 +1,20 @@
+/* Atlassian Design System layer for the BitOmni product surface.
+ *
+ * Import order matters: tokens first, then the base layer that consumes them,
+ * then the components. Screen CSS imports this file and uses the tokens rather
+ * than raw colour and pixel values.
+ */
+
+@import "@fontsource-variable/inter";
+@import "./tokens-color.css";
+@import "./tokens-color-dark.css";
+@import "./tokens-shape.css";
+@import "./base.css";
+@import "./button.css";
+@import "./field.css";
+@import "./lozenge.css";
+@import "./card.css";
+@import "./table.css";
+@import "./dialog.css";
+@import "./banner.css";
+@import "./tabs.css";

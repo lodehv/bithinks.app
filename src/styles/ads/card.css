@@ -1,0 +1,140 @@
+/* Card and page furniture.
+ *
+ * A card is used when elevation says something real: this block is a unit the
+ * reader can act on. Grouping alone uses a divider or plain space instead.
+ */
+
+.ds-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-150);
+  padding: var(--ds-space-200);
+  border-radius: var(--ds-radius-200);
+  background: var(--ds-surface-raised);
+  box-shadow: var(--ds-shadow-raised);
+}
+
+.ds-card-flat {
+  box-shadow: none;
+  border: 1px solid var(--ds-border);
+}
+
+.ds-card-clickable {
+  cursor: pointer;
+  text-align: left;
+  border: none;
+  transition: box-shadow var(--ds-duration-small) var(--ds-ease-out),
+    background var(--ds-duration-small) var(--ds-ease-out);
+}
+
+.ds-card-clickable:hover {
+  background: var(--ds-surface-hovered);
+  box-shadow: var(--ds-shadow-overflow);
+}
+
+.ds-card-clickable:active { background: var(--ds-surface-pressed); }
+
+.ds-card-title {
+  font-size: var(--ds-font-size-body);
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-text);
+}
+
+.ds-card-subtitle {
+  font-size: var(--ds-font-size-body-small);
+  line-height: var(--ds-line-height-body-small);
+  color: var(--ds-text-subtlest);
+}
+
+/* Metric: one number, one label, read at a glance. The number is tabular so a
+ * row of metrics keeps its baseline. */
+.ds-metric-value {
+  font-size: var(--ds-font-size-large);
+  line-height: var(--ds-line-height-large);
+  font-weight: var(--ds-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--ds-letter-spacing-heading-large);
+  color: var(--ds-text);
+}
+
+.ds-metric-label {
+  font-size: var(--ds-font-size-body-small);
+  line-height: var(--ds-line-height-body-small);
+  color: var(--ds-text-subtlest);
+}
+
+/* Page header: title on the left, actions on the right, one rule beneath. */
+.ds-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ds-space-200);
+  padding-bottom: var(--ds-space-200);
+  margin-bottom: var(--ds-space-300);
+  border-bottom: 1px solid var(--ds-border);
+}
+
+.ds-page-title {
+  font-size: var(--ds-font-size-medium);
+  line-height: var(--ds-line-height-medium);
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-text);
+}
+
+.ds-page-description {
+  margin-top: var(--ds-space-050);
+  font-size: var(--ds-font-size-body-small);
+  color: var(--ds-text-subtlest);
+}
+
+.ds-divider {
+  height: 1px;
+  border: none;
+  background: var(--ds-border);
+}
+
+/* Empty state: says what is missing and how to fill it, never just "no data". */
+.ds-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ds-space-100);
+  padding: var(--ds-space-600) var(--ds-space-300);
+  text-align: center;
+  color: var(--ds-text-subtlest);
+}
+
+.ds-empty-title {
+  font-size: var(--ds-font-size-small);
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-text);
+}
+
+/* Skeleton: the shape of the content that is loading, not a spinner floating
+ * over an empty page. */
+.ds-skeleton {
+  border-radius: var(--ds-radius-100);
+  background: var(--ds-background-neutral);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ds-skeleton {
+    animation: ds-skeleton-pulse 1.2s ease-in-out infinite;
+  }
+}
+
+@keyframes ds-skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+.ds-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--ds-border);
+  border-top-color: var(--ds-background-brand-bold);
+  border-radius: var(--ds-radius-full);
+  animation: ds-spin 0.6s linear infinite;
+}
+
+@keyframes ds-spin { to { transform: rotate(360deg); } }

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Package, Pencil, Check, X, Plus, Minus, ClipboardCheck, PackagePlus } from "lucide-react";
 import FulfillBar from "./WmsFulfillBar";
 import { omniApi, isPaymentRequired } from "../../../../utils/omniApi";
+import { formatDate, WIB } from "../../../../utils/datetime";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Satu baris tabel Produk & Stok. Acuan: dokumen "Cara Kerja Sistem Stok Gudang".
@@ -25,9 +26,7 @@ const FIELDS = {
   cadangan: { label: "Cadangan", note: "Ambang peringatan menipis. Tidak mengurangi angka mana pun." },
 };
 
-const tglSingkat = (d) => (d ? new Date(d).toLocaleDateString("id-ID", {
-  day: "2-digit", month: "short", timeZone: "Asia/Jakarta",
-}) : "—");
+const tglSingkat = (d) => (d ? formatDate(d, { timeZone: WIB }) : "-");
 
 /**
  * Tiga cara mengubah Stok Fisik, mengikuti §06 dokumen sistem stok. Dipisah

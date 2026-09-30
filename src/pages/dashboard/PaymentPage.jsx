@@ -195,7 +195,7 @@ export default function PaymentPage({ onBack, onWalletChanged, onPaymentComplete
   return (
     <div className="pay">
       <button className="pay-back" type="button" onClick={onBack}><ArrowLeft size={18} /> Kembali</button>
-      <div className="pay-head"><h1>Isi saldo bit</h1><p>1 bit bernilai Rp250 dan dipakai otomatis untuk setiap pesanan yang selesai dan terkonfirmasi.</p></div>
+      <div className="pay-head"><h1>Isi saldo prabayar</h1><p>1 bit bernilai Rp250 dan dipakai otomatis untuk setiap pesanan yang selesai dan terkonfirmasi.</p></div>
       <div className="pay-grid">
         <section className="pay-card pay-balance" aria-live="polite"><span className="pay-kicker">Saldo tersedia</span><strong>{wallet ? bit(wallet.balance) : loading ? 'Memuat…' : 'Tidak tersedia'}</strong><span>Setara {wallet ? Math.max(0, Math.floor(Number(wallet.balance))).toLocaleString('id-ID') : '–'} pesanan berikutnya · 1 bit = Rp250</span></section>
         {loading ? <section className="pay-card pay-loading" aria-live="polite"><LoaderCircle size={22} /> Menyiapkan pembayaran…</section>

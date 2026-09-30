@@ -1,0 +1,346 @@
+/* Panel rincian retur. Bentuknya mengikuti referensi pemilik toko: saringan
+   beruas di atas, ringkasan satu baris, lalu tabelnya. */
+
+.panel-retur-latar {
+  position: fixed;
+  inset: 0;
+  background: rgba(9, 30, 66, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ds-space-300);
+  z-index: 1000;
+}
+
+.panel-retur {
+  background: #ffffff;
+  border-radius: var(--ds-radius-300);
+  width: min(1100px, 100%);
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+}
+
+.panel-retur-kepala {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ds-space-200);
+  padding: var(--ds-space-250) var(--ds-space-300) var(--ds-space-200);
+  border-bottom: 1px solid var(--ds-border-subtle);
+}
+.panel-retur-kepala h3 { margin: 0; font-size: var(--ds-font-size-small); font-weight: var(--ds-font-weight-semibold); color: var(--ds-text); }
+.panel-retur-kepala p { margin: var(--ds-space-050) 0 0; font-size: var(--ds-font-size-body-small); color: var(--ds-n500); }
+
+.panel-retur-tutup {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--ds-text-subtlest);
+  padding: var(--ds-space-050);
+  border-radius: var(--ds-radius-100);
+  line-height: 0;
+}
+.panel-retur-tutup:hover { background: var(--ds-n200); }
+
+.panel-retur-saringan {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--ds-space-100);
+  padding: var(--ds-space-150) var(--ds-space-300);
+  border-bottom: 1px solid var(--ds-n200);
+}
+
+.panel-retur-label {
+  font-size: 10px;
+  font-weight: var(--ds-font-weight-semibold);
+  letter-spacing: 0.06em;
+  color: var(--ds-n500);
+}
+
+/* Tombol beruas untuk pilihan yang saling meniadakan — satu platform pada satu
+   waktu. Digambar berbeda dari kotak centang toko, yang justru boleh banyak. */
+.panel-ruas { display: flex; gap: var(--ds-space-075); }
+.panel-ruas-tombol {
+  border: 1px solid var(--ds-border-subtle);
+  background: #ffffff;
+  border-radius: 999px;
+  padding: var(--ds-space-050) var(--ds-space-150);
+  font-size: var(--ds-font-size-body-small);
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-text-subtlest);
+  cursor: pointer;
+}
+.panel-ruas-tombol:hover { background: var(--ds-surface-sunken); }
+.panel-ruas-aktif {
+  border-color: var(--ds-background-brand-bold);
+  background: var(--ds-b50);
+  color: var(--ds-background-brand-bold-hovered);
+}
+
+.panel-toko { position: relative; }
+.panel-toko-tombol {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-100);
+  border: 1px solid var(--ds-border-subtle);
+  background: #ffffff;
+  border-radius: var(--ds-radius-200);
+  padding: var(--ds-space-075) var(--ds-space-150);
+  font-size: var(--ds-font-size-body-small);
+  color: var(--ds-text);
+  cursor: pointer;
+  min-width: 160px;
+  justify-content: space-between;
+}
+.panel-panah-buka { transform: rotate(180deg); }
+
+.panel-toko-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 5;
+  min-width: 260px;
+  max-height: 300px;
+  overflow-y: auto;
+  background: #ffffff;
+  border: 1px solid var(--ds-border-subtle);
+  border-radius: var(--ds-radius-200);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  padding: var(--ds-space-075);
+}
+
+.panel-toko-semua {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  padding: var(--ds-space-100) var(--ds-space-100);
+  font-size: var(--ds-font-size-body-small);
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-text);
+  cursor: pointer;
+  border-radius: var(--ds-radius-100);
+}
+.panel-toko-semua:hover { background: var(--ds-n200); }
+
+.panel-toko-baris {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-100);
+  padding: var(--ds-space-075) var(--ds-space-100);
+  border-radius: var(--ds-radius-100);
+  cursor: pointer;
+  font-size: var(--ds-font-size-body-small);
+}
+.panel-toko-baris:hover { background: var(--ds-surface-sunken); }
+.panel-toko-nama { flex: 1; color: var(--ds-text); }
+.panel-toko-channel {
+  font-size: 10px;
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-text-subtlest);
+  background: var(--ds-n200);
+  border-radius: 999px;
+  padding: 0 var(--ds-space-100);
+}
+
+.panel-retur-ringkas {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-150);
+  padding: var(--ds-space-150) var(--ds-space-300);
+  background: var(--ds-n0);
+  border-bottom: 1px solid var(--ds-n200);
+}
+.panel-ringkas-jumlah { font-size: var(--ds-font-size-body-small); color: var(--ds-text-subtlest); }
+.panel-ringkas-jumlah b { font-size: var(--ds-font-size-small); color: var(--ds-text); }
+.panel-ringkas-nilai {
+  margin-left: auto;
+  font-size: var(--ds-font-size-small);
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-text-danger);
+  font-variant-numeric: tabular-nums;
+}
+
+.panel-aksi {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-075);
+  border: 1px solid var(--ds-border-subtle);
+  background: #ffffff;
+  border-radius: var(--ds-radius-200);
+  padding: var(--ds-space-075) var(--ds-space-150);
+  font-size: var(--ds-font-size-body-small);
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-text-subtle);
+  cursor: pointer;
+}
+.panel-aksi:hover:not(:disabled) { background: var(--ds-surface-sunken); }
+.panel-aksi:disabled { opacity: 0.5; cursor: not-allowed; }
+/* Satu aksi utama saja per panel; sisanya netral. */
+.panel-aksi-utama {
+  background: var(--ds-background-brand-bold);
+  border-color: var(--ds-background-brand-bold);
+  color: #ffffff;
+}
+.panel-aksi-utama:hover:not(:disabled) { background: var(--ds-background-brand-bold-hovered); }
+
+.panel-retur-isi { overflow: auto; padding: 0 var(--ds-space-100) var(--ds-space-200); }
+
+.panel-tabel { width: 100%; border-collapse: collapse; font-size: var(--ds-font-size-body-small); }
+.panel-tabel th {
+  position: sticky;
+  top: 0;
+  background: #ffffff;
+  text-align: left;
+  font-size: 10px;
+  font-weight: var(--ds-font-weight-semibold);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ds-n500);
+  padding: var(--ds-space-150) var(--ds-space-150) var(--ds-space-100);
+  border-bottom: 1px solid var(--ds-border-subtle);
+}
+.panel-tabel td { padding: var(--ds-space-100) var(--ds-space-150); border-bottom: 1px solid var(--ds-n200); vertical-align: top; }
+
+.panel-kolom-no { width: 36px; color: var(--ds-n500); font-variant-numeric: tabular-nums; }
+
+.panel-baris { cursor: pointer; }
+.panel-baris:hover { background: var(--ds-surface-sunken); }
+.panel-baris-buka { background: var(--ds-surface-sunken); }
+
+.panel-no-pesanan { font-weight: var(--ds-font-weight-semibold); color: var(--ds-text); font-variant-numeric: tabular-nums; }
+.panel-sub { font-size: 10.5px; color: var(--ds-n500); margin-top: var(--ds-space-025); }
+
+.panel-toko-sel { color: var(--ds-text-subtle); }
+
+.panel-resi, .panel-status {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  color: var(--ds-text-subtlest);
+}
+.panel-status {
+  display: inline-block;
+  background: var(--ds-n200);
+  border-radius: var(--ds-radius-100);
+  padding: var(--ds-space-025) var(--ds-space-075);
+  color: var(--ds-text-subtle);
+}
+
+/* Alasan boleh panjang; dipotong dua baris supaya barisnya tidak menuruni
+   layar. Teks utuhnya tetap ada di `title` dan saat barisnya dibuka. */
+.panel-alasan {
+  color: var(--ds-text-subtle);
+  max-width: 240px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.panel-tanggal { color: var(--ds-text-subtle); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.panel-detail-baris td { background: var(--ds-surface-sunken); }
+.panel-detail { padding: var(--ds-space-050) 0 var(--ds-space-100); }
+
+.panel-fakta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--ds-space-100) var(--ds-space-250);
+  margin: 0 0 var(--ds-space-150);
+}
+.panel-fakta dt {
+  font-size: 10px;
+  font-weight: var(--ds-font-weight-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ds-n500);
+  margin-bottom: var(--ds-space-025);
+}
+.panel-fakta dd { margin: 0; font-size: var(--ds-font-size-body-small); color: var(--ds-text); }
+
+.panel-alasan-asli {
+  display: block;
+  font-size: 10.5px;
+  color: var(--ds-n500);
+  margin-top: var(--ds-space-025);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.panel-jejak { list-style: none; margin: 0; padding: 0; }
+.panel-jejak li {
+  display: flex;
+  gap: var(--ds-space-150);
+  padding: var(--ds-space-050) 0 var(--ds-space-050) var(--ds-space-150);
+  font-size: var(--ds-font-size-body-small);
+  color: var(--ds-text-subtlest);
+  border-left: 2px solid var(--ds-border-subtle);
+}
+.panel-jejak-kini { color: var(--ds-text); font-weight: var(--ds-font-weight-semibold); border-left-color: var(--ds-background-brand-bold); }
+.panel-jejak-waktu { min-width: 96px; color: var(--ds-n500); font-variant-numeric: tabular-nums; }
+
+.panel-kosong { padding: var(--ds-space-500) var(--ds-space-200); text-align: center; color: var(--ds-n500); font-size: var(--ds-font-size-body-small); }
+.panel-kosong-kecil { font-size: var(--ds-font-size-body-small); color: var(--ds-n500); }
+
+@media (max-width: 900px) {
+  .panel-retur-latar { padding: 0; }
+  .panel-retur { max-height: 100vh; border-radius: 0; }
+  .panel-ringkas-nilai { margin-left: 0; }
+}
+
+/* ── DIAM & UANG SAJA ───────────────────────────────────────────────────────
+   Dua penanda yang mengubah tabel dari catatan jadi daftar kerja.
+
+   "Diam" = hari sejak marketplace terakhir memperbarui returnya. Diam 2 hari
+   itu normal; diam 32 hari berarti barangnya hampir pasti tidak akan datang.
+   Yang lewat 30 hari ditebalkan — bukan diberi warna sendiri, karena satu
+   warna aksen per layar sudah dipakai nilai returnya. */
+.panel-kolom-diam {
+  width: 74px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.panel-diam {
+  font-variant-numeric: tabular-nums;
+  color: var(--ds-text-subtlest);
+}
+
+.panel-diam-lama {
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-text-danger);
+}
+
+/* Uang kembali, barang tidak. Ditulis kecil di bawah nama platform karena ia
+   sifat baris itu, bukan kolom tersendiri — satu kolom lagi akan menambah
+   lebar tabel demi penanda yang hanya berlaku pada sebagian baris. */
+.panel-uang-saja {
+  margin-left: var(--ds-space-075);
+  padding: 0 var(--ds-space-050);
+  border: 1px solid var(--ds-border-subtle);
+  border-radius: var(--ds-radius-100);
+  font-size: 9.5px;
+  font-weight: var(--ds-font-weight-semibold);
+  letter-spacing: 0.03em;
+  color: var(--ds-text-warning);
+  background: var(--ds-background-warning);
+  text-transform: uppercase;
+}
+
+/* Daftar yang dipotong server disebut, bukan disembunyikan. Yang dilarang
+   bukan memotong — melainkan memotong diam-diam, karena angka yang dijumlahkan
+   dari potongan akan selalu lebih kecil daripada kenyataannya. */
+.panel-terpotong {
+  margin-left: var(--ds-space-100);
+  padding: 0 var(--ds-space-075);
+  border-radius: var(--ds-radius-100);
+  background: var(--ds-background-warning);
+  border: 1px solid var(--ds-y100);
+  color: var(--ds-text-warning);
+  font-size: 10px;
+  font-weight: var(--ds-font-weight-semibold);
+}
