@@ -1,0 +1,255 @@
+/* Side navigation for the product shell. Split from DashboardLayout.css so
+ * each file stays short enough to read in one screen.
+ */
+
+/* ─── Side navigation ──────────────────────────────────────────────────────── */
+.sidebar {
+  width: 240px;
+  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--ds-surface);
+  border-right: 1px solid var(--ds-border);
+  color: var(--ds-text-subtle);
+  transition: width var(--ds-duration-medium) var(--ds-ease-out),
+    min-width var(--ds-duration-medium) var(--ds-ease-out);
+}
+
+.sidebar.collapsed {
+  width: 56px;
+  min-width: 56px;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-100);
+  height: 56px;
+  padding: 0 var(--ds-space-150);
+  border-bottom: 1px solid var(--ds-border);
+  flex-shrink: 0;
+}
+
+.sidebar-brand img {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--ds-radius-100);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.sidebar-brand-name {
+  font-size: var(--ds-font-size-small);
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-text);
+  letter-spacing: var(--ds-letter-spacing-heading);
+  white-space: nowrap;
+}
+
+.sidebar.collapsed .sidebar-brand-name { display: none; }
+
+/* ── Subscription strip ── */
+.sidebar-billing {
+  margin: var(--ds-space-150) var(--ds-space-150) 0;
+  padding: var(--ds-space-100) var(--ds-space-150);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-200);
+  background: var(--ds-surface-sunken);
+  flex-shrink: 0;
+}
+
+.sidebar-billing-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--ds-space-050);
+}
+
+.sidebar-billing-label {
+  font-size: var(--ds-font-size-body-small);
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-text-subtlest);
+}
+
+.sidebar-billing-badge {
+  padding: 0 var(--ds-space-075);
+  border-radius: var(--ds-radius-100);
+  background: var(--ds-background-brand-bold);
+  color: var(--ds-text-inverse);
+  font-size: 11px;
+  font-weight: var(--ds-font-weight-bold);
+  line-height: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.sidebar-billing-badge.active    { background: var(--ds-background-success-bold); }
+.sidebar-billing-badge.trial     { background: var(--ds-background-brand-bold); }
+.sidebar-billing-badge.suspended { background: var(--ds-background-danger-bold); }
+
+.sidebar-billing-name {
+  font-size: var(--ds-font-size-body);
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-billing-sub {
+  margin-top: var(--ds-space-025);
+  font-size: var(--ds-font-size-body-small);
+  color: var(--ds-text-subtlest);
+}
+
+.sidebar.collapsed .sidebar-billing { display: none; }
+
+/* ── Navigation items ── */
+.sidebar-nav {
+  flex: 1;
+  padding: var(--ds-space-150) var(--ds-space-100);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sidebar-nav::-webkit-scrollbar { width: 0; }
+
+.nav-section-label { display: none; }
+
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-150);
+  padding: var(--ds-space-075) var(--ds-space-100);
+  margin-bottom: var(--ds-space-025);
+  border-radius: var(--ds-radius-100);
+  color: var(--ds-text);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition: background var(--ds-duration-small) var(--ds-ease-out),
+    color var(--ds-duration-small) var(--ds-ease-out);
+}
+
+.nav-item:hover {
+  background: var(--ds-background-neutral-subtle-hovered);
+  color: var(--ds-text);
+}
+
+.nav-item.active {
+  background: var(--ds-background-selected);
+  color: var(--ds-text-selected);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.nav-item.locked {
+  color: var(--ds-text-disabled);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.nav-item-icon { flex-shrink: 0; width: 16px; height: 16px; }
+
+.nav-item-label {
+  flex: 1;
+  font-size: var(--ds-font-size-body);
+  font-weight: var(--ds-font-weight-medium);
+  line-height: var(--ds-line-height-body);
+}
+
+.sidebar.collapsed .nav-item-label { display: none; }
+.sidebar.collapsed .nav-item { justify-content: center; }
+
+.nav-lock-icon { color: var(--ds-icon-subtle); }
+.sidebar.collapsed .nav-lock-icon { display: none; }
+
+/* ── Bottom actions ── */
+.sidebar-bottom {
+  flex-shrink: 0;
+  border-top: 1px solid var(--ds-border);
+}
+
+.sidebar-collapse-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-100);
+  padding: var(--ds-space-150) var(--ds-space-200);
+  border-bottom: 1px solid var(--ds-border);
+  color: var(--ds-text-subtlest);
+  font-size: var(--ds-font-size-body-small);
+  cursor: pointer;
+  transition: background var(--ds-duration-small) var(--ds-ease-out),
+    color var(--ds-duration-small) var(--ds-ease-out);
+}
+
+.sidebar-collapse-btn:hover {
+  background: var(--ds-background-neutral-subtle-hovered);
+  color: var(--ds-text);
+}
+
+.sidebar.collapsed .sidebar-collapse-btn-label { display: none; }
+
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-100);
+  padding: var(--ds-space-150) var(--ds-space-200);
+  overflow: hidden;
+}
+
+.sidebar-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: var(--ds-radius-full);
+  background: var(--ds-background-brand-bold);
+  color: var(--ds-text-inverse);
+  font-size: var(--ds-font-size-body-small);
+  font-weight: var(--ds-font-weight-bold);
+}
+
+.sidebar-user-info { flex: 1; overflow: hidden; }
+
+.sidebar-user-name {
+  font-size: var(--ds-font-size-body);
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-user-role {
+  font-size: var(--ds-font-size-body-small);
+  color: var(--ds-text-subtlest);
+  text-transform: capitalize;
+}
+
+.sidebar.collapsed .sidebar-user-info { display: none; }
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: var(--ds-space-050);
+  border: none;
+  border-radius: var(--ds-radius-100);
+  background: none;
+  color: var(--ds-icon-subtle);
+  cursor: pointer;
+  transition: background var(--ds-duration-small) var(--ds-ease-out),
+    color var(--ds-duration-small) var(--ds-ease-out);
+}
+
+.logout-btn:hover {
+  background: var(--ds-background-neutral-subtle-hovered);
+  color: var(--ds-text-danger);
+}
+
+.sidebar.collapsed .logout-btn { display: none; }

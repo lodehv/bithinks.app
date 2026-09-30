@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ScanLine, ClipboardList, UserRound, Cog, ChevronDown } from "lucide-react";
 import { TYPE_LABEL } from "./ledgerTypes";
+import { formatDateTime, WIB } from "../../../../utils/datetime";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Baris Buku Besar Stok — log aktivitas pergerakan barang.
@@ -115,10 +116,7 @@ function Row({ row: r, open, allocDelta, onToggle, onOpenSession }) {
     <>
       <tr className="wms-row-clickable" onClick={onToggle}>
         <td className="omni-cell-muted" style={{ whiteSpace: "nowrap" }}>
-          {new Date(r.occurredAt).toLocaleString("id-ID", {
-            day: "2-digit", month: "short", year: "numeric",
-            hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta",
-          })}
+          {formatDateTime(r.occurredAt, { year: "always", timeZone: WIB })}
         </td>
         <td>
           <div className="wms-prod-name">{r.productName}</div>

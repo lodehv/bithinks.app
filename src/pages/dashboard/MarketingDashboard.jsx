@@ -1,5 +1,7 @@
 import { useState, useEffect, Fragment } from "react";
 import { omniApi } from "../../utils/omniApi";
+import { teksRibuan, bacaRibuan } from "../../utils/angka";
+import PanelRetur from "./retur/PanelRetur";
 import { 
   Calendar, Filter, ChevronDown, Check, X, 
   HelpCircle, RefreshCw, BarChart3, DollarSign, 
@@ -30,7 +32,64 @@ import "./MarketingDashboard.css";
 // `px()` menaruh titik tunggal di tengah alih-alih membagi dengan nol
 // (trendData.length - 1). Diperiksa sebelum angka ini diubah.
 // ─────────────────────────────────────────────────────────────────────────────
-const HARI_BAWAAN = 1;
+// Dua tahap retur, ditulis sekali supaya judul dan keterangannya tidak bisa
+// berbeda antara kartu, daftar, dan pengelompokan di bawahnya.
+// RETUR di layar ini berarti: apa pun yang sudah KELUAR GUDANG lalu berbalik —
+// retur dari pembeli maupun pembatalan sesudah barang dikirim. Marketplace
+// memecahnya jadi dua nama, tapi nasib barangnya sama dan pemilik toko
+// menghitungnya sebagai satu hal.
+//
+// Pembatalan SEBELUM dikirim tidak pernah ikut: barangnya tidak berangkat, jadi
+// tidak ada yang harus kembali.
+// Hanya judul + keterangan panel yang dipakai kini; kartu ringkasnya dihapus
+// 26 September 2026 atas permintaan pemilik toko.
+const TAHAP_RETUR = [
+  {
+    kunci: 'diJalan',
+    judul: 'RETUR DI JALAN',
+    keterangan: 'Retur pembeli dan pembatalan sesudah dikirim — barangnya belum tercatat kembali',
+  },
+  {
+    kunci: 'sampai',
+    judul: 'RETUR SELESAI',
+    keterangan: 'Muara dari kartu pertama: barang sudah sampai di gudang, stok naik',
+  },
+  {
+    kunci: 'periodeLalu',
+    judul: 'BELUM SELESAI DARI PERIODE LALU',
+    keterangan: 'Retur dan pembatalan atas pesanan periode sebelumnya yang sampai kini belum kembali',
+  },
+];
+
+// EMPAT TAHAP PERJALANAN PESANAN — keputusan pemilik toko 14 September 2026.
+// Ditulis sekali di sini supaya urutan, nama, dan artinya tidak pernah berbeda
+// antara kartu dan panel rinciannya.
+// TIGA TAHAP TERBUKA — posisi hari ini, tanpa tanggal. Pesanan masuk lalu
+// keluar lagi, jadi angkanya bergerak naik-turun dan masuk akal tanpa periode.
+const TAHAP_POSISI = [
+  { kunci: 'belumDikirim', judul: 'BELUM DIKIRIM', catatan: 'masih di gudang, masih bisa batal' },
+  { kunci: 'diJalan', judul: 'UANG DI JALAN', catatan: 'sudah keluar gudang, belum sampai' },
+  { kunci: 'berisikoBatal', judul: 'BERISIKO BATAL', catatan: 'ada permintaan batal, belum final', utama: true },
+];
+
+// Tahap terminal, dipisah dari deret panah dan MENGIKUTI tanggal.
+//
+// Dua alasan, keduanya dari data. Tanpa batas tanggal ia cuma menumpuk
+// selamanya — terukur 14 September 2026: Rp 2.110.302.219 dari 28.510 pesanan,
+// angka yang tidak bisa dipakai memutuskan apa pun.
+//
+// Dan panah berarti "pesanan berpindah ke kotak sebelahnya". Begitu tiga kartu
+// kiri berisi semua bulan sementara kartu ini hanya bulan terpilih, panah itu
+// berbohong: pesanan yang di jalan sejak Agustus tidak akan pernah muncul di
+// kartu September.
+const TAHAP_SELESAI = {
+  kunci: 'selesai', judul: 'SELESAI KE TANGAN PEMBELI', catatan: 'sudah diterima pembeli',
+};
+
+// Keempatnya untuk mencari judul panel. Sejak tahap terminal dipisah dari deret,
+// mencarinya di TAHAP_POSISI saja membuat panelnya berjudul "Posisi" — terlihat
+// di layar 15 September 2026.
+const SEMUA_TAHAP_POSISI = [...TAHAP_POSISI, TAHAP_SELESAI];
 
 // Tanggal hari ini menurut WIB, bukan menurut jam mesin pemakainya.
 // Backend membatasi harinya di WIB (lib/waktu/wib.ts); kalau sisi ini memakai
@@ -40,9 +99,71 @@ function tanggalWib(mundurHari = 0) {
   return wib.toISOString().slice(0, 10);
 }
 
+/**
+ * Tanggal 1 bulan berjalan, WIB.
+ *
+ * RENTANG BAWAAN: 1 sampai hari ini, bukan hari ini saja.
+ *
+ * Bawaan lama satu hari, dan pada rentang itu separuh halaman selalu nol —
+ * bukan karena rusak, melainkan karena pertanyaannya tidak bisa dijawab dalam
+ * sehari. Diukur di produksi 15 September 2026:
+ *
+ *   rentang 15 Sep saja  → selesai ke tangan pembeli Rp 0, 0 pesanan
+ *   rentang 1–15 Sep     → Rp 256.261.747, 3.686 pesanan
+ *
+ * Pesanan yang dibuat hari ini mustahil sudah sampai ke pembeli — rata-rata 8–9
+ * hari — jadi kartu itu nol tiap kali halaman dibuka. Hal yang sama menimpa
+ * kedua kartu retur. Pemilik toko menabraknya tiga kali sebelum sebabnya
+ * ketahuan, dan tiap kali terbaca seperti data hilang.
+ *
+ * Bulan berjalan juga yang dia pakai saat bicara: "omset bulan ini sekian, dari
+ * situ yang diretur berapa".
+ */
+function awalBulanWib() {
+  return `${tanggalWib(0).slice(0, 7)}-01`;
+}
+
+/**
+ * Perubahan terhadap periode sebelumnya.
+ *
+ * Arahnya dibaca berbeda tergantung angkanya: omset naik itu kabar baik, beban
+ * naik tidak. `naikBaik` yang menentukan warnanya, bukan tanda angkanya.
+ *
+ * null berarti periode sebelumnya bernilai nol — kenaikan "dari nol" tidak
+ * punya persentase yang bermakna, jadi barisnya tidak ditulis sama sekali
+ * alih-alih menulis 100% yang menyesatkan.
+ */
+/** Persen dalam penulisan Indonesia: koma, dua angka di belakang. */
+function persen(nilai) {
+  return `${nilai.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
+}
+
+function Beda({ nilai, naikBaik = false }) {
+  if (nilai === null || nilai === undefined) return null;
+  const naik = nilai > 0;
+  const baik = naikBaik ? naik : !naik;
+  return (
+    <div className={`arus-beda${nilai === 0 ? '' : baik ? ' arus-beda-baik' : ' arus-beda-buruk'}`}>
+      {nilai === 0 ? '—' : `${naik ? '↑' : '↓'} ${persen(Math.abs(nilai))}`}
+      <span className="arus-beda-kata">vs periode sebelumnya</span>
+    </div>
+  );
+}
+
+/** Satu ubin angka. Label di atas, angka besar, lalu satu baris keterangan. */
+function Ubin({ label, nilai, catatan, beda, naikBaik, nada }) {
+  return (
+    <div className="arus-ubin">
+      <span className="arus-label">{label}</span>
+      <div className={`arus-nilai arus-nilai-ubin${nada ? ` arus-nada-${nada}` : ''}`}>{nilai}</div>
+      {catatan ? <div className="arus-catatan">{catatan}</div> : <Beda nilai={beda} naikBaik={naikBaik} />}
+    </div>
+  );
+}
+
 export default function MarketingDashboard() {
   // ─── Filter States ────────────────────────────────────────────────────────
-  const [startDate, setStartDate] = useState(() => tanggalWib(HARI_BAWAAN - 1));
+  const [startDate, setStartDate] = useState(() => awalBulanWib());
   const [endDate, setEndDate] = useState(() => tanggalWib(0));
   const [selectedPlatforms, setSelectedPlatforms] = useState([]);
   const [selectedStores, setSelectedStores] = useState([]);
@@ -68,7 +189,12 @@ export default function MarketingDashboard() {
   const marketingData = Array.isArray(stats?.per_toko) ? stats.per_toko : [];
   const [isSubmittingFilters, setIsSubmittingFilters] = useState(false);
   const [showFeeModal, setShowFeeModal] = useState(false);
-  const [adSpend, setAdSpend] = useState(0);
+  // Biaya iklan yang SEDANG DIKETIK, per toko. Terpisah dari angka tersimpan
+  // supaya sel yang sedang disunting tidak ditimpa saat laporan dimuat ulang.
+  // Kuncinya storeId; nilainya teks apa adanya, masih berpemisah ribuan.
+  const [iklanDraf, setIklanDraf] = useState({});
+  const [iklanSimpan, setIklanSimpan] = useState(null); // storeId yang sedang disimpan
+  const [iklanGagal, setIklanGagal] = useState(null);   // storeId yang gagal disimpan
   const [hoverIdx, setHoverIdx] = useState(null); // titik tren yang di-hover
 
   // List of standard platforms
@@ -109,15 +235,17 @@ export default function MarketingDashboard() {
     );
   };
 
-  // "Atur Ulang" mengembalikan ke keadaan bawaan — termasuk rentang hari ini.
+  // "Atur Ulang" mengembalikan ke keadaan bawaan — termasuk rentang bulan
+  // berjalan.
   // Dikosongkan sama sekali justru bukan "bersih", melainkan diam-diam menarik
   // seluruh riwayat: kebalikan dari yang diharapkan orang saat menekan tombol ini.
   const clearAllFilters = () => {
-    setStartDate(tanggalWib(HARI_BAWAAN - 1));
+    setStartDate(awalBulanWib());
     setEndDate(tanggalWib(0));
     setSelectedPlatforms([]);
     setSelectedStores([]);
-    setAdSpend(0);
+    setIklanDraf({});
+    setIklanGagal(null);
   };
 
   // ─── Ambil metrik dari backend ─────────────────────────────────────────────
@@ -130,7 +258,6 @@ export default function MarketingDashboard() {
         platforms: selectedPlatforms,
         stores: selectedStores,
         granularity: "day",
-        adSpend,
         ...overrides,
       })
       .then((data) => setStats(data))
@@ -138,8 +265,46 @@ export default function MarketingDashboard() {
       .finally(() => setIsSubmittingFilters(false));
   };
 
-  // Muat awal memakai rentang bawaan HARI INI (lihat HARI_BAWAAN di atas), bukan
-  // lagi seluruh riwayat.
+  // ─── Biaya iklan per toko ──────────────────────────────────────────────────
+  // Disimpan per toko per HARI. Butir yang lebih kasar tidak bisa dipotong
+  // mengikuti rentang mana pun tanpa membagi rata, dan membagi rata berarti
+  // mengarang angka yang bukan biaya iklan toko itu.
+  //
+  // Akibatnya kolomnya hanya bisa disunting saat rentangnya TEPAT SATU HARI.
+  // Pada rentang yang lebih panjang angkanya tetap ditampilkan sebagai jumlah,
+  // tapi tidak bisa diketik — menerima ketikan di sana berarti kita harus
+  // menebak hari mana yang dimaksud.
+  const rentangSatuHari = Boolean(startDate) && startDate === endDate;
+
+  const simpanIklan = (storeId, teks) => {
+    if (!rentangSatuHari) return;
+    setIklanSimpan(storeId);
+    setIklanGagal(null);
+    return omniApi
+      .saveAdSpend({ storeId, date: startDate, amount: bacaRibuan(teks) })
+      .then(() => {
+        // Draf dilepas supaya sel kembali membaca angka dari server. Selama
+        // draf masih ada, layar memperlihatkan yang diketik — bukan yang
+        // benar-benar tersimpan.
+        setIklanDraf((d) => {
+          const salin = { ...d };
+          delete salin[storeId];
+          return salin;
+        });
+        return fetchStats();
+      })
+      .catch((err) => {
+        console.error("Gagal menyimpan biaya iklan:", err);
+        // Draf SENGAJA dipertahankan. Menghapusnya akan membuat angka yang
+        // diketik lenyap tanpa pernah tersimpan, dan layar akan terlihat
+        // seperti tidak terjadi apa-apa.
+        setIklanGagal(storeId);
+      })
+      .finally(() => setIklanSimpan(null));
+  };
+
+  // Muat awal memakai rentang bawaan BULAN BERJALAN (lihat awalBulanWib di
+  // atas), bukan seluruh riwayat dan bukan pula hari ini saja.
   useEffect(() => {
     fetchStats();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -161,12 +326,8 @@ export default function MarketingDashboard() {
   // Angka status dihitung server-side: bucket order_date + as_of + GMV(diskon seller).
   // Partisi status → Kotor = pipeline+terkonfirmasi+berisiko+retur+dibatalkan (tidak dobel).
   const t = stats?.totals ?? {};
-  const totalOmsetKotor     = t.omsetKotor     ?? 0;
   const totalOmsetPerkiraan = t.omsetPerkiraan ?? 0; // pipeline + terkonfirmasi + berisiko
-  const totalPipeline       = t.pipeline       ?? 0;
-  const totalBerisiko       = t.berisiko       ?? 0;
   const totalRetur          = t.retur          ?? 0;
-  const totalDibatalkan     = t.dibatalkan     ?? 0;
 
   // ─── TIGA SUDUT PANDANG ────────────────────────────────────────────────────
   // Satu himpunan pesanan, tiga pertanyaan yang selama ini dijawab satu angka.
@@ -189,53 +350,91 @@ export default function MarketingDashboard() {
   // kontrol yang berbohong — pelajaran yang sama dengan kolom tanggal kosong.
   const posisi = stats?.posisi ?? null;
 
-  // ─── CAKUPAN BEBAN ─────────────────────────────────────────────────────────
-  // Omset diakui saat pesanan dibuat; beban platform baru datang setelah
-  // sinkron keuangan (Shopee escrow 02:30, TikTok settled ~H+3). Untuk pesanan
-  // hari ini: omset penuh, beban baru sebagian.
+  // ─── RETUR: DUA TAHAP, BUKAN SATU ANGKA ────────────────────────────────────
   //
-  // Terukur di produksi 29 Agu 2026 — beban terhadap omset per tanggal pesanan:
-  //   19–27 Agu  cakupan 100%  →  21–24%   ← tarif sebenarnya
-  //   hari ini   cakupan ~20%  →   4,9%
+  // Kartu lama berisi `retur + dibatalkan` dijumlahkan jadi satu. Sensus
+  // produksi 11 September 2026: 1.232 pembatalan berbanding 42 retur — jadi
+  // kartu bernama RETUR sebenarnya menampilkan pembatalan, dan retur yang
+  // sesungguhnya tenggelam di dalamnya.
   //
-  // Yang berbahaya bukan angka bebannya, melainkan LABA yang ikut salah:
-  // 64,5% padahal sekitar 44%. Angka itu dibaca sebagai uang yang boleh diambil.
-  const cakupanBeban = stats?.cakupan_beban ?? null;
-  const bebanBelumLengkap = cakupanBeban ? cakupanBeban.lengkap === false : false;
-  const persenBerbeban = cakupanBeban && cakupanBeban.pesananTotal > 0
-    ? Math.round((cakupanBeban.pesananBerbeban / cakupanBeban.pesananTotal) * 100)
-    : null;
+  // Sekarang dipecah mengikuti perjalanan barangnya:
+  //   di jalan → barang belum kembali (diajukan, disetujui, dikirim pembeli)
+  //   sampai   → barang di gudang, stok sudah naik
+  //
+  // Keputusan pemilik toko 11 September 2026: tahap "diajukan" dan "disetujui"
+  // ikut DI JALAN, dan pembatalan sebelum barang dikirim tidak dihitung sebagai
+  // retur sama sekali.
+  const returTahap = stats?.retur ?? null;
+  // Nama platform ditulis sekali di sini. Server mengirim kunci mentahnya
+  // (`shopee`), layar menampilkan nama resminya.
+  const NAMA_PLATFORM = { shopee: 'Shopee', tiktok: 'TikTok' };
+  // Daftar baris retur — dibaca panel "Lihat detail retur" di zona TOTAL OMSET.
+  const daftarRetur = Array.isArray(returTahap?.daftar) ? returTahap.daftar : [];
+  // Total retur periode ini, ditampilkan sebagai pengurang di zona TOTAL OMSET.
+  const returTotal = returTahap?.total ?? { nilai: 0, pesanan: 0 };
 
-  // Berapa lama lagi sampai lengkap. Dihitung dari sinkronisasi terakhir yang
-  // PALING TERTINGGAL, bukan tenggat karangan.
+  // ── PANEL RINCIAN ─────────────────────────────────────────────────────────
+  // Kedua tahap adalah TOMBOL: menekannya membuka panel berisi saringan
+  // platform & toko, ringkasan, lalu tabel pesanannya.
   //
-  // Versi pertama menulis "Shopee 02:30, TikTok ~3 hari setelah pesanan
-  // sampai" — seolah harus menunggu pencairan. Itu SALAH, dan pemilik toko
-  // yang menemukannya: beban sudah bisa dibaca sejak pesanan masuk. Diukur di
-  // produksi 29 Agu 2026, pesanan berumur >18 jam cakupannya 100% di SEMUA
-  // status, termasuk `dikemas` yang belum dikirim apalagi cair.
-  //
-  // Menyebut tenggat yang salah lebih buruk daripada tidak menyebut apa-apa:
-  // orang akan menunda keputusan tiga hari untuk sesuatu yang beres dalam enam
-  // jam.
-  const jamSejakSinkron = (() => {
-    const s = cakupanBeban?.sinkronTerakhir;
-    if (!s) return null;
-    const ms = Date.now() - Date.parse(s);
-    return Number.isFinite(ms) ? Math.max(0, Math.floor(ms / 3_600_000)) : null;
-  })();
+  // Versi sebelumnya menempelkan rinciannya langsung di bawah ringkasan, dan
+  // seluruh daftar tampil sekaligus — pada data sungguhan 22 baris dalam satu
+  // layar. Halaman laporan jadi terbaca bercecer justru oleh bagian yang paling
+  // jarang dibutuhkan. Sekarang: ringkasan di halaman, rincian saat diminta.
+  const [panelTahap, setPanelTahap] = useState(null);
+  // Panel yang sama dipakai zona Posisi Uang: pertanyaannya identik — "pesanan
+  // mana saja?" — jadi bentuk jawabannya tidak perlu dua macam.
+  const [panelPosisi, setPanelPosisi] = useState(null);
 
-  // "Breakdown status" hanya berarti untuk rentang PANJANG. Di rentang satu
-  // hari, Pipeline selalu sama persis dengan Omset Perkiraan (pesanan hari ini
-  // belum mungkin sampai), jadi ia cuma mengulang angka yang sudah ada di
-  // sebelahnya — dan angka yang sama muncul empat kali di satu layar.
-  const hariRentang = (() => {
-    if (!startDate || !endDate) return 999;
-    const a = Date.parse(startDate), b = Date.parse(endDate);
-    return Number.isFinite(a) && Number.isFinite(b) ? Math.round((b - a) / 86_400_000) + 1 : 999;
-  })();
-  const rentangPanjang = hariRentang >= 7;
+  const barisPanel = panelTahap
+    ? daftarRetur.filter((r) => r.kartu === panelTahap)
+    : [];
+
+  // Baris posisi diubah ke bentuk yang sama dengan baris retur. Marketplace
+  // tidak memberi alasan, resi balik, maupun linimasa untuk pesanan yang masih
+  // berjalan — kolomnya dibiarkan kosong, dan panel menuliskannya sebagai garis
+  // pendek, bukan sel kosong yang terbaca seperti kerusakan tampilan.
+  const barisPosisi = panelPosisi
+    ? (posisi?.daftar ?? [])
+      .filter((o) => o.kartu === panelPosisi)
+      .map((o) => ({
+        id: o.id,
+        pesanan: o.pesanan,
+        channel: NAMA_PLATFORM[o.channel] ?? o.channel,
+        toko: o.toko,
+        item: '',
+        nominal: o.nominal,
+        alasan: null,
+        alasanAsli: null,
+        status: o.status,
+        resi: null,
+        diamHari: null,
+        uangSaja: false,
+        jejak: [],
+      }))
+    : [];
+
+
+  // ─── CAKUPAN BEBAN — peringatannya dihapus 11 September 2026 ──────────────
+  // Layar pernah memuat spanduk "Laba di bawah ini masih terlalu besar" yang
+  // menyebut persentase cakupan dan jarak sinkronisasi terakhir. Keputusan
+  // pemilik toko: dihapus.
+  //
+  // Server MASIH mengirim `cakupan_beban`, dan angkanya masih benar. Yang
+  // hilang cuma tempat menampilkannya; kalau kelak perlu ditampilkan lagi,
+  // datanya sudah ada tanpa perlu menyentuh backend.
+
   const povOmset = pov?.omset?.nilai ?? 0;
+
+  /**
+   * Porsi sebuah beban terhadap omset periode yang sama.
+   *
+   * Ditulis dengan koma seperti seluruh angka lain di halaman ini. Titik dan
+   * koma bercampur dalam satu zona membuat pembacanya berhenti sejenak tiap
+   * kali — dan di zona berisi tujuh angka, berhenti tujuh kali.
+   */
+  const persenDariOmset = (nilai) =>
+    povOmset > 0 ? `${persen((nilai / povOmset) * 100)}` : '—';
 
   // Turunan untuk kartu TUNTAS dan PENERIMAAN ikut dibuang bersama kartunya.
   // Keputusan pemilik toko 29 Agu 2026: zona arus cukup memuat satu hitungan
@@ -258,7 +457,11 @@ export default function MarketingDashboard() {
   // Versi lama menghitungnya sendiri sebagai omset − COGS − beban, TANPA biaya
   // iklan — sementara server mengurangkan iklan juga. Dua rumus untuk angka
   // yang sama, dan yang tampil di layar adalah yang melupakan iklan.
-  const totalProfit = stats?.profit ?? (totalOmsetPerkiraan - totalCogs - totalFees - adSpend);
+  // Biaya iklan dijumlahkan dari BARIS PER TOKO, bukan dari satu kolom isian.
+  // Sumber yang sama dengan yang dipakai tiap barisnya, jadi total dan rincian
+  // tidak bisa berselisih.
+  const totalIklan = marketingData.reduce((a, b) => a + (b.iklan || 0), 0);
+  const totalProfit = stats?.profit ?? (totalOmsetPerkiraan - totalCogs - totalFees - totalIklan);
   const marginPercent = stats?.profit_margin
     ?? (totalOmsetPerkiraan > 0 ? (totalProfit / totalOmsetPerkiraan) * 100 : 0);
 
@@ -291,7 +494,7 @@ export default function MarketingDashboard() {
   const profitOffset = 0;
   const feesOffset = -profitDash;
   const returOffset = -(profitDash + feesDash);
-  const adSpendPct = pct(adSpend);
+  const adSpendPct = pct(totalIklan);
   const adSpendDash = (adSpendPct / 100) * circumference;
   const adSpendOffset = -(profitDash + feesDash + returDash);
   const cogsOffset = -(profitDash + feesDash + returDash + adSpendDash);
@@ -500,19 +703,16 @@ export default function MarketingDashboard() {
             )}
           </div>
 
-          {/* 4. Biaya Iklan Input */}
+          {/* 4. Biaya Iklan — sekarang diisi PER TOKO di tabel paling bawah.
+              Kolom isian tunggal yang dulu ada di sini mengirim angkanya lewat
+              URL: tidak tersimpan, hilang tiap muat ulang, dan satu angka untuk
+              semua toko sekaligus. Tidak ada yang bisa dijawabnya — "toko mana
+              yang iklannya memakan laba" justru pertanyaan utamanya. */}
           <div className="filter-item">
             <label className="filter-label">Biaya Iklan (Ad Spend)</label>
-            <div className="ad-spend-input-wrapper">
-              <span className="currency-symbol">Rp</span>
-              <input 
-                type="number" 
-                min="0"
-                value={adSpend || ""} 
-                onChange={(e) => setAdSpend(Math.max(0, parseInt(e.target.value) || 0))}
-                placeholder="0"
-                className="filter-ad-spend-input"
-              />
+            <div className="iklan-petunjuk">
+              <span className="iklan-petunjuk-nilai">{formatRupiah(totalIklan)}</span>
+              <span className="iklan-petunjuk-teks">Diisi per toko di tabel bawah</span>
             </div>
           </div>
         </div>
@@ -549,50 +749,78 @@ export default function MarketingDashboard() {
           <div className="summary-card-header">
             <h4>Posisi Uang — sekarang</h4>
             <span className="summary-card-subtitle">
-              Setiap pesanan tepat di <b>satu</b> tahap · saldo, bukan periode ·{' '}
-              <b>tidak mengikuti saringan tanggal</b> · mengikuti pilihan platform &amp; toko
+              Setiap pesanan tepat di <b>satu</b> tahap · tiga tahap kiri adalah{' '}
+              <b>posisi hari ini</b>, tanpa tanggal · yang kanan{' '}
+              <b>mengikuti periode terpilih</b> · keduanya mengikuti pilihan platform &amp; toko
             </span>
           </div>
 
+          {/* EMPAT TAHAP PERJALANAN PESANAN, keputusan pemilik toko 14 September
+              2026. Dua tahap terakhir dulu tentang kapan UANGNYA dilepas
+              marketplace ("menunggu / selesai rekonsiliasi"). Yang dia tanyakan
+              tiap hari berbeda: di mana PESANANNYA sekarang.
+
+              "Berisiko batal" sebelumnya dibuang dari zona ini sama sekali, dan
+              itu yang paling merugikan — justru pesanan itulah yang masih bisa
+              diselamatkan kalau dilihat hari ini.
+
+              Semuanya TOMBOL: menekannya memunculkan nomor pesanannya. */}
           <div className="tahap-uang">
-            <div className="tahap">
-              <span className="tahap-label">BELUM DIKIRIM</span>
-              <div className="block-value">{formatRupiah(posisi.belumDikirim?.nilai ?? 0)}</div>
-              <div className="tahap-note">
-                {posisi.belumDikirim?.pesanan ?? 0} pesanan · masih bisa batal
-                <span className="tanda-dasar">KOTOR</span>
-              </div>
-            </div>
-            <div className="tahap-panah">→</div>
-            <div className="tahap">
-              <span className="tahap-label">UANG DI JALAN</span>
-              <div className="block-value">{formatRupiah(posisi.diJalan?.nilai ?? 0)}</div>
-              <div className="tahap-note">
-                {posisi.diJalan?.pesanan ?? 0} pesanan · sudah keluar gudang
-                <span className="tanda-dasar">KOTOR</span>
-              </div>
-            </div>
-            <div className="tahap-panah">→</div>
-            <div className="tahap tahap-utama">
-              <span className="tahap-label">MENUNGGU REKONSILIASI</span>
-              <div className="block-value text-purple">{formatRupiah(posisi.menungguCair?.nilai ?? 0)}</div>
-              <div className="tahap-note">
-                {posisi.menungguCair?.pesanan ?? 0} pesanan · sudah sampai, uang belum dilepas
-                <span className="tanda-dasar">KOTOR</span>
-              </div>
-            </div>
-            <div className="tahap-panah">→</div>
-            {/* Tahap terakhir: rekonsiliasi selesai, uang sudah di dompet.
-                NETO — beban platform sudah dipotong sebelum masuk. */}
-            <div className="tahap tahap-selesai">
-              <span className="tahap-label">SELESAI REKONSILIASI</span>
-              <div className="block-value">{formatRupiah(posisi.sudahCair?.nilai ?? 0)}</div>
-              <div className="tahap-note">
-                {posisi.sudahCair?.pesanan ?? 0} pesanan · uang sudah di dompet
-                <span className="tanda-dasar tanda-neto">NETO</span>
-              </div>
-            </div>
+            {TAHAP_POSISI.map(({ kunci, judul, catatan, utama }, urut) => {
+              const isi = posisi[kunci] ?? { nilai: 0, pesanan: 0 };
+              const bisaDibuka = (isi.pesanan ?? 0) > 0;
+              return (
+                <Fragment key={kunci}>
+                  {urut > 0 && <div className="tahap-panah">→</div>}
+                  <button
+                    type="button"
+                    className={`tahap${utama ? ' tahap-utama' : ''}`}
+                    onClick={() => bisaDibuka && setPanelPosisi(kunci)}
+                    disabled={!bisaDibuka}
+                  >
+                    <span className="tahap-label">{judul}</span>
+                    <div className={`block-value${utama ? ' text-purple' : ''}`}>
+                      {formatRupiah(isi.nilai ?? 0)}
+                    </div>
+                    <div className="tahap-note">
+                      {isi.pesanan ?? 0} pesanan · {catatan}
+                      <span className="tanda-dasar">KOTOR</span>
+                    </div>
+                    {bisaDibuka && <div className="retur-ajakan">Lihat nomor pesanan</div>}
+                  </button>
+                </Fragment>
+              );
+            })}
           </div>
+
+          {/* TAHAP TERMINAL — dipisah, dan sengaja tanpa panah dari tahap di
+              kiri. Lihat alasannya di TAHAP_SELESAI. */}
+          {(() => {
+            const isi = posisi[TAHAP_SELESAI.kunci] ?? { nilai: 0, pesanan: 0 };
+            const bisaDibuka = (isi.pesanan ?? 0) > 0;
+            return (
+              <div className="posisi-terminal">
+                <div className="posisi-terminal-garis" />
+                <button
+                  type="button"
+                  className="tahap tahap-selesai"
+                  onClick={() => bisaDibuka && setPanelPosisi(TAHAP_SELESAI.kunci)}
+                  disabled={!bisaDibuka}
+                >
+                  <span className="tahap-label">
+                    {TAHAP_SELESAI.judul}
+                    <span className="tahap-periode">periode ini</span>
+                  </span>
+                  <div className="block-value">{formatRupiah(isi.nilai ?? 0)}</div>
+                  <div className="tahap-note">
+                    {isi.pesanan ?? 0} pesanan · {TAHAP_SELESAI.catatan}
+                    <span className="tanda-dasar">KOTOR</span>
+                  </div>
+                  {bisaDibuka && <div className="retur-ajakan">Lihat nomor pesanan</div>}
+                </button>
+              </div>
+            );
+          })()}
 
           {/* DI LUAR ketiga tahap, dan sengaja begitu: pembeli belum membayar,
               jadi ini belum uang sama sekali. Tidak dibuang diam-diam —
@@ -617,142 +845,119 @@ export default function MarketingDashboard() {
           <div className="summary-card-header">
             <h4>Arus per periode</h4>
             <span className="summary-card-subtitle">
-              Dibaca berurutan: <b>omset − beban = laba</b> · ketiganya bersandar pada
-              sumbu yang sama, tanggal pesanan dibuat
+              Seluruhnya bersandar pada sumbu yang sama, <b>tanggal pesanan dibuat</b> ·
+              pembandingnya jendela sama panjang tepat sebelum rentang ini
             </span>
           </div>
 
-          {/* Baris laba-rugi: dibaca berurutan, dengan tanda − dan = di antaranya
-              supaya pembaca tahu ketiganya SATU hitungan, bukan tiga angka lepas.
-              Ketiganya berdiri di sumbu yang sama (tanggal pesanan) — itulah
-              yang membuat pengurangan ini sah. */}
-          <div className="laba-rugi-baris">
-            <div className="summary-block block-highlighted">
-              <div className="block-meta-row">
-                <span className="block-category">OMSET</span>
-                <DollarSign size={13} className="text-purple" />
-              </div>
-              <div className="block-value text-purple">{formatRupiah(povOmset)}</div>
-              <div className="block-subtext">Penjualan periode ini</div>
-              <div className="pov-note">
-                Tanpa yang batal sebelum dikirim &amp; belum dibayar
-                {(pov.omset?.dikeluarkan?.pesanan ?? 0) > 0 && (
-                  <> — <b>{formatRupiah(pov.omset.dikeluarkan.nilai)}</b> dari{' '}
-                  {pov.omset.dikeluarkan.pesanan} pesanan dikeluarkan</>
-                )}
-                {' '}· <span className="tanda-dasar">KOTOR</span>
+          {/* KERANJANG ANGKA PERIODE — tata letak diminta pemilik toko
+              23 September 2026, mengikuti satu referensi yang dia berikan.
+
+              Kolom pertama berdiri sendiri karena ia satu-satunya angka yang
+              punya ASAL-USUL: omset kotor dikurangi retur. Enam ubin di
+              kanannya adalah angka tunggal, jadi mereka berbaris rata.
+
+              Warna memakai token semantik Atlassian, bukan palet referensinya:
+              hasil memakai `success`, beban memakai `danger`, sisanya netral.
+              Referensinya memberi warna berbeda pada HPP — di sini HPP tetap
+              beban, dan memberinya warna keempat cuma menambah kosakata tanpa
+              menambah arti. */}
+          <div className="arus-kisi">
+            <div className="arus-utama">
+              <span className="arus-label">TOTAL OMSET</span>
+              <div className="arus-nilai">{formatRupiah(povOmset)}</div>
+              <Beda nilai={pov.sebelumnya?.bedaOmset ?? null} naikBaik />
+
+              <div className="arus-asal">
+                <div className="arus-asal-baris">
+                  <span>Omset Kotor</span>
+                  <b>{formatRupiah(t.omsetKotor ?? 0)}</b>
+                </div>
+                <div className="arus-asal-baris arus-asal-kurang">
+                  <span>Retur</span>
+                  <b>− {formatRupiah(returTotal.nilai)}</b>
+                </div>
+                {/* Pintu ke rinciannya, bukan angka baru: retur sudah punya
+                    zonanya sendiri di bawah, dan mengulang isinya di sini
+                    berarti menulis angka yang sama dua kali. */}
+                <button
+                  type="button"
+                  className="arus-tautan"
+                  onClick={() => setPanelTahap('diJalan')}
+                  disabled={returTotal.pesanan === 0}
+                >
+                  Lihat detail retur →
+                </button>
               </div>
             </div>
 
-            <div className="laba-rugi-tanda">−</div>
-
-            <div className="summary-block">
-              <div className="block-meta-row">
-                <span className="block-category">BEBAN</span>
-                <Percent size={13} className="text-purple" />
-              </div>
-              <div className="block-value">{formatRupiah(pov.beban?.nilai ?? 0)}</div>
-              <div className="block-subtext">Platform + modal barang + iklan</div>
-              <div className="pov-note">
-                Platform {formatRupiah(pov.beban?.platform ?? 0)} · COGS{' '}
-                {formatRupiah(pov.beban?.cogs ?? 0)} · Iklan {formatRupiah(pov.beban?.iklan ?? 0)}
-              </div>
-            </div>
-
-            <div className="laba-rugi-tanda">=</div>
-
-            <div className="summary-block blok-laba">
-              <div className="block-meta-row">
-                <span className="block-category">LABA</span>
-                <TrendingUp size={13} className="text-purple" />
-              </div>
-              <div className="block-value">{formatRupiah(pov.laba?.nilai ?? 0)}</div>
-              <div className="block-subtext">Margin {pov.laba?.margin ?? 0}%</div>
-              <div className="pov-note">Omset dikurangi beban di sebelah kiri</div>
+            <div className="arus-ubin-kisi">
+              <Ubin
+                label="TOTAL PROFIT"
+                nilai={formatRupiah(pov.laba?.nilai ?? 0)}
+                nada="hasil"
+                catatan={`${persen(pov.laba?.margin ?? 0)} dari omset`}
+              />
+              <Ubin
+                label="TOTAL PESANAN"
+                nilai={(pov.omset?.pesanan ?? 0).toLocaleString('id-ID')}
+                beda={pov.sebelumnya?.bedaPesanan ?? null}
+                naikBaik
+              />
+              <Ubin
+                label="TOTAL PRODUK"
+                nilai={`${(pov.omset?.produk ?? 0).toLocaleString('id-ID')} pcs`}
+                beda={pov.sebelumnya?.bedaProduk ?? null}
+                naikBaik
+              />
+              <Ubin
+                label="TOTAL BIAYA IKLAN"
+                nilai={formatRupiah(pov.beban?.iklan ?? 0)}
+                nada="beban"
+                catatan={`${persenDariOmset(pov.beban?.iklan ?? 0)} dari omset`}
+              />
+              <Ubin
+                label="TOTAL BIAYA PLATFORM"
+                nilai={formatRupiah(pov.beban?.platform ?? 0)}
+                nada="beban"
+                catatan={`${persenDariOmset(pov.beban?.platform ?? 0)} dari omset`}
+              />
+              <Ubin
+                label="TOTAL HPP"
+                nilai={formatRupiah(pov.beban?.cogs ?? 0)}
+                nada="beban"
+                catatan={`${persenDariOmset(pov.beban?.cogs ?? 0)} dari omset`}
+              />
             </div>
           </div>
 
         </div>
       )}
 
-      {/* ─── Summary Cards Section (Omset Harian & Status Breakdown) ─── */}
-      <div className={`marketing-summary-wrapper${rentangPanjang ? "" : " satu-kartu"}`}>
-        
-        {/* Card 1: Ringkasan Omset Harian */}
+      {/* ─── Zona Beban Platform ─── */}
+      <div className="marketing-summary-wrapper satu-kartu">
+
+        {/* Bukan pengurang omset, jadi berdiri di zonanya sendiri. */}
         <div className="summary-card">
           <div className="summary-card-header">
-            <h4>Asal-usul angka OMSET</h4>
+            <h4>Beban Platform</h4>
             <span className="summary-card-subtitle">
-              Kotor − retur &amp; batal = <b>OMSET</b> di atas · sumbu: tanggal pesanan dibuat
+              Komisi &amp; potongan marketplace · bukan bagian dari hitungan omset di atas
             </span>
           </div>
-
-          <div className="summary-blocks-grid tiga-blok">
-            {/* Block 1: Omset Kotor */}
-            <div className="summary-block">
-              <div className="block-meta-row">
-                <span className="block-category">OMSET KOTOR</span>
-                <DollarSign size={13} className="text-purple" />
-              </div>
-              <div className="block-value">{formatRupiah(totalOmsetKotor)}</div>
-              <div className="block-subtext">Termasuk retur &amp; batal</div>
-            </div>
-
-            {/* Block 2: Retur */}
-            <div className="summary-block block-danger-accent">
-              <div className="block-meta-row">
-                <span className="block-category">RETUR</span>
-                <RefreshCw size={13} className="text-purple" />
-              </div>
-              <div className="block-value">- {formatRupiah(totalRetur + totalDibatalkan)}</div>
-              <div className="block-subtext">Pembatalan & retur pesanan</div>
-            </div>
-
-            {/* Block 4: Platform Fees */}
-            <div className="summary-block clickable-block" onClick={() => setShowFeeModal(true)}>
-              <div className="block-meta-row">
-                <span className="block-category">BEBAN PLATFORM</span>
-                <DollarSign size={13} className="text-purple" />
-              </div>
+          <div className="beban-baris clickable-block" onClick={() => setShowFeeModal(true)}>
+            <div>
               <div className="block-value hover-underline">{formatRupiah(totalFees)}</div>
-              <div className="block-subtext">Komisi platform <span className="kpi-action-purple">(rincian)</span></div>
+              <div className="block-subtext">
+                {totalOmsetPerkiraan > 0
+                  ? `${((totalFees / totalOmsetPerkiraan) * 100).toFixed(1)}% dari omset · `
+                  : ''}
+                <span className="kpi-action-purple">(rincian per platform)</span>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Card 2: Status Breakdown — HANYA untuk rentang panjang.
-            Di rentang pendek ia mengulang: Pipeline == Omset Perkiraan, dan
-            angka yang sama jadi muncul empat kali di satu layar. */}
-        {rentangPanjang && (
-        <div className="summary-card">
-          <div className="summary-card-header">
-            <h4>Breakdown status</h4>
-            <span className="summary-card-subtitle">Sumbu: tanggal pesanan dibuat · pecahan dari Omset Perkiraan</span>
-          </div>
-
-          <div className="summary-blocks-grid">
-            {/* Block 3: Pipeline */}
-            <div className="summary-block">
-              <div className="block-meta-row">
-                <span className="block-category">PIPELINE</span>
-                <TrendingUp size={13} className="text-purple" />
-              </div>
-              <div className="block-value">{formatRupiah(totalPipeline)}</div>
-              <div className="block-subtext">Masih di jalan — baru, dikemas, dikirim</div>
-            </div>
-
-            {/* Block 4: Berisiko */}
-            <div className="summary-block">
-              <div className="block-meta-row">
-                <span className="block-category">BERISIKO</span>
-                <HelpCircle size={13} className="text-purple" />
-              </div>
-              <div className="block-value">{formatRupiah(totalBerisiko)}</div>
-              <div className="block-subtext">Ada permintaan batal, belum final</div>
-            </div>
-          </div>
-        </div>
-        )}
 
       </div>
 
@@ -764,8 +969,8 @@ export default function MarketingDashboard() {
             <h3>Tren Penjualan Harian</h3>
           </div>
           <div className="trend-legend">
-            <span className="trend-legend-item"><span className="trend-dot" style={{ background: "#4f46e5" }}></span>Omset</span>
-            <span className="trend-legend-item"><span className="trend-dot" style={{ background: "#059669" }}></span>Diterima</span>
+            <span className="trend-legend-item"><span className="trend-dot" style={{ background: "#1868DB" }}></span>Omset</span>
+            <span className="trend-legend-item"><span className="trend-dot" style={{ background: "#1F845A" }}></span>Diterima</span>
           </div>
         </div>
 
@@ -792,8 +997,8 @@ export default function MarketingDashboard() {
               <svg viewBox="0 0 1000 300" preserveAspectRatio="xMidYMid meet" className="trend-svg-v2" onMouseLeave={() => setHoverIdx(null)}>
                 <defs>
                   <linearGradient id="omsetFill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#4f46e5" stopOpacity="0.16" />
-                    <stop offset="100%" stopColor="#4f46e5" stopOpacity="0" />
+                    <stop offset="0%" stopColor="#1868DB" stopOpacity="0.16" />
+                    <stop offset="100%" stopColor="#1868DB" stopOpacity="0" />
                   </linearGradient>
                 </defs>
 
@@ -801,34 +1006,34 @@ export default function MarketingDashboard() {
                   const y = py(v);
                   return (
                     <g key={i}>
-                      <line x1={V.l} y1={y} x2={V.w - V.r} y2={y} stroke="#ececeb" strokeWidth="1" />
-                      <text x={V.l - 12} y={y + 4} textAnchor="end" fontSize="12.5" fill="#9ca3af" className="trend-axis-num">{formatAxis(v)}</text>
+                      <line x1={V.l} y1={y} x2={V.w - V.r} y2={y} stroke="#DDDEE1" strokeWidth="1" />
+                      <text x={V.l - 12} y={y + 4} textAnchor="end" fontSize="12.5" fill="#8C8F97" className="trend-axis-num">{formatAxis(v)}</text>
                     </g>
                   );
                 })}
 
                 <path d={areaPath()} fill="url(#omsetFill)" />
-                <path d={linePath("diterima")} fill="none" stroke="#059669" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
-                <path d={linePath("omset")} fill="none" stroke="#4f46e5" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+                <path d={linePath("diterima")} fill="none" stroke="#1F845A" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+                <path d={linePath("omset")} fill="none" stroke="#1868DB" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
 
                 {trendData.length <= 14 && trendData.map((d, i) => (
                   <g key={i}>
-                    <circle cx={px(i)} cy={py(d.diterima)} r="3" fill="#fff" stroke="#059669" strokeWidth="2" />
-                    <circle cx={px(i)} cy={py(d.omset)} r="3" fill="#fff" stroke="#4f46e5" strokeWidth="2" />
+                    <circle cx={px(i)} cy={py(d.diterima)} r="3" fill="#fff" stroke="#1F845A" strokeWidth="2" />
+                    <circle cx={px(i)} cy={py(d.omset)} r="3" fill="#fff" stroke="#1868DB" strokeWidth="2" />
                   </g>
                 ))}
 
                 {trendData.map((d, i) => (
                   (i % xLabelEvery === 0 || i === trendData.length - 1) && (
-                    <text key={i} x={px(i)} y={V.h - 18} textAnchor="middle" fontSize="12.5" fill="#6b7280">{fmtDate(d.date)}</text>
+                    <text key={i} x={px(i)} y={V.h - 18} textAnchor="middle" fontSize="12.5" fill="#6B6E76">{fmtDate(d.date)}</text>
                   )
                 ))}
 
                 {hoverIdx != null && trendData[hoverIdx] && (
                   <>
-                    <line x1={px(hoverIdx)} y1={V.t} x2={px(hoverIdx)} y2={py(0)} stroke="#c7c7c4" strokeWidth="1" strokeDasharray="4 4" />
-                    <circle cx={px(hoverIdx)} cy={py(trendData[hoverIdx].omset)} r="5" fill="#fff" stroke="#4f46e5" strokeWidth="2.5" />
-                    <circle cx={px(hoverIdx)} cy={py(trendData[hoverIdx].diterima)} r="5" fill="#fff" stroke="#059669" strokeWidth="2.5" />
+                    <line x1={px(hoverIdx)} y1={V.t} x2={px(hoverIdx)} y2={py(0)} stroke="#B7B9BE" strokeWidth="1" strokeDasharray="4 4" />
+                    <circle cx={px(hoverIdx)} cy={py(trendData[hoverIdx].omset)} r="5" fill="#fff" stroke="#1868DB" strokeWidth="2.5" />
+                    <circle cx={px(hoverIdx)} cy={py(trendData[hoverIdx].diterima)} r="5" fill="#fff" stroke="#1F845A" strokeWidth="2.5" />
                   </>
                 )}
 
@@ -841,8 +1046,8 @@ export default function MarketingDashboard() {
               {hoverIdx != null && (
                 <div className="trend-tooltip" style={{ left: `${(px(hoverIdx) / 1000) * 100}%` }}>
                   <div className="tt-date">{fmtDate(trendData[hoverIdx].date)}</div>
-                  <div className="tt-row"><span className="trend-dot" style={{ background: "#4f46e5" }}></span><span className="tt-name">Omset</span><b>{formatRupiah(trendData[hoverIdx].omset)}</b></div>
-                  <div className="tt-row"><span className="trend-dot" style={{ background: "#059669" }}></span><span className="tt-name">Diterima</span><b>{formatRupiah(trendData[hoverIdx].diterima)}</b></div>
+                  <div className="tt-row"><span className="trend-dot" style={{ background: "#1868DB" }}></span><span className="tt-name">Omset</span><b>{formatRupiah(trendData[hoverIdx].omset)}</b></div>
+                  <div className="tt-row"><span className="trend-dot" style={{ background: "#1F845A" }}></span><span className="tt-name">Diterima</span><b>{formatRupiah(trendData[hoverIdx].diterima)}</b></div>
                 </div>
               )}
             </>
@@ -866,29 +1071,6 @@ export default function MarketingDashboard() {
             </div>
           </div>
 
-          {/* Menempel LANGSUNG di kartu labanya, bukan di pojok halaman.
-              Peringatan yang jauh dari angka yang diperingatkannya tidak
-              terbaca oleh orang yang sedang melihat angka itu. */}
-          {bebanBelumLengkap && (
-            <div className="laba-belum-lengkap">
-              <b>⚠ Laba di bawah ini masih terlalu besar.</b> Beban platform baru
-              tercatat untuk <b>{persenBerbeban}%</b> pesanan
-              ({cakupanBeban.pesananBerbeban} dari {cakupanBeban.pesananTotal}) —
-              {' '}<b>{formatRupiah(cakupanBeban.omsetTanpaBeban)}</b> omset belum ada
-              bebannya.{' '}
-              {/* Sebabnya BUKAN menunggu pencairan — beban sudah terbaca sejak
-                  pesanan masuk. Yang tertinggal cuma putaran sinkronisasinya. */}
-              Beban ditarik bersamaan dengan sinkronisasi pesanan, tiap{' '}
-              {cakupanBeban.jedaSinkronJam ?? 6} jam
-              {jamSejakSinkron !== null && (
-                <> — terakhir <b>{jamSejakSinkron === 0 ? 'kurang dari 1 jam' : `${jamSejakSinkron} jam`} lalu</b></>
-              )}
-              . Pesanan yang masuk sesudah itu belum ditarik bebannya. Angkanya
-              turun sendiri pada putaran berikutnya; jangan ambil keputusan
-              sebelum cakupannya 100%.
-            </div>
-          )}
-
           <div className="chart-card-body">
             <div className="donut-chart-container">
               <svg width="160" height="160" viewBox="0 0 100 100" className="donut-svg">
@@ -898,7 +1080,7 @@ export default function MarketingDashboard() {
                   cy="50" 
                   r={radius} 
                   fill="transparent" 
-                  stroke="#F3F4F6" 
+                  stroke="#F0F1F2" 
                   strokeWidth={strokeWidth} 
                 />
                 
@@ -910,7 +1092,7 @@ export default function MarketingDashboard() {
                       cy="50" 
                       r={radius} 
                       fill="transparent" 
-                      stroke="#111827"
+                      stroke="#292A2E"
                       strokeWidth={strokeWidth} 
                       strokeDasharray={`${cogsDash} ${circumference - cogsDash}`}
                       strokeDashoffset={cogsOffset}
@@ -924,7 +1106,7 @@ export default function MarketingDashboard() {
                       cy="50" 
                       r={radius} 
                       fill="transparent" 
-                      stroke="#C7C9F9"
+                      stroke="#CFE1FD"
                       strokeWidth={strokeWidth} 
                       strokeDasharray={`${adSpendDash} ${circumference - adSpendDash}`}
                       strokeDashoffset={adSpendOffset}
@@ -938,7 +1120,7 @@ export default function MarketingDashboard() {
                       cy="50" 
                       r={radius} 
                       fill="transparent" 
-                      stroke="#9CA3AF"
+                      stroke="#8C8F97"
                       strokeWidth={strokeWidth} 
                       strokeDasharray={`${returDash} ${circumference - returDash}`}
                       strokeDashoffset={returOffset}
@@ -952,7 +1134,7 @@ export default function MarketingDashboard() {
                       cy="50" 
                       r={radius} 
                       fill="transparent" 
-                      stroke="#818CF8"
+                      stroke="#8FB8F6"
                       strokeWidth={strokeWidth} 
                       strokeDasharray={`${feesDash} ${circumference - feesDash}`}
                       strokeDashoffset={feesOffset}
@@ -966,7 +1148,7 @@ export default function MarketingDashboard() {
                       cy="50" 
                       r={radius} 
                       fill="transparent" 
-                      stroke="#4F46E5"
+                      stroke="#1868DB"
                       strokeWidth={strokeWidth} 
                       strokeDasharray={`${profitDash} ${circumference - profitDash}`}
                       strokeDashoffset={profitOffset}
@@ -993,7 +1175,7 @@ export default function MarketingDashboard() {
                     cy="50"
                     r={radius}
                     fill="transparent"
-                    stroke="#E5E7EB"
+                    stroke="#DDDEE1"
                     strokeWidth={strokeWidth}
                   />
                 )}
@@ -1018,7 +1200,7 @@ export default function MarketingDashboard() {
             {/* Donut Legend */}
             <div className="donut-legend-list">
               <div className="legend-item">
-                <div className="legend-color-dot" style={{ backgroundColor: "#4F46E5" }}></div>
+                <div className="legend-color-dot" style={{ backgroundColor: "#1868DB" }}></div>
                 <div className="legend-text-group">
                   <span className="legend-label">Net Profit</span>
                   <span className="legend-value font-bold text-black">
@@ -1028,7 +1210,7 @@ export default function MarketingDashboard() {
               </div>
               
               <div className="legend-item">
-                <div className="legend-color-dot" style={{ backgroundColor: "#818CF8" }}></div>
+                <div className="legend-color-dot" style={{ backgroundColor: "#8FB8F6" }}></div>
                 <div className="legend-text-group">
                   <span className="legend-label">Beban Platform</span>
                   <span className="legend-value font-bold text-black">
@@ -1038,17 +1220,17 @@ export default function MarketingDashboard() {
               </div>
 
               <div className="legend-item">
-                <div className="legend-color-dot" style={{ backgroundColor: "#C7C9F9" }}></div>
+                <div className="legend-color-dot" style={{ backgroundColor: "#CFE1FD" }}></div>
                 <div className="legend-text-group">
                   <span className="legend-label">Biaya Iklan</span>
                   <span className="legend-value font-bold text-black">
-                    {formatRupiah(adSpend)} ({hasData ? adSpendPct.toFixed(1) + "%" : "—"})
+                    {formatRupiah(totalIklan)} ({hasData ? adSpendPct.toFixed(1) + "%" : "—"})
                   </span>
                 </div>
               </div>
 
               <div className="legend-item">
-                <div className="legend-color-dot" style={{ backgroundColor: "#9CA3AF" }}></div>
+                <div className="legend-color-dot" style={{ backgroundColor: "#8C8F97" }}></div>
                 <div className="legend-text-group">
                   <span className="legend-label">Beban Retur</span>
                   <span className="legend-value font-bold text-black">
@@ -1058,7 +1240,7 @@ export default function MarketingDashboard() {
               </div>
 
               <div className="legend-item">
-                <div className="legend-color-dot" style={{ backgroundColor: "#111827" }}></div>
+                <div className="legend-color-dot" style={{ backgroundColor: "#292A2E" }}></div>
                 <div className="legend-text-group">
                   <span className="legend-label">COGS (HPP)</span>
                   <span className="legend-value font-bold text-black">
@@ -1139,11 +1321,58 @@ export default function MarketingDashboard() {
                       <td className="text-right">{formatRupiah(row.cogs)}</td>
                       <td className="text-right">{formatRupiah(row.fees)}</td>
                       <td className="text-right text-purple font-semibold">{formatRupiah(row.retur || 0)}</td>
-                      {/* Biaya iklan per toko belum diisi — keputusan pemilik
-                          toko 20 Agu 2026: kolomnya disiapkan, angkanya menyusul
-                          per toko. TIDAK dibagi rata dari satu angka global,
-                          karena hasil bagi rata bukan biaya iklan toko itu. */}
-                      <td className="text-right text-gray" title="Belum diisi per toko">—</td>
+                      {/* Biaya iklan — satu-satunya angka di tabel ini yang
+                          diketik pemilik toko, karena tidak ada marketplace yang
+                          melaporkannya. Disunting DI TEMPAT: memindahkannya ke
+                          jendela terpisah berarti angka toko sebelah hilang dari
+                          pandangan justru saat sedang dibandingkan.
+                          Isian menampilkan pemisah ribuan sambil diketik; tanpa
+                          itu "1500000" harus dihitung digitnya sendiri. */}
+                      <td className="text-right sel-iklan">
+                        {rentangSatuHari ? (
+                          <div className="iklan-isian">
+                            <span className="iklan-rp">Rp</span>
+                            <input
+                              type="text"
+                              inputMode="numeric"
+                              className={`iklan-input${iklanGagal === row.storeId ? " iklan-input-gagal" : ""}`}
+                              value={iklanDraf[row.storeId] ?? teksRibuan(row.iklan || 0)}
+                              disabled={!row.storeId || iklanSimpan === row.storeId}
+                              onChange={(e) =>
+                                setIklanDraf((d) => ({
+                                  ...d,
+                                  [row.storeId]: teksRibuan(bacaRibuan(e.target.value)),
+                                }))
+                              }
+                              onBlur={(e) => {
+                                if (iklanDraf[row.storeId] === undefined) return;
+                                simpanIklan(row.storeId, e.target.value);
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") e.currentTarget.blur();
+                                if (e.key === "Escape") {
+                                  setIklanDraf((d) => {
+                                    const salin = { ...d };
+                                    delete salin[row.storeId];
+                                    return salin;
+                                  });
+                                  setIklanGagal(null);
+                                }
+                              }}
+                            />
+                          </div>
+                        ) : (
+                          <span
+                            className="text-gray"
+                            title="Biaya iklan dicatat per hari. Pilih satu tanggal untuk mengisinya."
+                          >
+                            {formatRupiah(row.iklan || 0)}
+                          </span>
+                        )}
+                        {iklanGagal === row.storeId && (
+                          <div className="iklan-galat">Gagal disimpan — coba lagi</div>
+                        )}
+                      </td>
                       <td className="text-right font-semibold text-black">{formatRupiah(row.netProfit)}</td>
                       <td className="text-right font-semibold text-purple">{(row.margin ?? 0).toFixed(1)}%</td>
                     </tr>
@@ -1165,7 +1394,7 @@ export default function MarketingDashboard() {
                     <td className="text-right font-bold text-black">{formatRupiah(totalCogs)}</td>
                     <td className="text-right font-bold text-black">{formatRupiah(totalFees)}</td>
                     <td className="text-right font-bold text-black">{formatRupiah(totalRetur)}</td>
-                    <td className="text-right font-bold text-gray">{formatRupiah(adSpend)}</td>
+                    <td className="text-right font-bold text-gray">{formatRupiah(totalIklan)}</td>
                     <td className="text-right font-bold text-purple">{formatRupiah(totalProfit)}</td>
                     <td className="text-right font-bold text-purple">{marginPercent.toFixed(1)}%</td>
                   </tr>
@@ -1175,6 +1404,26 @@ export default function MarketingDashboard() {
           </div>
         </div>
       </div>
+
+      {panelPosisi && (
+        <PanelRetur
+          judul={SEMUA_TAHAP_POSISI.find((t) => t.kunci === panelPosisi)?.judul ?? 'Posisi'}
+          keterangan={SEMUA_TAHAP_POSISI.find((t) => t.kunci === panelPosisi)?.catatan ?? ''}
+          baris={barisPosisi}
+          ringkasan={posisi?.[panelPosisi] ?? null}
+          onTutup={() => setPanelPosisi(null)}
+        />
+      )}
+
+      {panelTahap && (
+        <PanelRetur
+          judul={TAHAP_RETUR.find((t) => t.kunci === panelTahap)?.judul ?? 'Retur'}
+          keterangan={TAHAP_RETUR.find((t) => t.kunci === panelTahap)?.keterangan ?? ''}
+          baris={barisPanel}
+          ringkasan={returTahap?.[panelTahap] ?? null}
+          onTutup={() => setPanelTahap(null)}
+        />
+      )}
 
       {/* ─── Balance Sheet Ledger Modal ─── */}
       {showFeeModal && (
@@ -1232,7 +1481,7 @@ export default function MarketingDashboard() {
               <tbody>
                 {costBreakdown.length === 0 && (
                   <tr>
-                    <td className="ledger-td-desc" colSpan={3} style={{ textAlign: "center", color: "#9ca3af", padding: "24px 0" }}>
+                    <td className="ledger-td-desc" colSpan={3} style={{ textAlign: "center", color: "#8C8F97", padding: "24px 0" }}>
                       Belum ada data beban platform pada filter ini
                     </td>
                   </tr>
@@ -1254,10 +1503,10 @@ export default function MarketingDashboard() {
                       {/* Sudah settlement (riil) */}
                       {riilItems.length > 0 && (
                         <tr>
-                          <td className="ledger-td-desc" colSpan={2} style={{ fontStyle: "italic", color: "#16a34a" }}>
+                          <td className="ledger-td-desc" colSpan={2} style={{ fontStyle: "italic", color: "#1F845A" }}>
                             Sudah settlement (riil) — {g.final_orders + g.preliminary_orders} order
                           </td>
-                          <td className="text-right" style={{ color: "#16a34a" }}>{formatRupiah(riilTotal)}</td>
+                          <td className="text-right" style={{ color: "#1F845A" }}>{formatRupiah(riilTotal)}</td>
                         </tr>
                       )}
                       {riilItems.map((it, idx) => (
@@ -1271,10 +1520,10 @@ export default function MarketingDashboard() {
                       {/* Belum settlement (perkiraan) */}
                       {estItems.length > 0 && (
                         <tr>
-                          <td className="ledger-td-desc" colSpan={2} style={{ fontStyle: "italic", color: "#d97706" }}>
+                          <td className="ledger-td-desc" colSpan={2} style={{ fontStyle: "italic", color: "#BD5B00" }}>
                             Belum settlement (perkiraan) — {g.estimated_orders} order
                           </td>
-                          <td className="text-right" style={{ color: "#d97706" }}>{formatRupiah(estTotal)}</td>
+                          <td className="text-right" style={{ color: "#BD5B00" }}>{formatRupiah(estTotal)}</td>
                         </tr>
                       )}
                       {estItems.map((it, idx) => (

@@ -3,11 +3,12 @@ import { ChevronDown, Copy, Package, MapPin, Truck, CheckCircle2, Clock } from "
 import { channelMeta } from "./channels";
 import shopeeLogo from "../../../assets/logo_pilihan_fitur/shopee.png";
 import tiktokLogo from "../../../assets/logo_pilihan_fitur/logo_tiktok.jpg";
+import { formatDateTime } from "../../../utils/datetime";
 
 const LOGOS = { shopee: shopeeLogo, tiktok: tiktokLogo };
 const rupiah = (n) => (n === null || n === undefined ? "—" : "Rp " + Number(n).toLocaleString("id-ID"));
 const fmt = (d) =>
-  d ? new Date(d).toLocaleString("id-ID", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "—";
+  d ? formatDateTime(d, { year: "always" }) : "-";
 
 const STATUS_LABEL = {
   baru: "Perlu Diproses", dikemas: "Perlu Dikirim", dikirim: "Dikirim", selesai: "Selesai", batal: "Dibatalkan",

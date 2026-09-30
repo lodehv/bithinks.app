@@ -94,10 +94,10 @@ const productsData = {
     logo: bitOmniLogo,
     mockupType: "omni",
     stats: [
-      { value: "Real-Time", label: "Laporan Omzet & Net Profit" },
-      { value: "100% Objektif", label: "Tracking Status & Audit Retur" },
-      { value: "0 Selisih", label: "Stok Fisik vs Siap Jual WMS" },
-      { value: "−80%", label: "Waktu Kelola Pesanan & Stok" }
+      { value: "Auto-Sync", label: "Stok & Pesanan Real-Time" },
+      { value: "Akurat", label: "Rekonsiliasi Omset, COGS & Net Profit" },
+      { value: "Bebas Kebocoran", label: "Kontrol Stok Multi-Toko" },
+      { value: "Efisiensi 1-Klik", label: "Cetak Resi Massal Pengiriman" }
     ],
     features: [
       {
@@ -323,17 +323,13 @@ const BitOmniTopUpCalculator = ({ product }) => {
     { orders: 4000, price: 1000000, labelPrice: "Rp 1.000.000" },
   ];
 
-  const maxScaleOrders = 4000;
-  const barPercent = Math.min(Math.max((orderCount / maxScaleOrders) * 100, 2), 100);
-
   return (
     <div className="topup-calc-container">
       <div className="topup-calc-card">
-        {/* Header Badge & Title */}
+
+        {/* Header Title */}
         <div className="topup-calc-header">
-          <div className="topup-badge">
-            <Coins size={15} /> SKEMA TOP-UP SESUKAMU
-          </div>
+          <span className="topup-kicker">SKEMA TOP-UP SESUKAMU</span>
           <h3 className="topup-calc-title">
             Hanya <span className="highlight-price">1 bit</span> / Pesanan
           </h3>
@@ -342,105 +338,144 @@ const BitOmniTopUpCalculator = ({ product }) => {
           </p>
         </div>
 
-        {/* Interactive Controls */}
-        <div className="topup-interactive-box">
-          {/* Preset Buttons */}
-          <div className="topup-preset-header">Pilih Preset Jumlah Pesanan:</div>
-          <div className="topup-presets-grid">
-            {presets.map((p) => (
-              <button
-                key={p.orders}
-                className={`topup-preset-btn ${orderCount === p.orders ? 'active' : ''}`}
-                onClick={() => setOrderCount(p.orders)}
-              >
-                {p.isPopular && <span className="preset-pop-tag">Populer</span>}
-                <div className="preset-amount">{p.orders.toLocaleString('id-ID')} Pesanan</div>
-                <div className="preset-orders">{p.labelPrice}</div>
-              </button>
-            ))}
-          </div>
+        {/* Modern Split Calculator Grid */}
+        <div className="topup-split-grid">
 
-          {/* Range Slider for Order Count */}
-          <div className="topup-slider-section">
-            <div className="topup-slider-header">
-              <label htmlFor="topup-range-input">Atur / Ketik Jumlah Pesanan Anda:</label>
-              <div className="topup-amount-input-box">
-                <input
-                  id="topup-number-input"
-                  type="number"
-                  min="1"
-                  max="50000"
-                  value={orderCount === 0 ? '' : orderCount}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    if (val === '') {
-                      setOrderCount(0);
-                    } else {
-                      const parsed = parseInt(val, 10);
-                      if (!isNaN(parsed)) {
-                        setOrderCount(parsed);
+          {/* LEFT: Controls & Included Features */}
+          <div className="topup-left-col">
+
+            {/* Preset Quantity Pills */}
+            <div className="topup-group">
+              <label className="topup-label">Pilih Target Jumlah Pesanan:</label>
+              <div className="topup-presets-pills">
+                {presets.map((p) => (
+                  <button
+                    key={p.orders}
+                    type="button"
+                    className={`topup-pill-btn ${orderCount === p.orders ? 'active' : ''}`}
+                    onClick={() => setOrderCount(p.orders)}
+                  >
+                    {p.isPopular && <span className="topup-pill-tag">POPULER</span>}
+                    <span className="pill-orders">{p.orders.toLocaleString('id-ID')} Pesanan</span>
+                    <span className="pill-price">{p.labelPrice}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Range Slider & Custom Input */}
+            <div className="topup-group topup-slider-group">
+              <div className="topup-slider-row-head">
+                <span className="topup-label">Atur / Ketik Jumlah Pesanan:</span>
+                <div className="topup-input-inline">
+                  <input
+                    type="number"
+                    min="1"
+                    max="10000000"
+                    value={orderCount === 0 ? '' : orderCount}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '') setOrderCount(0);
+                      else {
+                        const parsed = parseInt(val, 10);
+                        if (!isNaN(parsed)) setOrderCount(parsed);
                       }
-                    }
-                  }}
-                  onBlur={() => {
-                    if (!orderCount || orderCount < 1) setOrderCount(1);
-                  }}
-                  className="topup-order-number-input"
-                  placeholder="120"
-                />
-                <span className="topup-order-unit-label">Pesanan</span>
+                    }}
+                    onBlur={() => {
+                      if (!orderCount || orderCount < 1) setOrderCount(1);
+                    }}
+                    className="topup-number-field"
+                    placeholder="200"
+                  />
+                  <span className="topup-unit-text">Pesanan</span>
+                </div>
+              </div>
+
+              <input
+                type="range"
+                min="40"
+                max="4000"
+                step="10"
+                value={Math.min(Math.max(orderCount, 40), 4000)}
+                onChange={(e) => setOrderCount(Number(e.target.value))}
+                className="topup-range-slider"
+                style={{
+                  backgroundSize: `${((Math.min(Math.max(orderCount, 40), 4000) - 40) * 100) / (4000 - 40)}% 100%`
+                }}
+              />
+
+              <div className="topup-slider-ticks">
+                <span>40 pesanan (Rp 10.000)</span>
+                <span>2.000 pesanan (Rp 500.000)</span>
+                <span>4.000 pesanan (Rp 1.000.000)</span>
               </div>
             </div>
-            <input
-              id="topup-range-input"
-              type="range"
-              min="40"
-              max="4000"
-              step="10"
-              value={Math.min(Math.max(orderCount, 40), 4000)}
-              onChange={(e) => setOrderCount(Number(e.target.value))}
-              className="topup-custom-slider"
-            />
-            <div className="topup-slider-price-summary">
-              Biaya Top-up: <strong>Rp {topUpAmount.toLocaleString('id-ID')}</strong> ({orderCount.toLocaleString('id-ID')} pesanan × Rp 250)
+
+            {/* Included Features List */}
+            <div className="topup-included-section">
+              <h5 className="topup-inc-title">Termasuk Layanan Penuh:</h5>
+              <div className="topup-inc-grid">
+                <div className="topup-inc-item">
+                  <span className="topup-inc-check"><Check size={14} strokeWidth={3} /></span>
+                  <span>Cetak Resi Massal 1-Klik Multi-Channel</span>
+                </div>
+                <div className="topup-inc-item">
+                  <span className="topup-inc-check"><Check size={14} strokeWidth={3} /></span>
+                  <span>Sinkronisasi Stok Real-Time Bebas Overselling</span>
+                </div>
+                <div className="topup-inc-item">
+                  <span className="topup-inc-check"><Check size={14} strokeWidth={3} /></span>
+                  <span>Rekonsiliasi Omset &amp; COGS Akurat</span>
+                </div>
+                <div className="topup-inc-item">
+                  <span className="topup-inc-check"><Check size={14} strokeWidth={3} /></span>
+                  <span>Dukungan CS Manusia Nonstop 24/7</span>
+                </div>
+              </div>
             </div>
-            <div className="topup-slider-labels">
-              <span>40 pesanan (Rp 10.000)</span>
-              <span>2.000 pesanan (Rp 500.000)</span>
-              <span>4.000 pesanan (Rp 1.000.000)</span>
-            </div>
+
           </div>
 
-          {/* Informative Graphic Bar Chart */}
-          <div className="topup-graphic-bar-box">
-            <div className="topup-bar-title-row">
-              <span className="topup-bar-title"><Sliders size={16} /> Grafik Kuota Pesanan Terkalkulasi</span>
-              <span className="topup-bar-equation">
-                {orderCount.toLocaleString('id-ID')} Pesanan × Rp 250 = <strong>Rp {topUpAmount.toLocaleString('id-ID')}</strong>
-              </span>
+          {/* RIGHT: High-Trust Hero Summary Card */}
+          <div className="topup-summary-card">
+            <div className="summary-badge">RINGKASAN TOP-UP</div>
+
+            <div className="summary-main-price">
+              <span className="summary-price-lbl">Total Nominal</span>
+              <div className="summary-price-val">Rp {topUpAmount.toLocaleString('id-ID')}</div>
+              <div className="summary-price-sub">Rp 250 × {orderCount.toLocaleString('id-ID')} pesanan</div>
             </div>
 
-            <div className="topup-bar-track">
-              <div
-                className="topup-bar-fill"
-                style={{ width: `${barPercent}%` }}
-              >
-                <div className="topup-bar-glow"></div>
-                {barPercent >= 18 && (
-                  <span className="topup-bar-thumb-label-inside">{orderCount.toLocaleString('id-ID')} Pesanan</span>
-                )}
+            <div className="summary-divider"></div>
+
+            <div className="summary-details-list">
+              <div className="summary-row">
+                <span className="lbl">Kuota Pesanan</span>
+                <span className="val highlight">{orderCount.toLocaleString('id-ID')} Pesanan</span>
               </div>
-              {barPercent < 18 && (
-                <span className="topup-bar-thumb-label-outside">{orderCount.toLocaleString('id-ID')} Pesanan</span>
-              )}
+              <div className="summary-row">
+                <span className="lbl">Tarif Per Pesanan</span>
+                <span className="val">Rp 250 / pesanan</span>
+              </div>
+              <div className="summary-row">
+                <span className="lbl">Masa Berlaku Saldo</span>
+                <span className="val pos">Selamanya (Tanpa Hangus)</span>
+              </div>
+              <div className="summary-row">
+                <span className="lbl">Biaya Bulanan</span>
+                <span className="val pos">Rp 0 (Gratis)</span>
+              </div>
             </div>
 
-            <div className="topup-bar-ticks">
-              <div className="tick-item"><span>0</span></div>
-              <div className="tick-item"><span>1.000</span></div>
-              <div className="tick-item"><span>2.000</span></div>
-              <div className="tick-item"><span>3.000</span></div>
-              <div className="tick-item"><span>4.000+</span></div>
+            <div className="summary-action-box">
+              <button
+                type="button"
+                onClick={() => navigateTo('/register')}
+                className="topup-action-btn"
+              >
+                Mulai Top-Up Saldo Sekarang
+              </button>
+              <span className="summary-note-cs">Daftar akun gratis 1 menit &amp; langsung aktifkan saldo</span>
             </div>
           </div>
 
@@ -532,34 +567,34 @@ const ProductDetail = ({ appId }) => {
 
     const ctx = gsap.context(() => {
       // 1. Entrance animation for Left Header Title & Elements
-      gsap.fromTo('.p-detail-tagline', 
+      gsap.fromTo('.p-detail-tagline',
         { opacity: 0, y: 15 },
         { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }
       );
-      
-      gsap.fromTo('.p-detail-title', 
+
+      gsap.fromTo('.p-detail-title',
         { opacity: 0, y: 25 },
         { opacity: 1, y: 0, duration: 0.8, delay: 0.1, ease: 'power3.out' }
       );
-      
-      gsap.fromTo('.p-detail-desc', 
+
+      gsap.fromTo('.p-detail-desc',
         { opacity: 0, y: 20 },
         { opacity: 1, y: 0, duration: 0.8, delay: 0.2, ease: 'power3.out' }
       );
 
-      gsap.fromTo('.p-detail-actions', 
+      gsap.fromTo('.p-detail-actions',
         { opacity: 0, y: 15 },
         { opacity: 1, y: 0, duration: 0.6, delay: 0.3, ease: 'power3.out' }
       );
 
       // 2. Entrance for Hero Mockup on the right
-      gsap.fromTo('.p-detail-hero-mockup', 
+      gsap.fromTo('.p-detail-hero-mockup',
         { scale: 0.95, opacity: 0, y: 20 },
         { scale: 1, opacity: 1, y: 0, duration: 1.2, delay: 0.25, ease: 'power4.out' }
       );
 
       // 3. Stagger entrance for statistics badges
-      gsap.fromTo('.p-detail-stat-card', 
+      gsap.fromTo('.p-detail-stat-card',
         { scale: 0.85, opacity: 0 },
         { scale: 1, opacity: 1, duration: 0.8, delay: 0.45, stagger: 0.1, ease: 'back.out(1.2)' }
       );
@@ -621,42 +656,37 @@ const ProductDetail = ({ appId }) => {
   return (
     <div className={`app-container${appId === 'bitomni' ? ' ds-omni' : ''}`} ref={containerRef}>
       <Navbar />
-      
+
       <main className="p-detail-main-layout">
-        
+
         {/* SECTION 1: Product Detail Hero */}
         <section className="p-detail-hero-section" style={{ '--theme-bg': product.bgColor }}>
           <div className="p-detail-bg-accent" style={{ '--theme-glow': product.glowColor }}></div>
-          
-          <div className="container">
-            {/* Back to Home Button */}
-            <button className="p-detail-back-btn" onClick={() => navigateTo('/')}>
-              <ArrowLeft size={16} /> <span>Kembali ke Beranda</span>
-            </button>
 
+          <div className="container">
             <div className="p-detail-hero-grid">
-              
+
               {/* Left Info Column */}
               <div className="p-detail-hero-left">
                 <div className="p-detail-badge-strip">
                   <span className="p-detail-tagline" style={{ color: product.color }}>{product.tagline}</span>
                 </div>
-                
+
                 <h1 className="p-detail-title">{product.headline}</h1>
                 <p className="p-detail-desc">{product.description}</p>
-                
+
                 <div className="p-detail-actions">
-                  <button 
-                    className="p-btn-primary" 
+                  <button
+                    className="p-btn-primary"
                     style={{ backgroundColor: product.color }}
                     onClick={() => navigateTo('/register')}
                   >
                     <span>Coba {product.badgeText} Gratis</span>
                     <ArrowRight size={16} />
                   </button>
-                  <button 
+                  <button
                     className="p-btn-secondary"
-                    onClick={() => window.open('https://wa.me/628113000676?text=Halo%20Bithinks,%20saya%20ingin%20tanya%20mengenai%20fitur%20' + product.name, '_blank')}
+                    onClick={() => window.open('https://wa.me/6285156297948?text=Halo%20Bithinks,%20saya%20ingin%20tanya%20mengenai%20fitur%20' + product.name, '_blank')}
                   >
                     Hubungi Sales
                   </button>
@@ -666,7 +696,7 @@ const ProductDetail = ({ appId }) => {
               {/* Right Mockup Representation Column */}
               <div className="p-detail-hero-right">
                 <div className={`p-detail-hero-mockup${product.mockupType === 'omni' ? ' omni-hero' : ''}`} style={{ '--theme-color': product.color }}>
-                  
+
                   {/* Decorative grid lines */}
                   <div className="p-detail-mockup-grid"></div>
 
@@ -703,7 +733,7 @@ const bithinksEngine = require('@bithinks/core');
 
 module.exports = async function customWorkflow(ctx) {
   const { cart, customer, db } = ctx;
-  
+
   // Custom automated loyalty pipeline
   if (customer.tier === 'VIP') {
     await db.orders.applyDiscount(cart.id, 0.15);
@@ -1016,7 +1046,7 @@ module.exports = async function customWorkflow(ctx) {
                     <p>
                       Data bisnis Anda adalah aset terpenting. Kami menjamin enkripsi database berlapis 256-bit SSL, backup otomatis harian, dan ketersediaan server (uptime guarantee) sebesar 99.9%.
                     </p>
-                    
+
                     {/* Visual checklist mockup */}
                     <div className="p-why-visual-bullets">
                       <div className="bullet-row">
@@ -1069,9 +1099,9 @@ module.exports = async function customWorkflow(ctx) {
                   <button className="p-cta-btn-white" onClick={() => navigateTo('/register')}>
                     Coba Gratis
                   </button>
-                  <button 
+                  <button
                     className="p-cta-btn-outline"
-                    onClick={() => window.open('https://wa.me/628113000676?text=Halo%20Bithinks,%20saya%20tertarik%20dengan%20' + product.name, '_blank')}
+                    onClick={() => window.open('https://wa.me/6285156297948?text=Halo%20Bithinks,%20saya%20tertarik%20dengan%20' + product.name, '_blank')}
                   >
                     Konsultasi Kustom
                   </button>

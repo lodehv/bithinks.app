@@ -141,3 +141,34 @@ p {
   opacity: 0;
   visibility: hidden;
 }
+
+/* Page Back Breadcrumb (UX Return Navigation) */
+.hero-breadcrumb-wrapper {
+  display: block;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.page-back-breadcrumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  color: #4f46e5;
+  border: 1px solid #c7d2fe;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.08);
+  transition: all 0.2s ease;
+}
+
+.page-back-breadcrumb:hover {
+  background: #4f46e5;
+  color: #ffffff;
+  border-color: #4f46e5;
+  transform: translateX(-3px);
+  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.25);
+}

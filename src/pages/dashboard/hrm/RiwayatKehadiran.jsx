@@ -2,20 +2,17 @@ import { useState, useEffect } from "react";
 import { Camera, Clock, CheckCircle, XCircle, AlertCircle, Calendar } from "lucide-react";
 import "./RiwayatKehadiran.css";
 import api from "../../../utils/api";
+import { formatDate, formatTime } from "../../../utils/datetime";
 
 const PAGE_SIZE = 10;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function fmtTime(iso) {
   if (!iso) return null;
-  return new Date(iso).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
+  return formatTime(iso);
 }
 
-function fmtDate(iso) {
-  return new Date(iso).toLocaleDateString("id-ID", {
-    weekday: "short", day: "numeric", month: "short", year: "numeric",
-  });
-}
+const fmtDate = (iso) => formatDate(iso, { weekday: true, year: "always" });
 
 function calcDuration(checkIn, checkOut) {
   if (!checkIn || !checkOut) return null;
