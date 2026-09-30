@@ -326,24 +326,24 @@ const BitOmniTopUpCalculator = ({ product }) => {
   return (
     <div className="topup-calc-container">
       <div className="topup-calc-card">
-        
+
         {/* Header Title */}
         <div className="topup-calc-header">
           <span className="topup-kicker">SKEMA TOP-UP SESUKAMU</span>
           <h3 className="topup-calc-title">
-            Hanya <strong>Rp 250</strong> / Pesanan
+            Hanya <span className="highlight-price">1 bit</span> / Pesanan
           </h3>
           <p className="topup-calc-sub">
-            Tanpa biaya langganan bulanan yang mengikat. Saldo <strong>tidak pernah hangus</strong> &amp; sudah mencakup fitur cetak resi massal, rekonsiliasi beban komplit, tracking COGS, hingga net profit per 1 pesanan.
+            1 bit bernilai Rp250. Tanpa langganan bulanan yang mengikat! Cukup atur target pesanan Anda. Saldo bit <strong>tidak pernah hangus</strong> &amp; sudah mencakup fitur cetak resi instan, rekonsiliasi beban komplit, tracking COGS, hingga net profit per 1 pesanan.
           </p>
         </div>
 
         {/* Modern Split Calculator Grid */}
         <div className="topup-split-grid">
-          
+
           {/* LEFT: Controls & Included Features */}
           <div className="topup-left-col">
-            
+
             {/* Preset Quantity Pills */}
             <div className="topup-group">
               <label className="topup-label">Pilih Target Jumlah Pesanan:</label>
@@ -403,7 +403,7 @@ const BitOmniTopUpCalculator = ({ product }) => {
                   backgroundSize: `${((Math.min(Math.max(orderCount, 40), 4000) - 40) * 100) / (4000 - 40)}% 100%`
                 }}
               />
-              
+
               <div className="topup-slider-ticks">
                 <span>40 pesanan (Rp 10.000)</span>
                 <span>2.000 pesanan (Rp 500.000)</span>
@@ -468,9 +468,9 @@ const BitOmniTopUpCalculator = ({ product }) => {
             </div>
 
             <div className="summary-action-box">
-              <button 
+              <button
                 type="button"
-                onClick={() => navigateTo('/register')} 
+                onClick={() => navigateTo('/register')}
                 className="topup-action-btn"
               >
                 Mulai Top-Up Saldo Sekarang
@@ -479,8 +479,78 @@ const BitOmniTopUpCalculator = ({ product }) => {
             </div>
           </div>
 
+          {/* Metric Highlights */}
+          <div className="topup-result-grid">
+            <div className="topup-result-card">
+              <div className="res-icon"><Printer size={22} /></div>
+              <div className="res-label">Jumlah Kuota Pesanan</div>
+              <div className="res-value">{orderCount.toLocaleString('id-ID')} <span className="res-unit">Pesanan</span></div>
+              <div className="res-sub">Cetak resi otomatis &amp; sync stok multi-toko</div>
+            </div>
+
+            <div className="topup-result-card">
+              <div className="res-icon"><Calculator size={22} /></div>
+              <div className="res-label">Total Nominal Top-up</div>
+              <div className="res-value">Rp {topUpAmount.toLocaleString('id-ID')}</div>
+              <div className="res-sub">Rincian beban komplit hingga tahu net profit per 1 pesanan</div>
+            </div>
+
+            <div className="topup-result-card">
+              <div className="res-icon"><Tag size={22} /></div>
+              <div className="res-label">Biaya Per Pesanan</div>
+              <div className="res-value">1 bit <span className="res-unit">/ pesanan</span></div>
+              <div className="res-sub">Flat rate tanpa biaya tersembunyi &amp; tanpa kadaluwarsa</div>
+            </div>
+          </div>
         </div>
 
+        {/* Feature Check Grid */}
+        <div className="topup-features-section">
+          <h4 className="topup-features-title">Semua Fitur Canggih Ini Langsung Aktif Dengan Top-up:</h4>
+          <div className="topup-features-grid">
+            <div className="topup-feature-item">
+              <div className="feat-check"><Check size={16} strokeWidth={3} /></div>
+              <div>
+                <strong>Cetak Resi Instan Massal</strong>
+                <p>Cetak resi pengiriman otomatis untuk toko Shopee, Tokopedia, TikTok Shop, Lazada &amp; Blibli dalam 1 klik.</p>
+              </div>
+            </div>
+            <div className="topup-feature-item">
+              <div className="feat-check"><Check size={16} strokeWidth={3} /></div>
+              <div>
+                <strong>Rekonsiliasi Pesanan &amp; Beban Komplit</strong>
+                <p>Ketahui secara pasti net profit bersih dari 1 pesanan setelah dipotong komisi marketplace, ongkir, dan biaya iklan.</p>
+              </div>
+            </div>
+            <div className="topup-feature-item">
+              <div className="feat-check"><Check size={16} strokeWidth={3} /></div>
+              <div>
+                <strong>Atur Master Produk &amp; Tracking COGS</strong>
+                <p>Kelola Master SKU multi-toko dan lacak Beban HPP (Cost of Goods Sold) produk Anda secara real-time.</p>
+              </div>
+            </div>
+            <div className="topup-feature-item">
+              <div className="feat-check"><Check size={16} strokeWidth={3} /></div>
+              <div>
+                <strong>Masa Aktif Bit Tanpa Kadaluwarsa</strong>
+                <p>Saldo bit tersimpan aman di akun Anda dan tidak pernah hangus sampai terpakai untuk pesanan.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="topup-cta-row">
+          <button className="topup-btn-primary" onClick={() => navigateTo('/register')}>
+            Mulai Top-up {orderCount.toLocaleString('id-ID')} Pesanan (Rp {topUpAmount.toLocaleString('id-ID')})
+          </button>
+          <button
+            className="topup-btn-secondary"
+            onClick={() => window.open(`https://wa.me/628113000676?text=Halo%20Bithinks,%20saya%20tertarik%20dengan%20sistem%20Top-up%20Sesukamu%20BitOmni%20${orderCount}%20pesanan%20(Rp${topUpAmount})`, '_blank')}
+          >
+            Konsultasi via WhatsApp
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -497,34 +567,34 @@ const ProductDetail = ({ appId }) => {
 
     const ctx = gsap.context(() => {
       // 1. Entrance animation for Left Header Title & Elements
-      gsap.fromTo('.p-detail-tagline', 
+      gsap.fromTo('.p-detail-tagline',
         { opacity: 0, y: 15 },
         { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }
       );
-      
-      gsap.fromTo('.p-detail-title', 
+
+      gsap.fromTo('.p-detail-title',
         { opacity: 0, y: 25 },
         { opacity: 1, y: 0, duration: 0.8, delay: 0.1, ease: 'power3.out' }
       );
-      
-      gsap.fromTo('.p-detail-desc', 
+
+      gsap.fromTo('.p-detail-desc',
         { opacity: 0, y: 20 },
         { opacity: 1, y: 0, duration: 0.8, delay: 0.2, ease: 'power3.out' }
       );
 
-      gsap.fromTo('.p-detail-actions', 
+      gsap.fromTo('.p-detail-actions',
         { opacity: 0, y: 15 },
         { opacity: 1, y: 0, duration: 0.6, delay: 0.3, ease: 'power3.out' }
       );
 
       // 2. Entrance for Hero Mockup on the right
-      gsap.fromTo('.p-detail-hero-mockup', 
+      gsap.fromTo('.p-detail-hero-mockup',
         { scale: 0.95, opacity: 0, y: 20 },
         { scale: 1, opacity: 1, y: 0, duration: 1.2, delay: 0.25, ease: 'power4.out' }
       );
 
       // 3. Stagger entrance for statistics badges
-      gsap.fromTo('.p-detail-stat-card', 
+      gsap.fromTo('.p-detail-stat-card',
         { scale: 0.85, opacity: 0 },
         { scale: 1, opacity: 1, duration: 0.8, delay: 0.45, stagger: 0.1, ease: 'back.out(1.2)' }
       );
@@ -586,35 +656,35 @@ const ProductDetail = ({ appId }) => {
   return (
     <div className={`app-container${appId === 'bitomni' ? ' ds-omni' : ''}`} ref={containerRef}>
       <Navbar />
-      
+
       <main className="p-detail-main-layout">
-        
+
         {/* SECTION 1: Product Detail Hero */}
         <section className="p-detail-hero-section" style={{ '--theme-bg': product.bgColor }}>
           <div className="p-detail-bg-accent" style={{ '--theme-glow': product.glowColor }}></div>
-          
+
           <div className="container">
             <div className="p-detail-hero-grid">
-              
+
               {/* Left Info Column */}
               <div className="p-detail-hero-left">
                 <div className="p-detail-badge-strip">
                   <span className="p-detail-tagline" style={{ color: product.color }}>{product.tagline}</span>
                 </div>
-                
+
                 <h1 className="p-detail-title">{product.headline}</h1>
                 <p className="p-detail-desc">{product.description}</p>
-                
+
                 <div className="p-detail-actions">
-                  <button 
-                    className="p-btn-primary" 
+                  <button
+                    className="p-btn-primary"
                     style={{ backgroundColor: product.color }}
                     onClick={() => navigateTo('/register')}
                   >
                     <span>Coba {product.badgeText} Gratis</span>
                     <ArrowRight size={16} />
                   </button>
-                  <button 
+                  <button
                     className="p-btn-secondary"
                     onClick={() => window.open('https://wa.me/6285156297948?text=Halo%20Bithinks,%20saya%20ingin%20tanya%20mengenai%20fitur%20' + product.name, '_blank')}
                   >
@@ -626,7 +696,7 @@ const ProductDetail = ({ appId }) => {
               {/* Right Mockup Representation Column */}
               <div className="p-detail-hero-right">
                 <div className={`p-detail-hero-mockup${product.mockupType === 'omni' ? ' omni-hero' : ''}`} style={{ '--theme-color': product.color }}>
-                  
+
                   {/* Decorative grid lines */}
                   <div className="p-detail-mockup-grid"></div>
 
@@ -663,7 +733,7 @@ const bithinksEngine = require('@bithinks/core');
 
 module.exports = async function customWorkflow(ctx) {
   const { cart, customer, db } = ctx;
-  
+
   // Custom automated loyalty pipeline
   if (customer.tier === 'VIP') {
     await db.orders.applyDiscount(cart.id, 0.15);
@@ -976,7 +1046,7 @@ module.exports = async function customWorkflow(ctx) {
                     <p>
                       Data bisnis Anda adalah aset terpenting. Kami menjamin enkripsi database berlapis 256-bit SSL, backup otomatis harian, dan ketersediaan server (uptime guarantee) sebesar 99.9%.
                     </p>
-                    
+
                     {/* Visual checklist mockup */}
                     <div className="p-why-visual-bullets">
                       <div className="bullet-row">
@@ -1007,7 +1077,7 @@ module.exports = async function customWorkflow(ctx) {
                 <span className="p-pretitle" style={{ color: product.color }}>SKEMA HARGA TRANSPARAN</span>
                 <h2 className="p-section-title">Top-up Sesukamu, Bayar Sesuai Pesanan</h2>
                 <p className="p-section-subtitle">
-                  Hanya Rp 250 per pesanan. Bebas atur nominal top-up tanpa biaya langganan bulanan mengikat. Saldo tidak pernah hangus!
+                  Hanya 1 bit per pesanan (1 bit = Rp250). Bebas atur nominal top-up tanpa biaya langganan bulanan mengikat. Saldo bit tidak pernah hangus!
                 </p>
               </div>
 
@@ -1029,7 +1099,7 @@ module.exports = async function customWorkflow(ctx) {
                   <button className="p-cta-btn-white" onClick={() => navigateTo('/register')}>
                     Coba Gratis
                   </button>
-                  <button 
+                  <button
                     className="p-cta-btn-outline"
                     onClick={() => window.open('https://wa.me/6285156297948?text=Halo%20Bithinks,%20saya%20tertarik%20dengan%20' + product.name, '_blank')}
                   >

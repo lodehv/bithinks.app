@@ -1,0 +1,18 @@
+.refund-status { display: grid; gap: 8px; max-width: 360px; }
+.refund-status p { font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+.refund-status .refund-status-summary { font-weight: 600; }
+.refund-status .refund-status-detail { color: var(--color-text-muted, #475569); font-size: 13px; }
+.refund-status .refund-action-hint { color: var(--color-text-muted, #475569); font-size: 13px; line-height: 1.5; }
+.refund-status[data-state=SUCCEEDED] .refund-status-summary { color: #15803d; }
+.refund-status[data-state=FAILED] .refund-status-summary { color: #b91c1c; }
+.refund-status-check button { min-height: 44px; }
+.refund-status-check button:focus-visible { outline: 3px solid #818cf8; outline-offset: 3px; }
+.refund-status-check [role=alert] { color: #b91c1c; margin-top: 8px; }
+.refund-state-failed { color: #991b1b; background: #fef2f2; }
+body.dark .refund-status[data-state=SUCCEEDED] .refund-status-summary { color: #86efac; }
+body.dark .refund-status[data-state=FAILED] .refund-status-summary,
+body.dark .refund-status-check [role=alert] { color: #fca5a5; }
+@media (max-width: 480px) {
+  .refund-status p { font-size: 16px; }
+  .refund-status .refund-action-hint { font-size: 16px; }
+}

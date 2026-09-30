@@ -35,6 +35,9 @@
 .topbar-hamburger {
   display: flex;
   align-items: center;
+  width: 44px;
+  height: 44px;
+  justify-content: center;
   padding: var(--ds-space-075);
   border: none;
   border-radius: var(--ds-radius-100);
@@ -52,11 +55,43 @@
 
 .topbar-title {
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: var(--ds-font-size-small);
   font-weight: var(--ds-font-weight-semibold);
   line-height: var(--ds-line-height-small);
   color: var(--ds-text);
 }
+
+
+/* Wallet balance in the dashboard header. */
+.topbar-wallet {
+  min-width: 174px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 13px;
+  border: 1px solid #C7C9F9;
+  border-radius: 12px;
+  background: #F5F3FF;
+  color: #3730A3;
+  cursor: pointer;
+  transition: background-color 180ms ease, border-color 180ms ease;
+}
+.topbar-wallet:hover { background: #EDE9FE; border-color: #A5B4FC; }
+.topbar-wallet:focus-visible, .topbar-hamburger:focus-visible { outline: 3px solid #A5B4FC; outline-offset: 2px; }
+.topbar-wallet-label { font-size: 12px; font-weight: 600; }
+.topbar-wallet-amount { font-size: 13px; font-variant-numeric: tabular-nums; }
+.topbar-wallet-compact { display: none; }
+.topbar-wallet.low { border-color: #FCD34D; background: #FFFBEB; color: #92400E; }
+.topbar-wallet.low:hover { background: #FEF3C7; border-color: #F59E0B; }
+.topbar-wallet.unavailable { color: #52525B; background: #FAFAFA; border-color: #D4D4D8; }
+.topbar-wallet-skeleton { width: 174px; height: 36px; border-radius: 12px; background: var(--ds-surface-sunken); animation: wallet-pulse 1.2s ease-in-out infinite alternate; }
+@keyframes wallet-pulse { to { opacity: .55; } }
 
 .topbar-tenant-badge {
   padding: var(--ds-space-025) var(--ds-space-100);
@@ -94,5 +129,23 @@
   }
   .sidebar-collapse-btn { display: none; }
   .dashboard-main { width: 100%; }
+  .topbar { padding: 0 10px; gap: 8px; }
+  .topbar-tenant-badge { display: none; }
+  .topbar-wallet { min-width: 112px; padding: 0 10px; }
+  .topbar-wallet-label, .topbar-wallet-full { display: none; }
+  .topbar-wallet-compact { display: inline; }
+  .topbar-wallet-skeleton { width: 64px; }
   .dashboard-content { padding: var(--ds-space-200); }
+}
+
+@media (max-width: 420px) {
+  .topbar-title { font-size: 13px; }
+  .topbar-wallet { min-width: 96px; }
+  .topbar-wallet.low .topbar-wallet-label { display: inline; }
+  .topbar-wallet.low .topbar-wallet-compact { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .topbar-wallet { transition: none; }
+  .topbar-wallet-skeleton { animation: none; }
 }

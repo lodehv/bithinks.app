@@ -19,6 +19,46 @@ import { renderToString } from 'react-dom/server'
 import { createElement } from 'react'
 
 const HALAMAN = [
+  {
+    jalur: '/src/pages/dashboard/PaymentPage.jsx',
+    props: { onBack: () => {} },
+    harusMemuat: ['Isi saldo prabayar', 'Menyiapkan pembayaran'],
+  },
+  {
+    jalur: '/src/pages/dashboard/PaymentStatus.jsx',
+    props: { payment: {}, status: 'credit_pending' },
+    harusMemuat: ['Pembayaran diterima', 'Jangan membuat pembayaran lain'],
+  },
+  {
+    jalur: '/src/pages/dashboard/PaymentStatus.jsx',
+    props: { payment: {}, status: 'refund_pending' },
+    harusMemuat: ['Pengembalian dana sedang diproses'],
+  },
+  {
+    jalur: '/src/pages/dashboard/PaymentStatus.jsx',
+    props: { payment: {}, status: 'refund_failed', onRefresh: () => {} },
+    harusMemuat: ['Jangan membayar ulang'],
+  },
+  {
+    jalur: '/src/pages/dashboard/PaymentStatus.jsx',
+    props: { payment: {}, status: 'refunded', onRecreate: () => {} },
+    harusMemuat: ['Dana telah dikembalikan', 'Buat pembayaran baru'],
+  },
+  {
+    jalur: '/src/pages/dashboard/PaymentStatus.jsx',
+    props: { payment: {}, status: 'cancelled', onRecreate: () => {} },
+    harusMemuat: ['Pembayaran dibatalkan'],
+  },
+  {
+    jalur: '/src/pages/dashboard/PaymentStatus.jsx',
+    props: { payment: {}, status: 'expired', onRecreate: () => {} },
+    harusMemuat: ['Waktu pembayaran habis'],
+  },
+  {
+    jalur: '/src/pages/dashboard/PaymentStatus.jsx',
+    props: { payment: {}, status: 'expiry_check' },
+    harusMemuat: ['Instruksi lama sudah disembunyikan'],
+  },
   { jalur: '/src/pages/dashboard/MarketingDashboard.jsx' },
   // Antrean cetak: layar yang paling sering diubah, dan yang paling mahal
   // kalau mati — di sinilah pemilik toko mencetak resi tiap hari.
