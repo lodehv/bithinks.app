@@ -1,3 +1,4 @@
+import BankSelect from './BankSelect'
 import { CreditCard, QrCode, ShieldCheck } from 'lucide-react'
 import {
   TOPUP_PRESETS, amountAllowed, bit, bitsToRupiah, methodCapability, rupiah, RUPIAH_PER_BIT,
@@ -41,7 +42,7 @@ export default function PaymentForm({
           )
         })}
       </fieldset>
-      {method === 'va' && <label className="pay-field" htmlFor="bank-code">Pilih bank<select id="bank-code" name="bankCode" value={bankCode} onChange={(event) => onBankChange(event.target.value)}>{activeCapability?.banks.map((bank) => <option value={bank.code} key={bank.code}>{bank.name}</option>)}</select></label>}
+      {method === 'va' && <BankSelect banks={activeCapability?.banks ?? []} value={bankCode} disabled={busy} onChange={onBankChange} />}
       {error && <p className="pay-error" role="alert">{error}</p>}
       <button className="pay-submit" disabled={busy || !activeCapability}>{busy ? 'Menyiapkan…' : method === 'qris' ? 'Tampilkan QRIS' : 'Buat Virtual Account'}</button>
       <div className="pay-trust"><ShieldCheck size={17} /><span>Nominal, metode, dan status pembayaran diverifikasi oleh penyedia pembayaran.</span></div>
