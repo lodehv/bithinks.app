@@ -8,6 +8,16 @@ import { announcePaymentRequired } from './paymentRequired'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
 
+export function getAccessToken() {
+  try { return JSON.parse(localStorage.getItem('padu-auth') ?? 'null')?.accessToken ?? null }
+  catch { return null }
+}
+
+export function handleUnauthorized() {
+  localStorage.removeItem('padu-auth')
+  if (!['/login', '/register'].includes(window.location.pathname)) window.location.href = '/login'
+}
+
 const api = axios.create({
   baseURL: API_URL,
   headers: {
@@ -23,17 +33,8 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    try {
-      const stored = localStorage.getItem('padu-auth')
-      if (stored) {
-        const { accessToken } = JSON.parse(stored)
-        if (accessToken) {
-          config.headers.Authorization = `Bearer ${accessToken}`
-        }
-      }
-    } catch {
-      // localStorage tidak tersedia atau data corrupt — abaikan
-    }
+    const token = getAccessToken()
+    if (token) config.headers.Authorization = `Bearer ${token}`
     return config
   },
   (error) => Promise.reject(error),
@@ -50,16 +51,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Token expired atau tidak valid — paksa logout
-      localStorage.removeItem('padu-auth')
-
-      // Hanya redirect jika bukan halaman auth itu sendiri
-      const currentPath = window.location.pathname
-      const isAuthPage  = currentPath === '/login' || currentPath === '/register'
-
-      if (!isAuthPage) {
-        window.location.href = '/login'
-      }
+      handleUnauthorized()
     }
 
     // US-02: one authoritative payment-required signal for every feature.

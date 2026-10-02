@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { ArrowLeft, LoaderCircle, RotateCw } from 'lucide-react'
 import { walletApi } from '../../utils/omniApi'
 import { loadPaymentPageData } from './loadPaymentPageData'
+import { useLivePaymentStatus } from './useLivePaymentStatus'
 import PaymentForm from './PaymentForm'
 import PaymentStatus from './PaymentStatus'
 import {
@@ -85,34 +86,32 @@ export default function PaymentPage({ onBack, onWalletChanged, onPaymentComplete
     return () => window.clearTimeout(timer)
   }, [payment?.expiresAt, status])
 
-  useEffect(() => {
-    if (!payment?.paymentId || !shouldPollPayment(status)) return undefined
-    let ignore = false
-    const check = async () => {
-      try {
-        const state = await walletApi.topupState(payment.paymentId)
-        if (!ignore && state.payment) { setPayment(state.payment); setClock(Date.now()); setError('') }
-        else if (!ignore) {
-          setUncertain(true)
-          setError('Pembayaran aktif tidak ditemukan saat status diperiksa. Jangan membayar ulang.')
-        }
-      } catch (requestError) {
-        if (!ignore && paymentErrorCode(requestError) === 'TOPUP_PROVIDER_STATE_UNCERTAIN') {
-          setUncertain(true)
-          setError('Penyedia belum dapat memastikan status pembayaran. Jangan membayar ulang.')
-        }
-      }
+  const receivePayment = useCallback((nextPayment) => {
+    setPayment(nextPayment); setClock(Date.now()); setError(''); setUncertain(false)
+  }, [])
+  const receiveStatusError = useCallback((requestError) => {
+    const code = paymentErrorCode(requestError)
+    if (code === 'TOPUP_PROVIDER_STATE_UNCERTAIN' || requestError.message === 'ACTIVE_PAYMENT_NOT_FOUND'
+      || [403, 404].includes(requestError?.response?.status)) {
+      setUncertain(true)
+      setError('Status pembayaran belum dapat dipastikan. Periksa kembali dan jangan membayar ulang.')
     }
-    const timer = window.setInterval(check, 4000)
-    return () => { ignore = true; window.clearInterval(timer) }
-  }, [payment?.paymentId, status])
+  }, [])
+  useLivePaymentStatus(payment?.paymentId, shouldPollPayment(status), receivePayment, receiveStatusError)
 
+  const completedPayments = useRef(new Set())
+  const completionCallbacks = useRef({ onWalletChanged, onPaymentComplete })
+  useEffect(() => { completionCallbacks.current = { onWalletChanged, onPaymentComplete } }, [onWalletChanged, onPaymentComplete])
   useEffect(() => {
-    if (status !== 'credited') return undefined
-    refreshWallet().then((nextWallet) => onWalletChanged?.(nextWallet)).catch(() => {})
-    const timer = window.setTimeout(() => onPaymentComplete?.(), 2000)
+    const id = payment?.paymentId
+    if (status !== 'credited' || !id) return undefined
+    if (!completedPayments.current.has(id)) {
+      completedPayments.current.add(id)
+      refreshWallet().then((nextWallet) => completionCallbacks.current.onWalletChanged?.(nextWallet)).catch(() => {})
+    }
+    const timer = window.setTimeout(() => completionCallbacks.current.onPaymentComplete?.(), 2000)
     return () => window.clearTimeout(timer)
-  }, [onPaymentComplete, onWalletChanged, refreshWallet, status])
+  }, [payment?.paymentId, refreshWallet, status])
 
   const recoverBlockedPayment = async (requestError) => {
     const embedded = paymentFromError(requestError)
