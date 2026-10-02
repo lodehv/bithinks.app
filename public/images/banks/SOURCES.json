@@ -1,0 +1,79 @@
+{
+  "retrievedAt": "2026-10-02",
+  "conversion": "Sharp 0.35.5, lossless WebP, fit inside 240x96, no enlargement, original colors/proportions retained",
+  "usage": "Bank identification; brand rights remain with the banks. Commons mirrors identify their source as the issuing bank.",
+  "assets": [
+    {
+      "code": "BCA",
+      "file": "bca.webp",
+      "source": "https://pustaka.bca.co.id/public-assets/logo-bca.svg",
+      "sha256": "c976d013d44175675919cc661dcac427f48f541b793ce04c1570f267e065e1b3"
+    },
+    {
+      "code": "BNC",
+      "file": "bnc.webp",
+      "source": "https://www-cms.bankneo.co.id/storage/photos/1/logo/logo_bnc.png",
+      "sha256": "f4542d2e02f75edf6e37df96cb87bb16934b6f785c4d7b04408dc3d9bdd7b7c3"
+    },
+    {
+      "code": "BNI",
+      "file": "bni.webp",
+      "source": "https://upload.wikimedia.org/wikipedia/commons/f/f0/Bank_Negara_Indonesia_logo_%282004%29.svg",
+      "sha256": "be01bba3f18303a72b7f75cea511e437868fbdcbc31220f9af9ae13617e89c91"
+    },
+    {
+      "code": "BRI",
+      "file": "bri.webp",
+      "source": "https://upload.wikimedia.org/wikipedia/commons/5/59/BRI_2025.svg",
+      "sha256": "b20252ff6fae9c193b4988d1f24e7ebc79a07e11f5c21a65b32ed715a9bba94e"
+    },
+    {
+      "code": "BSI",
+      "file": "bsi.webp",
+      "source": "https://www.bankbsi.co.id/img/logo.png",
+      "sha256": "bbb49ab447760b06097ae17f6ee7fb76e3c61cb1db1446916b86c1c11fe10063"
+    },
+    {
+      "code": "CIMB",
+      "file": "cimb.webp",
+      "source": "https://upload.wikimedia.org/wikipedia/commons/3/38/CIMB_Niaga_logo.svg",
+      "sha256": "ac540be75854c66213fa43b8c0b363c3574f6b64b1124dcefcc898a8a7dcb4dd"
+    },
+    {
+      "code": "DANAMON",
+      "file": "danamon.webp",
+      "source": "https://www.danamon.co.id/-/media/Project/Danamon/DCWCOID/v1/Header/Logo/Logo-Danamon-Default-v1.svg",
+      "sha256": "b118745868d43ae8e9e6cc0d19d8091edd5545a661f44e59c772f12939157c6d"
+    },
+    {
+      "code": "MANDIRI",
+      "file": "mandiri.webp",
+      "source": "https://www.bankmandiri.co.id/image/layout_set_logo?img_id=31567",
+      "sha256": "36849816bb2e5d28052541ce0ae636dd4cb145a6ecfdb70a2ba0a4e1abe81020"
+    },
+    {
+      "code": "MAYBANK",
+      "file": "maybank.webp",
+      "source": "https://www.maybank.co.id/-/media/Project/Maybank/Logo/maybank.svg",
+      "sha256": "21e6541ae00d2b13e76e90475604e1e90b2bcf597785e45149762bf2f98f58d3"
+    },
+    {
+      "code": "MUAMALAT",
+      "file": "muamalat.webp",
+      "source": "https://www.bankmuamalat.co.id/assets/frontend/images/logo.jpg",
+      "sha256": "b5d5e6cb8910226234a36ed0a14a2305a329347a7db46c6628d215dacb4f8089"
+    },
+    {
+      "code": "OCBC",
+      "file": "ocbc.webp",
+      "source": "https://cdn1.ocbc.id/asset/media/Project/OCBC/OCBCID/V1/Header/Logo-Menu/ocbc-red.png?h=392&w=1452&rev=e90e53c526e44e6ca70efc4646c1ab07",
+      "sha256": "29e8c9e5fec193eaa517a1ec5955f64e72d909966497d57e4111915074f3c685"
+    },
+    {
+      "code": "PERMATA",
+      "file": "permata.webp",
+      "source": "https://upload.wikimedia.org/wikipedia/commons/f/ff/Permata_Bank_%282024%29.svg",
+      "sha256": "b87c8ff866714e8052aba350cd9e1d3b31a7c77714381469aeaffa437a1aaf97"
+    }
+  ]
+}
