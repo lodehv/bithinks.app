@@ -37,5 +37,6 @@ export const omniApi = {
   cetakLabel: async () => ({}),
 }
 export const subscriptionApi = { status: async () => ({}), checkout: async () => ({}) }
+export const notificationApi = { list: async () => ({ rows: [], unread: 0 }), markRead: async () => ({}), markAllRead: async () => ({}) }
 export const adminApi = { subscribers: async () => [], leads: async () => [] }
 export const isPaymentRequired = () => false

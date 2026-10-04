@@ -1,0 +1,56 @@
+.ds-flag-group {
+  position: fixed; z-index: 1200; bottom: var(--ds-space-300); left: var(--ds-space-300);
+  display: flex; flex-direction: column;
+  gap: var(--ds-space-100);
+  width: min(400px, calc(100vw - 48px));
+  pointer-events: none;
+}
+.ds-flag {
+  display: flex; align-items: flex-start; gap: var(--ds-space-150);
+  padding: var(--ds-space-200);
+  border-left: 4px solid var(--ds-border);
+  border-radius: var(--ds-radius-200); background: var(--ds-surface-overlay);
+  box-shadow: var(--ds-shadow-overlay); color: var(--ds-text);
+  font-family: var(--ds-font-family-body);
+  pointer-events: auto;
+}
+.ds-flag-success { border-left-color: var(--ds-border-success); }
+.ds-flag-error { border-left-color: var(--ds-border-danger); }
+.ds-flag-warning { border-left-color: var(--ds-border-warning); }
+.ds-flag-info { border-left-color: var(--ds-border-selected); }
+.ds-flag-icon { flex: 0 0 auto; margin-top: 1px; }
+.ds-flag-success .ds-flag-icon { color: var(--ds-icon-success); }
+.ds-flag-error .ds-flag-icon { color: var(--ds-icon-danger); }
+.ds-flag-warning .ds-flag-icon { color: var(--ds-icon-warning); }
+.ds-flag-info .ds-flag-icon { color: var(--ds-icon-brand); }
+.ds-flag-content { min-width: 0; flex: 1; }
+.ds-flag-title { font-size: var(--ds-font-size-body); font-weight: var(--ds-font-weight-semibold); line-height: var(--ds-line-height-body); }
+.ds-flag-description {
+  margin-top: var(--ds-space-025); color: var(--ds-text-subtle);
+  font-size: var(--ds-font-size-body-small);
+  line-height: var(--ds-line-height-body-small);
+}
+.ds-flag-dismiss {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px;
+  margin: -4px -4px 0 0;
+  border: 0; border-radius: var(--ds-radius-100);
+  background: transparent; color: var(--ds-icon-subtle); cursor: pointer;
+}
+.ds-flag-dismiss:hover { background: var(--ds-background-neutral-subtle-hovered); }
+.ds-flag-dismiss:focus-visible {
+  outline: 2px solid var(--ds-border-focused); outline-offset: 2px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ds-flag { animation: ds-flag-enter var(--ds-duration-medium) var(--ds-ease-out); }
+}
+
+@keyframes ds-flag-enter {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: none; }
+}
+@media (max-width: 600px) {
+  .ds-flag-group {
+    right: var(--ds-space-150); bottom: var(--ds-space-150); left: var(--ds-space-150); width: auto;
+  }
+}
