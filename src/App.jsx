@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import Home from './pages/Home';
+import BitOmniHomepage from './pages/bitomni-homepage';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
@@ -28,7 +29,7 @@ function InnerApp() {
   if (route === '/terms' || route === '/syarat-ketentuan') return <TermsConditions />;
   if (route === '/privacy' || route === '/kebijakan-privasi') return <PrivacyPolicy />;
   if (route === '/bitone')              return <ProductDetail appId="bitone" />;
-  if (route === '/bitomni')             return <ProductDetail appId="bitomni" />;
+  if (route === '/bitomni')             return <BitOmniHomepage />;
   if (route === '/bitfine')             return <ProductDetail appId="bitfine" />;
   if (route === '/bitpos')              return <ProductDetail appId="bitpos" />;
   if (route === '/bitteam')             return <ProductDetail appId="bitteam" />;
