@@ -185,7 +185,7 @@ export const subscriptionApi = {
 
 export const walletApi = {
   get: () => api.get('/api/wallet').then(unwrap),
-  topupState: (paymentId) => api.get('/api/wallet/topup', { params: paymentId ? { paymentId } : {} }).then(unwrap),
+  topupState: (paymentId, signal) => api.get('/api/wallet/topup', { signal, params: paymentId ? { paymentId } : {} }).then(unwrap),
   topup: (payload) => api.post('/api/wallet/topup', payload).then(unwrap),
   completeMockTopup: (paymentId) => api.post('/api/wallet/topup/mock/complete', { paymentId }).then(unwrap),
 }
