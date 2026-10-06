@@ -1,3 +1,4 @@
+import { createElement } from 'react';
 import { Package, ClipboardList, ChartNoAxesCombined, ArrowDown } from 'lucide-react';
 
 const steps = [
@@ -15,7 +16,7 @@ export default function WorkflowPreview() {
           <div key={title}>
             {index > 0 && <div className="omni-connector"><ArrowDown size={18} aria-hidden="true" /></div>}
             <div className="omni-preview-step">
-              <div className="omni-preview-label"><Icon size={20} aria-hidden="true" /><strong>{title}</strong><span>0{index + 1}</span></div>
+              <div className="omni-preview-label">{createElement(Icon, { size: 20, 'aria-hidden': true })}<strong>{title}</strong><span>0{index + 1}</span></div>
               <div className="omni-preview-value"><b>{value}</b><span>{unit}</span></div>
               <p>{detail}</p>
             </div>

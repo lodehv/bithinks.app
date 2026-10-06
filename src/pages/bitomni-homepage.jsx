@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { createElement, useState } from 'react';
 import { ArrowRight, Check, Menu, X, Package, ClipboardList, ChartNoAxesCombined } from 'lucide-react';
 import WorkflowPreview from '../components/bitomni/workflow-preview';
 import './bitomni-homepage.css';
@@ -52,7 +52,7 @@ export default function BitOmniHomepage() {
         <section className="omni-wrap omni-hero" aria-labelledby="omni-title">
           <div>
             <p className="omni-eyebrow">UNTUK PENJUAL SHOPEE & TIKTOK SHOP</p>
-            <h1 id="omni-title">Dari stok masuk<br />sampai hasil penjualan.<br /><em>Kelola dalam satu alur.</em></h1>
+            <h1 id="omni-title">Dari stok masuk{' '}<br />sampai hasil penjualan.<br /><em>Kelola dalam satu alur.</em></h1>
             <p className="omni-lead">Stok di gudang, pesanan di marketplace, laporan di akhir hari. BitOmni membantu Anda mengelolanya dalam satu tempat.</p>
             <div className="omni-actions"><a className="omni-button" href="/register">Coba BitOmni gratis <ArrowRight size={18} aria-hidden="true" /></a><a className="omni-text-link" href="#alur-kerja">Lihat alur kerjanya <ArrowRight size={17} aria-hidden="true" /></a></div>
             <p className="omni-small">Masa coba hingga 3 hari atau 100 pesanan · 1 toko</p>
@@ -75,7 +75,7 @@ export default function BitOmniHomepage() {
         <section className="omni-wrap omni-features" id="fitur" aria-labelledby="features-title">
           <p className="omni-eyebrow">LEBIH DEKAT DENGAN PEKERJAAN ANDA</p><h2 id="features-title">Satu tempat, dari gudang<br />sampai evaluasi toko.</h2>
           <div className="omni-feature-switch" role="group" aria-label="Pilih bagian alur kerja">
-            {features.map(({ label, Icon }, index) => <button key={label} type="button" aria-pressed={selected === index} aria-controls="omni-feature-panel" onClick={() => setSelected(index)}><Icon size={19} aria-hidden="true" />{label}</button>)}
+            {features.map(({ label, Icon }, index) => <button key={label} type="button" aria-pressed={selected === index} aria-controls="omni-feature-panel" onClick={() => setSelected(index)}>{createElement(Icon, { size: 19, 'aria-hidden': true })}{label}</button>)}
           </div>
           <div id="omni-feature-panel" className="omni-feature-panel" aria-live="polite" aria-atomic="true">
             <div className="omni-feature-copy"><h3>{feature.question}</h3><p>{feature.description}</p><ul>{feature.points.map(point => <li key={point}><Check size={18} aria-hidden="true" />{point}</li>)}</ul></div>
