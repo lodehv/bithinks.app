@@ -1,0 +1,16 @@
+/* Keep catalog controls and progress usable on narrow screens. */
+.mp-products { min-width: 0; }
+.mp-products .mp-products-head { flex-wrap: wrap; }
+.mp-products .mp-products-head > div { flex: 1 1 240px; min-width: 0; }
+.mp-products .omni-pill { max-width: 100%; overflow-wrap: anywhere; }
+@media (max-width: 640px) {
+  .mp-products .mp-subtabs { flex-wrap: wrap; }
+  .mp-products .mpp-search { min-width: 0; max-width: none; flex-basis: 100%; }
+  .mp-products .mpp-map-tabs { flex-wrap: wrap; max-width: 100%; }
+  .mp-products .mpp-grid { grid-template-columns: minmax(0, 1fr); }
+  .skum-modal { min-width: 0; }
+  .skum-head > div { min-width: 0; }
+  .skum-type { flex-wrap: wrap; }
+  .skum-type-opt { min-width: 0; }
+  .skum-actions { flex-wrap: wrap; }
+}

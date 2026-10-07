@@ -21,7 +21,7 @@ export const omniApi = {
   listProducts:      ()            => api.get('/api/omni/products').then(unwrap),
   // Produk marketplace (etalase) untuk tab Produk Marketplaces + tautan ke master.
   listMarketplaceProducts: (channel) => api.get('/api/omni/products/marketplace', { params: { channel } }).then(unwrap),
-  syncProductCatalog: ()            => api.post('/api/omni/products/catalog/sync').then(unwrap),
+  syncProductCatalog: (payload)     => api.post('/api/omni/products/catalog/sync', payload, { timeout: 300000, notifications: false }).then(unwrap),
   // Resep (BOM) SKU marketplace → master produk: [{masterProductId, qty}]
   listSkuMappings:   ()             => api.get('/api/omni/products/sku-mappings').then(unwrap),
   // Dashboard Kelola Produk (data real): movement keluar & COGS dari resep SKU.
