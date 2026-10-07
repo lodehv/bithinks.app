@@ -11,7 +11,8 @@ import WalletAccessDenied from "./dashboard/WalletAccessDenied";
 import AdminPanel from "./dashboard/AdminPanel";
 import ModulePlaceholder from "./dashboard/ModulePlaceholder";
 import MarketingDashboard from "./dashboard/MarketingDashboard";
-import { subscriptionApi, walletApi, adminApi } from "../utils/omniApi";
+import { subscriptionApi, walletApi } from "../utils/omniApi";
+import usePlatformAdmin from "./dashboard/usePlatformAdmin";
 import { PAYMENT_REQUIRED_EVENT } from "../utils/paymentRequired";
 import { Settings, Info } from "lucide-react";
 
@@ -36,13 +37,6 @@ function menuFromLocation() {
   return PAGE_IDS.has(menu) ? menu : "dashboard";
 }
 
-// ─── Banner billing global (status langganan live) ────────────────────────────
-// Gaya tombol tagihan. Ditaruh SEBELUM komponen yang memakainya — bukan soal
-// selera: nilai yang dipakai di atas baris deklarasinya adalah bentuk yang sama
-// dengan yang menjatuhkan halaman Laporan Penjualan jadi layar putih pada
-// 20 Agustus 2026. Yang ini sebenarnya aman (React menjalankan komponennya
-// belakangan), tapi membedakan yang aman dari yang tidak butuh penalaran —
-// dan penalaran itulah yang gagal waktu itu.
 const billBtn = {
   marginLeft: "auto", fontSize: 12, fontWeight: 600, color: "#F97316",
   background: "#fff", border: "1px solid #FED7AA", borderRadius: 6,
@@ -94,7 +88,7 @@ function BillingBanner({ sub, onPay }) {
 
 export default function Dashboard() {
   const { isAuthenticated, user } = useAppContext();
-  const [isPlatformAdmin, setIsPlatformAdmin] = useState(false);
+  const isPlatformAdmin = usePlatformAdmin(isAuthenticated, user?.id);
   const canViewWallet = ["owner", "admin"].includes(String(user?.role ?? "").toLowerCase());
   const [activeMenu, setActiveMenu] = useState(menuFromLocation);
   const activeMenuRef = useRef(activeMenu);
@@ -106,8 +100,6 @@ export default function Dashboard() {
     return value ? (value.endsWith("_ok") ? "ok" : "failed") : null;
   }); // 'ok' | 'failed'
 
-  // Tab Pesanan yang dituju saat datang lewat pintasan dari dashboard.
-  // null = buka apa adanya (tab bawaan "Semua Pesanan").
   //
   // Kenapa ada: kartu di halaman depan berfungsi sebagai pintasan kerja —
   // menekan "Siap dicetak 1.096" harus mendarat tepat di tumpukan itu, bukan
@@ -195,7 +187,6 @@ export default function Dashboard() {
   }, [navigateMenu, refreshSub]);
   useEffect(() => {
     if (!isAuthenticated) return undefined;
-    adminApi.session().then(() => setIsPlatformAdmin(true)).catch(() => setIsPlatformAdmin(false));
     refreshSub();
     window.addEventListener("focus", refreshSub);
     const timer = window.setInterval(() => {
