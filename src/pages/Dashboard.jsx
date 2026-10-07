@@ -16,7 +16,6 @@ import usePlatformAdmin from "./dashboard/usePlatformAdmin";
 import { PAYMENT_REQUIRED_EVENT } from "../utils/paymentRequired";
 import { Settings, Info } from "lucide-react";
 
-// ─── Map menu id → judul halaman ──────────────────────────────────────────────
 const PAGES = {
   dashboard:        { title: "Dashboard"              },
   wms:              { title: "WMS — Manajemen Gudang" },
