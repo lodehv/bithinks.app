@@ -11,7 +11,7 @@ export default function MarketplaceMappingDialog({ mapProduct, setMapProduct, se
                 <h3>Petakan SKU ke Master Produk</h3>
                 <p className="skum-sub" title={mapProduct.title}>{mapProduct.title}</p>
               </div>
-              <button className="skum-close" onClick={() => { setMapProduct(null); setEditingSku(null); }}><X size={18} /></button>
+              <button className="skum-close" aria-label="Tutup pemetaan SKU" onClick={() => { setMapProduct(null); setEditingSku(null); }}><X size={18} /></button>
             </div>
 
             <div className="skum-body">

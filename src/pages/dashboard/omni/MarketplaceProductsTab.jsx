@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { PackageOpen, RefreshCw, Link2, Check, ImageOff, Search } from "lucide-react";
+import { PackageOpen, RefreshCw, Link2, Check, ImageOff, Search, X } from "lucide-react";
 import { omniApi, isPaymentRequired } from "../../../utils/omniApi";
 import shopeeLogo from "../../../assets/logo_pilihan_fitur/shopee.png";
 import tiktokLogo from "../../../assets/logo_pilihan_fitur/logo_tiktok.jpg";
@@ -10,6 +10,7 @@ import tiktokLogo from "../../../assets/logo_pilihan_fitur/logo_tiktok.jpg";
 // Resep ini jadi dasar movement stok & COGS.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import "./MarketplaceCatalog.css";
 import MarketplaceMappingDialog from "./MarketplaceMappingDialog";
 import { syncCatalogPages } from "../../../utils/catalogSync";
 import { notify } from "../../../components/notifications/notificationBus";
@@ -26,6 +27,7 @@ export default function MarketplaceProductsTab({ locked, onRequirePayment }) {
   const [masters, setMasters] = useState([]);     // master produk utk dropdown
   const [syncing, setSyncing] = useState(false);
   const [note, setNote] = useState("");
+  const [noteTone, setNoteTone] = useState("neutral");
   const [searchQ, setSearchQ] = useState("");
   const [mapFilter, setMapFilter] = useState("all"); // all | mapped | unmapped
   const [storeFilter, setStoreFilter] = useState("all");
@@ -58,21 +60,21 @@ export default function MarketplaceProductsTab({ locked, onRequirePayment }) {
 
   const syncCatalog = async () => {
     if (locked) return onRequirePayment?.();
-    setSyncing(true); setNote("");
+    setSyncing(true); setNote(""); setNoteTone("neutral");
     try {
       const r = await syncCatalogPages(omniApi, ({ store, synced }) =>
         setNote(`Menarik produk ${store}… ${synced} produk tersimpan.`));
       const message = r.errors.length
         ? `${r.synced} produk tersimpan. Belum selesai: ${r.errors.map((error) => error.store).join(', ')}. Coba Sync Produk lagi.`
         : `${r.synced} produk tersinkron.`;
-      setNote(message);
+      setNote(message); setNoteTone(r.errors.length ? "unsync" : "sync");
       notify({ type: r.errors.length ? (r.synced ? 'warning' : 'error') : 'success',
         title: r.errors.length ? 'Sinkron produk belum lengkap' : 'Produk berhasil disinkronkan', description: message });
       load(channel);
     } catch (err) {
       if (isPaymentRequired(err)) return onRequirePayment?.();
       const message = err?.response?.data?.error?.message ?? err.message ?? "Gagal sinkron produk.";
-      setNote(message);
+      setNote(message); setNoteTone("error");
       notify({ type: 'error', title: 'Sinkron produk gagal', description: message });
     } finally {
       setSyncing(false);
@@ -191,7 +193,7 @@ export default function MarketplaceProductsTab({ locked, onRequirePayment }) {
             value={searchQ}
             onChange={(e) => setSearchQ(e.target.value)}
           />
-          {searchQ && <button className="mpp-search-clear" onClick={() => setSearchQ("")}><X size={12} /></button>}
+          {searchQ && <button className="mpp-search-clear" aria-label="Hapus pencarian" onClick={() => setSearchQ("")}><X size={12} /></button>}
         </div>
 
         <div className="mpp-map-tabs">
@@ -212,7 +214,7 @@ export default function MarketplaceProductsTab({ locked, onRequirePayment }) {
         </select>
       </div>
 
-      {note && <div role="status" aria-live="polite" className="omni-pill sync" style={{ marginBottom: 12 }}>{note}</div>}
+      {note && <div role="status" aria-live="polite" className={`omni-pill ${noteTone}`} style={{ marginBottom: 12 }}>{note}</div>}
 
       {products === null ? (
         <div className="mp-products-panel"><div className="mp-products-empty"><RefreshCw size={26} className="spin text-gray" /><p>Memuat produk…</p></div></div>
