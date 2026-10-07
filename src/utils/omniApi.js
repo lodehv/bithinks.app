@@ -197,6 +197,10 @@ export const notificationApi = {
 }
 
 // Panel admin platform (akses khusus demo@bithinks.id — gerbang di backend).
+export const sessionApi = {
+  capabilities: () => api.get('/api/auth/session', { notifications: false }).then(unwrap),
+}
+
 export const adminApi = {
   session: () => api.get('/api/admin/session').then(unwrap),
   subscribers: () => api.get('/api/admin/subscribers').then(unwrap),
