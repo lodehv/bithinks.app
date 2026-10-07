@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { PackageOpen, RefreshCw, Link2, Check, ImageOff, X, Plus, Trash2, Search } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { PackageOpen, RefreshCw, Link2, Check, ImageOff, Search } from "lucide-react";
 import { omniApi, isPaymentRequired } from "../../../utils/omniApi";
 import shopeeLogo from "../../../assets/logo_pilihan_fitur/shopee.png";
 import tiktokLogo from "../../../assets/logo_pilihan_fitur/logo_tiktok.jpg";
@@ -9,6 +9,10 @@ import tiktokLogo from "../../../assets/logo_pilihan_fitur/logo_tiktok.jpg";
 // tiap SKU dipetakan ke master produk (single = 1 komponen, bundle = >1) + qty.
 // Resep ini jadi dasar movement stok & COGS.
 // ─────────────────────────────────────────────────────────────────────────────
+
+import MarketplaceMappingDialog from "./MarketplaceMappingDialog";
+import { syncCatalogPages } from "../../../utils/catalogSync";
+import { notify } from "../../../components/notifications/notificationBus";
 
 const SUB_TABS = [
   { key: "tiktok", label: "TikTok Shop", logo: tiktokLogo },
@@ -56,15 +60,23 @@ export default function MarketplaceProductsTab({ locked, onRequirePayment }) {
     if (locked) return onRequirePayment?.();
     setSyncing(true); setNote("");
     try {
-      const r = await omniApi.syncProductCatalog();
-      setNote(`${r?.synced ?? 0} produk tersinkron.`);
+      const r = await syncCatalogPages(omniApi, ({ store, synced }) =>
+        setNote(`Menarik produk ${store}… ${synced} produk tersimpan.`));
+      const message = r.errors.length
+        ? `${r.synced} produk tersimpan. Belum selesai: ${r.errors.map((error) => error.store).join(', ')}. Coba Sync Produk lagi.`
+        : `${r.synced} produk tersinkron.`;
+      setNote(message);
+      notify({ type: r.errors.length ? (r.synced ? 'warning' : 'error') : 'success',
+        title: r.errors.length ? 'Sinkron produk belum lengkap' : 'Produk berhasil disinkronkan', description: message });
       load(channel);
     } catch (err) {
       if (isPaymentRequired(err)) return onRequirePayment?.();
-      setNote(err?.response?.data?.error?.message ?? "Gagal sinkron produk.");
+      const message = err?.response?.data?.error?.message ?? err.message ?? "Gagal sinkron produk.";
+      setNote(message);
+      notify({ type: 'error', title: 'Sinkron produk gagal', description: message });
     } finally {
       setSyncing(false);
-      setTimeout(() => setNote(""), 5000);
+
     }
   };
 
@@ -124,10 +136,10 @@ export default function MarketplaceProductsTab({ locked, onRequirePayment }) {
     [stores, channel],
   );
 
-  const isFullyMapped = (p) => {
+  const isFullyMapped = useCallback((p) => {
     const total = (p.skus || []).length;
     return total > 0 && p.skus.every((s) => mappings[s]?.length);
-  };
+  }, [mappings]);
 
   const visible = useMemo(() => {
     let list = products ?? [];
@@ -142,9 +154,9 @@ export default function MarketplaceProductsTab({ locked, onRequirePayment }) {
     if (mapFilter === "mapped") list = list.filter((p) => isFullyMapped(p));
     if (mapFilter === "unmapped") list = list.filter((p) => !isFullyMapped(p));
     return list;
-  }, [products, searchQ, storeFilter, mapFilter, mappings]);
+  }, [products, searchQ, storeFilter, mapFilter, isFullyMapped]);
 
-  const countMapped = useMemo(() => (products ?? []).filter((p) => isFullyMapped(p)).length, [products, mappings]);
+  const countMapped = useMemo(() => (products ?? []).filter((p) => isFullyMapped(p)).length, [products, isFullyMapped]);
   const countUnmapped = (products?.length ?? 0) - countMapped;
 
   return (
@@ -200,7 +212,7 @@ export default function MarketplaceProductsTab({ locked, onRequirePayment }) {
         </select>
       </div>
 
-      {note && <div className="omni-pill sync" style={{ marginBottom: 12 }}><Check size={12} /> {note}</div>}
+      {note && <div role="status" aria-live="polite" className="omni-pill sync" style={{ marginBottom: 12 }}>{note}</div>}
 
       {products === null ? (
         <div className="mp-products-panel"><div className="mp-products-empty"><RefreshCw size={26} className="spin text-gray" /><p>Memuat produk…</p></div></div>
@@ -257,99 +269,8 @@ export default function MarketplaceProductsTab({ locked, onRequirePayment }) {
         </div>
       )}
 
-      {/* ── Modal pemetaan SKU per etalase ── */}
-      {mapProduct && (
-        <div className="skum-overlay" onClick={() => { setMapProduct(null); setEditingSku(null); }}>
-          <div className="skum-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="skum-head">
-              <div>
-                <h3>Petakan SKU ke Master Produk</h3>
-                <p className="skum-sub" title={mapProduct.title}>{mapProduct.title}</p>
-              </div>
-              <button className="skum-close" onClick={() => { setMapProduct(null); setEditingSku(null); }}><X size={18} /></button>
-            </div>
-
-            <div className="skum-body">
-              {(mapProduct.skus || []).map((sku) => {
-                const summary = summaryOf(sku);
-                const isEditing = editingSku === sku;
-                return (
-                  <div key={sku} className={`skum-row ${isEditing ? "editing" : ""}`}>
-                    <div className="skum-row-head">
-                      <div className="skum-row-info">
-                        <span className="skum-sku">{sku}</span>
-                        {summary
-                          ? <span className="skum-summary"><Check size={11} strokeWidth={3} /> {summary}</span>
-                          : <span className="skum-unmapped">Belum dipetakan</span>}
-                      </div>
-                      {!isEditing && (
-                        <button className="skum-edit-btn" onClick={() => openEditor(sku)}>
-                          {summary ? "Ubah" : "Petakan"}
-                        </button>
-                      )}
-                    </div>
-
-                    {isEditing && (
-                      <div className="skum-editor">
-                        {/* Single / Bundle */}
-                        <div className="skum-type">
-                          <label className={`skum-type-opt ${!bundleMode ? "on" : ""}`}>
-                            <input type="radio" name={`type-${sku}`} checked={!bundleMode} onChange={() => setMode(false)} />
-                            Single <small>1 master produk</small>
-                          </label>
-                          <label className={`skum-type-opt ${bundleMode ? "on" : ""}`}>
-                            <input type="radio" name={`type-${sku}`} checked={bundleMode} onChange={() => setMode(true)} />
-                            Bundle <small>gabungan beberapa produk</small>
-                          </label>
-                        </div>
-
-                        {/* Komponen resep */}
-                        {rows.map((r, idx) => (
-                          <div key={idx} className="skum-comp">
-                            <select
-                              value={r.masterProductId}
-                              onChange={(e) => setRows((cur) => cur.map((x, i) => (i === idx ? { ...x, masterProductId: e.target.value } : x)))}
-                            >
-                              <option value="">— Pilih master produk —</option>
-                              {masterOptions.map((m) => (
-                                <option key={m.id} value={m.id}>{m.name} ({m.sku})</option>
-                              ))}
-                            </select>
-                            <input
-                              type="number" min="1" value={r.qty}
-                              onChange={(e) => setRows((cur) => cur.map((x, i) => (i === idx ? { ...x, qty: e.target.value } : x)))}
-                              title="Kuantiti yang keluar per 1 movement SKU ini"
-                            />
-                            {bundleMode && rows.length > 1 && (
-                              <button className="skum-del" onClick={() => setRows((cur) => cur.filter((_, i) => i !== idx))} title="Hapus baris">
-                                <Trash2 size={14} />
-                              </button>
-                            )}
-                          </div>
-                        ))}
-
-                        {bundleMode && (
-                          <button className="skum-add" onClick={() => setRows((cur) => [...cur, { masterProductId: "", qty: 1 }])}>
-                            <Plus size={13} /> Tambah produk
-                          </button>
-                        )}
-
-                        {formErr && <div className="skum-err">{formErr}</div>}
-                        <div className="skum-actions">
-                          <button className="skum-cancel" onClick={() => setEditingSku(null)}>Batal</button>
-                          <button className="skum-save" onClick={saveMapping} disabled={saving}>
-                            {saving ? "Menyimpan…" : "Simpan Pemetaan"}
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
+      <MarketplaceMappingDialog {...{ mapProduct, setMapProduct, setEditingSku, summaryOf,
+        editingSku, openEditor, bundleMode, setMode, rows, setRows, masterOptions, formErr, saveMapping, saving }} />
     </div>
   );
 }

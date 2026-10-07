@@ -20,6 +20,16 @@ import { createElement } from 'react'
 
 const HALAMAN = [
   {
+    jalur: '/src/pages/dashboard/omni/MarketplaceProductsTab.jsx',
+    props: { locked: false },
+    harusMemuat: ['Sync Produk', 'Produk Marketplaces'],
+  },
+  {
+    jalur: '/src/pages/dashboard/omni/MarketplaceMappingDialog.jsx',
+    props: { mapProduct: { title: 'Catalog audit', skus: ['SKU-A'] }, summaryOf: () => null },
+    harusMemuat: ['SKU-A', 'Petakan SKU ke Master Produk'],
+  },
+  {
     jalur: '/src/pages/dashboard/PaymentPage.jsx',
     props: { onBack: () => {} },
     harusMemuat: ['Isi saldo prabayar', 'Menyiapkan pembayaran'],
